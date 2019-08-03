@@ -9,9 +9,19 @@ export const asyncRouterMap = [
 
 let routes = [
     {
-    	path:'/admin/login',
-    	name: 'test',
-    	component: resolve => require(['../components/Login.vue'], resolve),
+    	path:'/all/login',
+    	name: 'login',
+    	component: resolve => require(['../components/pages/LoginAll.vue'], resolve),
+    },
+    {
+        path:'/diff/login',
+        name: 'loginCommon',
+        component: resolve => require(['../components/pages/LoginDiff.vue'], resolve),
+    },
+    {
+    	path:'/index',
+    	name:'index',
+    	component: resolve => require(['../components/pages/Index.vue'], resolve),
     }
 ];
 
