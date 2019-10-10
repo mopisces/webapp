@@ -1,30 +1,25 @@
 <template>
-	<div>
-		<p>this is test page</p>
-		<p>this is test page</p>
-		<p>this is test page</p>
-	</div>
+	
 </template>
-<script >
+<script>
+	import { NavBar, Tabbar, TabbarItem, Cell, Button, Grid, GridItem } from 'vant';
 	export default {
-		data(){
-			return {}
-		},
 		components:{
 
 		},
-		created(){
+		data(){
+			return {
+
+			}
+		},
+		methods:{
 
 		},
 		mounted(){
 
 		},
-		updated(){
-
-		},
-		methods:{
-
+		created(){
+			
 		}
-
 	}
 </script>

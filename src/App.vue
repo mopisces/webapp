@@ -1,11 +1,14 @@
+  
 <template>
-    <div id="app">
-        <router-view></router-view>
-    </div>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
-<script>
-	window.onload = () => {
-		document.getElementById("app").style.height = window.screen.height +"px";
-		document.getElementById("app").style.width  = window.screen.width+"px";
-	}
-</script>
+
+<style>
+body {
+  font-size: 16px;
+  background-color: #f8f8f8;
+  -webkit-font-smoothing: antialiased;
+}
+</style>	

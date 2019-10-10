@@ -9,19 +9,38 @@ export const asyncRouterMap = [
 
 let routes = [
     {
-    	path:'/all/login',
-    	name: 'login',
-    	component: resolve => require(['../components/pages/LoginAll.vue'], resolve),
+        path:'/entrance',
+        component: resolve => require(['../components/pages/login/LoginHeader.vue'], resolve),
+        meta: { title: '登录公共头部' },
+        children:[
+            {
+                path:'login/site',
+                meta: { title: '登录入口' },
+                component: resolve => require(['../components/pages/login/LoginSite.vue'], resolve),
+            },
+            {
+                path:'login/exact',
+                meta: { title: '具体登录' },
+                component: resolve => require(['../components/pages/login/LoginExact.vue'], resolve),
+            }
+        ]
     },
     {
-        path:'/diff/login',
-        name: 'loginCommon',
-        component: resolve => require(['../components/pages/LoginDiff.vue'], resolve),
+        path:'/staff',
+        component: resolve => require(['../components/common/StaffLayout.vue'], resolve),
+        meta: { title: '内部人员使用' },
+        children:[
+            {
+                path:'calc/index',
+                meta: { title: '登录入口' },
+                component: resolve => require(['../components/staff/calc/Index.vue'], resolve),
+            }
+        ]
     },
     {
     	path:'/index',
     	name:'index',
-    	component: resolve => require(['../components/pages/Index.vue'], resolve),
+    	component: resolve => require(['../components/pages/home/HomeNew.vue'], resolve),
     }
 ];
 

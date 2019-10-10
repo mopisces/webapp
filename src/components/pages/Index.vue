@@ -46,7 +46,7 @@
 				gridItem:[
 					{
 						cusName:'绍兴合润',
-						homeUrl:'/all/login'
+						homeUrl:'/entrance/login/site'
 					},
 					{
 						cusName:'重庆永利',

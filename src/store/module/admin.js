@@ -1,6 +1,8 @@
 const admin = {
 	state: {
-		data:'helloworld'
+		layout:{
+			title:''
+		}
 	},
 	mutations:{},
 	actions: {},

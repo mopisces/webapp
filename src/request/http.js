@@ -17,7 +17,7 @@ httpServer.defaults.timeout = 5000;
 httpServer.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 httpServer.interceptors.request.use(
 	config => {
-		let auth = '';
+		let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1NzA2NzMwMTEsImV4cCI6MTU3MDc1OTQxMSwiU1Nob3J0TmFtZSI6IiIsIlN1YkZhY0lkIjoiIiwidGFnIjoiY2xpZW50IiwiVXNlck5hbWUiOiJBUSIsIlBhc3NXb3JkIjoiQVEiLCJVc2VyVHlwZSI6IjAiLCJFUlBJZCI6IkpYQ1EiLCJUYXNrSWQiOm51bGwsIk9uZUNlbnRQYXkiOiIwIiwiUk9XX05VTUJFUiI6IjEifQ.cLUg0hTVtSzKVapiZLriFydKTbntQCHu1zUuAvQtHxo';
 		config.headers.Authentication = auth;
 		return config;
 	},

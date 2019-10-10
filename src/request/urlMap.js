@@ -8,4 +8,9 @@ const webappMap = {
 const adminUrl = {
 	login: `${base.admin}login`
 };
-export { map, webappMap, adminUrl};
+const staff = {
+	frec : {
+		cusPicker: `${base.staff}frecCusPicker`,
+	}
+}
+export { map, webappMap, adminUrl, staff};

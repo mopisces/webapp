@@ -4,7 +4,7 @@ import states from './state';
 import actions from './action';
 import mutations from './mutation';
 import admin from './module/admin';
-
+import staff from './module/staff';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -12,6 +12,7 @@ export default new Vuex.Store({
  	mutations,
  	actions,
  	modules:{
- 		admin
+ 		admin,
+ 		staff
  	}
 });	
