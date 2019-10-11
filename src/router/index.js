@@ -32,9 +32,14 @@ let routes = [
         children:[
             {
                 path:'calc/index',
-                meta: { title: '登录入口' },
+                meta: { title: '订单试算' },
                 component: resolve => require(['../components/staff/calc/Index.vue'], resolve),
-            }
+            },
+            {
+                path:'frec/cusContact',
+                meta: { title: '订单试算' },
+                component: resolve => require(['../components/staff/frec/CusContact.vue'], resolve),
+            },
         ]
     },
     {

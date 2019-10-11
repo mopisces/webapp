@@ -16,6 +16,7 @@ const staff = {
 	},
 	frec : {
 		cusPicker: `${base.staff}frecCusPicker`,
+		cusContact: `${base.staff}frecCusContact`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-tabs v-model="config.tabs.active" sticky>
-			<van-tab :title="item" v-for="item in config.tabs.title">
+			<van-tab :title="item" v-for="(item,index) in config.tabs.title" :key="index">
 				<van-cell-group>
 					<van-field readonly clickable label="客户" :value="commonForm.cusName"  placeholder="选择客户" @click="cusPicker()" required></van-field>
 					<van-field readonly clickable label="材质" :value="commonForm.texName"  placeholder="选择材质" @click="texPicker()" required></van-field>
@@ -55,6 +55,7 @@
 		</van-tabs>
 		<template>
 			<van-popup v-model="config.popup.show" position="bottom" :style="{ height: '50%' }" >
+				<el-button>默认按钮</el-button>
 				<van-picker show-toolbar :columns="info.cusPicker.columns" @cancel="config.popup.show = false"  @confirm="cusConfirm" :default-index="info.cusPicker.defaultIndex" v-if=" config.picker.type === 0">
 					<van-search slot="title" v-model="commonForm.cusName" @search="cusPickerSearch"> </van-search>
 				</van-picker>
@@ -197,15 +198,11 @@
 			},
 			checkCommon(){
 				if( commonFunc.trim(this.commonForm.cusName).length <= 0 ){
-					Dialog.alert({
-						message: '请选择客户'
-					});
+					Dialog.alert({message: '请选择客户'});
 					return false;
 				}
 				if( commonFunc.trim(this.commonForm.texName).length <= 0 ){
-					Dialog.alert({
-						message: '请选择材质'
-					});
+					Dialog.alert({message: '请选择材质'});
 					return false;
 				}
 			},
