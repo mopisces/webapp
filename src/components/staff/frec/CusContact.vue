@@ -1,13 +1,16 @@
 <template>
 	<div>
-		<van-field readonly clickable label="客户名称" :value="cusForm.cusName" placeholder="选择客户名称" @click="fieldClick()"></van-field>
+		<van-button plain hairline type="primary" size="small" style="width:100%" @click="filterClick()">筛选</van-button>
+		<van-popup v-model="config.popup.filterShow" position="right" :style="{ width: '80%' , height: '100%'}">
+			<van-field readonly clickable label="客户名称" :value="cusForm.cusName" placeholder="选择客户名称" @click="fieldClick()"></van-field>
+		</van-popup>
 		<van-popup v-model="config.popup.show" position="bottom">
 			<van-picker show-toolbar  :columns="info.cusPicker.columns" :default-index="info.cusPicker.defaultIndex" @cancel="cusPickerCancel()" @confirm="cusConfirm">
 				<van-search slot="title" v-model="cusForm.cusName" @search="cusPickerSearch"> </van-search>
 			</van-picker>
 		</van-popup>
    		<template>
-   			<div>
+   			<div  class="container">
    				<v-table is-horizontal-resize is-horizontal-resize style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500"></v-table>
    			</div>
    		</template>
@@ -15,7 +18,7 @@
 	</div>
 </template>
 <script>
-	import { Field, Popup, Picker, Search  } from 'vant';
+	import { Field, Popup, Picker, Search, Button  } from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
@@ -23,15 +26,18 @@
 			[Popup.name]: Popup,
 			[Picker.name]: Picker,
 			[Search.name]: Search,
+			[Button.name]: Button,
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
 		},
 		data(){
 			return {
+				show:true,
 				config:{
 					popup:{
 						show:false,
+						filterShow:false
 					},
 					table:{
 						columns: [
@@ -65,6 +71,9 @@
 			}
 		},
 		methods:{
+			filterClick(){
+				this.config.popup.filterShow = true;
+			},
 			fieldClick(){
 				this.config.popup.show = true;
 				if( this.info.cusPicker.columns.length == 0 ){
@@ -83,6 +92,7 @@
 			cusConfirm( value, index ){
 				this.config.popup.show = false;
 				this.cusForm.cusName = '';
+				this.info.cusPicker.defaultIndex = -1;
 				if( JSON.stringify(value) !== '[]' ){
 					this.info.cusPicker.defaultIndex = index;
 					this.cusForm.cusName = value.key;
@@ -107,7 +117,7 @@
 		},
 		created(){
 			this.cusContact();
-			this.$store.commit('staff/setHeaderTitle','订单试算');
+			this.$store.commit('staff/setHeaderTitle','客户来往统计');
 		}
 	}
 </script>
