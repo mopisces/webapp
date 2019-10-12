@@ -14,7 +14,7 @@ const frec = {
 	},
 	recAdjustMain( data ){
 		let postData = {
-			adjust_type : 1,
+			adjust_type : data.adjustType,
 			date_type: 0,
 			frec_begin_date: '2017-10-12',
 			frec_end_date: '2019-08-27',
