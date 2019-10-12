@@ -17,6 +17,8 @@ const staff = {
 	frec : {
 		cusPicker: `${base.staff}frecCusPicker`,
 		cusContact: `${base.staff}frecCusContact`,
+		recAdjustConfig: `${base.staff}frecAdjustConfig`,
+		recAdjustMain: `${base.staff}frecAdjustMain`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

@@ -20,6 +20,12 @@
 		},
 		created(){
 			
+		},
+		computed:{
+			
+		},
+		watch:{
+
 		}
 	}
 </script>

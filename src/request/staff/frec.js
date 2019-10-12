@@ -8,6 +8,19 @@ const frec = {
 	},
 	cusContact( data ){
 		return post(staff.frec.cusContact,{cus_id:data.cusName,task_id:data.taskId});
-	}
+	},
+	recAdjustConfig(){
+		return post(staff.frec.recAdjustConfig);
+	},
+	recAdjustMain( data ){
+		let postData = {
+			adjust_type : 1,
+			date_type: 0,
+			frec_begin_date: '2017-10-12',
+			frec_end_date: '2019-08-27',
+			pay_type: 8 
+		};
+		return post(staff.frec.recAdjustMain,postData);
+	},
 }
 export default frec;

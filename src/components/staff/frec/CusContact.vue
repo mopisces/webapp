@@ -83,7 +83,7 @@
 						defaultIndex:-1
 					},
 					switch:{
-						checked:true
+						checked:false
 					}
 				},
 				tableData: [],

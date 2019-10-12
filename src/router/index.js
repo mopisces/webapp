@@ -40,6 +40,11 @@ let routes = [
                 meta: { title: '订单试算' },
                 component: resolve => require(['../components/staff/frec/CusContact.vue'], resolve),
             },
+             {
+                path:'frec/recAdjust',
+                meta: { title: '收款调账' },
+                component: resolve => require(['../components/staff/frec/RecAdjust.vue'], resolve),
+            }
         ]
     },
     {
