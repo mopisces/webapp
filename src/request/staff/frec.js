@@ -6,8 +6,8 @@ const frec = {
 	cusPicker( keyword ){
 		return post(staff.frec.cusPicker,{cus_key_word:keyword});
 	},
-	cusContact( cusId ){
-		return post(staff.frec.cusContact,{cus_id:cusId});
+	cusContact( data ){
+		return post(staff.frec.cusContact,{cus_id:data.cusName,task_id:data.taskId});
 	}
 }
 export default frec;

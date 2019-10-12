@@ -5,15 +5,9 @@
 				<van-cell-group>
 					<van-field readonly clickable label="客户" :value="commonForm.cusName"  placeholder="选择客户" @click="cusPicker()" required></van-field>
 					<van-field readonly clickable label="材质" :value="commonForm.texName"  placeholder="选择材质" @click="texPicker()" required></van-field>
-					<van-cell title="加修边" is-link>
-						<van-switch v-model="checked" slot="right-icon"/>
-					</van-cell>
-					<van-cell title="加面积" is-link>
-						<van-switch v-model="checked" slot="right-icon"/>
-					</van-cell>
-					<van-cell title="毛片" is-link>
-						<van-switch v-model="checked" slot="right-icon"/>
-					</van-cell>
+					<van-switch-cell v-model="checked" title="加修边" />
+					<van-switch-cell v-model="checked" title="加面积" />
+					<van-switch-cell v-model="checked" title="毛片" />
 					<template v-if="config.tabs.active == 0 ">
 						<van-cell title="规格(mm)" is-link>
 							<div slot="right-icon">
@@ -55,7 +49,6 @@
 		</van-tabs>
 		<template>
 			<van-popup v-model="config.popup.show" position="bottom" :style="{ height: '50%' }" >
-				<el-button>默认按钮</el-button>
 				<van-picker show-toolbar :columns="info.cusPicker.columns" @cancel="config.popup.show = false"  @confirm="cusConfirm" :default-index="info.cusPicker.defaultIndex" v-if=" config.picker.type === 0">
 					<van-search slot="title" v-model="commonForm.cusName" @search="cusPickerSearch"> </van-search>
 				</van-picker>
@@ -70,7 +63,7 @@
 	</div>
 </template>
 <script>
-	import { Tab, Tabs, Switch, CellGroup, Cell, Field, Button, Popup, Picker, Search, Dialog    } from 'vant';
+	import { Tab, Tabs, CellGroup, Cell, Field, Button, Popup, Picker, Search, Dialog, SwitchCell     } from 'vant';
 	import commonFunc from '@/util/index';
 	export default {
 		components:{
@@ -78,12 +71,12 @@
 			[Tabs.name]: Tabs,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
-			[Switch.name]: Switch,
 			[Field.name]: Field,
 			[Button.name]: Button,
 			[Popup.name]: Popup,
 			[Picker.name]: Picker,
 			[Search.name]: Search,
+			[SwitchCell.name]: SwitchCell,
 			[Dialog.Component.name]: Dialog.Component,
 		},
 		data(){
