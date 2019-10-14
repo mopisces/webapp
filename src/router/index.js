@@ -31,6 +31,11 @@ let routes = [
         meta: { title: '内部人员使用' },
         children:[
             {
+                path:'index/menu',
+                meta: { title: '菜单页面' },
+                component: resolve => require(['../components/staff/index/Menu.vue'], resolve),
+            },
+            {
                 path:'calc/index',
                 meta: { title: '订单试算' },
                 component: resolve => require(['../components/staff/calc/Index.vue'], resolve),

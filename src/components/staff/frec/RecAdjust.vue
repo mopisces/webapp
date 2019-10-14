@@ -9,24 +9,26 @@
 				</div>
 			</div>
 		</div>
-		<v-table is-horizontal-resize style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
 		</v-table>
-		<van-popup v-model="config.popup.filterShow" position="right" :style="{ height: '100%', width:'80%' }">-
+		<van-popup v-model="config.popup.filterShow" position="right" :style="{ height: '100%', width:'80%' }">
 			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
 				<div class="van-nav-bar__title van-ellipsis">
 					筛选条件
 				</div>
 			</div>
 			<div style="margin-top:46px;">
-					<van-field readonly clickable label="客户名称" :value="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="fieldClick()"></van-field>
+					<van-field readonly clickable label="客户名称" v-model="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="fieldClick()"></van-field>
 					<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" />
 					<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</van-popup>
+		<cus-picker :show="config.popup.cusShow" :searchData="filterForm.cusName" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm" @cusPickerInput="cusPickerInput"></cus-picker>
 	</div>
 </template>
 <script>
 	import { Popup, SwitchCell, Field   } from 'vant';
+	import CusPicker from '@/components/subject/CusPicker.vue';
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
@@ -36,6 +38,8 @@
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
+
+			CusPicker
 		},
 		data(){
 			return {
@@ -44,7 +48,7 @@
 					table:{
 						columns:[
 							{field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-							{field: 'Checked', title: '审核', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,formatter: (rowData,rowIndex,pagingIndex,field)=>{
+							{field: 'Checked', title: '审核', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,formatter: (rowData,rowIndex,pagingIndex,field)=>{
 								return rowData.Checked === '1' ? '<span class="van-icon van-icon-success"></span>' : '<span class="van-icon van-icon-fail"></span>';
 							}},
 							{field: 'PayId', title: '单号', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
@@ -52,7 +56,7 @@
 							{field: 'IssueDate', title: '生效日期', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Amount', title: '金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Remark', title: '备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'NeedInv', title: '需开票', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true, formatter:(rowData,rowIndex,pagingIndex,field)=>{
+							{field: 'NeedInv', title: '需开票', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true, formatter:(rowData,rowIndex,pagingIndex,field)=>{
 								return rowData.NeedInv === '1' ? '<span class="van-icon van-icon-success"></span>' : '<span class="van-icon van-icon-fail"></span>';
 							}},
 							{field: 'ShortName', title: '科目', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
@@ -66,7 +70,8 @@
 						adjustClass:'van-tab',
 					},
 					popup:{
-						filterShow:false
+						filterShow:false,
+						cusShow:false
 					}
 				},
 				info:{
@@ -75,6 +80,10 @@
 					},
 					switch:{
 						checked:false
+					},
+					cusPicker:{
+						defaultIndex:-1,
+						columns:[],
 					}
 				},
 				filterForm:{
@@ -116,8 +125,18 @@
 				this.recAdjustMain();
 			},
 			fieldClick(){
-
+				this.config.popup.cusShow = true;
 			},
+			cusPickerCancel(){
+				this.config.popup.cusShow = false;
+			},
+			cusPickerConfirm(data){
+				this.config.popup.cusShow = false;
+				this.filterForm.cusName = data.key;
+			},
+			cusPickerInput(value){
+				this.filterForm.searchData = value;
+			}
 		},
 		mounted(){
 

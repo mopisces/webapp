@@ -20,9 +20,8 @@
 					</div>
 				</div>
 			</div>
-			
 		</van-popup>
-		<van-popup v-model="config.popup.show" position="bottom">
+		<van-popup v-model="config.popup.cusShow" position="bottom">
 			<van-picker show-toolbar  :columns="info.cusPicker.columns" :default-index="info.cusPicker.defaultIndex" @cancel="cusPickerCancel()" @confirm="cusPickerConfirm">
 				<van-search slot="title" v-model="filterForm.cusName" @search="cusPickerSearch"> </van-search>
 			</van-picker>
@@ -100,7 +99,7 @@
 			},
 			
 			fieldClick(){
-				this.config.popup.show = true;
+				this.config.popup.cusShow = true;
 				if( this.info.cusPicker.columns.length == 0 ){
 					this.cusPickerSearch()
 				}
