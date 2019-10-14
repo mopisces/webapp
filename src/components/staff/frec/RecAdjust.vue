@@ -9,23 +9,30 @@
 				</div>
 			</div>
 		</div>
-		<v-table is-horizontal-resize is-horizontal-resize style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
+		<v-table is-horizontal-resize style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
 		</v-table>
-		<van-popup v-model="config.popup.filterShow" position="right" :style="{ height: '100%', width:'80%' }">
+		<van-popup v-model="config.popup.filterShow" position="right" :style="{ height: '100%', width:'80%' }">-
 			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
 				<div class="van-nav-bar__title van-ellipsis">
 					筛选条件
 				</div>
 			</div>
+			<div style="margin-top:46px;">
+					<van-field readonly clickable label="客户名称" :value="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="fieldClick()"></van-field>
+					<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" />
+					<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)" />
+			</div>
 		</van-popup>
 	</div>
 </template>
 <script>
-	import { Popup   } from 'vant';
+	import { Popup, SwitchCell, Field   } from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
 			[Popup .name]: Popup,
+			[SwitchCell.name]: SwitchCell,
+			[Field.name]: Field,
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
@@ -65,9 +72,14 @@
 				info:{
 					table:{
 						data:[],
+					},
+					switch:{
+						checked:false
 					}
 				},
 				filterForm:{
+					cusName:'',
+					taskId:'',
 					adjustType : 1
 				}
 			}
@@ -102,7 +114,10 @@
 					this.filterForm.adjustType = 1;
 				}
 				this.recAdjustMain();
-			}
+			},
+			fieldClick(){
+
+			},
 		},
 		mounted(){
 

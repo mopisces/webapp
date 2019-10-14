@@ -29,7 +29,7 @@
 		</van-popup>
    		<template>
    			<div  class="container">
-   				<v-table is-horizontal-resize is-horizontal-resize style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500"></v-table>
+   				<v-table  is-horizontal-resize style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500"></v-table>
    			</div>
    		</template>
 
