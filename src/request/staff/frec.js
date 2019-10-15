@@ -13,6 +13,7 @@ const frec = {
 		return post(staff.frec.recAdjustConfig);
 	},
 	recAdjustMain( data ){
+		//console.log(data);
 		let postData = {
 			adjust_type : data.adjustType,
 			date_type: 0,

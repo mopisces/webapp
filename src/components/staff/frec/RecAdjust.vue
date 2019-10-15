@@ -5,41 +5,40 @@
 				<div class="van-tabs__nav van-tabs__nav--card">
 					<div :class="config.tabs.payClass"  @click="tabsClick(0)">收款</div>
 					<div :class="config.tabs.adjustClass" @click="tabsClick(1)">调账</div>
-					<div class="van-tab" @click="filterClick()">筛选</div>
+					<div class="van-tab" @click="filterShow()">筛选</div>
 				</div>
 			</div>
 		</div>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
 		</v-table>
-		<van-popup v-model="config.popup.filterShow" position="right" :style="{ height: '100%', width:'80%' }">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
-				<div class="van-nav-bar__title van-ellipsis">
-					筛选条件
-				</div>
-			</div>
-			<div style="margin-top:46px;">
-					<van-field readonly clickable label="客户名称" v-model="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="fieldClick()"></van-field>
-					<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" />
-					<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)" />
-			</div>
-		</van-popup>
+		<popup-filter :filterShow="config.popup.filterShow" :filterRem="info.switch.checked" @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick" @filterRemClick="filterRemClick">
+			<van-field readonly clickable label="客户名称" v-model="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusShow = true" slot="filter-field-1"></van-field>
+			<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" slot="filter-field-2"/>
+			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
+			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
+		</popup-filter>
 		<cus-picker :show="config.popup.cusShow" :searchData="filterForm.cusName" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm" @cusPickerInput="cusPickerInput"></cus-picker>
+		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="filterForm.beginDate" :minDate="info.dateTimePicker.minDate" :maxDate="info.dateTimePicker.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm"></time-picker>
+		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="filterForm.endDate" :minDate="info.dateTimePicker.minDate" :maxDate="info.dateTimePicker.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm"></time-picker>
 	</div>
 </template>
 <script>
-	import { Popup, SwitchCell, Field   } from 'vant';
+	import { Field } from 'vant';
+	import { dateTimeFormat } from '@/util/index';
 	import CusPicker from '@/components/subject/CusPicker.vue';
+	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import TimePicker from '@/components/subject/TimePicker.vue';
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
-			[Popup .name]: Popup,
-			[SwitchCell.name]: SwitchCell,
 			[Field.name]: Field,
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
 
-			CusPicker
+			CusPicker,
+			PopupFilter,
+			TimePicker
 		},
 		data(){
 			return {
@@ -71,7 +70,11 @@
 					},
 					popup:{
 						filterShow:false,
-						cusShow:false
+						cusShow:false,
+						timeShow:{
+							start:false,
+							end :false
+						}
 					}
 				},
 				info:{
@@ -84,28 +87,45 @@
 					cusPicker:{
 						defaultIndex:-1,
 						columns:[],
+					},
+					dateTimePicker:{
+						maxDate:new Date(),
+						minDate:new Date()
+					},
+					field:{
+						beginDate:new Date(),
+						endDate:new Date()
 					}
 				},
 				filterForm:{
 					cusName:'',
 					taskId:'',
-					adjustType : 1
+					adjustType : 1,
+					dateType:0,
+					beginDate:'',
+					endDate:'',
+					payType:8
 				}
 			}
 		},
 		methods:{
-			filterClick(){
+			filterShow(){
 				this.recAdjustConfig();
 				this.config.popup.filterShow = true;
 			},
 			recAdjustConfig(){
+				let self = this;
 				this.$request.staff.frec.recAdjustConfig().then(res=>{
-					console.log(res)
+					self.info.field.beginDate = res.result.date.RecAdjustBeginDate;
+					self.info.field.endDate = res.result.date.RecAdjustEndDate;
+					self.filterForm.beginDate = res.result.date.RecAdjustBeginDate;
+					self.filterForm.endDate = res.result.date.RecAdjustEndDate;
+					self.info.dateTimePicker.maxDate = new Date(res.result.date.RecAdjustMaxDate);
+					self.info.dateTimePicker.minDate = new Date(res.result.date.RecAdjustMinDate);
 				});
 			},
 			recAdjustMain(){
 				let self = this;
-				
 				this.$request.staff.frec.recAdjustMain( this.filterForm ).then(res=>{
 					self.info.table.data = res.result;
 				});
@@ -128,6 +148,7 @@
 				this.config.popup.cusShow = true;
 			},
 			cusPickerCancel(){
+				this.filterForm.cusName = '';
 				this.config.popup.cusShow = false;
 			},
 			cusPickerConfirm(data){
@@ -136,6 +157,39 @@
 			},
 			cusPickerInput(value){
 				this.filterForm.searchData = value;
+			},
+			filterRemClick( checked ){
+				if( checked.checked === false ){
+					this.info.switch.checked = false;
+				}else{
+					this.info.switch.checked = true;
+				}
+			},
+			filterClick(){
+				this.config.popup.filterShow = false;
+				this.recAdjustMain();
+			},
+			filterOverlayClick(){
+				this.config.popup.filterShow = false;
+			},
+			resetClick(){
+				this.filterForm = {
+					cusName:'',
+					taskId:'',
+					adjustType : 1
+				};
+			},
+			timePickerOverlay(){
+				console.log('timePickerOverlay')
+			},
+			timePickerCancel(){
+				this.config.popup.timeShow.start = false;
+				this.config.popup.timeShow.end = false;
+			},
+			timePickerConfirm( value ){
+				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
+				this.info.field.beginDate = value.value;
+				this.timePickerCancel();
 			}
 		},
 		mounted(){

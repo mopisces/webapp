@@ -64,7 +64,7 @@
 </template>
 <script>
 	import { Tab, Tabs, CellGroup, Cell, Field, Button, Popup, Picker, Search, Dialog, SwitchCell     } from 'vant';
-	import commonFunc from '@/util/index';
+	import { trim } from '@/util/index';
 	export default {
 		components:{
 			[Tab.name]: Tab,
@@ -190,11 +190,11 @@
 				this.config.popup.show = false;
 			},
 			checkCommon(){
-				if( commonFunc.trim(this.commonForm.cusName).length <= 0 ){
+				if( trim(this.commonForm.cusName).length <= 0 ){
 					Dialog.alert({message: '请选择客户'});
 					return false;
 				}
-				if( commonFunc.trim(this.commonForm.texName).length <= 0 ){
+				if( trim(this.commonForm.texName).length <= 0 ){
 					Dialog.alert({message: '请选择材质'});
 					return false;
 				}

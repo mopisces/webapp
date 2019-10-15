@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<van-nav-bar  :title="config.headerTitle" left-text="返回" right-text="按钮" left-arrow @click-left="onClickLeft" @click-right="reload" :fixed="true">
-			<div slot="right" class="van-nav-bar__text">
-				<span>刷新</span>
-				<van-icon class-prefix="iconfont" name="refresh" size="18"/>
+			<div slot="right">
+				<span class="van-nav-bar__text">刷新</span>
+				<van-icon class-prefix="iconfont" name="refresh" size="18" class="van-icon van-icon-arrow-right"/>
 			</div>
 			
 		</van-nav-bar>

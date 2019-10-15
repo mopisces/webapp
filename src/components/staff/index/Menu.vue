@@ -23,12 +23,10 @@
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon"/>
 			</van-grid-item>
 		</van-grid>
-		<cus-picker :show="show" :searchData="searchData" @cusPickerCancel="cusPickerCancel" @fieldClick="fieldClick" @cusPickerConfirm="cusPickerConfirm" @cusPickerOverlay="cusPickerOverlay" @cusPickerInput="cusPickerInput"></cus-picker>
 	</div>
 </template>
 <script>
 	import { Grid, GridItem, Icon, Cell, Button  } from 'vant';
-	import CusPicker from '@/components/subject/CusPicker.vue';
 	export default {
 		components:{
 			[Grid.name]: Grid,
@@ -36,13 +34,10 @@
 			[Icon.name]: Icon,
 			[Cell.name]: Cell,
 			[Button.name]: Button,
-			CusPicker
+
 		},
 		data(){	
 			return {
-				show:true,
-				searchData:'',
-				active:2,
 				config:{
 					gridItem:[
 						{text:'用户管理',iconName:'guanwangicon31334',url:''},
@@ -72,25 +67,7 @@
 			}
 		},
 		methods:{
-			cusPickerCancel(){
-				console.log('cusPickerCancel');
-				this.show = false;
-			},
-			fieldClick(){
-				console.log('fieldClick');
-				this.show = true;
-			},
-			cusPickerConfirm(data){
-				this.show = false;
-				this.searchData = data.key;
-			},
-			cusPickerOverlay(){
-				console.log('cusPickerOverlay');
-				this.show = false;
-			},
-			cusPickerInput(value){
-				this.searchData = value;
-			}
+			
 		},
 		mounted(){
 

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-popup v-model="show" position="bottom" @click-overlay="cusPickerOverlay()" :close-on-click-overlay="false">
+		<van-popup :value="show" position="bottom" @click-overlay="cusPickerOverlay()" :close-on-click-overlay="false">
 			<van-picker show-toolbar :columns="columns" :default-index="defaultIndex" @cancel="cusPickerCancel()" @confirm="cusPickerConfirm">
 				<van-search slot="title" v-model="filterForm.cusName" @search="cusPickerSearch" @input="cusPickerInput" :clearable="false"></van-search>
 			</van-picker>
@@ -18,10 +18,14 @@
 		},
 		props:{
 			show:{
-				defalut:false
+				type:Boolean,
+				default:false,
+				required:true
 			},
 			searchData:{
-				defalut:'',
+				type:String,
+				default:'',
+				required:true
 			}
 		},
 		data(){
