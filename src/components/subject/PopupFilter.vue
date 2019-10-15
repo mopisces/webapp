@@ -13,7 +13,7 @@
 					<slot name="filter-field-5"></slot>
 					<slot name="filter-field-6"></slot>
 					<van-switch-cell :value="filterRem" title="记住筛选条件(本次登录有效)" @change="filterRemClick"/>
-					<div class="van-hairline--top-bottom van-tabbar van-tabbar--fixed">
+					<div class="van-hairline--top-bottom van-tabbar">
 						<div class="van-tabbar-item">
 							<van-button type="danger" style="width:60%" @click="resetClick()">重置</van-button>
 						</div>

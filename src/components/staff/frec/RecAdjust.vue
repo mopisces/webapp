@@ -16,6 +16,26 @@
 			<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" slot="filter-field-2"/>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
+			<van-radio-group v-model="filterForm.adjustType" slot="filter-field-5">
+				<van-cell-group>
+					<van-cell title="日期类型"></van-cell>
+					<van-cell title="操作日期" clickable @click="filterForm.adjustType = '0'">
+						<van-radio slot="right-icon" name="0" />
+					</van-cell>
+					<van-cell title="生效日期" clickable @click="filterForm.adjustType = '1'">
+						<van-radio slot="right-icon" name="1" />
+					</van-cell>
+				</van-cell-group>
+			</van-radio-group>
+			<van-radio-group v-model="filterForm.payType" slot="filter-field-6">
+				<van-cell title="科目"></van-cell>
+				<van-cell-group>
+					<van-cell title="日期类型"></van-cell>
+					<van-cell :title="item.ShortName" clickable @click="filterForm.payType = item.ShortName" v-for="(item,index) in info.payType">
+						<van-radio slot="right-icon" :name="item.ShortName" />
+					</van-cell>
+				</van-cell-group>
+			</van-radio-group>
 		</popup-filter>
 		<cus-picker :show="config.popup.cusShow" :searchData="filterForm.cusName" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm" @cusPickerInput="cusPickerInput"></cus-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="info.dateTimePicker.beginDate" :minDate="info.dateTimePicker.minDate" :maxDate="info.dateTimePicker.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
@@ -23,7 +43,7 @@
 	</div>
 </template>
 <script>
-	import { Field } from 'vant';
+	import { Field, RadioGroup, Radio, Cell, CellGroup, Row, Col } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
@@ -32,6 +52,12 @@
 	export default {
 		components:{
 			[Field.name]: Field,
+			[RadioGroup.name]: RadioGroup,
+			[Radio.name]: Radio,
+			[Cell.name]: Cell,
+			[CellGroup.name]: CellGroup,
+			[Row.name]: Row,
+			[Col.name]: Col,
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
@@ -42,6 +68,7 @@
 		},
 		data(){
 			return {
+				radio:'1',
 				config:{
 					table:{
 						columns:[
@@ -92,7 +119,8 @@
 						minDate:'',
 						beginDate:new Date(),
 						endDate:new Date()
-					}
+					},
+					payType:[]
 				},
 				filterForm:{
 					cusName:'',
@@ -120,6 +148,7 @@
 
 					self.info.dateTimePicker.maxDate = new Date(res.result.date.RecAdjustMaxDate);
 					self.info.dateTimePicker.minDate = new Date(res.result.date.RecAdjustMinDate);
+					self.info.payType = res.result.pay_type;
 				}).then(()=>{
 					sessionStorage.setItem('frec/recAdjust-filterInit',JSON.stringify(this.filterForm));
 				}).then(()=>{
