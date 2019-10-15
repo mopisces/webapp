@@ -65,10 +65,10 @@
 			}
 		},
 		mounted(){
-
+			this.cusPickerSearch();
 		},
 		created(){
-			this.cusPickerSearch();
+			
 		},
 		computed:{
 			

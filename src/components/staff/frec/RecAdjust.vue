@@ -18,8 +18,8 @@
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
 		</popup-filter>
 		<cus-picker :show="config.popup.cusShow" :searchData="filterForm.cusName" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm" @cusPickerInput="cusPickerInput"></cus-picker>
-		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="filterForm.beginDate" :minDate="info.dateTimePicker.minDate" :maxDate="info.dateTimePicker.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm"></time-picker>
-		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="filterForm.endDate" :minDate="info.dateTimePicker.minDate" :maxDate="info.dateTimePicker.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm"></time-picker>
+		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="info.dateTimePicker.beginDate" :minDate="info.dateTimePicker.minDate" :maxDate="info.dateTimePicker.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
+		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="info.dateTimePicker.endDate" :minDate="info.dateTimePicker.minDate" :maxDate="info.dateTimePicker.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
@@ -42,7 +42,6 @@
 		},
 		data(){
 			return {
-				show:false,
 				config:{
 					table:{
 						columns:[
@@ -89,10 +88,8 @@
 						columns:[],
 					},
 					dateTimePicker:{
-						maxDate:new Date(),
-						minDate:new Date()
-					},
-					field:{
+						maxDate:'',
+						minDate:'',
 						beginDate:new Date(),
 						endDate:new Date()
 					}
@@ -110,23 +107,28 @@
 		},
 		methods:{
 			filterShow(){
-				this.recAdjustConfig();
 				this.config.popup.filterShow = true;
 			},
 			recAdjustConfig(){
 				let self = this;
 				this.$request.staff.frec.recAdjustConfig().then(res=>{
-					self.info.field.beginDate = res.result.date.RecAdjustBeginDate;
-					self.info.field.endDate = res.result.date.RecAdjustEndDate;
 					self.filterForm.beginDate = res.result.date.RecAdjustBeginDate;
 					self.filterForm.endDate = res.result.date.RecAdjustEndDate;
+
+					self.info.dateTimePicker.beginDate = new Date(res.result.date.RecAdjustBeginDate);
+					self.info.dateTimePicker.endDate = new Date(res.result.date.RecAdjustEndDate);
+
 					self.info.dateTimePicker.maxDate = new Date(res.result.date.RecAdjustMaxDate);
 					self.info.dateTimePicker.minDate = new Date(res.result.date.RecAdjustMinDate);
+				}).then(()=>{
+					sessionStorage.setItem('frec/recAdjust-filterInit',JSON.stringify(this.filterForm));
+				}).then(()=>{
+					this.recAdjustMain( this.filterForm );
 				});
 			},
-			recAdjustMain(){
+			recAdjustMain( filterForm ){
 				let self = this;
-				this.$request.staff.frec.recAdjustMain( this.filterForm ).then(res=>{
+				this.$request.staff.frec.recAdjustMain( filterForm ).then(res=>{
 					self.info.table.data = res.result;
 				});
 			},
@@ -142,13 +144,12 @@
 					this.config.tabs.payClass = 'van-tab van-tab--active';
 					this.filterForm.adjustType = 1;
 				}
-				this.recAdjustMain();
+				this.recAdjustMain(this.filterForm);
 			},
 			fieldClick(){
 				this.config.popup.cusShow = true;
 			},
 			cusPickerCancel(){
-				this.filterForm.cusName = '';
 				this.config.popup.cusShow = false;
 			},
 			cusPickerConfirm(data){
@@ -161,43 +162,65 @@
 			filterRemClick( checked ){
 				if( checked.checked === false ){
 					this.info.switch.checked = false;
+					sessionStorage.setItem('frec/recAdjust','');
 				}else{
 					this.info.switch.checked = true;
+					sessionStorage.setItem('frec/recAdjust',JSON.stringify(this.filterForm));
 				}
 			},
 			filterClick(){
 				this.config.popup.filterShow = false;
-				this.recAdjustMain();
+				this.recAdjustMain( this.filterForm );
 			},
 			filterOverlayClick(){
 				this.config.popup.filterShow = false;
 			},
 			resetClick(){
-				this.filterForm = {
-					cusName:'',
-					taskId:'',
-					adjustType : 1
-				};
+				this.filterForm = Object.assign(this.filterForm,JSON.parse(sessionStorage.getItem('frec/recAdjust-filterInit')));
+				sessionStorage.setItem('frec/recAdjust','');
 			},
 			timePickerOverlay(){
-				console.log('timePickerOverlay')
+				this.timePickerCancel();
 			},
 			timePickerCancel(){
 				this.config.popup.timeShow.start = false;
 				this.config.popup.timeShow.end = false;
 			},
-			timePickerConfirm( value ){
+			timeBeginConfirm( value ){
 				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.info.field.beginDate = value.value;
+				this.info.dateTimePicker.beginDate = value.value;
+				this.timePickerCancel();
+			},
+			timeEndConfirm( value ){
+				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
+				this.info.dateTimePicker.endDate = value.value;
 				this.timePickerCancel();
 			}
 		},
 		mounted(){
-
+			try{
+				this.filterForm = Object.assign(this.filterForm,JSON.parse(sessionStorage.getItem('frec/recAdjust')));
+				if( this.filterForm.beginDate != '' || this.filterForm.endDate != '' ){
+					this.recAdjustMain( this.filterForm );
+				}else{
+					this.recAdjustConfig();
+				}
+			}catch(err){
+				this.recAdjustConfig();
+			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','收款调账');
-			this.recAdjustMain();
+		},
+		watch:{
+			filterForm:{
+				handler( val, oldVal ){
+					this.info.switch.checked = false;
+					sessionStorage.setItem('frec/recAdjust','');
+				},
+				deep:true
+			}
+			
 		}
 	}
 </script>

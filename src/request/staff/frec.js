@@ -12,14 +12,16 @@ const frec = {
 	recAdjustConfig(){
 		return post(staff.frec.recAdjustConfig);
 	},
-	recAdjustMain( data ){
-		//console.log(data);
+	recAdjustMain( result ){
+		console.log(result.adjustType);
 		let postData = {
-			adjust_type : data.adjustType,
-			date_type: 0,
-			frec_begin_date: '2017-10-12',
-			frec_end_date: '2019-08-27',
-			pay_type: 8 
+			cus_id : result.cusName,
+			task_id: result.taskId,
+			adjust_type : result.adjustType,
+			date_type: result.dateType,
+			frec_begin_date: result.beginDate,
+			frec_end_date: result.endDate,
+			pay_type: result.payType
 		};
 		return post(staff.frec.recAdjustMain,postData);
 	},
