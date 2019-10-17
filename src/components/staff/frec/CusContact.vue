@@ -83,6 +83,7 @@
 			},
 			cusPickerCancel(){
 				this.config.popup.cusShow = false;
+				this.filterForm.cusName = '';
 			},
 			cusContact( data ){
 				let self = this;

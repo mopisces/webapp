@@ -180,6 +180,7 @@
 			},
 			cusPickerCancel(){
 				this.config.popup.cusShow = false;
+				this.filterForm.cusName = '';
 			},
 			cusPickerConfirm(data){
 				this.config.popup.cusShow = false;

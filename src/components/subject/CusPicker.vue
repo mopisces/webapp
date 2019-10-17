@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-popup :value="show" position="bottom" @click-overlay="cusPickerOverlay()" :close-on-click-overlay="false">
-			<van-picker show-toolbar :columns="columns" :default-index="defaultIndex" @cancel="cusPickerCancel()" @confirm="cusPickerConfirm">
+			<van-picker show-toolbar :columns="columns" :default-index="defaultIndex" @cancel="cusPickerCancel()" @confirm="cusPickerConfirm" cancel-button-text="清空">
 				<van-search slot="title" v-model="filterForm.cusName" @search="cusPickerSearch" @input="cusPickerInput" :clearable="false"></van-search>
 			</van-picker>
 		</van-popup>
@@ -73,12 +73,12 @@
 		},
 		created(){
 			let itemName = this.$parent.getPageName();
-			if( sessionStorage.getItem(itemName+'---pageConfig') !== null ){
+			if( sessionStorage.getItem(itemName + '---pageConfig') !== null ){
 				try{
-					let pageConfig = JSON.parse(sessionStorage.getItem('frec/cusContact---pageConfig'));
+					let pageConfig = JSON.parse(sessionStorage.getItem(itemName + '---pageConfig'));
 					this.defaultIndex = pageConfig.defaultIndex;
 				}catch(err){
-					sessionStorage.removeItem('frec/cusContact---pageConfig');
+					sessionStorage.removeItem(itemName + '---pageConfig');
 				}
 			}
 		},

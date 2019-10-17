@@ -64,6 +64,11 @@ let routes = [
                 path:'cred/wGetCusAmt',
                 meta: { title: '客户信用余额' },
                 component: resolve => require(['../components/staff/cred/WGetCusAmt.vue'], resolve),
+            },
+            {
+                path:'cred/cusAmtDetail',
+                meta: { title: '客户信用余额/详情' },
+                component: resolve => require(['../components/staff/cred/CusAmtDetail.vue'], resolve),
             }
         ]
     },

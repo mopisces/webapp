@@ -14,7 +14,7 @@
 		<slot name="left-popup-6"></slot>
 		<slot name="left-popup-7"></slot>
 		<div style="margin-bottom:50px"></div>
-		<van-button type="primary" size="large" @click="closeLeft()" class="van-tabbar--fixed">大号按钮</van-button>
+		<van-button type="primary" size="large" @click="closeLeft()" class="van-tabbar--fixed">关闭</van-button>
 	</van-popup>
 </template>
 <script>

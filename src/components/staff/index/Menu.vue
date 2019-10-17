@@ -73,7 +73,7 @@
 
 		},
 		created(){
-			
+			this.$store.commit('staff/setHeaderTitle','菜单页面');
 		},
 		computed:{
 			
