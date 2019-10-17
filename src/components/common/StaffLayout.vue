@@ -1,22 +1,14 @@
 <template>
 	<div>
-		<van-nav-bar  :title="config.headerTitle" left-text="返回" right-text="按钮" left-arrow @click-left="onClickLeft" @click-right="reload" :fixed="true">
+		<van-nav-bar :title="config.headerTitle" left-text="返回" right-text="按钮" left-arrow @click-left="onClickLeft" @click-right="reload" :fixed="true" style="z-index:-1">
 			<div slot="right">
 				<span class="van-nav-bar__text">刷新</span>
 				<van-icon class-prefix="iconfont" name="refresh" size="18" class="van-icon van-icon-arrow-right"/>
 			</div>
-			
 		</van-nav-bar>
-		<div style="margin-top:46px;" >
+		<div style="margin-top:46px;" class="container">
 			<router-view v-if="isRouterAlive" />
-			<div class="van-cell" style="margin-bottom:4px">
-				<div class="van-cell__title">
-					<span></span>
-				</div>
-				<div class="van-cell__value van-cell__value--alone">
-					<span></span>
-				</div>
-			</div>
+			<div style="margin-bottom:50px;"></div>
 		</div>
 		<van-tabbar v-model="active" @change="onChange">
 			<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>

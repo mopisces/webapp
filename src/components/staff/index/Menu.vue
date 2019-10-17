@@ -43,7 +43,7 @@
 						{text:'用户管理',iconName:'guanwangicon31334',url:''},
 						{text:'ERP订单',iconName:'erp',url:''},
 						{text:'客户每日订单',iconName:'meiri',url:''},
-						{text:'客户信用余额',iconName:'xinyongyue',url:''},
+						{text:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt'},
 						{text:'订单统计',iconName:'dingdan2',url:''},
 						{text:'退货统计',iconName:'tuihuo1',url:''},
 						{text:'传单统计',iconName:'chuandan',url:''},

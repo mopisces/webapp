@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const stock = {
 	deliveryArea(){
-		return post(staff.frec.deliveryArea);
+		return post(staff.stock.deliveryArea);
 	}
 }
 export default stock;

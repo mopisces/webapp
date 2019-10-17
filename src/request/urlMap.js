@@ -19,7 +19,16 @@ const staff = {
 		cusContact: `${base.staff}frecCusContact`,
 		recAdjustConfig: `${base.staff}frecAdjustConfig`,
 		recAdjustMain: `${base.staff}frecAdjustMain`,
+	},
+	stock:{
 		deliveryArea : `${base.staff}deliveryArea`,
+	},
+	paper:{
+		staffPaperSafe:`${base.staff}staffPaperSafe`,
+	},
+	cred:{
+		wGetCusAmt: `${base.staff}wGetCusAmt`,
+		cusAmtDetail:`${base.staff}cusAmtDetail`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

@@ -59,6 +59,11 @@ let routes = [
                 path:'paper/paperSafe',
                 meta: { title: '安全库存' },
                 component: resolve => require(['../components/staff/paper/PaperSafe.vue'], resolve),
+            },
+            {
+                path:'cred/wGetCusAmt',
+                meta: { title: '客户信用余额' },
+                component: resolve => require(['../components/staff/cred/WGetCusAmt.vue'], resolve),
             }
         ]
     },

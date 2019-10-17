@@ -148,7 +148,6 @@
 		watch:{
 			filterForm:{
 				handler( val, oldVal ){
-					//this.removeItem();
 					this.pageConfig.switchChecked = false;
 				},
 				deep:true,

@@ -5,22 +5,21 @@
 					筛选条件
 				</div>
 			</div>
-			<div style="margin-top:46px;">
-					<slot name="filter-field-1"></slot>
-					<slot name="filter-field-2"></slot>
-					<slot name="filter-field-3"></slot>
-					<slot name="filter-field-4"></slot>
-					<slot name="filter-field-5"></slot>
-					<slot name="filter-field-6"></slot>
-					<slot name="filter-field-7"></slot>
-					<div class="van-hairline--top-bottom van-tabbar">
-						<div class="van-tabbar-item">
-							<van-button type="danger" style="width:60%" @click="resetClick()">重置</van-button>
-						</div>
-						<div class="van-tabbar-item">
-							<van-button type="primary" style="width:60%" @click="filterClick()">筛选</van-button>
-						</div>
-					</div>
+			<div style="margin-top:46px;"></div>
+			<slot name="filter-field-1"></slot>
+			<slot name="filter-field-2"></slot>
+			<slot name="filter-field-3"></slot>
+			<slot name="filter-field-4"></slot>
+			<slot name="filter-field-5"></slot>
+			<slot name="filter-field-6"></slot>
+			<slot name="filter-field-7"></slot>
+			<div class="van-hairline--top-bottom van-tabbar">
+				<div class="van-tabbar-item">
+					<van-button type="danger" style="width:60%" @click="resetClick()">重置</van-button>
+				</div>
+				<div class="van-tabbar-item">
+					<van-button type="primary" style="width:60%" @click="filterClick()">筛选</van-button>
+				</div>
 			</div>
 		</van-popup>
 </template>
