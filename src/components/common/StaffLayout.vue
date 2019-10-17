@@ -7,9 +7,16 @@
 			</div>
 			
 		</van-nav-bar>
-		<!--  -->
-		<div style="margin-top:46px;margin-bottom:50px;" >
+		<div style="margin-top:46px;" >
 			<router-view v-if="isRouterAlive" />
+			<div class="van-cell" style="margin-bottom:4px">
+				<div class="van-cell__title">
+					<span></span>
+				</div>
+				<div class="van-cell__value van-cell__value--alone">
+					<span></span>
+				</div>
+			</div>
 		</div>
 		<van-tabbar v-model="active" @change="onChange">
 			<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>
@@ -22,14 +29,14 @@
 </template>
 <script>
 	import BScroll from 'better-scroll';
-	import { NavBar, Tabbar, TabbarItem, Icon } from 'vant';
+	import { NavBar, Tabbar, TabbarItem, Icon, Cell } from 'vant';
 	export default{
 		components:{
 			[NavBar.name]: NavBar,
 			[Tabbar.name]: Tabbar,
 			[TabbarItem.name]: TabbarItem,
-			
 			[Icon.name]: Icon,
+			[Cell.name]: Cell,
 		},
 		data(){
 			return {

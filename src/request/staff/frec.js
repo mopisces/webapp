@@ -13,7 +13,6 @@ const frec = {
 		return post(staff.frec.recAdjustConfig);
 	},
 	recAdjustMain( result ){
-		console.log(result.adjustType);
 		let postData = {
 			cus_id : result.cusName,
 			task_id: result.taskId,

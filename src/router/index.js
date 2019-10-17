@@ -45,10 +45,20 @@ let routes = [
                 meta: { title: '订单试算' },
                 component: resolve => require(['../components/staff/frec/CusContact.vue'], resolve),
             },
-             {
+            {
                 path:'frec/recAdjust',
                 meta: { title: '收款调账' },
                 component: resolve => require(['../components/staff/frec/RecAdjust.vue'], resolve),
+            },
+            {
+                path:'stock/deliveryArea',
+                meta: { title: '库区面积' },
+                component: resolve => require(['../components/staff/stock/DeliveryArea.vue'], resolve),
+            },
+            {
+                path:'paper/paperSafe',
+                meta: { title: '安全库存' },
+                component: resolve => require(['../components/staff/paper/PaperSafe.vue'], resolve),
             }
         ]
     },

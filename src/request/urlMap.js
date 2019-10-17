@@ -19,6 +19,7 @@ const staff = {
 		cusContact: `${base.staff}frecCusContact`,
 		recAdjustConfig: `${base.staff}frecAdjustConfig`,
 		recAdjustMain: `${base.staff}frecAdjustMain`,
+		deliveryArea : `${base.staff}deliveryArea`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

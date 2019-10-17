@@ -26,14 +26,18 @@
 				type:String,
 				default:'',
 				required:true
+			},
+			index:{
+				required:true,
+				default:-1,
 			}
 		},
 		data(){
 			return {
 				columns:[],
-				defaultIndex:-1,
+				defaultIndex:this.index,
 				filterForm:{
-					cusName:this.searchData
+					cusName:this.searchData,
 				},
 			}
 		},
@@ -68,7 +72,15 @@
 			this.cusPickerSearch();
 		},
 		created(){
-			
+			let itemName = this.$parent.getPageName();
+			if( sessionStorage.getItem(itemName+'---pageConfig') !== null ){
+				try{
+					let pageConfig = JSON.parse(sessionStorage.getItem('frec/cusContact---pageConfig'));
+					this.defaultIndex = pageConfig.defaultIndex;
+				}catch(err){
+					sessionStorage.removeItem('frec/cusContact---pageConfig');
+				}
+			}
 		},
 		computed:{
 			
@@ -78,3 +90,8 @@
 		}
 	}
 </script>
+<style>
+	.vant-search:{
+		width:60%;
+	}
+</style>
