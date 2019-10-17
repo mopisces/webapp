@@ -29,6 +29,10 @@ const staff = {
 	cred:{
 		wGetCusAmt: `${base.staff}wGetCusAmt`,
 		cusAmtDetail:`${base.staff}cusAmtDetail`,
+	},
+	stow:{
+		stowListConfig:`${base.staff}stowListConfig`,
+		stowList:`${base.staff}stowList`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

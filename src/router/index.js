@@ -69,6 +69,11 @@ let routes = [
                 path:'cred/cusAmtDetail',
                 meta: { title: '客户信用余额/详情' },
                 component: resolve => require(['../components/staff/cred/CusAmtDetail.vue'], resolve),
+            },
+            {
+                path:'stow/lists',
+                meta: { title: '扫描装货' },
+                component: resolve => require(['../components/staff/stow/Lists.vue'], resolve),
             }
         ]
     },

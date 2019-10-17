@@ -56,7 +56,7 @@
 						{text:'直接入库',iconName:'ruku2',url:''},
 						{text:'原纸库存',iconName:'weishengzhi',url:''},
 						{text:'安全库存',iconName:'anquanmenhu',url:'/staff/paper/paperSafe'},
-						{text:'扫描装货',iconName:'zhuangche1',url:''},
+						{text:'扫描装货',iconName:'zhuangche1',url:'/staff/stow/lists'},
 						{text:'库存修改',iconName:'iconfontzhizuobiaozhunbduan24',url:''},
 						{text:'库区面积',iconName:'fangwumianji',url:'/staff/stock/deliveryArea'},
 						{text:'订单试算',iconName:'jisuanqi',url:'/staff/calc/index'},
