@@ -33,6 +33,10 @@ const staff = {
 	stow:{
 		stowListConfig:`${base.staff}stowListConfig`,
 		stowList:`${base.staff}stowList`,
+	},
+	statis:{
+		getProInfo:`${base.staff}getProInfo`,
+		getProInfoConfig:`${base.staff}getProInfoConfig`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

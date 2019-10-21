@@ -61,6 +61,11 @@ let routes = [
                 component: resolve => require(['../components/staff/paper/PaperSafe.vue'], resolve),
             },
             {
+                path:'paper/doStockOut',
+                meta: { title: '原纸出库' },
+                component: resolve => require(['../components/staff/paper/DoStockOut.vue'], resolve),
+            },
+            {
                 path:'cred/wGetCusAmt',
                 meta: { title: '客户信用余额' },
                 component: resolve => require(['../components/staff/cred/WGetCusAmt.vue'], resolve),
@@ -74,6 +79,16 @@ let routes = [
                 path:'stow/lists',
                 meta: { title: '扫描装货' },
                 component: resolve => require(['../components/staff/stow/Lists.vue'], resolve),
+            },
+            {
+                path:'statis/getProInfo',
+                meta: { title: '生产分析总计' },
+                component: resolve => require(['../components/staff/statis/GetProInfo.vue'], resolve),
+            },
+            {
+                path:'statis/getOrdStock',
+                meta: { title: '库存统计' },
+                component: resolve => require(['../components/staff/statis/GetOrdStock.vue'], resolve),
             }
         ]
     },

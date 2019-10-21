@@ -2,13 +2,13 @@
 	<div>
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" >
-		</v-table>
+		</v-table>	
+		<!-- <prepare-button ></prepare-button> -->
 	</div>
 </template>
 <script>
 	import { Button } from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
-	import PrepareButton from '@/components/subject/PrepareButton.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -16,7 +16,6 @@
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
 
-			PrepareButton
 		},
 		data(){
 			return {
@@ -46,8 +45,8 @@
 							{field: 'CusNames', title: '拼车客户', width: 120, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Remark', title: '备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'custome-adv', title: '送货单',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'PrepareButton',isResize:true},
-							{field: 'custome-adv', title: '明细',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'Button',isResize:true},
-							{field: 'custome-adv', title: '装货',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'Button',isResize:true}
+							{field: 'custome-adv', title: '明细',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'prepare-button',isResize:true},
+							{field: 'custome-adv', title: '装货',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'prepare-button',isResize:true}
 						]
 					}
 				},
