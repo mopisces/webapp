@@ -67,16 +67,25 @@
 							</div>
 						</div>
 						<div slot="footer" style="text-align: right;">
-							<van-button size="small" type="info">详情</van-button>
+							<van-button size="small" type="info" @click="detailOnClick(item.strOrderId)">详情</van-button>
 						</div>
 					</van-panel>
 				</van-list>
 			</van-pull-refresh>
 		</van-popup>
+		<!-- <van-popup v-model="config.popup.detailShow" position="right" :style="{ width: '100%',height:'100%' }">
+			<van-nav-bar left-text="统计下的ERP订单" @click-right="config.popup.detailShow = false" >
+				<van-icon name="cross" slot="right" size="16"/>
+			</van-nav-bar>
+			<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId"></order-detail>
+		</van-popup> -->
+		<popup-status :show="config.popup.detailShow" @statusCloseClick="statusCloseClick" :statisType="statisType"></popup-status>
 	</div>
 </template>
 <script>
-	import { DropdownMenu, DropdownItem, Sticky, Button, Panel, Popup, NavBar, Icon, NoticeBar, List, Cell, PullRefresh   } from 'vant';
+	import { DropdownMenu, DropdownItem, Sticky, Button, Panel, Popup, NavBar, Icon, NoticeBar, List, Cell, PullRefresh } from 'vant';
+	import OrderDetail from '@/components/subject/OrderDetail.vue';
+	import PopupStatus from '@/components/subject/PopupStatus.vue';
 	export default {
 		components:{
 			[DropdownMenu.name]: DropdownMenu,
@@ -91,17 +100,23 @@
 			[List.name]: List,
 			[Cell.name]: Cell,
 			[PullRefresh.name]: PullRefresh,
+
+			OrderDetail,
+			PopupStatus
 		},
 		data(){
 			return {
-				list: [],
-				loading: false,
-				finished: false,
-				isLoading: false,
+				statisType:[
+					{text:'aaa',value:'a'},
+					{text:'bbb',value:'b'},
+					{text:'ccc',value:'c'},
+				],
+				value:'aaa',
 				config:{
 					popup:{
 						filterShow:false,
-						listShow:false
+						listShow:false,
+						detailShow:false
 					},
 					dropMenu:{
 						disabled:true,
@@ -151,6 +166,11 @@
 				info:{
 					panelList:[],
 					popupList:[]
+				},
+				detailData:{
+					orderId:'',
+					orderType:'',
+					strOrderId:''
 				}
 			}
 		},
@@ -202,7 +222,19 @@
 				this.info.popupList = [];
 				this.statisDetail();
 				this.config.list.pullRefresh.reLoading = false;
+			},
+
+			detailOnClick( strOrderId ){
+				this.detailData.orderId = strOrderId.substring(1);
+				this.detailData.orderType = strOrderId[0];
+				this.detailData.strOrderId = strOrderId;
+				this.config.popup.detailShow = true;
+			},
+
+			statusCloseClick(){
+				this.config.popup.detailShow = false;
 			}
+
 		},
 		mounted(){
 			this.getOrdStock();

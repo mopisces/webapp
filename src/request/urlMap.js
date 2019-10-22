@@ -39,6 +39,9 @@ const staff = {
 		getProInfoConfig:`${base.staff}getProInfoConfig`,
 		getOrdStock:`${base.staff}getOrdStock`,
 		statisDetail:`${base.staff}statisDetail`,	
+	},
+	erp:{
+		ordersDetail:`${base.staff}staffOrdersDetail`,
 	}
 }
 export { map, webappMap, adminUrl, staff};
