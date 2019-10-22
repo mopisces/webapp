@@ -37,6 +37,8 @@ const staff = {
 	statis:{
 		getProInfo:`${base.staff}getProInfo`,
 		getProInfoConfig:`${base.staff}getProInfoConfig`,
+		getOrdStock:`${base.staff}getOrdStock`,
+		statisDetail:`${base.staff}statisDetail`,	
 	}
 }
 export { map, webappMap, adminUrl, staff};
