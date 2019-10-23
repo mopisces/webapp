@@ -34,7 +34,7 @@
 				<van-icon name="cross" slot="right" size="16"/>
 			</van-nav-bar>
 			<van-notice-bar color="#1989fa" background="#ecf9ff">
-				统计类型:{{  }}&nbsp;&nbsp;条件对象:{{ filterInfo.statisType }}&nbsp;&nbsp;条件值:{{  }}&nbsp;&nbsp;日期类型:{{  }}&nbsp;&nbsp;开始日期:{{  }}&nbsp;&nbsp;结束日期:{{  }}&nbsp;&nbsp;出库超期天数:{{  }}&nbsp;&nbsp;交货超期天数:{{  }}
+				统计类型:库存统计&nbsp;&nbsp;条件对象:{{ filterInfo.statisType }}&nbsp;&nbsp;日期类型:{{  }}&nbsp;&nbsp;开始日期:{{  }}&nbsp;&nbsp;结束日期:{{  }}&nbsp;&nbsp;出库超期天数:{{  }}&nbsp;&nbsp;交货超期天数:{{  }}
 			</van-notice-bar>
 			<van-pull-refresh v-model="config.list.pullRefresh.reLoading" @refresh="pullOnRefresh">
 				<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
@@ -73,13 +73,13 @@
 				</van-list>
 			</van-pull-refresh>
 		</van-popup>
-		<!-- <van-popup v-model="config.popup.detailShow" position="right" :style="{ width: '100%',height:'100%' }">
+		<van-popup v-model="config.popup.detailShow" position="right" :style="{ width: '100%',height:'100%' }">
 			<van-nav-bar left-text="统计下的ERP订单" @click-right="config.popup.detailShow = false" >
 				<van-icon name="cross" slot="right" size="16"/>
 			</van-nav-bar>
 			<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId"></order-detail>
-		</van-popup> -->
-		<popup-status :show="config.popup.detailShow" @statusCloseClick="statusCloseClick" :statisType="statisType"></popup-status>
+		</van-popup>
+		<!-- <popup-status :show="config.popup.detailShow" @statusCloseClick="statusCloseClick" :statisType="statisType" :chartType="chartType" :chartProperties="chartProperties"></popup-status> -->
 	</div>
 </template>
 <script>
@@ -106,6 +106,12 @@
 		},
 		data(){
 			return {
+				chartProperties:[
+					{text:'ccc',value:'ccc'},
+					{text:'ddd',value:'ddd'},
+					{text:'eee',value:'eee'}
+				],
+				chartType:['3D饼状图','饼状图','直线图','走势图'],
 				statisType:[
 					{text:'aaa',value:'a'},
 					{text:'bbb',value:'b'},
