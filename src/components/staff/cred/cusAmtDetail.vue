@@ -9,13 +9,15 @@
 		<van-field label="当前欠款" readonly v-model="info.data.CurAmt" input-align="center" />
 		<van-field label="信用余额" readonly v-model="info.data.LeftMinAmtCond" input-align="center" />
 		<van-field label="查询时间" readonly v-model="info.data.QueryTime" input-align="center" />
+		<van-button type="primary" size="normal" style="width:100%" @click="refresh()">刷新</van-button>
 	</div>
 </template>
 <script>
-	import {  Field } from 'vant';
+	import {  Field, Button } from 'vant';
 	export default {
 		components:{
 			[Field.name]: Field,
+			[Button.name]: Button,
 		},
 		data(){
 			return {
@@ -45,6 +47,9 @@
 					self.info.data.Stopped = ( res.result.Stopped == 1 ) ? '是' : '否';
 					self.info.data.SettleDay = ( res.result.SettleDay == 1 ) ? '是' : '否';
 				});
+			},
+			refresh(){
+				this.getInitData(  this.form );
 			}
 		},
 		mounted(){

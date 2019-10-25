@@ -1,42 +1,292 @@
 <template>
 	<div>
-		<van-tabs v-model="active">
+		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
+		<van-tabs v-model="filterForm.erpState">
 			<van-tab title="全部"></van-tab>
 			<van-tab title="未审核"></van-tab>
 			<van-tab title="已审核"></van-tab>
 			<van-tab title="已传单"></van-tab>
+			<van-tab title="已入库"></van-tab>
 			<van-tab title="已送货"></van-tab>
 			<van-tab title="有退货"></van-tab>
 		</van-tabs>
+		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
+			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
+				<van-panel v-for="(item,index) in info.panelList" :key="index">
+					<div slot="default">
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--20">货品名称:{{ item.MatName }}</div>
+						</div>
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--20">订单编号:{{ item.strOrderId }}</div>
+						</div>
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--10">客订单号:{{ item.CusPoNo }}</div>
+							<div class="van-col van-col--10">材质:{{ item.BoardId }}</div>
+						</div>
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--10">客户:{{ item.CusId}}</div>
+							<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+						</div>
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--20">规格:{{ item.GuiGe }}</div>
+						</div>
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--20">压线:{{ item.ScoreInfo }}</div>
+						</div>
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--6">订单数:{{ item.OrdQty }}</div>
+							<div class="van-col van-col--6">送货数:{{ item.DeliQty }}</div>
+							<div class="van-col van-col--6">退货数:{{ item.ReturnQty }}</div>
+						</div>
+					</div>
+					<div slot="footer" style="text-align: right;">
+						<van-button size="small" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>
+					</div>
+				</van-panel>
+			</van-list>
+		</van-pull-refresh>
+		<popup-filter :filterShow="config.popup.filterShow"  @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick">
+			<div slot="filter-field-1">
+				<van-field label="订单编号" v-model="filterForm.orderId" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
+				<van-field label="板长" v-model="filterForm.boardLength" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
+				<van-field label="板宽" v-model="filterForm.boardWidth" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
+				<van-field label="箱长" v-model="filterForm.boxLength" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
+				<van-field label="箱宽" v-model="filterForm.boxWidth" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
+				<van-field label="箱高" v-model="filterForm.boxHeight" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
+				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="精确查询" input-align="center" type="number" maxlength="10"></van-field>
+			</div>
+			<van-field readonly clickable label="客户名称" :value="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusShow = true"  slot="filter-field-2"></van-field>
+			<radio-cell :radioInfo="filterForm.dateType" :radioColumns="config.radio.radioColumns" title="日期类型" slot="filter-field-3" @radioClick="radioClick"></radio-cell>
+			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
+			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
+			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" slot="filter-field-5" @change="filterRemClick"/>
+		</popup-filter>
+		<cus-picker :show="config.popup.cusShow" :searchData="cusPicker.searchData" :index="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
+		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="config.popup.timeShow.start = false" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
+		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
+		<van-popup v-model="config.popup.detailShow" position="right" :style="{ width: '100%',height:'100%' }">
+			<van-nav-bar left-text="统计下的ERP订单" @click-right="config.popup.detailShow = false" >
+				<van-icon name="cross" slot="right" size="16"/>
+			</van-nav-bar>
+			<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId"></order-detail>
+		</van-popup>
 	</div>
 </template>
 <script>
-	import { Tab, Tabs, Button } from 'vant';
+	import { Tab, Tabs, Button, List, PullRefresh, Panel, Field, SwitchCell, Popup, NavBar, Icon } from 'vant';
+	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import CusPicker from '@/components/subject/CusPicker.vue';
+	import RadioCell from '@/components/subject/RadioCell.vue';
+	import TimePicker from '@/components/subject/TimePicker.vue';
+	import { dateTimeFormat } from '@/util/index';
+	import OrderDetail from '@/components/subject/OrderDetail.vue';
 	export default {
 		components:{
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 			[Button.name]: Button,
+			[List.name]: List,
+			[PullRefresh.name]: PullRefresh,
+			[Panel.name]: Panel,
+			[Field.name]: Field,
+			[SwitchCell.name]: SwitchCell,
+			[Popup.name]: Popup,
+			[NavBar.name]: NavBar,
+			[Icon.name]: Icon,
+
+			PopupFilter,
+			CusPicker,
+			RadioCell,
+			TimePicker,
+			OrderDetail
 		},
 		data(){
 			return {
-				active:'0'
+				active:'0',
+				pageConfig:{
+					defaultIndex:-1,
+					beginDate:new Date(),
+					minDate:new Date(),
+					maxDate:new Date(),
+					endDate:new Date()
+				},
+				cusPicker:{
+					searchData:'',
+				},
+				config:{
+					popup:{
+						filterShow:false,
+						cusShow:false,
+						timeShow:{
+							start:false,
+							end:false
+						},
+						detailShow:false
+					},
+					list:{
+						pullRefresh:{
+							reloading:false,
+							isInit:true
+						},
+						pushLoading:{
+							finished:false,
+							loading:false
+						}
+					},
+					radio:{
+						radioColumns:[
+							{title:'订单日期',value:'1'},
+							{title:'交货日期',value:'2'}
+						],
+					},
+					switch:{
+						checked:false
+					}
+				},
+				info:{
+					panelList:[],
+				},
+				filterForm:{
+					orderId:'',
+					boardLength:'',
+					boardWidth:'',
+					boxLength:'',
+					boxWidth:'',
+					boxHeight:'',
+					orderQuantity:'',
+					cusName:'',
+					dateType:'1',
+					beginDate:'',
+					endDate:'',
+					curPage:1,
+					erpState:0
+				},
+				detailData:{
+					orderId:'',
+					orderType:'',
+					strOrderId:''
+				}
 			}
 		},
 		methods:{
+			pullOnRefresh(){
+				this.getErpOrders( this.filterForm, true );
+				this.config.list.pullRefresh.reloading = false;
+			},
+			onLoad(){
+				if( this.config.list.pullRefresh.isInit ){
+					this.getConfig();
+					this.config.list.pullRefresh.isInit = false;
+				}else{
+					this.getErpOrders( this.filterForm );
+				}
+			},
+			resetClick(){
 
+			},
+			filterClick(){
+				this.getErpOrders( this.filterForm );
+			},
+			filterOverlayClick(){
+				this.config.popup.filterShow = false;
+			},
+			cusPickerCancel(){
+				this.config.popup.cusShow = false;
+				this.filterForm.cusName = '';
+			},
+			cusPickerConfirm( result ){
+				this.config.popup.cusShow = false;
+				this.filterForm.cusName = '';
+				this.pageConfig.defaultIndex = -1;
+				if( JSON.stringify(result.value) !== '[]' ){
+					this.pageConfig.defaultIndex = result.index;
+					this.filterForm.cusName = result.key;
+				}
+			},
+			getPageName(){
+				return 'erp/getOrders';
+			},
+			radioClick( val ){
+				this.filterForm.dateType = val.val;
+			},
+
+			timePickerCancel(){
+				this.config.popup.timeShow.start = false;
+				this.config.popup.timeShow.end = false;
+			},
+			timeBeginConfirm( value ){
+				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
+				this.pageConfig.beginDate = value.value;
+				this.timePickerCancel();
+			},
+			timeEndConfirm( value ){
+				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
+				this.pageConfig.endDate = value.value;
+				this.timePickerCancel();
+			},
+			timePickerOverlay(){
+				this.timePickerCancel();
+			},
+			filterRemClick(){
+
+			},
+
+			getConfig(){
+				let self = this;
+				this.$request.staff.erp.erpConfig().then(res=>{
+					self.filterForm.beginDate = res.result.Wap1GetOrdersBeginDate;
+					self.filterForm.endDate = res.result.Wap1GetOrdersEndDate;
+
+					self.pageConfig.beginDate = new Date(res.result.Wap1GetOrdersBeginDate);
+					self.pageConfig.endDate = new Date(res.result.Wap1GetOrdersEndDate);
+					self.pageConfig.maxDate = new Date(res.result.Wap1GetOrdersMaxDate);
+					self.pageConfig.minDate = new Date(res.result.Wap1GetOrdersMinDate);
+				}).then(()=>{
+					this.getErpOrders( this.filterForm );
+				}).then(()=>{
+					let initData = Object.assign({},this.filterForm,this.pageConfig);
+					sessionStorage.setItem('erp/getOrders---filterInit',JSON.stringify(initData));
+				});
+			},
+			getErpOrders( data , isReloading = false ){
+				let self = this;
+				this.filterForm.curPage = isReloading ? 1 : this.filterForm.curPage++;
+				this.$request.staff.erp.erpOrders( data ).then(res=>{
+					if( isReloading ){
+						self.info.panelList = [];
+						self.info.panelList = res.result;
+					}else{
+						res.result.forEach((item,index)=>{
+							self.info.panelList.push(item);
+						});
+					}
+					self.config.list.pushLoading.loading = false;
+				});
+				
+			},
+			detailShowClick( strOrderId ){
+				this.detailData.orderId = strOrderId.substring(1);
+				this.detailData.orderType = strOrderId[0];
+				this.detailData.strOrderId = strOrderId;
+				this.config.popup.detailShow = true;
+			}
 		},
 		mounted(){
-
+			
 		},
 		created(){
 			
 		},
 		computed:{
-			
+			orderState(){
+				return this.filterForm.erpState;
+			}
 		},
 		watch:{
-
+			orderState( newV,oldV ){
+				this.getErpOrders( this.filterForm, true );
+			}
 		}
 	}
 </script>

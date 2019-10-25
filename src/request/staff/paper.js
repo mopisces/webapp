@@ -13,6 +13,19 @@ const paper = {
 			safe_s_remark: data.safeSRemark,
 		};
 		return post(staff.paper.staffPaperSafe,postData);
+	},
+	paperWxConfig(){
+		return post(staff.paper.paperWxConfig);
+	},
+	stockConfig(){
+		return post(staff.paper.stockConfig);
+	},
+	stockMain( data ){
+		let postData = {
+			search_paper_data:'1050',
+			search_paper_type:1
+		};
+		return post(staff.paper.stockMain,postData);
 	}
 }
 export default paper;

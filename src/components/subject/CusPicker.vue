@@ -65,7 +65,7 @@
 				this.cusPickerCancel();
 			},
 			cusPickerInput(value){
-				this.$emit('cusPickerInput',value);
+				console.log(value);
 			}
 		},
 		mounted(){

@@ -66,6 +66,21 @@ let routes = [
                 component: resolve => require(['../components/staff/paper/DoStockOut.vue'], resolve),
             },
             {
+                path:'paper/doRStockIn',
+                meta: { title: '原纸入库' },
+                component: resolve => require(['../components/staff/paper/DoRStockIn.vue'], resolve),
+            },
+            {
+                path:'paper/directInStock',
+                meta: { title: '直接入库' },
+                component: resolve => require(['../components/staff/paper/DirectInStock.vue'], resolve),
+            },
+            {
+                path:'paper/getSStocks',
+                meta: { title: '原纸库存' },
+                component: resolve => require(['../components/staff/paper/GetSStocks.vue'], resolve),
+            },
+            {
                 path:'cred/wGetCusAmt',
                 meta: { title: '客户信用余额' },
                 component: resolve => require(['../components/staff/cred/WGetCusAmt.vue'], resolve),
@@ -89,6 +104,21 @@ let routes = [
                 path:'statis/getOrdStock',
                 meta: { title: '库存统计' },
                 component: resolve => require(['../components/staff/statis/GetOrdStock.vue'], resolve),
+            },
+            {
+                path:'erp/getOrders',
+                meta: { title: 'ERP订单' },
+                component: resolve => require(['../components/staff/erp/GetOrders.vue'], resolve),
+            },
+            {
+                path:'paperbuy/wGetPOIn',
+                meta: { title: '原纸收货' },
+                component: resolve => require(['../components/staff/paperbuy/WGetPOIn.vue'], resolve),
+            },
+            {
+                path:'paperbuy/wGetPOMain',
+                meta: { title: '原纸采购' },
+                component: resolve => require(['../components/staff/paperbuy/wGetPOMain.vue'], resolve),
             }
         ]
     },

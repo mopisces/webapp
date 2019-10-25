@@ -1,6 +1,6 @@
 <template>
 	<van-popup :value="filterShow" position="right" :style="{ height: '100%', width:'80%' }" @click-overlay="filterOverlayClick" :close-on-click-overlay="false">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
+			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
 				<div class="van-nav-bar__title van-ellipsis">
 					筛选条件
 				</div>
@@ -23,6 +23,7 @@
 			</div>
 		</van-popup>
 </template>
+
 <script>
 	import { Popup, SwitchCell, Button } from 'vant';
 	export default {

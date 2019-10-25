@@ -1,8 +1,8 @@
 <template>
 	<van-radio-group v-model="value">
 		<van-cell-group :title="title">
-			<van-cell  v-for=" (item,index) in radioColumns" :title="item.title" :key="index" clickable @click="click(item.value)">
-				<van-radio slot="right-icon" :name="item.value" />
+			<van-cell  v-for="(item,index) in radioColumns" :title="item.title" :key="index" clickable>
+				<van-radio slot="right-icon" :name="item.value"  @click="click(item.value,index)"/>
 			</van-cell>
 		</van-cell-group>
 	</van-radio-group>
@@ -33,8 +33,8 @@
 			}
 		},
 		methods:{
-			click( val ){
-				this.value = val;
+			click( val, index ){
+				this.$emit('radioClick',{val:val,index:index});
 			}
 		},
 		mounted(){
@@ -47,7 +47,7 @@
 			
 		},
 		watch:{
-
+			
 		}
 	}
 </script>

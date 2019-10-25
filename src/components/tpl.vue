@@ -1,5 +1,5 @@
 <template>
-	
+	<div></div>
 </template>
 <script>
 	import { Button } from 'vant';
@@ -19,7 +19,7 @@
 
 		},
 		created(){
-			
+			this.$store.commit('staff/setHeaderTitle','');
 		},
 		computed:{
 			

@@ -146,7 +146,9 @@
 			}
 		},
 		computed:{
-			
+			paperState(){
+				return this.filterForm.safePaperState;
+			}
 		},
 		watch:{
 			filterForm:{
@@ -154,6 +156,9 @@
 					this.config.switch.checked = false;
 				},
 				deep:true
+			},
+			paperState( newV,oldV ){
+				this.getTableData( this.filterForm );
 			}
 		}
 	}

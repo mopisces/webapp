@@ -36,7 +36,7 @@
 			<van-notice-bar color="#1989fa" background="#ecf9ff">
 				统计类型:库存统计&nbsp;&nbsp;条件对象:{{ filterInfo.statisType }}&nbsp;&nbsp;日期类型:{{  }}&nbsp;&nbsp;开始日期:{{  }}&nbsp;&nbsp;结束日期:{{  }}&nbsp;&nbsp;出库超期天数:{{  }}&nbsp;&nbsp;交货超期天数:{{  }}
 			</van-notice-bar>
-			<van-pull-refresh v-model="config.list.pullRefresh.reLoading" @refresh="pullOnRefresh">
+			<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 				<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
 					<van-panel v-for="(item,index) in info.popupList" :key="index">
 						<div slot="default">
@@ -85,7 +85,7 @@
 <script>
 	import { DropdownMenu, DropdownItem, Sticky, Button, Panel, Popup, NavBar, Icon, NoticeBar, List, Cell, PullRefresh } from 'vant';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
-	import PopupStatus from '@/components/subject/PopupStatus.vue';
+	//import PopupStatus from '@/components/subject/PopupStatus.vue';
 	export default {
 		components:{
 			[DropdownMenu.name]: DropdownMenu,
@@ -102,7 +102,7 @@
 			[PullRefresh.name]: PullRefresh,
 
 			OrderDetail,
-			PopupStatus
+			//PopupStatus
 		},
 		data(){
 			return {
@@ -155,7 +155,7 @@
 					},
 					list:{
 						pullRefresh:{
-							reLoading:false
+							reloading:false
 						},
 						pushLoading:{
 							loading:false,
@@ -227,7 +227,7 @@
 				/*cur_page = 1 */
 				this.info.popupList = [];
 				this.statisDetail();
-				this.config.list.pullRefresh.reLoading = false;
+				this.config.list.pullRefresh.reloading = false;
 			},
 
 			detailOnClick( strOrderId ){

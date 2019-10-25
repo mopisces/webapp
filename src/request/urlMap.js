@@ -25,6 +25,14 @@ const staff = {
 	},
 	paper:{
 		staffPaperSafe:`${base.staff}staffPaperSafe`,
+		paperWxConfig:`${base.staff}staffPaperWxConfig`,
+		stockConfig:`${base.staff}staffSStockConfig`,
+		stockMain:`${base.staff}staffSStock`,
+	},
+	paperbuy:{
+		paperInConfig:`${base.staff}staffPaperInConfig`,
+		paperInDetail:`${base.staff}staffPaperInDetail`,
+		paperInMain:`${base.staff}staffPaperInMain`,
 	},
 	cred:{
 		wGetCusAmt: `${base.staff}wGetCusAmt`,
@@ -42,6 +50,8 @@ const staff = {
 	},
 	erp:{
 		ordersDetail:`${base.staff}staffOrdersDetail`,
+		erpConfig:`${base.staff}staffErpConfig`,
+		erpOrders:`${base.staff}staffErp`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

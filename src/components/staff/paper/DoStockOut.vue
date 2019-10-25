@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<van-field v-model="formData.stockOutNo" placeholder="请输入用户名" label="条形码编号" input-align="center">
-		 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon"/>
+		<van-field v-model="formData.stockOutNo" placeholder="请输入订单号" label="条形码编号" input-align="center">
+		 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon" color="#0bf147"/>
 		</van-field>
 		<van-field readonly label="门幅(mm)" v-model="value" placeholder="自动查询" input-align="center"></van-field>
 		<van-field readonly label="纸质" v-model="value" placeholder="自动查询" input-align="center"></van-field>
@@ -11,18 +11,20 @@
 		<van-field label="机台" v-model="formData.stockOutSFlute" placeholder="输入班次" input-align="center"></van-field>
 		<van-field label="剥纸重量" v-model="formData.stockOutBzwt" type="number" input-align="center"></van-field>
 		<van-field readonly clickable label="出库日期" v-model="formData.stockOutOpTime" input-align="center"  @click="pageConfig.show = true "></van-field>
-		<time-picker :dateTimeShow="pageConfig.show" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerCancel" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm">
+		<time-picker :dateTimeShow="pageConfig.show" :dateTime="pageConfig.pickerDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerCancel" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm">
 		</time-picker>
+		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:55px;">出库</van-button>
 	</div>
 </template>
 <script>
-	import { Field, Icon } from 'vant';
+	import { Field, Icon, Button } from 'vant';
 	import TimePicker from '@/components/subject/TimePicker.vue';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Field.name]: Field,
 			[Icon.name]: Icon,
+			[Button.name]: Button,
 
 			TimePicker
 		},
@@ -31,8 +33,8 @@
 				value:'',
 				pageConfig:{
 					minDate:new Date(),
-					maxDate:new Date('2019-10-23'),
-					beginDate:new Date(),
+					maxDate:new Date(),
+					pickerDate:new Date(),
 					show:false
 				},
 				formData:{
@@ -49,16 +51,25 @@
 				this.pageConfig.show = false;
 			},
 			timePickerConfirm(val){
-				console.log(val.value)
 				this.pageConfig.beginDate = val.value;
 				this.timePickerCancel();
+			},
+			getPageConfig(){
+				let self = this;
+				this.$request.staff.paper.paperWxConfig().then(res=>{
+					self.pageConfig.maxDate = new Date(res.result.time.DoStockOutMaxDate);
+					self.pageConfig.minDate = new Date(res.result.time.DoStockOutMinDate);
+					self.pageConfig.pickerDate = new Date(res.result.time.DoStockOutOpTime);
+
+					self.formData.stockOutOpTime = res.result.time.DoStockOutOpTime;
+				});
 			}
 		},
 		mounted(){
-
+			this.getPageConfig();
 		},
 		created(){
-			
+			this.$store.commit('staff/setHeaderTitle','原纸出库');
 		},
 		computed:{
 			opTime(){
