@@ -52,6 +52,13 @@ const staff = {
 		ordersDetail:`${base.staff}staffOrdersDetail`,
 		erpConfig:`${base.staff}staffErpConfig`,
 		erpOrders:`${base.staff}staffErp`,
+	},
+	daily:{
+		staffDaily:`${base.staff}staffDaily`,
+		dailyConfig:`${base.staff}staffDailyConfig`,
+		getCusDateInfo:`${base.staff}staffGetCusInfo`,
+		dailyDetail:`${base.staff}staffDailyDetail`,
+		countOrder:`${base.staff}staffCountOrder`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

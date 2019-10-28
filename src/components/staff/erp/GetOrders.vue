@@ -183,10 +183,26 @@
 				}
 			},
 			resetClick(){
-
+				let init = JSON.parse(sessionStorage.getItem('erp/getOrders---filterInit'));
+				this.filterForm = {
+					orderId:'',
+					boardLength:'',
+					boardWidth:'',
+					boxLength:'',
+					boxWidth:'',
+					boxHeight:'',
+					orderQuantity:'',
+					cusName:'',
+					dateType:'1',
+					beginDate:dateTimeFormat(init.beginDate,'yyyy-MM-dd'),
+					endDate:dateTimeFormat(init.endDate,'yyyy-MM-dd'),
+					curPage:1,
+					erpState:0
+				};
 			},
 			filterClick(){
 				this.getErpOrders( this.filterForm );
+				this.filterOverlayClick();
 			},
 			filterOverlayClick(){
 				this.config.popup.filterShow = false;

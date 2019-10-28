@@ -1,11 +1,9 @@
 <template>
-	<div>
-		<van-popup :value="show" position="bottom" @click-overlay="cusPickerOverlay()" :close-on-click-overlay="false">
-			<van-picker show-toolbar :columns="columns" :default-index="defaultIndex" @cancel="cusPickerCancel()" @confirm="cusPickerConfirm" cancel-button-text="清空">
-				<van-search slot="title" v-model="filterForm.cusName" @search="cusPickerSearch" @input="cusPickerInput" :clearable="false"></van-search>
-			</van-picker>
-		</van-popup>
-	</div>
+	<van-popup :value="show" position="bottom" @click-overlay="cusPickerOverlay()" :close-on-click-overlay="false">
+		<van-picker show-toolbar :columns="columns" :default-index="defaultIndex" @cancel="cusPickerCancel()" @confirm="cusPickerConfirm" cancel-button-text="清空">
+			<van-search slot="title" v-model="filterForm.cusName" @search="cusPickerSearch" @input="cusPickerInput" :clearable="false" style="width:50%"></van-search>
+		</van-picker>
+	</van-popup>
 </template>
 <script>
 	import { Popup, Search, Picker, Field } from 'vant';
@@ -92,6 +90,6 @@
 </script>
 <style>
 	.vant-search:{
-		width:60%;
+		width:40%;
 	}
 </style>

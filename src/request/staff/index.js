@@ -7,6 +7,7 @@ import cred from './cred';
 import stow from './stow';
 import statis from './statis';
 import erp from './erp';
+import daily from './daily';
 export default {
 	calc,
 	frec,
@@ -16,5 +17,6 @@ export default {
 	cred,
 	stow,
 	statis,
-	erp
+	erp,
+	daily
 }

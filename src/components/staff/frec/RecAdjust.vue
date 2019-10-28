@@ -190,9 +190,9 @@
 				this.filterForm.searchData = value;
 			},
 			filterRemClick( checked ){
+				this.removeItem();
 				if( checked === false ){
 					this.info.switch.checked = false;
-					this.removeItem();
 				}else{
 					this.info.switch.checked = true;
 					sessionStorage.setItem('frec/recAdjust',JSON.stringify(this.filterForm));
