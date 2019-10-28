@@ -119,6 +119,11 @@ let routes = [
                 path:'paperbuy/wGetPOMain',
                 meta: { title: '原纸采购' },
                 component: resolve => require(['../components/staff/paperbuy/wGetPOMain.vue'], resolve),
+            },
+            {
+                path:'daily/wGetCusOrder',
+                meta: { title: '每日订单' },
+                component: resolve => require(['../components/staff/daily/WGetCusOrder.vue'], resolve),
             }
         ]
     },

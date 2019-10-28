@@ -22,8 +22,8 @@ const paper = {
 	},
 	stockMain( data ){
 		let postData = {
-			search_paper_data:'1050',
-			search_paper_type:1
+			search_paper_data:data.searchData,
+			search_paper_type:data.dataType
 		};
 		return post(staff.paper.stockMain,postData);
 	}

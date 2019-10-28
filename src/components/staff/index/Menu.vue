@@ -45,7 +45,7 @@
 					gridItem:[
 						{text:'用户管理',iconName:'guanwangicon31334',url:'',state:'#0b27f1'},
 						{text:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders',state:'#0bf147'},
-						{text:'客户每日订单',iconName:'meiri',url:'',state:'#0b27f1'},
+						{text:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder',state:'#eff30c'},
 						{text:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt',state:'#0bf147'},
 						{text:'订单统计',iconName:'dingdan2',url:'',state:'#0b27f1'},
 						{text:'退货统计',iconName:'tuihuo1',url:'',state:'#0b27f1'},
@@ -57,7 +57,7 @@
 						{text:'原纸出库',iconName:'ccgl-chukucaozuo-5',url:'/staff/paper/doStockOut',state:'#eff30c'},
 						{text:'原纸入库',iconName:'ruku',url:'/staff/paper/doRStockIn',state:'#eff30c'},
 						{text:'直接入库',iconName:'ruku2',url:'/staff/paper/directInStock',state:'#eff30c'},
-						{text:'原纸库存',iconName:'weishengzhi',url:'/staff/paper/getSStocks',state:'#eff30c'},
+						{text:'原纸库存',iconName:'weishengzhi',url:'/staff/paper/getSStocks',state:'#0bf147'},
 						{text:'安全库存',iconName:'anquanmenhu',url:'/staff/paper/paperSafe',state:'#0bf147'},
 						{text:'扫描装货',iconName:'zhuangche1',url:'/staff/stow/lists',state:'#eff30c'},
 						{text:'库存修改',iconName:'iconfontzhizuobiaozhunbduan24',url:'',state:'#0b27f1'},
