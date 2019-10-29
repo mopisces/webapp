@@ -113,7 +113,7 @@
 		},
 		methods:{
 			cellClick(item){
-				let str  = JSON.stringify(Object.assign({},this.filterForm,item));
+				let str  = JSON.stringify(Object.assign({},this.filterForm,item,{maxDate:dateTimeFormat( this.pageConfig.maxDate,'yyyy-MM-dd' ),minDate:dateTimeFormat( this.pageConfig.minDate,'yyyy-MM-dd' )}));
 				sessionStorage.setItem('daily/wGetCusOrder/info',str);
 				this.$router.push('/staff/daily/getOrdersP');
 			},

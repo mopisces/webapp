@@ -62,7 +62,7 @@
 				<div style="margin-bottom:46px;"></div>
 			</div>
 			<div class="footer" style="width:100%;position:fixed;height:46px;bottom:0px;">
-				<van-button type="primary" size="normal"  @click="confirmClick" style="width:100%;">确定</van-button>
+				<van-button type="primary" size="normal"  @click="confirmClick()" style="width:100%;">确定</van-button>
 			</div>
 		</van-popup>
 	</div>
@@ -140,11 +140,6 @@
 				this.config.header.index = Number( index );
 				this.controllerPrevNext();
 			},
-			/*radioClick( value ){
-				this.radio = value.val;
-				this.config.header.index = Number( value.index );
-				this.controllerPrevNext( );
-			},*/
 			confirmClick(){
 				this.config.popup.show = false;
 				this.$emit('radioConfirm',this.radio);
@@ -185,7 +180,9 @@
 		},
 		watch:{
 			radioChange( newV, oldV ){
-				this.$emit('radioConfirm',newV);
+				if( this.config.popup.show === false ){
+					this.$emit('radioConfirm',newV);
+				}
 			}
 		}
 	}

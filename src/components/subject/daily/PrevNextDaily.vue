@@ -49,21 +49,19 @@
 			<div class="content" style="width:100%;margin-top:46px;">
 				<van-radio-group v-model="radio" v-if="config.popup.show">
 					<van-cell-group>
-						<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.PaperCode,index )">
+						<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.OrderDate,index )">
 							<div class="van-cell__title">
-								<span>门幅:{{ item.PaperCode }}</span><br/>
-								<span>整卷卷数:{{ item.ZJCount }}</span><br/>
-								<span>残卷卷数:{{ item.CJCount }}</span><br/>
-								<span>重量:{{ item.SRWt }}</span>
+								<span>{{ item.OrderDate }}</span><br/>
+								<span>{{ item.ICount }}笔订单</span>
 							</div>
-							<van-radio slot="right-icon" :name="item.PaperCode" />
+							<van-radio slot="right-icon" :name="item.OrderDate" />
 						</div>
 					</van-cell-group>
 				</van-radio-group>
 				<div style="margin-bottom:46px;"></div>
 			</div>
 			<div class="footer" style="width:100%;position:fixed;height:46px;bottom:0px;">
-				<van-button type="primary" size="normal"  @click="config.popup.show = false" style="width:100%;">确定</van-button>
+				<van-button type="primary" size="normal"  @click="confirmClick()" style="width:100%;">确定</van-button>
 			</div>
 		</van-popup>
 	</div>
@@ -118,21 +116,21 @@
 					this.config.header.prev.data = '';
 				}else{
 					this.config.header.prev.noData = false;
-					this.config.header.prev.data = this.radioData[ prev ].PaperCode;
+					this.config.header.prev.data = this.radioData[ prev ].OrderDate;
 				}
 				if( this.radioData[ next ] == undefined ){
 					this.config.header.next.noData = true;
 					this.config.header.next.data = '';
 				}else{
 					this.config.header.next.noData = false;
-					this.config.header.next.data = this.radioData[ next ].PaperCode;
+					this.config.header.next.data = this.radioData[ next ].OrderDate;
 				}
 				if( this.radioData[ this.config.header.index ] == undefined ){
 					this.config.header.middle.noData = true;
 					this.config.header.middle.data = '';
 				}else{
 					this.config.header.middle.noData = false;
-					this.config.header.middle.data = this.radioData[ this.config.header.index ].PaperCode;
+					this.config.header.middle.data = this.radioData[ this.config.header.index ].OrderDate;
 				}
 			},
 			radioClick( value,index ){
@@ -142,6 +140,7 @@
 			},
 			confirmClick(){
 				this.config.popup.show = false;
+				this.$emit('radioConfirm',this.radio);
 			},
 			headerChange( type ){
 				if( type == 'prev' ){
@@ -156,11 +155,11 @@
 						this.config.header.index = this.radioData.length - 1 ;
 					}
 				}
-				this.radio = this.radioData[ this.config.header.index ].PaperCode;
+				this.radio = this.radioData[ this.config.header.index ].OrderDate;
 				this.controllerPrevNext();
 			},
 			middleClick(){
-				this.radio = this.radioData[ this.config.header.index ].PaperCode;
+				this.radio = this.radioData[ this.config.header.index ].OrderDate;
 				this.config.popup.show = true;
 			}
 		},
@@ -168,8 +167,8 @@
 			this.controllerPrevNext();
 		},
 		created(){
-			if( this.radioData[0].PaperCode ){
-				this.radio = this.radioData[0].PaperCode;
+			if( this.radioData[0].OrderDate ){
+				this.radio = this.radioData[0].OrderDate;
 			}
 		},
 		computed:{
@@ -179,7 +178,9 @@
 		},
 		watch:{
 			radioChange( newV, oldV ){
-				this.$emit('radioConfirm',newV);
+				if(this.config.popup.show === false){
+					this.$emit('radioConfirm',newV);
+				}
 			}
 		}
 	}

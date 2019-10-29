@@ -24,20 +24,20 @@ const daily = {
 		};
 		return post(staff.daily.getCusDateInfo,postData);
 	},
-	getOrderDeatil(){
+	getOrderDeatil( data ){
 		let postData = {
-			daily_cus_id:'AQ',
-			daily_s_state:'6',
-			daily_order_date:'2018-03-20'
+			daily_cus_id:data.cusId,
+			daily_s_state:data.sState,
+			daily_order_date:data.orderDate
 		};
 		return post(staff.daily.dailyDetail,postData);
 	},
-	getCountOrder(){
+	getCountOrder( data ){
 		let postData = {
-			daily_cus_id:'AQ',
-			daily_begin_date:'2016-10-30',
-			daily_end_date:'2019-08-29',
-			daily_s_state:'0'
+			daily_cus_id:data.cusId,
+			daily_begin_date:data.beginDate,
+			daily_end_date:data.endDate,
+			daily_s_state:data.sState
 		};
 		return post(staff.daily.countOrder,postData);
 	}
