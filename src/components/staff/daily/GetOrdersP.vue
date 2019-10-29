@@ -79,7 +79,7 @@
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<van-field readonly clickable label="开始日期" v-model="filterCount.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true"></van-field>
 				<van-field readonly clickable label="结束日期" v-model="filterCount.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true"></van-field>
-				<radio-cell :radioInfo="filterForm.sState" :radioColumns="config.step.status" :title="config.radio.title"></radio-cell>
+				<radio-cell :radioInfo="filterForm.sState" :radioColumns="config.step.status" :title="config.radio.title" @radioClick="radioClick"></radio-cell>
 			</div>
 		</popup-filter>
 		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
@@ -134,6 +134,7 @@
 						show:false,
 						//status:['未排产','排产中','生产中','生产完成','装车中','已送货','已签收'],
 						status:[
+							{title:'全部',value:0},
 							{title:'未排产',value:1},
 							{title:'排产中',value:2},
 							{title:'生产中',value:3},
@@ -225,6 +226,7 @@
 			},
 			fieldClick( index ){
 				this.rightPopupData = this.fieldData[ index ];
+				this.config.step.show = false;
 				this.config.popup.rightPopup.show = true;
 			},
 			phoneClick( tel ){
@@ -232,7 +234,7 @@
 			},
 			statusClick( status ){
 				for (let i = this.config.step.status.length - 1; i >= 0; i--) {
-					if( this.config.step.status[ i ] === status ){
+					if( this.config.step.status[ i ].title === status ){
 						this.config.step.active = i;
 						break;
 					}
@@ -269,6 +271,10 @@
 				this.filterCount.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
 				this.pageConfig.beginDate = value.value;
 				this.timePickerOverlay();
+			},
+			radioClick( val ){
+				this.filterForm.sState = val.val;
+				console.log(this.filterForm.sState);
 			}
 		},
 		mounted(){
@@ -279,7 +285,6 @@
 			this.$store.commit('staff/setHeaderTitle','每日订单详细信息');
 			if( sessionStorage.getItem('daily/wGetCusOrder/info') !== null ){
 				this.form = JSON.parse(sessionStorage.getItem('daily/wGetCusOrder/info'));
-				console.log(this.form)
 				this.pageConfig.maxDate    = new Date(this.form.maxDate);
 				this.pageConfig.minDate    = new Date(this.form.minDate);
 				this.pageConfig.beginDate  = new Date(this.form.beginDate);
