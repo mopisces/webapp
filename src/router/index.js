@@ -124,8 +124,7 @@ let routes = [
                 path:'daily/wGetCusOrder',
                 meta: { title: '每日订单' },
                 component: resolve => require(['../components/staff/daily/WGetCusOrder.vue'], resolve),
-            }
-            ,
+            },
             {
                 path:'daily/getOrdersP',
                 meta: { title: '每日订单详细信息' },

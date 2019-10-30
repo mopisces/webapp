@@ -25,11 +25,11 @@
 </template>
 
 <script>
-	import { Popup, SwitchCell, Button } from 'vant';
+
+	import { Popup, Button } from 'vant';
 	export default {
 		components:{
 			[Popup.name]: Popup,
-			[SwitchCell.name]: SwitchCell,
 			[Button.name]: Button,
 		},
 		props:{

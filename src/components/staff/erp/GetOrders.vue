@@ -65,35 +65,28 @@
 		<cus-picker :show="config.popup.cusShow" :searchData="cusPicker.searchData" :index="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="config.popup.timeShow.start = false" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
-		<van-popup v-model="config.popup.detailShow" position="right" :style="{ width: '100%',height:'100%' }">
-			<van-nav-bar left-text="统计下的ERP订单" @click-right="config.popup.detailShow = false" >
-				<van-icon name="cross" slot="right" size="16"/>
-			</van-nav-bar>
-			<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId"></order-detail>
-		</van-popup>
+		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow="config.popup.detailShow" @detailClose="detailClose"></order-detail>
 	</div>
 </template>
 <script>
-	import { Tab, Tabs, Button, List, PullRefresh, Panel, Field, SwitchCell, Popup, NavBar, Icon } from 'vant';
+	import { Panel, Button, Tab, Tabs,  Field, SwitchCell, List, PullRefresh } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import TimePicker from '@/components/subject/TimePicker.vue';
-	import { dateTimeFormat } from '@/util/index';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
+	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
+			[Panel.name]: Panel,
+			[Button.name]: Button,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
-			[Button.name]: Button,
-			[List.name]: List,
-			[PullRefresh.name]: PullRefresh,
-			[Panel.name]: Panel,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
-			[Popup.name]: Popup,
-			[NavBar.name]: NavBar,
-			[Icon.name]: Icon,
+			[List.name]: List,
+			[PullRefresh.name]: PullRefresh,
+			
 
 			PopupFilter,
 			CusPicker,
@@ -122,7 +115,7 @@
 							start:false,
 							end:false
 						},
-						detailShow:false
+						detailShow:false,
 					},
 					list:{
 						pullRefresh:{
@@ -245,7 +238,7 @@
 				this.timePickerCancel();
 			},
 			filterRemClick(){
-
+				console.log('filterRemClick');
 			},
 
 			getConfig(){
@@ -286,13 +279,16 @@
 				this.detailData.orderType = strOrderId[0];
 				this.detailData.strOrderId = strOrderId;
 				this.config.popup.detailShow = true;
+			},
+			detailClose(){
+				this.config.popup.detailShow = false;
 			}
 		},
 		mounted(){
 			
 		},
 		created(){
-			
+			this.$store.commit('staff/setHeaderTitle','ERP订单');
 		},
 		computed:{
 			orderState(){

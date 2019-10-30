@@ -69,15 +69,15 @@
 		components:{
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
-			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
+			[Cell.name]: Cell,
 			[Field.name]: Field,
 			[Button.name]: Button,
 			[Popup.name]: Popup,
 			[Picker.name]: Picker,
 			[Search.name]: Search,
-			[SwitchCell.name]: SwitchCell,
 			[Dialog.Component.name]: Dialog.Component,
+			[SwitchCell.name]: SwitchCell,
 		},
 		data(){
 			return {

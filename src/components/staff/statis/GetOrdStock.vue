@@ -83,16 +83,16 @@
 	</div>
 </template>
 <script>
-	import { DropdownMenu, DropdownItem, Sticky, Button, Panel, Popup, NavBar, Icon, NoticeBar, List, Cell, PullRefresh } from 'vant';
+	import { Panel, DropdownMenu, DropdownItem, Sticky, Button, Popup, NavBar, Icon, NoticeBar, List, Cell, PullRefresh } from 'vant';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
 	//import PopupStatus from '@/components/subject/PopupStatus.vue';
 	export default {
 		components:{
+			[Panel.name]: Panel,
 			[DropdownMenu.name]: DropdownMenu,
 			[DropdownItem.name]: DropdownItem,
-			[Button.name]: Button,
 			[Sticky.name]: Sticky,
-			[Panel.name]: Panel,
+			[Button.name]: Button,
 			[Popup.name]: Popup,
 			[NavBar.name]: NavBar,
 			[Icon.name]: Icon,
