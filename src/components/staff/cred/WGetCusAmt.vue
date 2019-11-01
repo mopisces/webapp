@@ -18,7 +18,7 @@
 			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="center" slot="left-popup-2"/>
 			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="center" slot="left-popup-3"/>
 		</left-popup>
-		<popup-filter :filterShow="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick">
+		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="客户名称" v-model="filterForm.cusId" placeholder="选择客户名称" input-align="center" @click="config.popup.cusPicker.show = true" slot="filter-field-1"></van-field>
 			<van-radio-group v-model="filterForm.isStopped" slot="filter-field-2">
 				<van-cell-group title="是否停单">
@@ -48,7 +48,7 @@
 			</van-radio-group>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick" />
 		</popup-filter>
-		<cus-picker :show="config.popup.cusPicker.show" :searchData="cusPicker.searchData" :index="cusPicker.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm" @cusPickerInput="cusPickerInput">
+		<cus-picker :show.sync="config.popup.cusPicker.show" :searchData.sync="cusPicker.searchData" :index.sync="cusPicker.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm" >
 		</cus-picker>
 	</div>
 </template>
@@ -140,11 +140,8 @@
 				};
 			},
 			filterClick(){
-				this.filterOverlayClick();
-				this.getInitData( this.filterForm );
-			},
-			filterOverlayClick(){
 				this.config.popup.rightFilter.show = false;
+				this.getInitData( this.filterForm );
 			},
 
 			cusPickerCancel(){
@@ -154,9 +151,6 @@
 			cusPickerConfirm( result ){
 				this.config.popup.cusPicker.show = false;
 				this.filterForm.cusId = result.key;
-			},
-			cusPickerInput( value ){
-				this.cusPicker.searchData = value;
 			},
 			getPageName(){
 				return 'cred/wGetCusAmt';

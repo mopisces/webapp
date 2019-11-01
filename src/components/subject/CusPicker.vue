@@ -1,7 +1,7 @@
 <template>
-	<van-popup :value="show" position="bottom" @click-overlay="cusPickerOverlay()" :close-on-click-overlay="false">
+	<van-popup v-model="popupShow" position="bottom" @click-overlay="cusPickerOverlay()" :close-on-click-overlay="false">
 		<van-picker show-toolbar :columns="columns" :default-index="defaultIndex" @cancel="cusPickerCancel()" @confirm="cusPickerConfirm" cancel-button-text="清空">
-			<van-search slot="title" v-model="filterForm.cusName" @search="cusPickerSearch" @input="cusPickerInput" :clearable="false" style="width:50%"></van-search>
+			<van-search slot="title" v-model="cusName" @search="cusPickerSearch" :clearable="false" style="width:50%"></van-search>
 		</van-picker>
 	</van-popup>
 </template>
@@ -14,29 +14,13 @@
 			[Picker.name]: Picker,
 			[Search.name]: Search
 		},
-		props:{
-			show:{
-				type:Boolean,
-				default:false,
-				required:true
-			},
-			searchData:{
-				type:String,
-				default:'',
-				required:true
-			},
-			index:{
-				required:true,
-				default:-1,
-			}
-		},
+		props:['show','searchData','index'],
 		data(){
 			return {
 				columns:[],
+				popupShow:this.show,
 				defaultIndex:this.index,
-				filterForm:{
-					cusName:this.searchData,
-				},
+				cusName:this.searchData,
 			}
 		},
 		methods:{
@@ -48,7 +32,7 @@
 			},
 			cusPickerSearch(){
 				let self = this;
-				this.$request.staff.frec.cusPicker( this.filterForm.cusName ).then(res=>{
+				this.$request.staff.frec.cusPicker( this.cusName ).then(res=>{
 					self.columns = [];
 					if( res.result.length <= 0 ){
 						return 
@@ -61,9 +45,6 @@
 			},
 			cusPickerOverlay(){
 				this.cusPickerCancel();
-			},
-			cusPickerInput(value){
-				console.log(value);
 			}
 		},
 		mounted(){
@@ -84,7 +65,24 @@
 			
 		},
 		watch:{
-
+			show(newV,oldV){
+				this.popupShow = newV;
+			},
+			popupShow(newV,oldV){
+				this.$emit("update:show", newV);
+			},
+			index(newV,oldV){
+				this.defaultIndex = newV;
+			},
+			defaultIndex(newV,oldV){
+				this.$emit("update:index", newV);
+			},
+			searchData(newV,oldV){
+				this.cusName = newV;
+			},
+			cusName(newV,oldV){
+				this.$emit("update:searchData", newV);
+			}
 		}
 	}
 </script>

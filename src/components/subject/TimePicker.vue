@@ -1,5 +1,5 @@
 <template>
-	<van-popup :value="dateTimeShow" position="bottom" @click-overlay="clickOverlay" :close-on-click-overlay="false">
+	<van-popup v-model="dateTimeShow" position="bottom" @click-overlay="clickOverlay" :close-on-click-overlay="false">
 		<van-datetime-picker :value="dateTime" :min-date="minDate" :max-date="maxDate" type="date" show-toolbar @cancel="onCancel" @confirm="onConfirm">
 		</van-datetime-picker>
 	</van-popup>
@@ -11,7 +11,8 @@
 			[Popup.name]: Popup,
 			[DatetimePicker.name]: DatetimePicker,
 		},
-		props:{
+		props:['dateTimeShow','dateTime','minDate','maxDate'],
+		/*props:{
 			dateTimeShow:{
 				type: Boolean,
 				required: true,
@@ -27,10 +28,10 @@
 			maxDate:{
 				default: new Date()
 			}
-		},
+		},*/
 		data(){
 			return {
-				dateTimeResult:this.dateTime
+				show:this.dateTimeShow
 			}
 		},
 		methods:{
@@ -54,7 +55,12 @@
 			
 		},
 		watch:{
-
+			show(newV,oldV){
+				this.popupShow = newV;
+			},
+			popupShow(newV,oldV){
+				this.$emit("update:show", newV);
+			},
 		}
 	}
 </script>

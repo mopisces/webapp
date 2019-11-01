@@ -69,7 +69,7 @@
 			<van-field v-model="rightPopupData.CarNo" readonly label="送货车号" input-align="center" v-if="rightPopupData.CarNo" @click="phoneClick(rightPopupData.CarNo)"/>
 			<van-button type="primary" size="normal" style="width:100%;" @click=" config.popup.rightPopup.show = false ">关闭</van-button>
 		</van-popup>
-		<popup-filter :filterShow="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick">
+		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<van-field label="订单编号" v-model="filterForm.orderId" placeholder="模糊查询" input-align="center"></van-field>
 				<van-field label="客订单号" v-model="filterForm.cusPoNo" placeholder="模糊查询" input-align="center"></van-field>
@@ -250,9 +250,6 @@
 			},
 			async filterClick(){
 				await this.getCountOrder( this.filterCount );
-				this.config.popup.rightFilter.show = false;
-			},
-			filterOverlayClick(){
 				this.config.popup.rightFilter.show = false;
 			},
 			timePickerOverlay(){

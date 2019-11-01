@@ -15,7 +15,7 @@
 				<p>总金额:{{ item.sumAmt }}</p>
 			</div>
 		</van-cell>
-		<popup-filter :filterShow="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick">
+		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-1"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-2"></van-field>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-3" @change="filterRemClick"/>
@@ -158,9 +158,6 @@
 			},
 			filterClick(){
 				this.getProInfo( this.filterForm );
-				this.filterOverlayClick();
-			},
-			filterOverlayClick(){
 				this.config.popup.filterShow = false;	
 			},
 

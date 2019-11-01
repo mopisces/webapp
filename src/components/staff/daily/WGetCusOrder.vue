@@ -29,14 +29,14 @@
 			</div>
 			<van-button type="primary" size="normal" style="width:100%;" @click="config.popup.leftPopup.show = false">关闭</van-button>
 		</van-popup>
-		<popup-filter :filterShow="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick" >
+		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="客户名称" v-model="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusFilter.show = true" slot="filter-field-1"></van-field>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeFilter.start.show = true" slot="filter-field-2"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeFilter.end.show = true" slot="filter-field-3"></van-field>
 			<van-switch-cell v-model="filterForm.addUserId" title="下单员" slot="filter-field-4"/>
 			<van-switch-cell v-model="config.switch.rem.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick"/>
 		</popup-filter>
-		<cus-picker :show="config.popup.cusFilter.show" :searchData="pageConfig.searchData" :index="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm" @cusPickerInput="cusPickerInput"></cus-picker>
+		<cus-picker :show.sync="config.popup.cusFilter.show" :searchData.sync="pageConfig.searchData" :index.sync="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
 		<time-picker :dateTimeShow="config.popup.timeFilter.start.show" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow="config.popup.timeFilter.end.show" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
@@ -152,11 +152,8 @@
 				};
 			},
 			filterClick(){
-				this.filterOverlayClick();
-				this.getDailyOrder( this.filterForm );
-			},
-			filterOverlayClick(){
 				this.config.popup.rightFilter.show = false;
+				this.getDailyOrder( this.filterForm );
 			},
 			filterRemClick( checked ){
 				this.removeItem();
@@ -174,9 +171,6 @@
 			cusPickerConfirm( data ){
 				this.config.popup.cusFilter.show = false;
 				this.filterForm.cusName = data.key;
-			},
-			cusPickerInput(){
-				this.pageConfig.searchData = value;
 			},
 			getPageName(){
 				return 'daily/wGetCusOrder';

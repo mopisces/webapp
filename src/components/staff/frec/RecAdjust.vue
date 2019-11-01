@@ -11,7 +11,7 @@
 		</div>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
 		</v-table>
-		<popup-filter :filterShow="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick" >
+		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="客户名称" v-model="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusShow = true" slot="filter-field-1"></van-field>
 			<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" slot="filter-field-2"/>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
@@ -35,7 +35,7 @@
 			</van-radio-group>
 			<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick"/>
 		</popup-filter>
-		<cus-picker :show="config.popup.cusShow" :searchData="info.cusPicker.searchData" :index="info.cusPicker.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm" @cusPickerInput="cusPickerInput"></cus-picker>
+		<cus-picker :show.sync="config.popup.cusShow" :searchData.sync="info.cusPicker.searchData" :index.sync="info.cusPicker.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
@@ -186,9 +186,6 @@
 				this.config.popup.cusShow = false;
 				this.filterForm.cusName = data.key;
 			},
-			cusPickerInput(value){
-				this.filterForm.searchData = value;
-			},
 			filterRemClick( checked ){
 				this.removeItem();
 				if( checked === false ){
@@ -202,9 +199,6 @@
 			filterClick(){
 				this.config.popup.filterShow = false;
 				this.recAdjustMain( this.filterForm );
-			},
-			filterOverlayClick(){
-				this.config.popup.filterShow = false;
 			},
 			resetClick(){
 				this.filterForm = Object.assign(this.filterForm,JSON.parse(sessionStorage.getItem('frec/recAdjust---filterInit')));

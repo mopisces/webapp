@@ -48,7 +48,7 @@
 				</van-panel>
 			</van-list>
 		</van-pull-refresh>
-		<popup-filter :filterShow="config.popup.filterShow"  @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick">
+		<popup-filter :filterShow.sync="config.popup.filterShow"  @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<van-field label="订单编号" v-model="filterForm.orderId" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="板长" v-model="filterForm.boardLength" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
@@ -64,7 +64,7 @@
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" slot="filter-field-5" @change="filterRemClick"/>
 		</popup-filter>
-		<cus-picker :show="config.popup.cusShow" :searchData="cusPicker.searchData" :index="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
+		<cus-picker :show.sync="config.popup.cusShow" :searchData.sync="cusPicker.searchData" :index.sync="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="config.popup.timeShow.start = false" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow.sync="config.popup.detailShow" @detailClose="detailClose"></order-detail>
@@ -197,10 +197,8 @@
 			},
 			filterClick(){
 				this.getErpOrders( this.filterForm ,true );
-				this.filterOverlayClick();
-			},
-			filterOverlayClick(){
 				this.config.popup.filterShow = false;
+				
 			},
 			cusPickerCancel(){
 				this.config.popup.cusShow = false;

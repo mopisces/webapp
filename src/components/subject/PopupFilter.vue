@@ -1,5 +1,5 @@
 <template>
-	<van-popup :value="filterShow" position="right" :style="{ height: '100%', width:'80%' }" @click-overlay="filterOverlayClick" :close-on-click-overlay="false">
+	<van-popup v-model="show" position="right" :style="{ height: '100%', width:'80%' }" @click-overlay="filterOverlayClick" :close-on-click-overlay="false">
 			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
 				<div class="van-nav-bar__title van-ellipsis">
 					筛选条件
@@ -35,6 +35,7 @@
 		props:['filterShow'],
 		data(){
 			return {
+				show:this.filterShow,
 			}
 		},
 		methods:{
@@ -45,10 +46,7 @@
 				this.$emit('filterClick');
 			},
 			filterOverlayClick(){
-				this.$emit('filterOverlayClick');
-			},
-			filterRemClick(checked){
-				this.$emit('filterRemClick',{checked:checked});
+				this.show = false;
 			}
 		},
 		mounted(){
@@ -61,7 +59,12 @@
 			
 		},
 		watch:{
-
+			filterShow(newV,oldV){
+				this.show = newV;
+			},
+			show(newV,oldV){
+				this.$emit("update:filterShow", newV);
+			}
 		}
 	}
 </script>

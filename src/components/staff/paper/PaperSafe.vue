@@ -9,7 +9,7 @@
 				<van-tab title="有库存的"></van-tab>
 			</van-tabs>
 		</van-sticky>
-		<popup-filter :filterShow="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick" @filterOverlayClick="filterOverlayClick">
+		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<van-radio-group v-model="filterForm.safePaperType" slot="filter-field-1">
 				<van-cell-group title="纸种类型">
 					<van-cell title="全部" clickable @click="filterForm.safePaperType = '0'">
@@ -111,9 +111,6 @@
 			},
 			filterClick(){
 				this.getTableData( this.filterForm );
-				this.config.popup.filterShow = false;
-			},
-			filterOverlayClick(){
 				this.config.popup.filterShow = false;
 			},
 			getTableData( data ){
