@@ -88,7 +88,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Sticky, Popup, Field, Icon, Step, Steps } from 'vant';
+	import { Button, Icon, Popup, Field, Step, Steps, Sticky } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	import PrevNextDaily from '@/components/subject/daily/PrevNextDaily.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
@@ -97,13 +97,13 @@
 	export default {
 		components:{
 			[Button.name]: Button,
-			[Sticky.name]: Sticky,
+			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
-			[Icon.name]: Icon,
 			[Step.name]: Step,
 			[Steps.name]: Steps,
-
+			[Sticky.name]: Sticky,
+			
 			PrevNextDaily,
 			PopupFilter,
 			TimePicker,
@@ -246,7 +246,7 @@
 				this.config.step.show = false;
 			},
 			resetClick(){
-
+				this.filterForm.sState = 0;
 			},
 			async filterClick(){
 				await this.getCountOrder( this.filterCount );
@@ -276,6 +276,7 @@
 				this.filterForm.sState = val.val;
 				console.log(this.filterForm.sState);
 			}
+			
 		},
 		mounted(){
 			this.getCusInfo( this.form );

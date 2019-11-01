@@ -1,8 +1,8 @@
 <template>
-	<van-popup :value="detailShow" :style="{ width: '100%',height:'100%' }" position="top">
+	<van-popup v-model="detailShow" :style="{ width: '100%',height:'100%' }" position="top">
 		<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
 			<div class="van-nav-bar__left">
-				<span class="van-nav-bar__text">统计下的ERP订单</span>
+				<span class="van-nav-bar__text">订单详情</span>
 			</div>
 			<div class="van-nav-bar__title van-ellipsis"></div>
 			<div class="van-nav-bar__right" @click="closeClick">
@@ -662,7 +662,8 @@
 					orderDN:null,
 					orderSch:null,
 					orderDetail:null
-				}
+				},
+				show:this.detailShow,
 			}
 		},
 		methods:{
@@ -690,7 +691,7 @@
 				window.location.tel = 'tel://' + tel;
 			},
 			closeClick(){
-				this.$emit('detailClose');
+				this.show = false;
 			}
 		},
 		mounted(){
@@ -709,7 +710,13 @@
 				this.orderId = newVal.substring(1);
 				this.orderType = newVal[0];
 				this.getDetail({orderId:this.orderId,orderType:this.orderType});
-			}
+			},
+			detailShow(newV,oldV){
+				this.show = newV;
+			},
+			show(newV,oldV){
+				this.$emit("update:detailShow", newV);
+			},
 		}
 	}
 </script>

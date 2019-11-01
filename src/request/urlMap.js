@@ -46,7 +46,8 @@ const staff = {
 		getProInfo:`${base.staff}getProInfo`,
 		getProInfoConfig:`${base.staff}getProInfoConfig`,
 		getOrdStock:`${base.staff}getOrdStock`,
-		statisDetail:`${base.staff}statisDetail`,	
+		statisDetail:`${base.staff}statisDetail`,
+		getOrderSum:`${base.staff}getOrderSum`,
 	},
 	erp:{
 		ordersDetail:`${base.staff}staffOrdersDetail`,

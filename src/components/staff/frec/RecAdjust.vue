@@ -41,7 +41,7 @@
 	</div>
 </template>
 <script>
-	import { Field, RadioGroup, Radio, Cell, CellGroup, SwitchCell } from 'vant';
+	import { Cell, CellGroup, Field, RadioGroup, Radio, SwitchCell } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
@@ -49,11 +49,11 @@
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
+			[Cell.name]: Cell,
+			[CellGroup.name]: CellGroup,
 			[Field.name]: Field,
 			[RadioGroup.name]: RadioGroup,
 			[Radio.name]: Radio,
-			[Cell.name]: Cell,
-			[CellGroup.name]: CellGroup,
 			[SwitchCell.name]: SwitchCell,
 
 			[VTable.name]: VTable,

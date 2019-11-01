@@ -34,11 +34,11 @@
 	</van-pull-refresh>
 </template>
 <script>
-	import { List, PullRefresh, Panel } from 'vant';
+	import { PullRefresh, List, Panel } from 'vant';
 	export default {
 		components:{
-			[List.name]: List,
 			[PullRefresh.name]: PullRefresh,
+			[List.name]: List,
 			[Panel.name]: Panel,
 		},
 		props:['panelList'],

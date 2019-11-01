@@ -1,0 +1,158 @@
+<template>
+	<div>
+		<van-popup v-model="popupShow" :style="{ height: '100%', width:'100%' }" position="bottom">
+			<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
+				<div class="van-nav-bar__left">
+					<span class="van-nav-bar__text">统计下的ERP订单</span>
+				</div>
+				<div class="van-nav-bar__title van-ellipsis"></div>
+				<div class="van-nav-bar__right" @click="closeClick">
+					<i class="van-icon van-icon-cross" style="font-size: 16px;"><!----></i>
+				</div>
+			</div>
+			<van-notice-bar color="#1989fa" background="#ecf9ff">
+				统计类型:{{  }}&nbsp;&nbsp;
+				条件对象:{{  }}&nbsp;&nbsp;
+				日期类型:{{  }}&nbsp;&nbsp;
+				开始日期:{{  }}&nbsp;&nbsp;
+				结束日期:{{  }}&nbsp;&nbsp;
+				出库超期天数:{{  }}&nbsp;&nbsp;
+				交货超期天数:{{  }}
+			</van-notice-bar>
+			<van-pull-refresh v-model="pullRefresh.reloading" @refresh="pullOnRefresh">
+				<van-list v-model="pushLoading.loading" :finished="pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
+					<van-panel v-for="(item,index) in listInfo" :key="index">
+						<div slot="default">
+							<van-row type="flex" justify="center">
+								<van-col span="20">货品名称:{{ item.MatName }}</van-col>
+							</van-row>
+							<van-row type="flex" justify="center">
+								<van-col span="20">订单编号:{{ item.strOrderId }}</van-col>
+							</van-row>
+							<van-row type="flex" justify="center">
+								<van-col span="10">客订单号:{{ item.CusPoNo }}</van-col>
+								<van-col span="10">材质:{{ item.BoardId }}</van-col>
+							</van-row>
+							<van-row type="flex" justify="center">
+								<van-col span="10">客户:{{ item.CusId }}</van-col>
+								<van-col span="10">客户简称:{{ item.CusShortName }}</van-col>
+							</van-row>
+							<van-row type="flex" justify="center">
+								<van-col span="20">规格:{{ item.GuiGe }}</van-col>
+							</van-row>
+							<van-row type="flex" justify="center">
+								<van-col span="20">压线:{{ item.ScoreInfo }}</van-col>
+							</van-row>
+							<van-row type="flex" justify="center">
+								<van-col span="8">订单数:{{ item.OrdQty }}</van-col>
+								<van-col span="6">送货数:{{ item.DeliQty }}</van-col>
+								<van-col span="6">库存数:{{ item.StockQty }}</van-col>
+							</van-row>
+						</div>
+						<div slot="footer" style="text-align: right;">
+							<van-button size="small" type="info" @click="detailOnClick(item.strOrderId)">详情</van-button>
+						</div>
+					</van-panel>
+				</van-list>
+			</van-pull-refresh>
+		</van-popup>
+		<order-detail :orderType="orderDetail.orderType" :orderId="orderDetail.orderId" :detailShow.sync="orderDetail.show"></order-detail>
+	</div>
+</template>
+<script>
+	import { Button, Row, Col, Popup, PullRefresh, List, NoticeBar, Panel } from 'vant';
+	import OrderDetail from '@/components/subject/OrderDetail.vue';
+	export default {
+		components:{
+			[Button.name]: Button,
+			[Row.name]: Row,
+			[Col.name]: Col,
+			[Popup.name]: Popup,
+			
+			[PullRefresh.name]: PullRefresh,
+			[List.name]: List,
+			[NoticeBar.name]: NoticeBar,
+			[Panel.name]: Panel,
+
+			OrderDetail
+		},
+		props:['show','filterForm'],
+		data(){
+			return {
+				popupShow:this.show,
+				pullRefresh:{
+					reloading:false,
+				},
+				pushLoading:{
+					loading:false,
+					finished:false
+				},
+				listInfo:[],
+				formData:{
+					curPage:0,
+				},
+				orderDetail:{
+					show:false,
+					orderId:'',
+					orderType:''
+				}
+				
+			}
+		},
+		methods:{
+			statisDetail(){
+				let self = this;
+				let data = {
+					curPage:  this.formData.curPage,
+					sType:    this.filterForm.sType,
+					dateType: this.filterForm.dateType,
+					beginDate:this.filterForm.beginDate,
+					endDate:  this.filterForm.endDate,
+				}
+				this.$request.staff.statis.statisDetail( data ).then(res=>{
+					res.result.forEach((item,index)=>{
+						self.listInfo.push(item);
+					});
+					this.pushLoading.loading = false;
+					if( res.result == null || res.result.length != 6 ){
+						self.pushLoading.finished = true;
+					}
+				});
+			},
+			pullOnRefresh(){
+				this.formData.curPage = 1;
+				this.statisDetail();
+				this.pullRefresh.reloading = false;
+			},
+			onLoad(){
+				this.formData.curPage++;
+				this.statisDetail( this.filterForm );
+			},
+			detailOnClick( strOrderId ){
+				this.orderDetail.orderId = strOrderId.substring(1);
+				this.orderDetail.orderType = strOrderId[0];
+				this.orderDetail.show = true;
+			},
+			closeClick(){
+				this.popupShow = false;
+			}
+		},
+		mounted(){
+
+		},
+		created(){
+			
+		},
+		computed:{
+			
+		},
+		watch:{
+			show(newV,oldV){
+				this.popupShow = newV;
+			},
+			popupShow(newV,oldV){
+				this.$emit("update:show", newV);
+			},
+		}
+	}
+</script>

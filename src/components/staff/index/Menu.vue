@@ -26,15 +26,14 @@
 	</div>
 </template>
 <script>
-	import { Grid, GridItem, Icon, Cell, Button  } from 'vant';
+	import { Button, Cell, Icon, Grid, GridItem } from 'vant';
 	export default {
 		components:{
+			[Button.name]: Button,
+			[Cell.name]: Cell,
+			[Icon.name]: Icon,
 			[Grid.name]: Grid,
 			[GridItem.name]: GridItem,
-			[Icon.name]: Icon,
-			[Cell.name]: Cell,
-			[Button.name]: Button,
-
 		},
 		/*
 		state: #0bf147 -> 已完成, #eff30c -> 正在开发 , #0b27f1 -> 未开发 
@@ -47,7 +46,7 @@
 						{text:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders',state:'#0bf147'},
 						{text:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder',state:'#eff30c'},
 						{text:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt',state:'#0bf147'},
-						{text:'订单统计',iconName:'dingdan2',url:'',state:'#0b27f1'},
+						{text:'订单统计',iconName:'dingdan2',url:'/staff/statis/getOrderSum',state:'#eff30c'},
 						{text:'退货统计',iconName:'tuihuo1',url:'',state:'#0b27f1'},
 						{text:'传单统计',iconName:'chuandan',url:'',state:'#0b27f1'},
 						{text:'库存统计',iconName:'storage',url:'/staff/statis/getOrdStock',state:'#eff30c'},

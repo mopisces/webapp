@@ -18,11 +18,11 @@
 	</van-popup>
 </template>
 <script>
-	import { Popup, Button } from 'vant';
+	import { Button, Popup } from 'vant';
 	export default {
 		components:{
-			[Popup.name]: Popup,
 			[Button.name]: Button,
+			[Popup.name]: Popup
 		},
 		props:{
 			leftShow:{

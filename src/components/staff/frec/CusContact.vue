@@ -16,14 +16,14 @@
 	</div>
 </template>
 <script>
-	import { Field, Button, SwitchCell } from 'vant';
+	import { Button, Field, SwitchCell } from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	export default {
 		components:{
-			[Field.name]: Field,
 			[Button.name]: Button,
+			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
 			
 			[VTable.name]: VTable,

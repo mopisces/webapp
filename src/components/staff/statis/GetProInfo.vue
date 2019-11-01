@@ -25,20 +25,20 @@
 	</div>
 </template>
 <script>
-	import {  DropdownMenu, DropdownItem, Button, Cell, Sticky, Field, SwitchCell   } from 'vant';
+	import {  Button, Cell, Field, SwitchCell, DropdownMenu, DropdownItem, Sticky } from 'vant';
 	import Highcharts from 'highcharts/highstock';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import TimePicker from '@/components/subject/TimePicker.vue';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
-			[DropdownMenu.name]: DropdownMenu,
-			[DropdownItem.name]: DropdownItem,
 			[Button.name]: Button,
 			[Cell.name]: Cell,
-			[Sticky.name]: Sticky,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
+			[DropdownMenu.name]: DropdownMenu,
+			[DropdownItem.name]: DropdownItem,
+			[Sticky.name]: Sticky,
 
 			PopupFilter,
 			TimePicker

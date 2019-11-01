@@ -53,20 +53,20 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, Cell, CellGroup, Sticky, RadioGroup, Radio, SwitchCell  } from 'vant';
+	import { Button, Cell, CellGroup, Field, RadioGroup, Radio,  SwitchCell, Sticky } from 'vant';
 	import LeftPopup from '@/components/subject/LeftPopup.vue';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
-			[Field.name]: Field,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
-			[Sticky.name]: Sticky,
+			[Field.name]: Field,
 			[RadioGroup.name]: RadioGroup,
 			[Radio.name]: Radio,
 			[SwitchCell.name]: SwitchCell,
+			[Sticky.name]: Sticky,
 
 			LeftPopup,
 			CusPicker,

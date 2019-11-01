@@ -6,13 +6,13 @@
 	</van-popup>
 </template>
 <script>
-	import { Popup, Search, Picker, Field } from 'vant';
+	import { Popup, Field, Picker, Search } from 'vant';
 	export default {
 		components:{
 			[Popup.name]: Popup,
-			[Search.name]: Search,
-			[Picker.name]: Picker,
 			[Field.name]: Field,
+			[Picker.name]: Picker,
+			[Search.name]: Search
 		},
 		props:{
 			show:{

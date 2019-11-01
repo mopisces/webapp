@@ -13,11 +13,11 @@
 	</div>
 </template>
 <script>
-	import {  Field, Button } from 'vant';
+	import { Button, Field } from 'vant';
 	export default {
 		components:{
-			[Field.name]: Field,
 			[Button.name]: Button,
+			[Field.name]: Field,
 		},
 		data(){
 			return {

@@ -1,5 +1,5 @@
 <template>
-	<van-radio-group v-model="value">
+	<van-radio-group v-model="value" v-if="show">
 		<van-cell-group :title="title">
 			<van-cell  v-for="(item,index) in radioColumns" :title="item.title" :key="index" clickable>
 				<van-radio slot="right-icon" :name="item.value"  @click="click(item.value,index)"/>
@@ -8,13 +8,13 @@
 	</van-radio-group>
 </template>
 <script>
-	import { RadioGroup, Radio, Cell, CellGroup } from 'vant';
+	import {  Cell, CellGroup, RadioGroup, Radio } from 'vant';
 	export default {
 		components:{
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
+			[RadioGroup.name]: RadioGroup,
+			[Radio.name]: Radio,
 		},
 		props:{
 			radioInfo:{
@@ -29,7 +29,8 @@
 		},
 		data(){
 			return {
-				value:this.radioInfo
+				value:0,
+				show:true
 			}
 		},
 		methods:{
@@ -38,7 +39,7 @@
 			}
 		},
 		mounted(){
-
+			this.value = this.radioInfo;
 		},
 		created(){
 			
@@ -47,7 +48,9 @@
 			
 		},
 		watch:{
-			
+			radioInfo(newV,oldV){
+				this.value = newV;
+			}
 		}
 	}
 </script>

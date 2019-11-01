@@ -42,7 +42,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Sticky, Popup, Field, Cell, CellGroup, SwitchCell } from 'vant';
+	import { Button, Cell, CellGroup, Popup, Field, SwitchCell, Sticky  } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import TimePicker from '@/components/subject/TimePicker.vue';
@@ -50,12 +50,12 @@
 	export default {
 		components:{
 			[Button.name]: Button,
-			[Sticky.name]: Sticky,
-			[Popup.name]: Popup,
-			[Field.name]: Field,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
+			[Popup.name]: Popup,
+			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
+			[Sticky.name]: Sticky,
 
 			CusPicker,
 			TimePicker,

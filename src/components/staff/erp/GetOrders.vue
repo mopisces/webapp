@@ -1,17 +1,19 @@
 <template>
 	<div>
-		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		<van-tabs v-model="filterForm.erpState">
-			<van-tab title="全部"></van-tab>
-			<van-tab title="未审核"></van-tab>
-			<van-tab title="已审核"></van-tab>
-			<van-tab title="已传单"></van-tab>
-			<van-tab title="已入库"></van-tab>
-			<van-tab title="已送货"></van-tab>
-			<van-tab title="有退货"></van-tab>
-		</van-tabs>
+		<van-sticky :offset-top="46">
+			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
+			<van-tabs v-model="filterForm.erpState">
+				<van-tab title="全部"></van-tab>
+				<van-tab title="未审核"></van-tab>
+				<van-tab title="已审核"></van-tab>
+				<van-tab title="已传单"></van-tab>
+				<van-tab title="已入库"></van-tab>
+				<van-tab title="已送货"></van-tab>
+				<van-tab title="有退货"></van-tab>
+			</van-tabs>
+		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
-			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
+			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
 				<van-panel v-for="(item,index) in info.panelList" :key="index">
 					<div slot="default">
 						<div class="van-row van-row--flex van-row--justify-center">
@@ -65,11 +67,11 @@
 		<cus-picker :show="config.popup.cusShow" :searchData="cusPicker.searchData" :index="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="config.popup.timeShow.start = false" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
-		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow="config.popup.detailShow" @detailClose="detailClose"></order-detail>
+		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow.sync="config.popup.detailShow" @detailClose="detailClose"></order-detail>
 	</div>
 </template>
 <script>
-	import { Panel, Button, Tab, Tabs,  Field, SwitchCell, List, PullRefresh } from 'vant';
+	import { Button, Field, SwitchCell, PullRefresh, List, Panel, Sticky, Tab, Tabs } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -78,16 +80,16 @@
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
-			[Panel.name]: Panel,
 			[Button.name]: Button,
-			[Tab.name]: Tab,
-			[Tabs.name]: Tabs,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
-			[List.name]: List,
 			[PullRefresh.name]: PullRefresh,
+			[List.name]: List,
+			[Panel.name]: Panel,
+			[Sticky.name]: Sticky,
+			[Tab.name]: Tab,
+			[Tabs.name]: Tabs,
 			
-
 			PopupFilter,
 			CusPicker,
 			RadioCell,
@@ -164,7 +166,7 @@
 		},
 		methods:{
 			pullOnRefresh(){
-				this.getErpOrders( this.filterForm, true );
+				this.getErpOrders( this.filterForm , true);
 				this.config.list.pullRefresh.reloading = false;
 			},
 			onLoad(){
@@ -194,7 +196,7 @@
 				};
 			},
 			filterClick(){
-				this.getErpOrders( this.filterForm );
+				this.getErpOrders( this.filterForm ,true );
 				this.filterOverlayClick();
 			},
 			filterOverlayClick(){
@@ -260,7 +262,10 @@
 			},
 			getErpOrders( data , isReloading = false ){
 				let self = this;
-				this.filterForm.curPage = isReloading ? 1 : this.filterForm.curPage++;
+				data.curPage++;
+				if( isReloading ){
+					data.curPage = 1;
+				}
 				this.$request.staff.erp.erpOrders( data ).then(res=>{
 					if( isReloading ){
 						self.info.panelList = [];
@@ -271,8 +276,10 @@
 						});
 					}
 					self.config.list.pushLoading.loading = false;
+					if( res.result == null || res.result.length < 6 ){
+						self.config.list.pushLoading.finished = true;
+					}
 				});
-				
 			},
 			detailShowClick( strOrderId ){
 				this.detailData.orderId = strOrderId.substring(1);

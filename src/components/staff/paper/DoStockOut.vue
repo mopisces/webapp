@@ -17,14 +17,14 @@
 	</div>
 </template>
 <script>
-	import { Field, Icon, Button } from 'vant';
+	import { Button, Icon, Field   } from 'vant';
 	import TimePicker from '@/components/subject/TimePicker.vue';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
-			[Field.name]: Field,
-			[Icon.name]: Icon,
 			[Button.name]: Button,
+			[Icon.name]: Icon,
+			[Field.name]: Field,
 
 			TimePicker
 		},

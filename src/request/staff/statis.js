@@ -24,17 +24,26 @@ const statis = {
 		}
 		return post(staff.statis.getOrdStock,postData);
 	},
-	statisDetail(){
+	statisDetail( data ){
 		let postData = {
-			detail_begin_date:'2017-10-22',
-			detail_end_date:'2019-10-22',
-			detail_date_type:'1',
-			detail_cur_page:'1',
-			detail_s_type:'3',
+			detail_begin_date:data.beginDate,
+			detail_end_date:data.endDate,
+			detail_date_type:data.dateType,
+			detail_cur_page:data.curPage,
+			detail_s_type:data.sType,
 			detail_remain_day:'0',
 			detail_diff_day:'0'
 		}
 		return post(staff.statis.statisDetail,postData);
+	},
+	getOrderSum(){
+		let postData = {
+			order_begin_date:'2017-11-01',
+			order_end_date:'2019-10-31',
+			order_statis_type:'0',
+			order_date_type:'OrderDate'
+		};
+		return post(staff.statis.getOrderSum,postData);
 	}
 }
 export default statis;

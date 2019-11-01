@@ -69,16 +69,16 @@
 	</div>
 </template>
 <script>
-	import { Icon, Popup, Button, RadioGroup, Radio, Cell, CellGroup  } from 'vant';
+	import { Button, Cell, CellGroup, Icon, Popup, RadioGroup, Radio } from 'vant';
 	export default {
 		components:{
-			[Icon.name]: Icon,
-			[Popup.name]: Popup,
 			[Button.name]: Button,
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
+			[Icon.name]: Icon,
+			[Popup.name]: Popup,
+			[RadioGroup.name]: RadioGroup,
+			[Radio.name]: Radio,
 		},
 		props:['radioData'],
 		data(){

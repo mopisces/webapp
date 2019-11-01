@@ -40,21 +40,21 @@
 	</div>
 </template>
 <script>
-	import { Button, Tab, Tabs, Sticky, RadioGroup, Radio, Cell, CellGroup, Field, SwitchCell  } from 'vant';
+	import { Button, Cell, CellGroup, Field, RadioGroup, Radio, SwitchCell, Sticky, Tab, Tabs} from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
-			[Tab.name]: Tab,
-			[Tabs.name]: Tabs,
-			[Sticky.name]: Sticky,
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
 			[Field.name]: Field,
+			[RadioGroup.name]: RadioGroup,
+			[Radio.name]: Radio,
 			[SwitchCell.name]: SwitchCell,
+			[Sticky.name]: Sticky,
+			[Tab.name]: Tab,
+			[Tabs.name]: Tabs,
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,

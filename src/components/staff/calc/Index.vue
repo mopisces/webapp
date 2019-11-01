@@ -63,21 +63,21 @@
 	</div>
 </template>
 <script>
-	import { Tab, Tabs, CellGroup, Cell, Field, Button, Popup, Picker, Search, Dialog, SwitchCell     } from 'vant';
+	import { Button, Cell, CellGroup, Popup, Field, Picker, Search, SwitchCell, Dialog, Tab, Tabs} from 'vant';
 	import { trim } from '@/util/index';
 	export default {
 		components:{
-			[Tab.name]: Tab,
-			[Tabs.name]: Tabs,
-			[CellGroup.name]: CellGroup,
-			[Cell.name]: Cell,
-			[Field.name]: Field,
 			[Button.name]: Button,
+			[Cell.name]: Cell,
+			[CellGroup.name]: CellGroup,
 			[Popup.name]: Popup,
+			[Field.name]: Field,
 			[Picker.name]: Picker,
 			[Search.name]: Search,
-			[Dialog.Component.name]: Dialog.Component,
 			[SwitchCell.name]: SwitchCell,
+			[Dialog.Component.name]: Dialog.Component,
+			[Tab.name]: Tab,
+			[Tabs.name]: Tabs,
 		},
 		data(){
 			return {
