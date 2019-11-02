@@ -49,13 +49,35 @@
 			<div class="content" style="width:100%;margin-top:46px;">
 				<van-radio-group v-model="radio" v-if="config.popup.show">
 					<van-cell-group>
-						<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.RecDate,index )">
-							<div class="van-cell__title">
+						<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.prevNext,index )">
+							<!-- 原纸收货按日期汇总 -->
+							<div class="van-cell__title" v-if="item.RecDate">
 								<span>{{ item.RecDate }}</span><br/>
 								<span>{{ item.InQty }}&nbsp;件</span><br/>
 								<span>{{ item.SumInWt }}&nbsp;kg</span>
 							</div>
-							<van-radio slot="right-icon" :name="item.RecDate" />
+							<!-- 按门幅汇总 -->
+							<div class="van-cell__title" v-else-if="item.PaperWidth">
+								<span>门幅:{{ item.PaperWidth }}</span><br/>
+								<span>整卷卷数:{{ item.ZJCount }}</span><br/>
+								<span>残卷卷数:{{ item.CJCount }}</span><br/>
+								<span>重量:{{ item.SRWt }}</span>
+							</div>
+							<!-- 按纸类汇总 -->
+							<div class="van-cell__title" v-else-if="item.PaperCode">
+								<span>纸类:{{ item.PaperCode }}
+									<span v-if="item.PaperName">{{ '[' + item.PaperName + ']' }}</span>
+								</span><br/>
+								<span>整卷卷数:{{ item.ZJCount }}</span><br/>
+								<span>残卷卷数:{{ item.CJCount }}</span><br/>
+								<span>重量:{{ item.SRWt }}</span>
+							</div>
+							<!-- 每日订单按日期汇总 -->
+							<div class="van-cell__title" v-else>
+								<span>{{ item.OrderDate }}</span><br/>
+								<span>{{ item.ICount }}笔订单</span>
+							</div>
+							<van-radio slot="right-icon" :name="item.prevNext" />
 						</div>
 					</van-cell-group>
 				</van-radio-group>
@@ -110,7 +132,7 @@
 		},
 		methods:{
 			controllerPrevNext(){
-
+				
 				let prev = Number(this.config.header.index) - 1;
 				let next = Number(this.config.header.index) + 1;
 				if( this.radioData[ prev ] == undefined ){
@@ -118,21 +140,21 @@
 					this.config.header.prev.data = '';
 				}else{
 					this.config.header.prev.noData = false;
-					this.config.header.prev.data = this.radioData[ prev ].RecDate;
+					this.config.header.prev.data = this.radioData[ prev ].prevNext;
 				}
 				if( this.radioData[ next ] == undefined ){
 					this.config.header.next.noData = true;
 					this.config.header.next.data = '';
 				}else{
 					this.config.header.next.noData = false;
-					this.config.header.next.data = this.radioData[ next ].RecDate;
+					this.config.header.next.data = this.radioData[ next ].prevNext;
 				}
 				if( this.radioData[ this.config.header.index ] == undefined ){
 					this.config.header.middle.noData = true;
 					this.config.header.middle.data = '';
 				}else{
 					this.config.header.middle.noData = false;
-					this.config.header.middle.data = this.radioData[ this.config.header.index ].RecDate;
+					this.config.header.middle.data = this.radioData[ this.config.header.index ].prevNext;
 				}
 			},
 			radioClick( value,index ){
@@ -157,11 +179,11 @@
 						this.config.header.index = this.radioData.length - 1 ;
 					}
 				}
-				this.radio = this.radioData[ this.config.header.index ].RecDate;
+				this.radio = this.radioData[ this.config.header.index ].prevNext;
 				this.controllerPrevNext();
 			},
 			middleClick(){
-				this.radio = this.radioData[ this.config.header.index ].RecDate;
+				this.radio = this.radioData[ this.config.header.index ].prevNext;
 				this.config.popup.show = true;
 			}
 		},
@@ -169,8 +191,8 @@
 			this.controllerPrevNext();
 		},
 		created(){
-			if( this.radioData[0].RecDate ){
-				this.radio = this.radioData[0].RecDate;
+			if( this.radioData[0].prevNext ){
+				this.radio = this.radioData[0].prevNext;
 			}
 		},
 		computed:{

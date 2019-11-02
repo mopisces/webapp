@@ -2,10 +2,10 @@
 	<div>
 		<van-tabs v-model="filterForm.dataType">
 			<van-tab title="按门幅汇总" name="1">
-				<prev-next-width @radioConfirm="radioConfirm" :radioData="radioData.widthData"  v-if="config.prevNext.show"></prev-next-width>
+				<prev-next @radioConfirm="radioConfirm" :radioData="radioData.widthData"  v-if="config.prevNext.show"></prev-next>
 			</van-tab>
   			<van-tab title="按纸类汇总" name="2">
-  				<prev-next-code @radioConfirm="radioConfirm" :radioData="radioData.codeData"  v-if=" filterForm.dataType == 2 "></prev-next-code>
+  				<prev-next @radioConfirm="radioConfirm" :radioData="radioData.codeData"  v-if=" filterForm.dataType == 2 "></prev-next>
   			</van-tab>
 		</van-tabs>
 		<template v-if=" filterForm.dataType == 1 ">
@@ -20,8 +20,7 @@
 </template>
 <script>
 	import { Button, Tab, Tabs } from 'vant';
-	import PrevNextWidth from '@/components/subject/paper/PrevNextWidth.vue';
-	import PrevNextCode from '@/components/subject/paper/PrevNextCode.vue';
+	import PrevNext from '@/components/subject/PrevNext.vue';
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
@@ -32,8 +31,7 @@
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
 
-			PrevNextWidth,
-			PrevNextCode
+			PrevNext
 		},
 		data(){
 			return {
@@ -78,7 +76,6 @@
 		},
 		methods:{
 			radioConfirm( val ){
-				console.log(val)
 				this.filterForm.searchData = val;
 				this.getData(this.filterForm);
 			},
@@ -87,6 +84,14 @@
 				this.$request.staff.paper.stockConfig().then(res=>{
 					self.radioData.widthData = res.result.width_select;
 					self.radioData.codeData = res.result.code_select;
+
+					self.radioData.widthData.forEach((item,index)=>{
+						item['prevNext'] = item.PaperWidth;
+					});
+					self.radioData.codeData.forEach((item,index)=>{
+						item['prevNext'] = item.PaperCode;
+					});
+
 
 					self.filterForm.dataType = 1;
 					self.filterForm.searchData = self.radioData.widthData[0].PaperWidth;

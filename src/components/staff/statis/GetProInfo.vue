@@ -20,8 +20,8 @@
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-2"></van-field>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-3" @change="filterRemClick"/>
 		</popup-filter>
-		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
@@ -162,19 +162,16 @@
 			},
 
 			timePickerCancel(){
-				this.timePickerOverlay();
-			},
-			timePickerOverlay(){
 				this.config.popup.timeShow.start = false;
 				this.config.popup.timeShow.end = false;
 			},
 			timeBeginConfirm( value ){
 				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.timePickerOverlay();
+				this.timePickerCancel();
 			},
 			timeEndConfirm( value ){
 				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.timePickerOverlay();
+				this.timePickerCancel();
 			},
 			filterRemClick( checked ){
 				if( checked === false ){

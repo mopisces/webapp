@@ -19,14 +19,13 @@
 					员工信息
 				</div>
 			</div>
-			<div style="margin-top:46px">
-				<!-- <van-field v-model="staffInfo." readonly label="员工" input-align="center"/>
-				<van-field v-model="staffInfo." readonly label="开始日期" input-align="center"/>
-				<van-field v-model="staffInfo." readonly label="结束日期" input-align="center"/> -->
-				<van-field v-model="staffInfo.ordAmt" readonly label="下单金额" input-align="center"/>
-				<van-field v-model="staffInfo.tLength" readonly label="下单米数" input-align="center"/>
-				<van-field v-model="staffInfo.tSalesArea" readonly label="下单平方" input-align="center"/>
-			</div>
+			<div style="margin-top:46px"></div>
+				<!-- <van-field v-model="staffInfo." readonly label="员工" input-align="center"/> -->
+			<van-field v-model="filterForm.beginDate" readonly label="开始日期" input-align="center"/>
+			<van-field v-model="filterForm.endDate" readonly label="结束日期" input-align="center"/>
+			<van-field v-model="staffInfo.ordAmt" readonly label="下单金额" input-align="center"/>
+			<van-field v-model="staffInfo.tLength" readonly label="下单米数" input-align="center"/>
+			<van-field v-model="staffInfo.tSalesArea" readonly label="下单平方" input-align="center"/>
 			<van-button type="primary" size="normal" style="width:100%;" @click="config.popup.leftPopup.show = false">关闭</van-button>
 		</van-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
@@ -37,8 +36,8 @@
 			<van-switch-cell v-model="config.switch.rem.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick"/>
 		</popup-filter>
 		<cus-picker :show.sync="config.popup.cusFilter.show" :searchData.sync="pageConfig.searchData" :index.sync="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
-		<time-picker :dateTimeShow="config.popup.timeFilter.start.show" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow="config.popup.timeFilter.end.show" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timeFilter.start.show" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timeFilter.end.show" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
@@ -112,6 +111,14 @@
 			}
 		},
 		methods:{
+			getDailyUser( data ){
+				let self = this;
+				this.$request.staff.daily.getDailyUser().then(res=>{
+					self.staffInfo.ordAmt     = res.result.OrdAmt;
+					self.staffInfo.tLength    = res.result.TLength;
+					self.staffInfo.tSalesArea = res.result.TSalesArea;
+				});
+			},
 			cellClick(item){
 				let str  = JSON.stringify(Object.assign({},this.filterForm,item,{maxDate:dateTimeFormat( this.pageConfig.maxDate,'yyyy-MM-dd' ),minDate:dateTimeFormat( this.pageConfig.minDate,'yyyy-MM-dd' )}));
 				sessionStorage.setItem('daily/wGetCusOrder/info',str);
@@ -175,9 +182,6 @@
 			getPageName(){
 				return 'daily/wGetCusOrder';
 			},
-			timePickerOverlay(){
-				this.timePickerCancel();
-			},
 			timePickerCancel(){
 				this.config.popup.timeFilter.end.show = false;
 				this.config.popup.timeFilter.start.show = false;
@@ -199,6 +203,7 @@
 		},
 		mounted(){
 			this.getDailyConfig();
+			this.getDailyUser();
 			this.removeItem();
 		},
 		created(){

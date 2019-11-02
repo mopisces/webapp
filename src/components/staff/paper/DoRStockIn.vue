@@ -9,7 +9,7 @@
 		<van-field readonly label="重量(kg)" v-model="value" placeholder="自动查询" input-align="center"></van-field>
 		<van-field label="回仓重量" v-model="value" placeholder="输入回仓重量" input-align="center"></van-field>
 		<van-field readonly clickable label="入库日期" v-model="formData.inOpTime" input-align="center"  @click="pageConfig.show = true "></van-field>
-		<time-picker :dateTimeShow="pageConfig.show" :dateTime="pageConfig.pickerDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerCancel" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm">
+		<time-picker :dateTimeShow.sync="pageConfig.show" :dateTime.sync="pageConfig.pickerDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm">
 		</time-picker>
 		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:100px;">入库</van-button>
 	</div>

@@ -10,7 +10,7 @@
 				</div>
 			</div>
 		</van-sticky>
-		<prev-next-daily @radioConfirm="radioConfirm" :radioData="radioData" v-if="config.prevNext.show"></prev-next-daily>
+		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" v-if="config.prevNext.show"></prev-next>
 		<template v-if="config.field.show">
 			<van-field v-for="(item,index) in fieldData" :key="index" :value="item.OrdQty" readonly :label="item.guige" input-align="center" @click="fieldClick(index)">
 				<div slot="right-icon" style="color:#0bf147">{{ item.sstate }}</div>
@@ -79,18 +79,18 @@
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<van-field readonly clickable label="开始日期" v-model="filterCount.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true"></van-field>
 				<van-field readonly clickable label="结束日期" v-model="filterCount.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true"></van-field>
-				<radio-cell :radioInfo="filterForm.sState" :radioColumns="config.step.status" :title="config.radio.title" @radioClick="radioClick"></radio-cell>
+				<radio-cell :radioInfo.sync="filterForm.sState" :radioColumns="config.step.status" :title="config.radio.title"></radio-cell>
 			</div>
 		</popup-filter>
-		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
-
+		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate"  @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
+
 	import { Button, Icon, Popup, Field, Step, Steps, Sticky } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
-	import PrevNextDaily from '@/components/subject/daily/PrevNextDaily.vue';
+	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import TimePicker from '@/components/subject/TimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -104,10 +104,10 @@
 			[Steps.name]: Steps,
 			[Sticky.name]: Sticky,
 			
-			PrevNextDaily,
 			PopupFilter,
 			TimePicker,
-			RadioCell
+			RadioCell,
+			PrevNext
 		},
 		data(){
 			return {
@@ -208,6 +208,9 @@
 				this.config.prevNext.show = false;
 				this.$request.staff.daily.getCountOrder(data).then(res=>{
 					self.radioData = res.result;
+					self.radioData.forEach((item,index)=>{
+						item['prevNext'] = item.OrderDate;
+					});
 				}).then(()=>{
 					this.$nextTick(() => {
 					    this.config.prevNext.show = true;
@@ -252,26 +255,22 @@
 				await this.getCountOrder( this.filterCount );
 				this.config.popup.rightFilter.show = false;
 			},
-			timePickerOverlay(){
+			timePickerClose(){
 				this.config.popup.timeShow.start = false;
 				this.config.popup.timeShow.end   = false;
 			},
 			timePickerCancel(){
-				this.timePickerOverlay();
+				this.timePickerClose();
 			},
 			timeEndConfirm( value ){
 				this.filterCount.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
 				this.pageConfig.endDate = value.value;
-				this.timePickerOverlay();
+				this.timePickerClose();
 			},
 			timeBeginConfirm( value ){
 				this.filterCount.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
 				this.pageConfig.beginDate = value.value;
-				this.timePickerOverlay();
-			},
-			radioClick( val ){
-				this.filterForm.sState = val.val;
-				console.log(this.filterForm.sState);
+				this.timePickerClose();
 			}
 			
 		},

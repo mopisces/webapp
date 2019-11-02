@@ -38,7 +38,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Icon, Field,   } from 'vant';
+	import { Button, Icon, Field } from 'vant';
 	export default {
 		components:{
 			[Button.name]: Button,

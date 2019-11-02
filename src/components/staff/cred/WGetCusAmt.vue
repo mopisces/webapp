@@ -13,7 +13,7 @@
 		<van-cell-group>
 			<van-cell :title="item.CusShortName + '(' + item.CusId + ')' " is-link :value="item.LeftMinAmtCond + '/' + item.MinAmtCond " v-for="(item,index) in info.cell.data" :key="index" @click="cellClick(item.CusId)"/>
 		</van-cell-group>
-		<left-popup :leftShow="config.popup.leftPopup.show" @closeLeft="closeLeft()" :title="config.popup.leftPopup.title">
+		<left-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title">
 			<van-field label="员工" readonly v-model="info.leftPopup.data.taskId" placeholder="员工" input-align="center" slot="left-popup-1"/>
 			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="center" slot="left-popup-2"/>
 			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="center" slot="left-popup-3"/>
@@ -115,9 +115,6 @@
 			}
 		},
 		methods:{
-			closeLeft(){
-				this.config.popup.leftPopup.show = false;
-			},
 			getInitData( data ){
 				let self = this;
 				this.$request.staff.cred.wGetCusAmt( data ).then(res=>{

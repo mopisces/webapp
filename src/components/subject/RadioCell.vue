@@ -1,8 +1,8 @@
 <template>
-	<van-radio-group v-model="value" v-if="show">
+	<van-radio-group v-model="value">
 		<van-cell-group :title="title">
 			<van-cell  v-for="(item,index) in radioColumns" :title="item.title" :key="index" clickable>
-				<van-radio slot="right-icon" :name="item.value"  @click="click(item.value,index)"/>
+				<van-radio slot="right-icon" :name="item.value"  />
 			</van-cell>
 		</van-cell-group>
 	</van-radio-group>
@@ -16,7 +16,8 @@
 			[RadioGroup.name]: RadioGroup,
 			[Radio.name]: Radio,
 		},
-		props:{
+		props:['radioInfo','radioColumns','title'],
+		/*props:{
 			radioInfo:{
 				required:true,
 			},
@@ -26,20 +27,19 @@
 			title:{
 				required:true,
 			}	
-		},
+		},*/
 		data(){
 			return {
-				value:0,
-				show:true
+				value:this.radioInfo,
 			}
 		},
 		methods:{
-			click( val, index ){
+			/*click( val, index ){
 				this.$emit('radioClick',{val:val,index:index});
-			}
+			}*/
 		},
 		mounted(){
-			this.value = this.radioInfo;
+			
 		},
 		created(){
 			
@@ -50,6 +50,9 @@
 		watch:{
 			radioInfo(newV,oldV){
 				this.value = newV;
+			},
+			value(newV,oldV){
+				this.$emit("update:radioInfo", newV);
 			}
 		}
 	}

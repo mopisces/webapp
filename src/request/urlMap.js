@@ -60,6 +60,7 @@ const staff = {
 		getCusDateInfo:`${base.staff}staffGetCusInfo`,
 		dailyDetail:`${base.staff}staffDailyDetail`,
 		countOrder:`${base.staff}staffCountOrder`,
+		getDailyUser:`${base.staff}staffDailyUser`,
 	}
 }
 export { map, webappMap, adminUrl, staff};

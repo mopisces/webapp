@@ -1,5 +1,5 @@
 <template>
-	<van-popup :value="leftShow" position="left" :style="{ width: '100%',height:'100%' }" >
+	<van-popup v-model="show" position="left" :style="{ width: '100%',height:'100%' }" >
 		<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
 			<div class="van-nav-bar__title van-ellipsis">
 				{{ title }}
@@ -24,26 +24,15 @@
 			[Button.name]: Button,
 			[Popup.name]: Popup
 		},
-		props:{
-			leftShow:{
-				type:Boolean,
-				default:false,
-				required:true
-			},
-			title:{
-				type:String,
-				defalut:'',
-				required:true
-			}
-		},
+		props:['leftShow','title'],
 		data(){
 			return {
-				
+				show:this.leftShow,
 			}
 		},
 		methods:{
 			closeLeft(){
-				this.$emit('closeLeft');
+				this.show = false;
 			}
 		},
 		mounted(){
@@ -56,7 +45,12 @@
 			
 		},
 		watch:{
-			
+			leftShow(newV,oldV){
+				this.show = newV;
+			},
+			show(newV,oldV){
+				this.$emit("update:leftShow", newV);
+			}
 		}
 	}
 </script>

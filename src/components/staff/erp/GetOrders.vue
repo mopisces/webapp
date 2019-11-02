@@ -59,14 +59,14 @@
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="精确查询" input-align="center" type="number" maxlength="10"></van-field>
 			</div>
 			<van-field readonly clickable label="客户名称" :value="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusShow = true"  slot="filter-field-2"></van-field>
-			<radio-cell :radioInfo="filterForm.dateType" :radioColumns="config.radio.radioColumns" title="日期类型" slot="filter-field-3" @radioClick="radioClick"></radio-cell>
+			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.radioColumns" title="日期类型" slot="filter-field-3"></radio-cell>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" slot="filter-field-5" @change="filterRemClick"/>
 		</popup-filter>
 		<cus-picker :show.sync="config.popup.cusShow" :searchData.sync="cusPicker.searchData" :index.sync="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
-		<time-picker :dateTimeShow="config.popup.timeShow.start" :dateTime="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="config.popup.timeShow.start = false" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow="config.popup.timeShow.end" :dateTime="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @clickOverlay="timePickerOverlay" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate"  @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow.sync="config.popup.detailShow" @detailClose="detailClose"></order-detail>
 	</div>
 </template>
@@ -216,9 +216,6 @@
 			getPageName(){
 				return 'erp/getOrders';
 			},
-			radioClick( val ){
-				this.filterForm.dateType = val.val;
-			},
 
 			timePickerCancel(){
 				this.config.popup.timeShow.start = false;
@@ -232,9 +229,6 @@
 			timeEndConfirm( value ){
 				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
 				this.pageConfig.endDate = value.value;
-				this.timePickerCancel();
-			},
-			timePickerOverlay(){
 				this.timePickerCancel();
 			},
 			filterRemClick(){

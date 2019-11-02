@@ -51,7 +51,7 @@
 					<van-cell-group>
 						<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.PaperCode,index )">
 							<div class="van-cell__title">
-								<span>门幅:{{ item.PaperCode }}</span><br/>
+								<span>纸类:{{ item.PaperCode }}</span><br/>
 								<span>整卷卷数:{{ item.ZJCount }}</span><br/>
 								<span>残卷卷数:{{ item.CJCount }}</span><br/>
 								<span>重量:{{ item.SRWt }}</span>
