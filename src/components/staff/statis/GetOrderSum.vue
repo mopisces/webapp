@@ -1,12 +1,11 @@
 <template>
 	<div>
 		<van-sticky :offset-top="46">
-			<chart-header-select :show.sync="config.popup.chartSelect.show" :statisType="config.selectOption.statisType" :chartType="config.selectOption.chartType" :chartProperties="config.selectOption.chartProperties" @statusCloseClick="statusCloseClick" @chartTypeInside="chartTypeInside">
+			<chart-header-select :show.sync="config.popup.chartSelect.show" :statisType="config.selectOption.statisType" :chartType="config.selectOption.chartType" :chartProperties="config.selectOption.chartProperties" @selectOption="selectOption">
 			</chart-header-select>
-		
 			<div class="van-row">
 				<div class="van-col van-col--12">
-					<van-button plain hairline type="info" style="width:100%">刷新</van-button>
+					<van-button plain hairline type="info" style="width:100%" @click="refresh()">刷新</van-button>
 				</div>
 				<div class="van-col van-col--12">
 					<van-button plain hairline type="info" style="width:100%"  @click="config.popup.rightFilter.show = true">筛选</van-button>
@@ -65,10 +64,11 @@
 				</div>
 			</div>
 			<div slot="footer" style="text-align: right;">
-				<van-button size="small" type="info" @click="detailShowClick()">订单</van-button>
+				<van-button size="small" type="info" @click="config.popup.detail.show = true">订单</van-button>
 			</div>
 		</van-panel>
-		<statis-order-list :show.sync="config.popup.detail.show" :filterForm="filterForm"></statis-order-list>
+		<statis-order-list :show.sync="config.popup.detail.show" :filterForm="filterForm" type="returnQty"></statis-order-list>
+
 	</div>
 </template>
 <script>
@@ -139,25 +139,18 @@
 			}
 		},
 		methods:{
-			statusCloseClick( val ){
-				if( val.isClose === 1 ){
-					this.config.popup.chartSelect.show = false;
-				}else{
-					this.config.popup.chartSelect.show = true;
-				}
+			refresh(){
+				this.getOrderSum({});
 			},
-			chartTypeInside( data ){
-				this.config.selectOption.chartType = data;
+			selectOption( val ){
+				console.log(val)
+				
 			},
 			getOrderSum( data ){
 				let self = this;
 				this.$request.staff.statis.getOrderSum( data ).then(res=>{
 					self.listInfo = res.result;
 				});
-			},
-			detailShowClick(){
-				this.config.popup.detail.show = true;
-				console.log('detailShowClick');
 			}
 		},
 		mounted(){

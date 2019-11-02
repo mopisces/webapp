@@ -10,25 +10,7 @@
 			</van-tabs>
 		</van-sticky>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
-			<van-radio-group v-model="filterForm.safePaperType" slot="filter-field-1">
-				<van-cell-group title="纸种类型">
-					<van-cell title="全部" clickable @click="filterForm.safePaperType = '0'">
-						<van-radio slot="right-icon" name="0" />
-					</van-cell>
-					<van-cell title="无" clickable @click="filterForm.safePaperType = '1'">
-						<van-radio slot="right-icon" name="1" />
-					</van-cell>
-					<van-cell title="牛皮挂面" clickable @click="filterForm.safePaperType = '2'">
-						<van-radio slot="right-icon" name="2" />
-					</van-cell>
-					<van-cell title="涂布白板" clickable @click="filterForm.safePaperType = '3'">
-						<van-radio slot="right-icon" name="3" />
-					</van-cell>
-					<van-cell title="瓦纸" clickable @click="filterForm.safePaperType = '4'">
-						<van-radio slot="right-icon" name="4" />
-					</van-cell>
-				</van-cell-group>
-			</van-radio-group>
+			<radio-cell :radioInfo.sync="filterForm.safePaperType" :radioColumns="config.radio.options" :title="config.radio.title" slot="filter-field-1"></radio-cell>
 			<van-field label="原纸代码" v-model="filterForm.safePaperCode" input-align="center" placeholder="精确查询"  slot="filter-field-2"></van-field>
 			<van-field label="门幅" v-model="filterForm.safePaperWidth" input-align="center" placeholder="精确查询"  slot="filter-field-3"></van-field>
 			<van-field label="纸种名称" v-model="filterForm.safePaperName" input-align="center" placeholder="精确查询"  slot="filter-field-4"></van-field>
@@ -40,17 +22,14 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Field, RadioGroup, Radio, SwitchCell, Sticky, Tab, Tabs} from 'vant';
+	import { Button, Field, SwitchCell, Sticky, Tab, Tabs} from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import RadioCell from '@/components/subject/RadioCell.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
-			[Cell.name]: Cell,
-			[CellGroup.name]: CellGroup,
 			[Field.name]: Field,
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
 			[SwitchCell.name]: SwitchCell,
 			[Sticky.name]: Sticky,
 			[Tab.name]: Tab,
@@ -59,7 +38,8 @@
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
 
-			PopupFilter
+			PopupFilter,
+			RadioCell
 		},
 		data(){
 			return {
@@ -82,6 +62,16 @@
 					},
 					switch:{
 						checked:false
+					},
+					radio:{
+						options:[
+							{ title:'全部', value:0},
+							{ title:'无', value:1},
+							{ title:'牛皮挂面', value:2},
+							{ title:'涂布白板', value:3},
+							{ title:'瓦纸', value:4},
+						],
+						title:'纸种类型'
 					}
 				},
 				table:{
@@ -89,7 +79,7 @@
 				},
 				filterForm:{
 					safePaperState:0,
-					safePaperType:'0',
+					safePaperType: 0,
 					safePaperCode:'',
 					safePaperWidth:'',
 					safePaperName:'',

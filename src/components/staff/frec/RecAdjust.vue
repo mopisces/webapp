@@ -16,23 +16,8 @@
 			<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" slot="filter-field-2"/>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
-			<van-radio-group v-model="filterForm.dateType" slot="filter-field-5">
-				<van-cell-group title="日期类型">
-					<van-cell title="操作日期" clickable @click="filterForm.dateType = '0'">
-						<van-radio slot="right-icon" name="0" />
-					</van-cell>
-					<van-cell title="生效日期" clickable @click="filterForm.dateType = '1'">
-						<van-radio slot="right-icon" name="1" />
-					</van-cell>
-				</van-cell-group>
-			</van-radio-group>
-			<van-radio-group v-model="filterForm.payType" slot="filter-field-6">
-				<van-cell-group title="科目">
-					<van-cell :title="item.ShortName" clickable @click="filterForm.payType = item.ShortName" v-for="(item,index) in pageConfig.payType" :key="index">
-						<van-radio slot="right-icon" :name="item.ShortName" />
-					</van-cell>
-				</van-cell-group>
-			</van-radio-group>
+			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" :title="config.radio.title" slot="filter-field-5"></radio-cell>
+			<radio-cell :radioInfo.sync="filterForm.payType" :radioColumns="pageConfig.payType" title="科目" slot="filter-field-6"></radio-cell>
 			<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick"/>
 		</popup-filter>
 		<cus-picker :show.sync="config.popup.cusShow" :searchData.sync="info.cusPicker.searchData" :index.sync="info.cusPicker.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
@@ -41,19 +26,16 @@
 	</div>
 </template>
 <script>
-	import { Cell, CellGroup, Field, RadioGroup, Radio, SwitchCell } from 'vant';
+	import { Field, SwitchCell } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import TimePicker from '@/components/subject/TimePicker.vue';
+	import RadioCell from '@/components/subject/RadioCell.vue';
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
-			[Cell.name]: Cell,
-			[CellGroup.name]: CellGroup,
 			[Field.name]: Field,
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
 			[SwitchCell.name]: SwitchCell,
 
 			[VTable.name]: VTable,
@@ -61,7 +43,8 @@
 
 			CusPicker,
 			PopupFilter,
-			TimePicker
+			TimePicker,
+			RadioCell
 		},
 		data(){
 			return {
@@ -98,6 +81,13 @@
 							start:false,
 							end :false
 						}
+					},
+					radio:{
+						options:[
+							{ title:'操作日期', value:0},
+							{ title:'生效日期', value:1},
+						],
+						title:''
 					}
 				},
 				info:{
@@ -117,7 +107,7 @@
 					cusName:'',
 					taskId:'',
 					adjustType:1,
-					dateType:'0',
+					dateType:0,
 					beginDate:'',
 					endDate:'',
 					payType:'全部'
@@ -148,7 +138,9 @@
 
 					self.pageConfig.maxDate = new Date(res.result.date.RecAdjustMaxDate);
 					self.pageConfig.minDate = new Date(res.result.date.RecAdjustMinDate);
-					self.pageConfig.payType = res.result.pay_type;
+					res.result.pay_type.forEach((item,index)=>{
+						self.pageConfig.payType.push({title:item.ShortName,value:item.ShortName});
+					});
 				}).then(()=>{
 					sessionStorage.setItem('frec/recAdjust---filterInit',JSON.stringify(this.filterForm));
 				}).then(()=>{

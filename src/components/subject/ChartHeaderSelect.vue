@@ -101,7 +101,7 @@
 			closeClick( isClose = 1 ){
 				if( isClose == 1 ){
 					this.popupShow = false;
-					this.$emit('',this.config.select);
+					this.$emit('selectOption',this.config.select);
 				}else{
 					this.popupShow = true;
 				}

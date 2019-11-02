@@ -13,39 +13,15 @@
 		<van-cell-group>
 			<van-cell :title="item.CusShortName + '(' + item.CusId + ')' " is-link :value="item.LeftMinAmtCond + '/' + item.MinAmtCond " v-for="(item,index) in info.cell.data" :key="index" @click="cellClick(item.CusId)"/>
 		</van-cell-group>
-		<left-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title">
+		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
 			<van-field label="员工" readonly v-model="info.leftPopup.data.taskId" placeholder="员工" input-align="center" slot="left-popup-1"/>
 			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="center" slot="left-popup-2"/>
 			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="center" slot="left-popup-3"/>
-		</left-popup>
+		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="客户名称" v-model="filterForm.cusId" placeholder="选择客户名称" input-align="center" @click="config.popup.cusPicker.show = true" slot="filter-field-1"></van-field>
-			<van-radio-group v-model="filterForm.isStopped" slot="filter-field-2">
-				<van-cell-group title="是否停单">
-					<van-cell title="全部" clickable @click="filterForm.isStopped = '2'">
-						<van-radio slot="right-icon" name="2" />
-					</van-cell>
-					<van-cell title="是" clickable @click="filterForm.isStopped = '0'">
-						<van-radio slot="right-icon" name="0" />
-					</van-cell>
-					<van-cell title="否" clickable @click="filterForm.isStopped = '1'">
-						<van-radio slot="right-icon" name="1" />
-					</van-cell>
-				</van-cell-group>
-			</van-radio-group>
-			<van-radio-group v-model="filterForm.isSettleDay" slot="filter-field-3">
-				<van-cell-group title="是否月结">
-					<van-cell title="全部" clickable @click="filterForm.isSettleDay = '2'">
-						<van-radio slot="right-icon" name="2" />
-					</van-cell>
-					<van-cell title="是" clickable @click="filterForm.isSettleDay = '0'">
-						<van-radio slot="right-icon" name="0" />
-					</van-cell>
-					<van-cell title="否" clickable @click="filterForm.isSettleDay = '1'">
-						<van-radio slot="right-icon" name="1" />
-					</van-cell>
-				</van-cell-group>
-			</van-radio-group>
+			<radio-cell :radioInfo.sync="filterForm.isStopped" :radioColumns="config.radio.isStopped.options" :title="config.radio.isStopped.title" slot="filter-field-2"></radio-cell>
+			<radio-cell :radioInfo.sync="filterForm.isSettleDay" :radioColumns="config.radio.isSettleDay.options" :title="config.radio.isSettleDay.title" slot="filter-field-3"></radio-cell>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick" />
 		</popup-filter>
 		<cus-picker :show.sync="config.popup.cusPicker.show" :searchData.sync="cusPicker.searchData" :index.sync="cusPicker.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm" >
@@ -53,24 +29,24 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Field, RadioGroup, Radio,  SwitchCell, Sticky } from 'vant';
-	import LeftPopup from '@/components/subject/LeftPopup.vue';
+	import { Button, Cell, CellGroup, Field, SwitchCell, Sticky } from 'vant';
+	import NewPopup from '@/components/subject/NewPopup.vue';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import RadioCell from '@/components/subject/RadioCell.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
 			[Field.name]: Field,
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
 			[SwitchCell.name]: SwitchCell,
 			[Sticky.name]: Sticky,
 
-			LeftPopup,
+			NewPopup,
 			CusPicker,
 			PopupFilter,
+			RadioCell
 		},
 		data(){
 			return {
@@ -78,7 +54,8 @@
 					popup:{
 						leftPopup:{
 							show:false,
-							title:'员工信息'
+							title:'员工信息',
+							position:'left'
 						},
 						rightFilter:{
 							show:false
@@ -89,6 +66,24 @@
 					},
 					switch:{
 						checked:false
+					},
+					radio:{
+						isStopped:{
+							options:[
+								{ title:'全部' ,value:2 },
+								{ title:'是' ,value:0 },
+								{ title:'否' ,value:1 },
+							],
+							title:'是否停单'
+						},
+						isSettleDay:{
+							options:[
+								{ title:'全部' ,value:2 },
+								{ title:'是' ,value:0 },
+								{ title:'否' ,value:1 },
+							],
+							title:'是否月结'
+						}
 					}
 				},
 				info:{
@@ -105,8 +100,8 @@
 				},
 				filterForm:{
 					cusId:'',
-					isStopped:'2',
-					isSettleDay:'2'
+					isStopped:2,
+					isSettleDay:2
 				},
 				cusPicker:{
 					searchData:'',

@@ -13,21 +13,16 @@
 		<van-cell-group>
 			<van-cell is-link :title="item.CusShortName + '(' + item.CusId + ')'" :value="item.OrdAmt" v-for="(item,index) in cellInfo" :key="index" @click="cellClick(item)"/>
 		</van-cell-group>
-		<van-popup ref="staffInfo" v-model="config.popup.leftPopup.show" position="left"  :style="{ width: '100%', height:'100%' }">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
-				<div class="van-nav-bar__title van-ellipsis">
-					员工信息
-				</div>
-			</div>
-			<div style="margin-top:46px"></div>
+		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
+			<div slot="new-popup-1">
 				<!-- <van-field v-model="staffInfo." readonly label="员工" input-align="center"/> -->
-			<van-field v-model="filterForm.beginDate" readonly label="开始日期" input-align="center"/>
-			<van-field v-model="filterForm.endDate" readonly label="结束日期" input-align="center"/>
-			<van-field v-model="staffInfo.ordAmt" readonly label="下单金额" input-align="center"/>
-			<van-field v-model="staffInfo.tLength" readonly label="下单米数" input-align="center"/>
-			<van-field v-model="staffInfo.tSalesArea" readonly label="下单平方" input-align="center"/>
-			<van-button type="primary" size="normal" style="width:100%;" @click="config.popup.leftPopup.show = false">关闭</van-button>
-		</van-popup>
+				<van-field v-model="filterForm.beginDate" readonly label="开始日期" input-align="center"/>
+				<van-field v-model="filterForm.endDate" readonly label="结束日期" input-align="center"/>
+				<van-field v-model="staffInfo.ordAmt" readonly label="下单金额" input-align="center"/>
+				<van-field v-model="staffInfo.tLength" readonly label="下单米数" input-align="center"/>
+				<van-field v-model="staffInfo.tSalesArea" readonly label="下单平方" input-align="center"/>
+			</div>
+		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="客户名称" v-model="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusFilter.show = true" slot="filter-field-1"></van-field>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeFilter.start.show = true" slot="filter-field-2"></van-field>
@@ -46,6 +41,7 @@
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import TimePicker from '@/components/subject/TimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -58,7 +54,8 @@
 
 			CusPicker,
 			TimePicker,
-			PopupFilter
+			PopupFilter,
+			NewPopup
 		},
 		data(){
 			return {
@@ -66,6 +63,8 @@
 					popup:{
 						leftPopup:{
 							show :false,
+							title:'员工信息',
+							position:'left'
 						},
 						rightFilter:{
 							show :false,

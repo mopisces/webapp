@@ -45,9 +45,11 @@ const staff = {
 	statis:{
 		getProInfo:`${base.staff}getProInfo`,
 		getProInfoConfig:`${base.staff}getProInfoConfig`,
+		getOrdStockConfig:`${base.staff}getOrdStockConfig`,
 		getOrdStock:`${base.staff}getOrdStock`,
 		statisDetail:`${base.staff}statisDetail`,
 		getOrderSum:`${base.staff}getOrderSum`,
+		getOrdReturnSum:`${base.staff}getOrdReturnSum`,
 	},
 	erp:{
 		ordersDetail:`${base.staff}staffOrdersDetail`,

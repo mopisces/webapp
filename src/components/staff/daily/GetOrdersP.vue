@@ -17,14 +17,8 @@
 				<van-icon name="arrow" slot="button"/>
 			</van-field>
 		</template>
-		
-		<van-popup v-model="config.popup.leftPopup.show" position="left"  :style="{ height: '100%', width:'100%' }">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
-				<div class="van-nav-bar__title van-ellipsis">
-					员工信息
-				</div>
-			</div>
-			<div  style="margin-top:46px">
+		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
+			<div slot="new-popup-1">
 				<van-field v-model="leftPopupData.CusShortName" readonly label="客户简称" input-align="center"/>
 				<van-field v-model="leftPopupData.Merchandiser" readonly label="跟单员" input-align="center"/>
 				<van-field v-model="leftPopupData.TaskName" readonly label="业务员" input-align="center"/>
@@ -37,38 +31,32 @@
 				<van-field v-model="leftPopupData.TProVol" readonly label="生产立方" input-align="center"/>
 				<van-field v-model="leftPopupData.TStockVol" readonly label="库存立方" input-align="center"/>
 				<van-field v-model="leftPopupData.TUnDeliVol" readonly label="未送立方" input-align="center"/>
-				<van-button type="primary" size="normal" style="width:100%;" @click=" config.popup.leftPopup.show = false ">关闭</van-button>
 			</div>
-		</van-popup>
-		<van-popup v-model="config.popup.rightPopup.show" position="right" :style="{ height: '100%', width:'100%' }">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
-				<div class="van-nav-bar__title van-ellipsis">
-					订单详细信息
-				</div>
+		</new-popup>
+		<new-popup :leftShow.sync="config.popup.rightPopup.show" :title="config.popup.rightPopup.title" :position="config.popup.rightPopup.position" :isClose="true">
+			<div slot="new-popup-1">
+				<van-field v-model="rightPopupData.OrderId" readonly label="订单编号" input-align="center"/>
+				<van-field v-model="rightPopupData.CusPoNo" readonly label="客订单号" input-align="center"/>
+				<van-field v-model="rightPopupData.guige" readonly label="规格" input-align="center"/>
+				<van-field v-model="rightPopupData.ScoreInfo" readonly label="压线" input-align="center"/>
+				<van-field v-model="rightPopupData.BoardName" readonly label="材质名称" input-align="center"/>
+				<van-field v-model="rightPopupData.OrdQty" readonly label="订单数" input-align="center"/>
+				<van-field v-model="rightPopupData.OrderDate" readonly label="下单日期" input-align="center"/>
+				<van-field v-model="rightPopupData.sstate" readonly label="订单状态" input-align="center" @click="statusClick(rightPopupData.sstate)">
+					<van-icon name="arrow-down" slot="right-icon" v-if="!config.step.show"></van-icon>
+					<van-icon name="arrow-up" slot="right-icon" v-if="config.step.show"></van-icon>
+				</van-field>
+				<van-steps :active="config.step.active" v-if="config.step.show" direction="vertical">
+					<van-step v-for="(item,index) in config.step.status" :key="index">{{item.title}}</van-step>
+				</van-steps>
+				<van-field v-model="rightPopupData.InTime" readonly label="完工时间" input-align="center" v-if="rightPopupData.InTime"/>
+				<van-field v-model="rightPopupData.TimeToGo" readonly label="送货时间" input-align="center" v-if="rightPopupData.TimeToGo"/>
+				<van-field v-model="rightPopupData.ConfQty" readonly label="回签数量" input-align="center" v-if="rightPopupData.ConfQty"/>
+				<van-field v-model="rightPopupData.CarPName" readonly label="送货司机" input-align="center" v-if="rightPopupData.CarPName"/>
+				<van-field v-model="rightPopupData.Phone" readonly label="电话" input-align="center" v-if="rightPopupData.Phone"/>
+				<van-field v-model="rightPopupData.CarNo" readonly label="送货车号" input-align="center" v-if="rightPopupData.CarNo" @click="phoneClick(rightPopupData.CarNo)"/>
 			</div>
-			<div style="margin-top:46px"></div>
-			<van-field v-model="rightPopupData.OrderId" readonly label="订单编号" input-align="center"/>
-			<van-field v-model="rightPopupData.CusPoNo" readonly label="客订单号" input-align="center"/>
-			<van-field v-model="rightPopupData.guige" readonly label="规格" input-align="center"/>
-			<van-field v-model="rightPopupData.ScoreInfo" readonly label="压线" input-align="center"/>
-			<van-field v-model="rightPopupData.BoardName" readonly label="材质名称" input-align="center"/>
-			<van-field v-model="rightPopupData.OrdQty" readonly label="订单数" input-align="center"/>
-			<van-field v-model="rightPopupData.OrderDate" readonly label="下单日期" input-align="center"/>
-			<van-field v-model="rightPopupData.sstate" readonly label="订单状态" input-align="center" @click="statusClick(rightPopupData.sstate)">
-				<van-icon name="arrow-down" slot="right-icon" v-if="!config.step.show"></van-icon>
-				<van-icon name="arrow-up" slot="right-icon" v-if="config.step.show"></van-icon>
-			</van-field>
-			<van-steps :active="config.step.active" v-if="config.step.show" direction="vertical">
-				<van-step v-for="(item,index) in config.step.status" :key="index">{{item.title}}</van-step>
-			</van-steps>
-			<van-field v-model="rightPopupData.InTime" readonly label="完工时间" input-align="center" v-if="rightPopupData.InTime"/>
-			<van-field v-model="rightPopupData.TimeToGo" readonly label="送货时间" input-align="center" v-if="rightPopupData.TimeToGo"/>
-			<van-field v-model="rightPopupData.ConfQty" readonly label="回签数量" input-align="center" v-if="rightPopupData.ConfQty"/>
-			<van-field v-model="rightPopupData.CarPName" readonly label="送货司机" input-align="center" v-if="rightPopupData.CarPName"/>
-			<van-field v-model="rightPopupData.Phone" readonly label="电话" input-align="center" v-if="rightPopupData.Phone"/>
-			<van-field v-model="rightPopupData.CarNo" readonly label="送货车号" input-align="center" v-if="rightPopupData.CarNo" @click="phoneClick(rightPopupData.CarNo)"/>
-			<van-button type="primary" size="normal" style="width:100%;" @click=" config.popup.rightPopup.show = false ">关闭</van-button>
-		</van-popup>
+		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<van-field label="订单编号" v-model="filterForm.orderId" placeholder="模糊查询" input-align="center"></van-field>
@@ -87,13 +75,13 @@
 	</div>
 </template>
 <script>
-
 	import { Button, Icon, Popup, Field, Step, Steps, Sticky } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import TimePicker from '@/components/subject/TimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
+	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -107,7 +95,8 @@
 			PopupFilter,
 			TimePicker,
 			RadioCell,
-			PrevNext
+			PrevNext,
+			NewPopup
 		},
 		data(){
 			return {
@@ -115,9 +104,13 @@
 					popup:{
 						leftPopup:{
 							show :false,
+							title:'员工信息',
+							position:'left'
 						},
 						rightPopup:{
-							show :false
+							show :false,
+							title:'订单详细信息',
+							position:'right'
 						},
 						rightFilter:{
 							show :false,

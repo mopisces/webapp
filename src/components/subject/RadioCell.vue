@@ -17,26 +17,13 @@
 			[Radio.name]: Radio,
 		},
 		props:['radioInfo','radioColumns','title'],
-		/*props:{
-			radioInfo:{
-				required:true,
-			},
-			radioColumns:{
-				required:true,
-			},
-			title:{
-				required:true,
-			}	
-		},*/
 		data(){
 			return {
 				value:this.radioInfo,
 			}
 		},
 		methods:{
-			/*click( val, index ){
-				this.$emit('radioClick',{val:val,index:index});
-			}*/
+			
 		},
 		mounted(){
 			

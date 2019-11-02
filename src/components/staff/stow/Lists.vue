@@ -3,7 +3,6 @@
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" >
 		</v-table>	
-		<!-- <prepare-button ></prepare-button> -->
 	</div>
 </template>
 <script>

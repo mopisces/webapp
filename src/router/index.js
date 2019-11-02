@@ -111,6 +111,11 @@ let routes = [
                 component: resolve => require(['../components/staff/statis/GetOrderSum.vue'], resolve),
             },
             {
+                path:'statis/getOrdReturnSum',
+                meta: { title: '退货统计' },
+                component: resolve => require(['../components/staff/statis/GetOrdReturnSum.vue'], resolve),
+            },
+            {
                 path:'erp/getOrders',
                 meta: { title: 'ERP订单' },
                 component: resolve => require(['../components/staff/erp/GetOrders.vue'], resolve),

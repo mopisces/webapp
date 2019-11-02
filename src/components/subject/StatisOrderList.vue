@@ -11,8 +11,8 @@
 				</div>
 			</div>
 			<van-notice-bar color="#1989fa" background="#ecf9ff">
-				统计类型:{{  }}&nbsp;&nbsp;
-				条件对象:{{  }}&nbsp;&nbsp;
+				<span>统计类型:{{ fomatter(filterForm.sType) }}&nbsp;&nbsp;</span>
+				<span>条件对象:{{  }}&nbsp;&nbsp;</span>
 				日期类型:{{  }}&nbsp;&nbsp;
 				开始日期:{{  }}&nbsp;&nbsp;
 				结束日期:{{  }}&nbsp;&nbsp;
@@ -46,7 +46,8 @@
 							<van-row type="flex" justify="center">
 								<van-col span="8">订单数:{{ item.OrdQty }}</van-col>
 								<van-col span="6">送货数:{{ item.DeliQty }}</van-col>
-								<van-col span="6">库存数:{{ item.StockQty }}</van-col>
+								<van-col span="6"  v-if=" type === 'stockQty' ">库存数:{{ item.StockQty }}</van-col>
+								<van-col span="6"  v-if=" type === 'returnQty' ">退货数:{{ item.ReturnQty }}</van-col>
 							</van-row>
 						</div>
 						<div slot="footer" style="text-align: right;">
@@ -76,7 +77,7 @@
 
 			OrderDetail
 		},
-		props:['show','filterForm'],
+		props:['show','filterForm','type'],
 		data(){
 			return {
 				popupShow:this.show,
@@ -95,6 +96,9 @@
 					show:false,
 					orderId:'',
 					orderType:''
+				},
+				noticeInfo:{
+					
 				}
 				
 			}
@@ -103,11 +107,11 @@
 			statisDetail(){
 				let self = this;
 				let data = {
-					curPage:  this.formData.curPage,
-					sType:    this.filterForm.sType,
-					dateType: this.filterForm.dateType,
-					beginDate:this.filterForm.beginDate,
-					endDate:  this.filterForm.endDate,
+					curPage   : this.formData.curPage,
+					sType     : this.filterForm.sType,
+					dateType  : this.filterForm.dateType,
+					beginDate : this.filterForm.beginDate,
+					endDate   : this.filterForm.endDate,
 				}
 				this.$request.staff.statis.statisDetail( data ).then(res=>{
 					res.result.forEach((item,index)=>{
@@ -126,7 +130,7 @@
 			},
 			onLoad(){
 				this.formData.curPage++;
-				this.statisDetail( this.filterForm );
+				this.statisDetail();
 			},
 			detailOnClick( strOrderId ){
 				this.orderDetail.orderId = strOrderId.substring(1);
@@ -135,13 +139,28 @@
 			},
 			closeClick(){
 				this.popupShow = false;
+			},
+			fomatter( sType ){
+				switch( sType ){
+					case 1 :
+						return '订单统计';
+						break;
+					case 2 :
+						return '退货统计';
+						break;
+					case 3 :
+						return '库存统计';
+						break;
+					default:
+						return '';
+				}
 			}
 		},
 		mounted(){
 
 		},
 		created(){
-			
+			console.log(this.filterForm)
 		},
 		computed:{
 			
