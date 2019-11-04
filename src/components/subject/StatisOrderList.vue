@@ -11,13 +11,14 @@
 				</div>
 			</div>
 			<van-notice-bar color="#1989fa" background="#ecf9ff">
-				<span>统计类型:{{ fomatter(filterForm.sType) }}&nbsp;&nbsp;</span>
+				<span>统计类型:{{ statisFomatter(filterForm.sType) }}&nbsp;&nbsp;</span>
 				<span>条件对象:{{  }}&nbsp;&nbsp;</span>
-				日期类型:{{  }}&nbsp;&nbsp;
-				开始日期:{{  }}&nbsp;&nbsp;
-				结束日期:{{  }}&nbsp;&nbsp;
-				出库超期天数:{{  }}&nbsp;&nbsp;
-				交货超期天数:{{  }}
+				<span>条件:{{  }}&nbsp;&nbsp;</span>
+				日期类型:{{ dateFomatter(filterForm.dateType) }}&nbsp;&nbsp;
+				开始日期:{{ filterForm.beginDate }}&nbsp;&nbsp;
+				结束日期:{{ filterForm.endDate }}&nbsp;&nbsp;
+				<span v-if="filterForm.remainDay">出库超期天数:{{ filterForm.remainDay }}&nbsp;&nbsp;</span>
+				<span v-if="filterForm.diffDay">交货超期天数:{{ filterForm.diffDay }}</span>
 			</van-notice-bar>
 			<van-pull-refresh v-model="pullRefresh.reloading" @refresh="pullOnRefresh">
 				<van-list v-model="pushLoading.loading" :finished="pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
@@ -140,7 +141,7 @@
 			closeClick(){
 				this.popupShow = false;
 			},
-			fomatter( sType ){
+			statisFomatter( sType ){
 				switch( sType ){
 					case 1 :
 						return '订单统计';
@@ -150,6 +151,24 @@
 						break;
 					case 3 :
 						return '库存统计';
+						break;
+					default:
+						return '';
+				}
+			},
+			dateFomatter( dateType ){
+				switch( dateType ){
+					case 1 :
+						return '订单日期';
+						break;
+					case 2 :
+						return '交货日期';
+						break;
+					case 3 :
+						return '退货日期';
+						break;
+					case 4 :
+						return '生效日期';
 						break;
 					default:
 						return '';
