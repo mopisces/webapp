@@ -36,28 +36,57 @@ const statis = {
 			detail_s_type     : data.sType,
 			detail_remain_day : '0',
 			detail_diff_day   : '0',
-			/*detail_limit_factor : '',
-			detail_limit_value  : '',*/
+		}
+		if( data.limitFactor ){
+			switch( data.limitFactor ){
+				case 'flutes' :
+					postData.detail_limit_factor = 1;
+					postData.detail_limit_value = data.limitValue;
+					break;
+				case 'cusId' :
+					postData.detail_limit_factor = 2;
+					postData.detail_limit_value = data.limitValue;
+					break;
+				case 'taskId' :
+					postData.detail_limit_factor = 3;
+					postData.detail_limit_value = data.limitValue;
+					break;
+				case 'returnCause' :
+					postData.detail_limit_factor = 4;
+					postData.detail_limit_value = data.limitValue;
+					break;
+				default : 
+					postData.detail_limit_factor = 0;
+					postData.detail_limit_value = '';
+			}
+			
 		}
 		return post(staff.statis.statisDetail,postData);
 	},
+	getOrderSumConfig(){
+		return post(staff.statis.getOrderSumConfig);
+	},
 	getOrderSum( data ){
 		let postData = {
-			order_begin_date  : '2017-11-01',
-			order_end_date    : '2019-10-31',
-			order_statis_type : '0',
-			order_date_type   : 'OrderDate'
+			order_begin_date  : data.beginDate,
+			order_end_date    : data.endDate,
+			order_statis_type : data.statisState,
+			order_date_type   : data.dateType
 		};
 		return post(staff.statis.getOrderSum,postData);
 	},
+	getOrdReturnSumConfig(){
+		return post(staff.statis.getOrdReturnSumConfig);
+	},
 	getOrdReturnSum( data ){
 		let postData={
-			return_begin_date   : '2017-11-02',
-			return_end_date     : '2019-11-02',
-			return_statis_state : '0',
-			return_date_type    : 'IssueDate',   
+			return_begin_date   : data.beginDate,
+			return_end_date     : data.endDate,
+			return_statis_state : data.statisState,
+			return_date_type    : data.dateType,   
 		};
 		return post(staff.statis.getOrdReturnSum,postData)
 	}
+
 }
 export default statis;

@@ -48,7 +48,9 @@ const staff = {
 		getOrdStockConfig:`${base.staff}getOrdStockConfig`,
 		getOrdStock:`${base.staff}getOrdStock`,
 		statisDetail:`${base.staff}statisDetail`,
+		getOrderSumConfig:`${base.staff}getOrderSumConfig`,
 		getOrderSum:`${base.staff}getOrderSum`,
+		getOrdReturnSumConfig:`${base.staff}getOrdReturnConfig`,
 		getOrdReturnSum:`${base.staff}getOrdReturnSum`,
 	},
 	erp:{

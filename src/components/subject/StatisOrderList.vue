@@ -12,9 +12,9 @@
 			</div>
 			<van-notice-bar color="#1989fa" background="#ecf9ff">
 				<span>统计类型:{{ statisFomatter(filterForm.sType) }}&nbsp;&nbsp;</span>
-				<span>条件对象:{{  }}&nbsp;&nbsp;</span>
-				<span>条件:{{  }}&nbsp;&nbsp;</span>
-				日期类型:{{ dateFomatter(filterForm.dateType) }}&nbsp;&nbsp;
+				<span v-if="filterForm.limitValue">条件对象:{{ factorFormatter(filterForm.limitFactor) }}&nbsp;&nbsp;</span>
+				<span v-if="filterForm.limitValue">条件值:{{ filterForm.limitValue }}&nbsp;&nbsp;</span>
+				<span >日期类型:{{ dateFomatter(filterForm.dateType) }}&nbsp;&nbsp;</span>
 				开始日期:{{ filterForm.beginDate }}&nbsp;&nbsp;
 				结束日期:{{ filterForm.endDate }}&nbsp;&nbsp;
 				<span v-if="filterForm.remainDay">出库超期天数:{{ filterForm.remainDay }}&nbsp;&nbsp;</span>
@@ -52,7 +52,7 @@
 							</van-row>
 						</div>
 						<div slot="footer" style="text-align: right;">
-							<van-button size="small" type="info" @click="detailOnClick(item.strOrderId)">详情</van-button>
+							<van-button size="small" type="info" @click="detailOnClick(item)">详情</van-button>
 						</div>
 					</van-panel>
 				</van-list>
@@ -98,10 +98,9 @@
 					orderId:'',
 					orderType:''
 				},
-				noticeInfo:{
-					
-				}
-				
+				noticeStr:{
+					limitValue:''
+				},
 			}
 		},
 		methods:{
@@ -113,6 +112,10 @@
 					dateType  : this.filterForm.dateType,
 					beginDate : this.filterForm.beginDate,
 					endDate   : this.filterForm.endDate,
+				};
+				if( this.filterForm.limitFactor ){
+					data.limitFactor = this.filterForm.limitFactor;
+					data.limitValue = this.filterForm.limitValue;
 				}
 				this.$request.staff.statis.statisDetail( data ).then(res=>{
 					res.result.forEach((item,index)=>{
@@ -122,6 +125,8 @@
 					if( res.result == null || res.result.length != 6 ){
 						self.pushLoading.finished = true;
 					}
+				}).then(()=>{
+					
 				});
 			},
 			pullOnRefresh(){
@@ -133,9 +138,9 @@
 				this.formData.curPage++;
 				this.statisDetail();
 			},
-			detailOnClick( strOrderId ){
-				this.orderDetail.orderId = strOrderId.substring(1);
-				this.orderDetail.orderType = strOrderId[0];
+			detailOnClick( item ){
+				this.orderDetail.orderId = item.strOrderId.substring(1);
+				this.orderDetail.orderType = item.strOrderId[0];
 				this.orderDetail.show = true;
 			},
 			closeClick(){
@@ -173,13 +178,31 @@
 					default:
 						return '';
 				}
+			},
+			factorFormatter( factor ){
+				switch( factor ){
+					case 'flutes' :
+						return '坑型';
+						break;
+					case 'cusId' :
+						return '客户';
+						break;
+					case 'taskId' :
+						return '业务员';
+						break;
+					case 'returnCause' :
+						return '退货原因';
+						break;
+					default:
+						return '汇总';
+				}
 			}
 		},
 		mounted(){
 
 		},
 		created(){
-			console.log(this.filterForm)
+			
 		},
 		computed:{
 			
@@ -190,7 +213,7 @@
 			},
 			popupShow(newV,oldV){
 				this.$emit("update:show", newV);
-			},
+			}
 		}
 	}
 </script>

@@ -409,35 +409,6 @@
 			</div>
 			<div class="van-cell van-field">
 				<div class="van-cell__title van-field__label">
-					<span>客订单号</span>
-				</div>
-				<div class="van-cell__value">
-					<div class="van-field__body">
-						<input type="text" readonly="readonly" class="van-field__control van-field__control--center" :value="info.orderDetail.CusPoNo">
-					</div>
-				</div>
-			</div>
-			<div class="van-cell van-field">
-				<div class="van-cell__title van-field__label">
-					<span>客订单号</span>
-				</div>
-				<div class="van-cell__value">
-					<div class="van-field__body">
-						<input type="text" readonly="readonly" class="van-field__control van-field__control--center" :value="info.orderDetail.CusPoNo">
-					</div>
-				</div>
-			</div>
-			<div class="van-cell van-field">
-				<div class="van-cell__title van-field__label">
-					<span>客订单号</span></div>
-				<div class="van-cell__value">
-					<div class="van-field__body">
-						<input type="text" readonly="readonly" class="van-field__control van-field__control--center" :value="info.orderDetail.CusPoNo">
-					</div>
-				</div>
-			</div>
-			<div class="van-cell van-field">
-				<div class="van-cell__title van-field__label">
 					<span>订单材质</span>
 				</div>
 				<div class="van-cell__value">

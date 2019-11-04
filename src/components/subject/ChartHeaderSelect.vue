@@ -3,8 +3,8 @@
 		<van-notice-bar color="#1989fa" background="#ecf9ff" mode="link" @click="noticeClick(0)">
 			统计类型:{{ config.notice.statisTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;
 			统计方式:{{ config.notice.statisWayText }}&nbsp;&nbsp;&nbsp;&nbsp;
-			图表类型:{{ config.notice.chartTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;
-			图表属性:{{ config.notice.chartPropertiesText }}&nbsp;&nbsp;&nbsp;&nbsp;
+			<span v-if="config.notice.chartTypeText">图表类型:{{ config.notice.chartTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			<span v-if="config.notice.chartTypeText">图表属性:{{ config.notice.chartPropertiesText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
 		</van-notice-bar>
 		<van-popup v-model="popupShow" position="right" :style="{ height: '100%', width:'100%' }" :close-on-click-overlay="false">
 			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">

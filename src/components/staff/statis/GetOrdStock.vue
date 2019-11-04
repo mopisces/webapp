@@ -25,7 +25,7 @@
 				<van-button size="small" type="info" @click="config.popup.detailShow = true">订单</van-button>
 			</div>
 		</van-panel>
-		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="stockQty"></statis-order-list>
+		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="stockQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-1"></radio-cell>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timePicker.startShow = true" slot="filter-field-2"></van-field>
@@ -63,8 +63,8 @@
 				config:{
 					selectOption:{
 						statisType:[
-							{ text: '汇总',   value: 0 },
-							{ text: '按客户', value: 1 }
+							{ text: '汇总',   value: 0, factor:'' },
+							{ text: '按客户', value: 1, factor:'cusId' }
 						],
 						chartType:['all'],
 						chartProperties:[
@@ -119,12 +119,6 @@
 			selectOption( val ){
 				this.filterForm.statisState = val.statisType;
 			},
-			getOrdStock( data ){
-				let self = this;
-				this.$request.staff.statis.getOrdStock( data ).then(res=>{
-					self.info.panelList = res.result;
-				});
-			},
 			getOrdStockConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.statis.getOrdStockConfig().then(res=>{
@@ -145,6 +139,12 @@
 					this.getOrdStock( this.filterForm );
 				});
 			},
+			getOrdStock( data ){
+				let self = this;
+				this.$request.staff.statis.getOrdStock( data ).then(res=>{
+					self.info.panelList = res.result;
+				});
+			},
 			resetClick(){
 				this.getOrdStockConfig( true );
 			},
@@ -162,8 +162,8 @@
 			}
 		},
 		mounted(){
-			this.getOrdStockConfig();
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
+			this.getOrdStockConfig();
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','库存统计');
