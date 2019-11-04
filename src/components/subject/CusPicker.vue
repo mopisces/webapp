@@ -51,15 +51,7 @@
 			this.cusPickerSearch();
 		},
 		created(){
-			let itemName = this.$parent.getPageName();
-			if( sessionStorage.getItem(itemName + '---pageConfig') !== null ){
-				try{
-					let pageConfig = JSON.parse(sessionStorage.getItem(itemName + '---pageConfig'));
-					this.defaultIndex = pageConfig.defaultIndex;
-				}catch(err){
-					sessionStorage.removeItem(itemName + '---pageConfig');
-				}
-			}
+			
 		},
 		computed:{
 			

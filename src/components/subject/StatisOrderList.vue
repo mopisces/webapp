@@ -70,7 +70,6 @@
 			[Row.name]: Row,
 			[Col.name]: Col,
 			[Popup.name]: Popup,
-			
 			[PullRefresh.name]: PullRefresh,
 			[List.name]: List,
 			[NoticeBar.name]: NoticeBar,

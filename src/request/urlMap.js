@@ -52,6 +52,8 @@ const staff = {
 		getOrderSum:`${base.staff}getOrderSum`,
 		getOrdReturnSumConfig:`${base.staff}getOrdReturnConfig`,
 		getOrdReturnSum:`${base.staff}getOrdReturnSum`,
+		getSchSumConfig:`${base.staff}getSchSumConfig`,
+		getSchSum:`${base.staff}getSchSum`,
 	},
 	erp:{
 		ordersDetail:`${base.staff}staffOrdersDetail`,

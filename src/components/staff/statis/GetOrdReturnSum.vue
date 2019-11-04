@@ -4,7 +4,7 @@
 			<chart-header-select :show.sync="config.popup.chartSelect.show" :statisType="config.selectOption.statisType" :chartType="config.selectOption.chartType" :chartProperties="config.selectOption.chartProperties" @selectOption="selectOption">
 			</chart-header-select>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="onRefresh()">刷新</van-button>
-			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="click()">筛选</van-button>
+			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="config.popup.filterShow = true">筛选</van-button>
 		</van-sticky>
 		<van-panel v-for="(item,index) in panelList" :key="index">
 			<div slot="default">
@@ -31,12 +31,15 @@
 				<van-button size="small" type="info" @click="orderClick(item)">订单</van-button>
 			</div>
 		</van-panel>
+		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
+			我也是有底线的
+  		</div>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="returnQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-1"></radio-cell>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timePicker.startShow = true" slot="filter-field-2"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timePicker.endShow = true" slot="filter-field-3"></van-field>
-			<van-switch-cell v-model="config.switchCell.checked" title="标题" />
+			<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" slot="filter-field-4" @change="switchChange"/>
 		</popup-filter>
 		<time-picker :dateTimeShow.sync="config.popup.timePicker.startShow" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.startShow = false" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timePicker.endShow" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.endShow = false" @onConfirm="timeEndConfirm"></time-picker>
@@ -66,7 +69,10 @@
 		},
 		data(){
 			return {
+				finished:true,
 				config:{
+					isInit:true,
+					getConfig:true,
 					switchCell:{
 						checked:false
 					},
@@ -110,7 +116,8 @@
 					beginDate:'',
 					endDate:  '',
 					statisState:0,
-					limitFactor:''
+					limitFactor:'',
+					limitValue:''
 				},
 				pageConfig:{
 					minDate:new Date(),
@@ -142,11 +149,13 @@
 			getOrdReturnSumConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.statis.getOrdReturnSumConfig().then(res=>{
-					self.filterForm.beginDate = res.result.GetOrdReturnSumBeginDate;
-					self.filterForm.endDate = res.result.GetOrdReturnSumEndDate;
+					if( this.config.getConfig ){
+						self.filterForm.beginDate = res.result.GetOrdReturnSumBeginDate;
+						self.filterForm.endDate = res.result.GetOrdReturnSumEndDate;
 
-					self.pageConfig.beginDate = new Date(res.result.GetOrdReturnSumBeginDate);
-					self.pageConfig.endDate = new Date(res.result.GetOrdReturnSumEndDate);
+						self.pageConfig.beginDate = new Date(res.result.GetOrdReturnSumBeginDate);
+						self.pageConfig.endDate = new Date(res.result.GetOrdReturnSumEndDate);
+					}
 					self.pageConfig.minDate = new Date(res.result.GetOrdReturnSumMinDate);
 					self.pageConfig.maxDate = new Date(res.result.GetOrdReturnSumMaxDate);
 				}).then(()=>{
@@ -160,9 +169,15 @@
 				let self = this;
 				this.$request.staff.statis.getOrdReturnSum( data ).then(res=>{
 					self.panelList = res.result;
+					this.finished = false;
+					if( res.result == null || res.result.length < 6 ){
+						this.finished = true;
+					}
 				});
 			},
 			resetClick(){
+				this.filterForm.dateType = 4;
+				sessionStorage.removeItem('statis/getOrdReturnSum');
 				this.getOrdReturnSumConfig( true );
 			},
 			filterClick(){
@@ -176,23 +191,65 @@
 			timeEndConfirm( val ){
 				this.filterForm.endDate = dateTimeFormat(val.value,'yyyy-MM-dd');
 				this.config.popup.timePicker.endShow = false;
+			},
+			switchChange(checked){
+				if( checked ){
+					sessionStorage.setItem('statis/getOrdReturnSum',JSON.stringify(this.filterForm));
+				}else{
+					sessionStorage.removeItem('statis/getOrdReturnSum');
+				}
+			}
+		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','退货统计');
+			if( sessionStorage.getItem('statis/getOrdReturnSum') ){
+				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrdReturnSum'));
+				this.filterForm = storageData;
+				this.pageConfig.beginDate = new Date(storageData.beginDate);
+				this.pageConfig.endDate = new Date(storageData.endDate);
+				this.config.getConfig = false;
+				this.config.switchCell.checked = true;
 			}
 		},
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
 			this.getOrdReturnSumConfig();
 		},
-		created(){
-			this.$store.commit('staff/setHeaderTitle','退货统计');
+		updated(){
+			this.config.isInit = false;
 		},
 		computed:{
 			statisStateChange(){
 				return this.filterForm.statisState;
+			},
+			filterFormBeginDateChange(){
+				return this.filterForm.beginDate;
+			},
+			filterFormEndDateChange(){
+				return this.filterForm.endDate;
+			},
+			filterFormDateTypeChange(){
+				return this.filterForm.dateType;
 			}
 		},
 		watch:{
 			statisStateChange(newV,oldV){
 				this.onRefresh( this.filterForm );
+			},
+			filterFormBeginDateChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
+			},
+			filterFormEndDateChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
+			},
+			filterFormDateTypeChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
 			}
 		}
 	}

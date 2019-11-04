@@ -55,12 +55,13 @@
 	
 </template>
 <script>
-	import { Popup, NoticeBar, Button } from 'vant';
+	import { Button,Popup, NoticeBar } from 'vant';
 	export default {
 		components:{
+			[Button.name]: Button,
 			[Popup.name]: Popup ,
 			[NoticeBar.name]: NoticeBar ,
-			[Button.name]: Button,
+			
 		},
 		props:['show','statisType','chartType','chartProperties'],
 		data(){

@@ -15,11 +15,14 @@
 		methods:{
 
 		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','');
+		},
 		mounted(){
 
 		},
-		created(){
-			this.$store.commit('staff/setHeaderTitle','');
+		updated(){
+			
 		},
 		computed:{
 			

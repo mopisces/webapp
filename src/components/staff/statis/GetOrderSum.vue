@@ -67,18 +67,22 @@
 				<van-button size="small" type="info" @click="config.popup.detailShow = true">订单</van-button>
 			</div>
 		</van-panel>
+		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
+			我也是有底线的
+  		</div>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="returnQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-1"></radio-cell>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timePicker.startShow = true" slot="filter-field-2"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timePicker.endShow = true" slot="filter-field-3"></van-field>
+			<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" slot="filter-field-4" @change="switchChange"/>
 		</popup-filter>
 		<time-picker :dateTimeShow.sync="config.popup.timePicker.startShow" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.startShow = false" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timePicker.endShow" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.endShow = false" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
-	import { Button, Field, Panel, Sticky } from 'vant';
+	import { Button, Field, SwitchCell, Panel, Sticky } from 'vant';
 	import ChartHeaderSelect from '@/components/subject/ChartHeaderSelect.vue';
 	import StatisOrderList from '@/components/subject/StatisOrderList.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
@@ -89,6 +93,7 @@
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
+			[SwitchCell.name]: SwitchCell,
 			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 
@@ -100,7 +105,13 @@
 		},
 		data(){
 			return {
+				finished:false,
 				config:{
+					getConfig:true,
+					isInit:true,
+					switchCell:{
+						checked:false,
+					},
 					popup:{
 						filterShow:false,
 						detailShow:false,
@@ -175,11 +186,13 @@
 			getOrderSumConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.statis.getOrderSumConfig().then(res=>{
-					self.filterForm.beginDate = res.result.GetOrderSumBeginDate;
-					self.filterForm.endDate = res.result.GetOrderSumEndDate;
+					if( this.config.getConfig ){
+						self.filterForm.beginDate = res.result.GetOrderSumBeginDate;
+						self.filterForm.endDate = res.result.GetOrderSumEndDate;
 
-					self.pageConfig.beginDate = new Date(res.result.GetOrderSumBeginDate);
-					self.pageConfig.endDate = new Date(res.result.GetOrderSumEndDate);
+						self.pageConfig.beginDate = new Date(res.result.GetOrderSumBeginDate);
+						self.pageConfig.endDate = new Date(res.result.GetOrderSumEndDate);
+					}
 					self.pageConfig.minDate = new Date(res.result.GetOrderSumMinDate);
 					self.pageConfig.maxDate = new Date(res.result.GetOrderSumMaxDate);
 				}).then(()=>{
@@ -193,9 +206,15 @@
 				let self = this;
 				this.$request.staff.statis.getOrderSum( data ).then(res=>{
 					self.listInfo = res.result;
+					this.finished = false;
+					if( res.result == null || res.result.length < 6 ){
+						this.finished = true;
+					}	
 				});
 			},
 			resetClick(){
+				this.filterForm.dateType = 1;
+				sessionStorage.removeItem('statis/getOrderSum');
 				this.getOrderSumConfig( true );
 			},
 			filterClick(){
@@ -209,23 +228,65 @@
 			timeEndConfirm( val ){
 				this.filterForm.endDate = dateTimeFormat(val.value,'yyyy-MM-dd');
 				this.config.popup.timePicker.endShow = false;
+			},
+			switchChange( checked ){
+				if( checked ){
+					sessionStorage.setItem('statis/getOrderSum',JSON.stringify(this.filterForm));
+				}else{
+					sessionStorage.removeItem('statis/getOrderSum');
+				}
+			}
+		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','订单统计');
+			if( sessionStorage.getItem('statis/getOrderSum') ){
+				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrderSum'));
+				this.filterForm = storageData;
+				this.pageConfig.beginDate = new Date(storageData.beginDate);
+				this.pageConfig.endDate = new Date(storageData.endDate);
+				this.config.getConfig = false;
+				this.config.switchCell.checked = true;
 			}
 		},
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
 			this.getOrderSumConfig();
 		},
-		created(){
-			this.$store.commit('staff/setHeaderTitle','订单统计');
+		updated(){
+			this.config.isInit = false;
 		},
 		computed:{
 			statisStateChange(){
 				return this.filterForm.statisState;
+			},
+			filterFormBeginDateChange(){
+				return this.filterForm.beginDate;
+			},
+			filterFormEndDateChange(){
+				return this.filterForm.endDate;
+			},
+			filterFormDateTypeChange(){
+				return this.filterForm.dateType;
 			}
 		},
 		watch:{
 			statisStateChange(newV,oldV){
 				this.onRefresh( this.filterForm );
+			},
+			filterFormBeginDateChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
+			},
+			filterFormEndDateChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
+			},
+			filterFormDateTypeChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
 			}
 		}
 	}

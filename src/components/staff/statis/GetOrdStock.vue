@@ -25,6 +25,9 @@
 				<van-button size="small" type="info" @click="config.popup.detailShow = true">订单</van-button>
 			</div>
 		</van-panel>
+		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
+			我也是有底线的
+  		</div>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="stockQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-1"></radio-cell>
@@ -32,13 +35,14 @@
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timePicker.endShow = true" slot="filter-field-3"></van-field>
 			<van-field label="在库超期天数" input-align="center" v-model="filterForm.remainDay" slot="filter-field-4" type="number"></van-field>
 			<van-field label="交货超期天数" input-align="center" v-model="filterForm.diffDay" slot="filter-field-5" type="number"></van-field>
+			<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" slot="filter-field-7" @change="switchChange"/>
 		</popup-filter>
 		<time-picker :dateTimeShow.sync="config.popup.timePicker.startShow" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.startShow = false" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timePicker.endShow" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.endShow = false" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
-	import { Button, Field, Panel, Sticky } from 'vant';
+	import { Button, Field, SwitchCell, Panel, Sticky } from 'vant';
 	import ChartHeaderSelect from '@/components/subject/ChartHeaderSelect.vue';
 	import StatisOrderList from '@/components/subject/StatisOrderList.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
@@ -49,6 +53,7 @@
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
+			[SwitchCell.name]: SwitchCell,
 			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 
@@ -60,7 +65,13 @@
 		},
 		data(){
 			return {
+				finished:false,
 				config:{
+					getConfig:true,
+					isInit:true,
+					switchCell:{
+						checked:false,
+					},
 					selectOption:{
 						statisType:[
 							{ text: '汇总',   value: 0, factor:'' },
@@ -108,7 +119,7 @@
 					beginDate:new Date(),
 					endDate:new Date(),
 					maxDate:new Date(),
-					minData:new Date()
+					minDate:new Date()
 				}
 			}
 		},
@@ -122,16 +133,16 @@
 			getOrdStockConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.statis.getOrdStockConfig().then(res=>{
-					self.pageConfig.beginDate = new Date(res.result.date_info.GetOrdStockBeginDate);
-					self.pageConfig.endDate   = new Date(res.result.date_info.GetOrdStockEndDate);
+					if( this.config.getConfig ){
+						self.pageConfig.beginDate = new Date(res.result.date_info.GetOrdStockBeginDate);
+						self.pageConfig.endDate   = new Date(res.result.date_info.GetOrdStockEndDate);
+						self.filterForm.beginDate = res.result.date_info.GetOrdStockBeginDate;
+						self.filterForm.endDate   = res.result.date_info.GetOrdStockEndDate;
+						self.filterForm.remainDay = res.result.limit_data.GetOrdStockiDiffDDay;
+						self.filterForm.diffDay   = res.result.limit_data.GetOrdStockiRemainDay;
+					}
 					self.pageConfig.maxDate   = new Date(res.result.date_info.GetOrdStockMaxDate);
-					self.pageConfig.minData   = new Date(res.result.date_info.GetOrdStockMinDate);
-
-					self.filterForm.beginDate = res.result.date_info.GetOrdStockBeginDate;
-					self.filterForm.endDate   = res.result.date_info.GetOrdStockEndDate;
-					self.filterForm.remainDay = res.result.limit_data.GetOrdStockiDiffDDay;
-					self.filterForm.diffDay   = res.result.limit_data.GetOrdStockiRemainDay;
-
+					self.pageConfig.minDate   = new Date(res.result.date_info.GetOrdStockMinDate);
 				}).then(()=>{
 					if( isReset ){
 						return ;
@@ -143,9 +154,17 @@
 				let self = this;
 				this.$request.staff.statis.getOrdStock( data ).then(res=>{
 					self.info.panelList = res.result;
+					this.finished = false;
+					if( res.result == null || res.result.length < 6 ){
+						this.finished = true;
+					}
 				});
 			},
 			resetClick(){
+				this.filterForm.dateType = 1;
+				this.filterForm.diffDay = 0;
+				this.filterForm.remainDay = 0;
+				sessionStorage.removeItem('statis/getOrdStock');
 				this.getOrdStockConfig( true );
 			},
 			filterClick(){
@@ -159,23 +178,81 @@
 			timeEndConfirm( value ){
 				this.filterForm.endDate = dateTimeFormat(value.value,'yyyy-MM-dd');
 				this.config.popup.timePicker.endShow = false;
+			},
+			switchChange( checked ){
+				if( checked ){
+					sessionStorage.setItem('statis/getOrdStock',JSON.stringify(this.filterForm));
+				}else{
+					sessionStorage.removeItem('statis/getOrdStock');
+				}
+			}
+		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','库存统计');
+			if( sessionStorage.getItem('statis/getOrdStock') ){
+				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrdStock'));
+				this.filterForm = storageData;
+				this.pageConfig.beginDate = new Date(storageData.beginDate);
+				this.pageConfig.endDate = new Date(storageData.endDate);
+				this.config.getConfig = false;
+				this.config.switchCell.checked = true;
 			}
 		},
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
 			this.getOrdStockConfig();
 		},
-		created(){
-			this.$store.commit('staff/setHeaderTitle','库存统计');
+		updated(){
+			this.config.isInit = false;
 		},
 		computed:{
 			statisStateChange(){
 				return this.filterForm.statisState;
+			},
+			filterFormBeginDateChange(){
+				return this.filterForm.beginDate;
+			},
+			filterFormEndDateChange(){
+				return this.filterForm.endDate;
+			},
+			filterFormDateTypeChange(){
+				return this.filterForm.dateType;
+			},
+			filterFormDiffDayChange(){
+				return this.filterForm.diffDay;
+			},
+			filterFormRemainDayChange(){
+				return this.filterForm.remainDay;
 			}
 		},
 		watch:{
 			statisStateChange(newV,oldV){
 				this.onRefresh( this.filterForm );
+			},
+			filterFormBeginDateChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
+			},
+			filterFormEndDateChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
+			},
+			filterFormDateTypeChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
+			},
+			filterFormDiffDayChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
+			},
+			filterFormRemainDayChange(newV,oldV){
+				if( !this.config.isInit ){
+					this.config.switchCell.checked = false;
+				}
 			}
 		}
 	}

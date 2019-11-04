@@ -85,7 +85,20 @@ const statis = {
 			return_statis_state : data.statisState,
 			return_date_type    : data.dateType,   
 		};
-		return post(staff.statis.getOrdReturnSum,postData)
+		return post(staff.statis.getOrdReturnSum,postData);
+	},
+	getSchSumConfig(){
+		return post(staff.statis.getSchSumConfig);
+	},
+	getSchSum( data ){
+		let postData = {
+			sch_begin_date  : data.beginDate,
+			sch_end_date    : data.endDate,
+			sch_date_type   : 'ProDate',
+			sch_s_state     : data.sState,
+			sch_statis_type : data.statisType,
+		};
+		return post(staff.statis.getSchSum,postData);
 	}
 
 }

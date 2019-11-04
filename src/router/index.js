@@ -9,23 +9,6 @@ export const asyncRouterMap = [
 
 let routes = [
     {
-        path:'/entrance',
-        component: resolve => require(['../components/pages/login/LoginHeader.vue'], resolve),
-        meta: { title: '登录公共头部' },
-        children:[
-            {
-                path:'login/site',
-                meta: { title: '登录入口' },
-                component: resolve => require(['../components/pages/login/LoginSite.vue'], resolve),
-            },
-            {
-                path:'login/exact',
-                meta: { title: '具体登录' },
-                component: resolve => require(['../components/pages/login/LoginExact.vue'], resolve),
-            }
-        ]
-    },
-    {
         path:'/staff',
         component: resolve => require(['../components/common/StaffLayout.vue'], resolve),
         meta: { title: '内部人员使用' },
@@ -116,6 +99,11 @@ let routes = [
                 component: resolve => require(['../components/staff/statis/GetOrdReturnSum.vue'], resolve),
             },
             {
+                path:'statis/getSchSum',
+                meta: { title: '传单统计' },
+                component: resolve => require(['../components/staff/statis/GetSchSum.vue'], resolve),
+            },
+            {
                 path:'erp/getOrders',
                 meta: { title: 'ERP订单' },
                 component: resolve => require(['../components/staff/erp/GetOrders.vue'], resolve),
@@ -141,11 +129,6 @@ let routes = [
                 component: resolve => require(['../components/staff/daily/GetOrdersP.vue'], resolve),
             }
         ]
-    },
-    {
-    	path:'/index',
-    	name:'index',
-    	component: resolve => require(['../components/pages/home/HomeNew.vue'], resolve),
     }
 ];
 

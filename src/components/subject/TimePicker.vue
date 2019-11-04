@@ -29,11 +29,11 @@
 				this.$emit('onConfirm',{value:value});
 			}
 		},
-		mounted(){
+		created(){
 
 		},
-		created(){
-			
+		mounted(){
+
 		},
 		computed:{
 			

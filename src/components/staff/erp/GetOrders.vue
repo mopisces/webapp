@@ -71,7 +71,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, SwitchCell, PullRefresh, List, Panel, Sticky, Tab, Tabs } from 'vant';
+	import { Button, Field, PullRefresh, List, SwitchCell, Panel, Sticky, Tab, Tabs } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import CusPicker from '@/components/subject/CusPicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -82,9 +82,9 @@
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
-			[SwitchCell.name]: SwitchCell,
 			[PullRefresh.name]: PullRefresh,
 			[List.name]: List,
+			[SwitchCell.name]: SwitchCell,
 			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 			[Tab.name]: Tab,
@@ -110,6 +110,8 @@
 					searchData:'',
 				},
 				config:{
+					getConfig:true,
+					isInit:true,
 					popup:{
 						filterShow:false,
 						cusShow:false,
@@ -178,7 +180,6 @@
 				}
 			},
 			resetClick(){
-				let init = JSON.parse(sessionStorage.getItem('erp/getOrders---filterInit'));
 				this.filterForm = {
 					orderId:'',
 					boardLength:'',
@@ -189,16 +190,17 @@
 					orderQuantity:'',
 					cusName:'',
 					dateType:'1',
-					beginDate:dateTimeFormat(init.beginDate,'yyyy-MM-dd'),
-					endDate:dateTimeFormat(init.endDate,'yyyy-MM-dd'),
 					curPage:1,
-					erpState:0
+					erpState:0,
+					beginDate:'',
+					endDate:''
 				};
+				sessionStorage.removeItem('erp/getOrders');
+				this.getConfig( true );
 			},
 			filterClick(){
 				this.getErpOrders( this.filterForm ,true );
 				this.config.popup.filterShow = false;
-				
 			},
 			cusPickerCancel(){
 				this.config.popup.cusShow = false;
@@ -212,9 +214,6 @@
 					this.pageConfig.defaultIndex = result.index;
 					this.filterForm.cusName = result.key;
 				}
-			},
-			getPageName(){
-				return 'erp/getOrders';
 			},
 
 			timePickerCancel(){
@@ -231,25 +230,32 @@
 				this.pageConfig.endDate = value.value;
 				this.timePickerCancel();
 			},
-			filterRemClick(){
-				console.log('filterRemClick');
+			filterRemClick( checked ){
+				if( checked ){
+					let storageData = Object.assign({},this.filterForm,{defaultIndex:this.pageConfig.defaultIndex})
+					sessionStorage.setItem('erp/getOrders',JSON.stringify(storageData));
+				}else{
+					sessionStorage.removeItem('erp/getOrders');
+				}
 			},
 
-			getConfig(){
+			getConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.erp.erpConfig().then(res=>{
-					self.filterForm.beginDate = res.result.Wap1GetOrdersBeginDate;
-					self.filterForm.endDate = res.result.Wap1GetOrdersEndDate;
+					if( this.config.getConfig ){
+						self.filterForm.beginDate = res.result.Wap1GetOrdersBeginDate;
+						self.filterForm.endDate = res.result.Wap1GetOrdersEndDate;
 
-					self.pageConfig.beginDate = new Date(res.result.Wap1GetOrdersBeginDate);
-					self.pageConfig.endDate = new Date(res.result.Wap1GetOrdersEndDate);
+						self.pageConfig.beginDate = new Date(res.result.Wap1GetOrdersBeginDate);
+						self.pageConfig.endDate = new Date(res.result.Wap1GetOrdersEndDate);
+					}
 					self.pageConfig.maxDate = new Date(res.result.Wap1GetOrdersMaxDate);
 					self.pageConfig.minDate = new Date(res.result.Wap1GetOrdersMinDate);
 				}).then(()=>{
+					if( isReset ){
+						return ;
+					}
 					this.getErpOrders( this.filterForm );
-				}).then(()=>{
-					let initData = Object.assign({},this.filterForm,this.pageConfig);
-					sessionStorage.setItem('erp/getOrders---filterInit',JSON.stringify(initData));
 				});
 			},
 			getErpOrders( data , isReloading = false ){
@@ -283,11 +289,24 @@
 				this.config.popup.detailShow = false;
 			}
 		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','ERP订单');
+			if( sessionStorage.getItem('erp/getOrders') ){
+				let storageData = JSON.parse(sessionStorage.getItem('erp/getOrders'));
+				this.pageConfig.defaultIndex = storageData.defaultIndex;
+				delete storageData.defaultIndex;
+				this.filterForm = storageData;
+				this.pageConfig.beginDate = new Date(storageData.beginDate);
+				this.pageConfig.endDate = new Date(storageData.endDate);
+				this.config.getConfig = false;
+				this.config.switch.checked = true;
+			}
+		},
 		mounted(){
 			
 		},
-		created(){
-			this.$store.commit('staff/setHeaderTitle','ERP订单');
+		updated(){
+
 		},
 		computed:{
 			orderState(){
@@ -297,6 +316,14 @@
 		watch:{
 			orderState( newV,oldV ){
 				this.getErpOrders( this.filterForm, true );
+			},
+			filterForm:{
+				handler( newV, oldV ){
+					if( this.config.getConfig ){
+						this.config.switch.checked = false;
+					}
+				},
+				deep:true
 			}
 		}
 	}
