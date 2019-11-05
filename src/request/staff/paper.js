@@ -26,6 +26,12 @@ const paper = {
 			search_paper_type:data.dataType
 		};
 		return post(staff.paper.stockMain,postData);
+	},
+	paperGetInInfo( data ){
+		let postData = {
+			stock_in_info_no : data.stockInNo
+		};
+		return post(staff.paper.paperGetInInfo,postData);
 	}
 }
 export default paper;

@@ -134,7 +134,6 @@
 					}
 					self.pageConfig.minDate = new Date(res.result.WGetCusOrderMinDate);
 					self.pageConfig.maxDate = new Date(res.result.WGetCusOrderMaxDate);
-					
 				}).then(()=>{
 					if( isReset ){
 						return ;

@@ -28,6 +28,7 @@ const staff = {
 		paperWxConfig:`${base.staff}staffPaperWxConfig`,
 		stockConfig:`${base.staff}staffSStockConfig`,
 		stockMain:`${base.staff}staffSStock`,
+		paperGetInInfo:`${base.staff}staffPaperGetInInfo`,
 	},
 	paperbuy:{
 		paperInConfig:`${base.staff}staffPaperInConfig`,
@@ -35,6 +36,7 @@ const staff = {
 		paperInMain:`${base.staff}staffPaperInMain`,
 		paperBuyConfig:`${base.staff}staffPaperBuyConfig`,
 		paperBuy:`${base.staff}staffPaperBuy`,
+		paperDetail:`${base.staff}staffPaperDetail`,
 	},
 	cred:{
 		wGetCusAmt: `${base.staff}wGetCusAmt`,

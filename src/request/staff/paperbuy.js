@@ -27,6 +27,12 @@ const paperbuy = {
 			paper_buy_end_date   : data.endDate
 		};
 		return post(staff.paperbuy.paperBuy,postData);
+	},
+	paperDetail( data ){
+		let postData = {
+			paper_buy_po_no: data.pONo
+		};
+		return post(staff.paperbuy.paperDetail,postData);
 	}
 }
 export default paperbuy;

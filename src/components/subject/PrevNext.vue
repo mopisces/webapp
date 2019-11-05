@@ -72,6 +72,10 @@
 								<span>残卷卷数:{{ item.CJCount }}</span><br/>
 								<span>重量:{{ item.SRWt }}</span>
 							</div>
+							<!-- 原纸采购 -->
+							<div class="van-cell__title" v-if="item.poMain === 'tags' ">
+								<span>日期:{{ item.prevNext }}</span><br/>
+							</div>
 							<!-- 每日订单按日期汇总 -->
 							<div class="van-cell__title" v-else>
 								<span>{{ item.OrderDate }}</span><br/>

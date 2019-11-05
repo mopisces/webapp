@@ -3,10 +3,44 @@
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 		<van-tabs v-model="config.tabs.active">
 			<van-tab title="全部">
-				
+				<div v-for="(value,key) in radioData" :key=" 'divider' + key ">
+					<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;">
+		      			 {{ value.prevNext }}
+		  			</div>
+		  			<div role="button" tabindex="0" class="van-cell van-cell--clickable" style="text-align:center;" v-for="(item,index) in cellList[value.prevNext]"  @click="detailClick(item)">
+		  				<div class="van-cell__title" >
+							<span>{{ item.PONo }}</span>
+						</div>
+						<div class="van-cell__title" >
+							<span>{{ item.ShortName }}</span>
+						</div>
+						<div class="van-cell__title" >
+							<span>{{ item.SumPaper }}</span>
+						</div>
+						<div class="van-cell__title" >
+							<span>{{ item.InQty }}/{{ item.POQty }}</span>
+						</div>
+						<i class="van-icon van-icon-arrow van-cell__right-icon"><!----></i>
+		  			</div>
+	  			</div>
 			</van-tab>
 			<van-tab title="按日期">
 				<prev-next @radioConfirm="radioConfirm" :radioData="radioData" :radioVal="radioVal"  v-if=" config.tabs.active == 1 "></prev-next>
+				<div role="button" tabindex="0" class="van-cell van-cell--clickable" style="text-align:center;" v-for="(item,index) in cellList[radioVal]" >
+	  				<div class="van-cell__title"  @click="detailClick(item)">
+						<span>{{ item.PONo }}</span>
+					</div>
+					<div class="van-cell__title" >
+						<span>{{ item.ShortName }}</span>
+					</div>
+					<div class="van-cell__title" >
+						<span>{{ item.SumPaper }}</span>
+					</div>
+					<div class="van-cell__title" >
+						<span>{{ item.InQty }}/{{ item.POQty }}</span>
+					</div>
+					<i class="van-icon van-icon-arrow van-cell__right-icon"><!----></i>
+	  			</div>
 			</van-tab>
 		</van-tabs>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
@@ -57,15 +91,16 @@
 					}
 				},
 				filterForm:{
-					beginDate:'2011-11-05',
-					endDate:'2019-11-05',
+					beginDate:'',
+					endDate:'',
 				},
 				pageConfig:{
 					beginDate:new Date(),
 					endDate:new Date(),
 					maxDate:new Date(),
 					minDate:new Date(),
-				}
+				},
+				cellList:{},
 			}
 		},
 		methods:{
@@ -77,6 +112,7 @@
 			filterClick(){
 				this.paperBuy( this.filterForm );
 				this.config.popup.filterShow = false;
+				this.config.tabs.active = 0;
 			},
 			timePickerCancel(){
 				this.config.popup.timeShow.start = false;
@@ -111,11 +147,19 @@
 			paperBuy( data ){
 				let self = this;
 				this.$request.staff.paperbuy.paperBuy( data ).then(res=>{
-					console.log(res.result)
+					self.radioData = [];
+					res.result.po_date_select.forEach((item,index)=>{
+						self.radioData.push({prevNext:item,poMain:'tags'});
+					});
+					self.cellList = res.result.data;
 				});
 			},
 			radioConfirm( value ){
-				
+				this.radioVal = value;
+			},
+			detailClick( item ){
+				this.$router.push('/staff/paperbuy/wGetPOMainConfig');
+				sessionStorage.setItem('wGetPOMainDetail',JSON.stringify(item));
 			}
 		},	
 		created(){
@@ -126,7 +170,7 @@
 				this.pageConfig.beginDate = new Date(storageData.beginDate);
 				this.pageConfig.endDate = new Date(storageData.endDate);
 				this.config.getConfig = false;
-				this.info.switch.checked = true;
+				this.config.switch.checked = true;
 			}
 		},
 		mounted(){
