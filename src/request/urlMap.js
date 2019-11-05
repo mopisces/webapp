@@ -33,6 +33,8 @@ const staff = {
 		paperInConfig:`${base.staff}staffPaperInConfig`,
 		paperInDetail:`${base.staff}staffPaperInDetail`,
 		paperInMain:`${base.staff}staffPaperInMain`,
+		paperBuyConfig:`${base.staff}staffPaperBuyConfig`,
+		paperBuy:`${base.staff}staffPaperBuy`,
 	},
 	cred:{
 		wGetCusAmt: `${base.staff}wGetCusAmt`,

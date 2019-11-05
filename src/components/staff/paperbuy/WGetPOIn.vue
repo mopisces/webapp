@@ -123,11 +123,11 @@
 				this.paperInDetail( data.InNo );
 			}
 		},
-		mounted(){
-			this.$store.commit('staff/setHeaderTitle','原纸收货');
-		},
 		created(){
 			this.getPaperInConfig();
+		},
+		mounted(){
+			this.$store.commit('staff/setHeaderTitle','原纸收货');
 		},
 		computed:{
 			

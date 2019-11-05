@@ -101,7 +101,6 @@
 				this.cusContact( this.filterForm );
 			}
 		},
-		
 		created(){
 			this.$store.commit('staff/setHeaderTitle','客户来往统计');
 			if( sessionStorage.getItem('frec/cusContact') !== null  ){
