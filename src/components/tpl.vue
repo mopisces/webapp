@@ -24,6 +24,9 @@
 		updated(){
 			
 		},
+		destroyed(){
+			
+		},
 		computed:{
 			
 		},

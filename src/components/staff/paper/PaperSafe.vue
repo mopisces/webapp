@@ -15,7 +15,7 @@
 			<van-field label="门幅" v-model="filterForm.safePaperWidth" input-align="center" placeholder="精确查询"  slot="filter-field-3"></van-field>
 			<van-field label="纸种名称" v-model="filterForm.safePaperName" input-align="center" placeholder="精确查询"  slot="filter-field-4"></van-field>
 			<van-field label="生产备注" v-model="filterForm.safeSRemark" input-align="center" placeholder="精确查询"  slot="filter-field-5"></van-field>
-			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick"/>
+			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" />
 		</popup-filter>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" >
 		</v-table>
@@ -97,7 +97,7 @@
 					safePaperName:'',
 					safeSRemark:''
 				};
-				this.removeItem();
+				this.config.switch.checked = false;
 			},
 			filterClick(){
 				this.getTableData( this.filterForm );
@@ -109,27 +109,23 @@
 					self.table.data = res.result;
 				});
 			},
-			filterRemClick( checked ){
-				if( checked === false ){
-					this.config.switch.checked = false;
-					this.removeItem();
-				}else{
-					this.config.switch.checked = true;
-					sessionStorage.setItem('paper/paperSafe',JSON.stringify(this.filterForm));
-				}
-			},
-			removeItem(){
-				sessionStorage.removeItem('paper/paperSafe');
-			}
-		},
-		mounted(){
-			this.getTableData( this.filterForm );
-			this.removeItem();
+			
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','安全库存');
 			if( sessionStorage.getItem('paper/paperSafe') !== null  ){
 				this.filterForm = JSON.parse(sessionStorage.getItem('paper/paperSafe'));
+				this.config.switch.checked = true;
+			}
+		},
+		mounted(){
+			this.getTableData( this.filterForm );
+		},
+		destroyed(){
+			if( this.config.switch.checked ){
+				sessionStorage.setItem('paper/paperSafe',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('paper/paperSafe');
 			}
 		},
 		computed:{
@@ -138,12 +134,6 @@
 			}
 		},
 		watch:{
-			filterForm:{
-				handler( val, oldVal ){
-					this.config.switch.checked = false;
-				},
-				deep:true
-			},
 			paperState( newV,oldV ){
 				this.getTableData( this.filterForm );
 			}

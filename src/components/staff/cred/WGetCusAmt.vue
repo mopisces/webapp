@@ -14,17 +14,17 @@
 			<van-cell :title="item.CusShortName + '(' + item.CusId + ')' " is-link :value="item.LeftMinAmtCond + '/' + item.MinAmtCond " v-for="(item,index) in info.cell.data" :key="index" @click="cellClick(item.CusId)"/>
 		</van-cell-group>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
-			<van-field label="员工" readonly v-model="info.leftPopup.data.taskId" placeholder="员工" input-align="center" slot="left-popup-1"/>
-			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="center" slot="left-popup-2"/>
-			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="center" slot="left-popup-3"/>
+			<van-field label="员工" readonly v-model="info.leftPopup.data.taskId" placeholder="员工" input-align="center" slot="new-popup-1"/>
+			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="center" slot="new-popup-2"/>
+			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="center" slot="new-popup-3"/>
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="客户名称" v-model="filterForm.cusId" placeholder="选择客户名称" input-align="center" @click="config.popup.cusPicker.show = true" slot="filter-field-1"></van-field>
 			<radio-cell :radioInfo.sync="filterForm.isStopped" :radioColumns="config.radio.isStopped.options" :title="config.radio.isStopped.title" slot="filter-field-2"></radio-cell>
 			<radio-cell :radioInfo.sync="filterForm.isSettleDay" :radioColumns="config.radio.isSettleDay.options" :title="config.radio.isSettleDay.title" slot="filter-field-3"></radio-cell>
-			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick" />
+			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" />
 		</popup-filter>
-		<cus-picker :show.sync="config.popup.cusPicker.show" :searchData.sync="cusPicker.searchData" :index.sync="cusPicker.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm" >
+		<cus-picker ref="cusPicker" :show.sync="config.popup.cusPicker.show" :searchData.sync="cusPicker.searchData" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm">
 		</cus-picker>
 	</div>
 </template>
@@ -105,7 +105,6 @@
 				},
 				cusPicker:{
 					searchData:'',
-					defaultIndex:-1,
 				}
 			}
 		},
@@ -113,7 +112,6 @@
 			getInitData( data ){
 				let self = this;
 				this.$request.staff.cred.wGetCusAmt( data ).then(res=>{
-
 					self.info.leftPopup.data.realAmt = res.result.real_amt;
 					self.info.leftPopup.data.queryTime = res.result.query_time;
 					self.info.cell.data = res.result.result;
@@ -123,19 +121,19 @@
 				sessionStorage.setItem('cred/wGetCusAmt/cusId',cusId);
 				this.$router.push('/staff/cred/cusAmtDetail');
 			},
-
 			resetClick(){
 				this.filterForm = {
 					cusId:'',
 					isStopped:'2',
 					isSettleDay:'2'
 				};
+				this.$refs.cusPicker.cusPickerClean();
+				this.config.switch.checked = false;
 			},
 			filterClick(){
 				this.config.popup.rightFilter.show = false;
 				this.getInitData( this.filterForm );
 			},
-
 			cusPickerCancel(){
 				this.config.popup.cusPicker.show = false;
 				this.filterForm.cusId = '';
@@ -143,56 +141,30 @@
 			cusPickerConfirm( result ){
 				this.config.popup.cusPicker.show = false;
 				this.filterForm.cusId = result.key;
-			},
-			getPageName(){
-				return 'cred/wGetCusAmt';
-			},
-			filterRemClick( checked ){
-				if( checked === false ){
-					this.config.switch.checked = false;
-					this.removeItem();
-				}else{
-					this.config.switch.checked = true;
-					let save = JSON.stringify(Object.assign(this.filterForm,this.cusPicker));
-					sessionStorage.setItem('cred/wGetCusAmt---pageConfig',save);
-				}
-			},
-			removeItem(){
-				sessionStorage.removeItem('cred/wGetCusAmt---pageConfig');
 			}
+		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','客户信用余额');
+			if( sessionStorage.getItem('cred/wGetCusAmt') !== null  ){
+				this.filterForm = JSON.parse(sessionStorage.getItem('cred/wGetCusAmt'));
+				this.config.switch.checked = true;
+			}	
 		},
 		mounted(){
 			this.getInitData( this.filterForm );
 		},
-		created(){
-			this.$store.commit('staff/setHeaderTitle','客户信用余额');
-			if( sessionStorage.getItem('cred/wGetCusAmt---pageConfig') !== null  ){
-				try{
-					let config = JSON.parse(sessionStorage.getItem('cred/wGetCusAmt---pageConfig'));
-					this.filterForm = {
-						cusId: config.cusId,
-						isStopped:config.isStopped,
-						isSettleDay:config.isSettleDay
-					};
-					this.cusPicker = {
-						searchData:config.searchData,
-						defaultIndex:config.defaultIndex
-					};
-				}catch(err){
-					sessionStorage.removeItem('cred/wGetCusAmt---pageConfig');
-				}
-			}	
+		destroyed(){
+			if( this.config.switch.checked ){
+				sessionStorage.setItem('cred/wGetCusAmt',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('cred/wGetCusAmt');
+			}
 		},
 		computed:{
 			
 		},
 		watch:{
-			filterForm:{
-				handler( val, oldVal ){
-					this.config.switch.checked = false;
-				},
-				deep:true
-			}
+			
 		}
 	}
 </script>

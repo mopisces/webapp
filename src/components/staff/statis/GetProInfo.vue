@@ -18,7 +18,7 @@
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-1"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-2"></van-field>
-			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-3" @change="filterRemClick"/>
+			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-3"/>
 		</popup-filter>
 		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
@@ -47,6 +47,7 @@
 			return {
 				data:[],
 				config:{
+					getConfig:true,
 					dropMenu:{
 						options:[
 							{ text: '列表', value: 'lists' },
@@ -115,19 +116,21 @@
 			drawCharts(){
 				new Highcharts.chart('container', this.options);
 			},
-			getProInfoConfig(){
+			getProInfoConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.statis.getProInfoConfig().then(res=>{
+					if( this.config.getConfig ){
+						self.pageConfig.beginDate = new Date(res.result.GetProInfoBeginDate);
+						self.pageConfig.endDate = new Date(res.result.GetProInfoEndDate);
+						self.filterForm.beginDate = res.result.GetProInfoBeginDate;
+						self.filterForm.endDate = res.result.GetProInfoEndDate;
+					}
 					self.pageConfig.maxDate = new Date(res.result.GetProInfoMaxDate);
 					self.pageConfig.minDate = new Date(res.result.GetProInfoMinDate);
-					self.pageConfig.beginDate = new Date(res.result.GetProInfoBeginDate);
-					self.pageConfig.endDate = new Date(res.result.GetProInfoEndDate);
-
-					self.filterForm.beginDate = res.result.GetProInfoBeginDate;
-					self.filterForm.endDate = res.result.GetProInfoEndDate;
-					sessionStorage.removeItem('statis/getProInfo---filterInit');
-					sessionStorage.setItem('statis/getProInfo---filterInit',JSON.stringify(res.result));
 				}).then(()=>{
+					if( isReset ){
+						return ;
+					}
 					this.getProInfo(this.filterForm);
 				});
 			},
@@ -147,14 +150,9 @@
 				});
 			},
 			resetClick(){
-				let init = JSON.parse(sessionStorage.getItem('statis/getProInfo---filterInit'));
-				this.pageConfig.maxDate = new Date(init.GetProInfoMaxDate);
-				this.pageConfig.minDate = new Date(init.GetProInfoMinDate);
-				this.pageConfig.beginDate = new Date(init.GetProInfoBeginDate);
-				this.pageConfig.endDate = new Date(init.GetProInfoEndDate);
 
-				this.filterForm.beginDate = init.GetProInfoBeginDate;
-				this.filterForm.endDate = init.GetProInfoEndDate;
+				this.config.getConfig = true;
+				getProInfoConfig( true );
 			},
 			filterClick(){
 				this.getProInfo( this.filterForm );
@@ -172,31 +170,25 @@
 			timeEndConfirm( value ){
 				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
 				this.timePickerCancel();
-			},
-			filterRemClick( checked ){
-				if( checked === false ){
-					sessionStorage.removeItem('statis/getProInfo---pageConfig');
-				}else{
-					sessionStorage.setItem('statis/getProInfo---pageConfig',JSON.stringify(this.filterForm));
-				}
 			}
-
-		},
-		mounted(){
-			
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','生产分析总计');
-			let config = JSON.parse(sessionStorage.getItem('statis/getProInfo---pageConfig'));
-			let init = JSON.parse(sessionStorage.getItem('statis/getProInfo---filterInit'));
-			if( config && init ){
-				this.pageConfig.beginDate = new Date(config.beginDate);
-				this.pageConfig.endDate = new Date(config.endDate);
-				this.pageConfig.maxDate = new Date(init.GetProInfoMaxDate);
-				this.pageConfig.minDate = new Date(init.GetProInfoMinDate);
-				this.filterForm = config;
+			if( sessionStorage.getItem('statis/getProInfo') !== null ){
+				let storageData = JSON.parse(sessionStorage.getItem('statis/getProInfo'));
+				this.filterForm = storageData;
+				this.config.getConfig = false;
+				this.config.switch.checked = true;
+			}
+		},
+		mounted(){
+			this.getProInfoConfig();
+		},
+		destroyed(){
+			if( this.config.switch.checked ){
+				sessionStorage.setItem('statis/getProInfo',JSON.stringify(this.filterForm));
 			}else{
-				this.getProInfoConfig();
+				sessionStorage.removeItem('statis/getProInfo');
 			}
 		},
 		computed:{
@@ -207,12 +199,6 @@
 		watch:{
 			chartsType(newVal,oldVal){
 				this.drawCharts();
-			},
-			filterForm:{
-				handler( val, oldVal ){
-					this.config.switch.checked = false;
-				},
-				deep:true
 			}
 		}
 	}

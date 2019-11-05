@@ -28,9 +28,9 @@
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeFilter.start.show = true" slot="filter-field-2"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeFilter.end.show = true" slot="filter-field-3"></van-field>
 			<van-switch-cell v-model="filterForm.addUserId" title="下单员" slot="filter-field-4"/>
-			<van-switch-cell v-model="config.switch.rem.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick"/>
+			<van-switch-cell v-model="config.switch.rem.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" />
 		</popup-filter>
-		<cus-picker :show.sync="config.popup.cusFilter.show" :searchData.sync="pageConfig.searchData" :index.sync="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
+		<cus-picker ref="cusPicker" :show.sync="config.popup.cusFilter.show" :searchData.sync="pageConfig.searchData" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timeFilter.start.show" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timeFilter.end.show" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
@@ -60,6 +60,7 @@
 		data(){
 			return {
 				config:{
+					getConfig:true,
 					popup:{
 						leftPopup:{
 							show :false,
@@ -100,7 +101,6 @@
 					cusName:''
 				},
 				pageConfig:{
-					defaultIndex:-1,
 					searchData:'',
 					beginDate:new Date(),
 					endDate:new Date(),
@@ -123,22 +123,23 @@
 				sessionStorage.setItem('daily/wGetCusOrder/info',str);
 				this.$router.push('/staff/daily/getOrdersP');
 			},
-			getDailyConfig(){
+			getDailyConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.daily.dailyConfig().then(res=>{
-					self.filterForm.beginDate = res.result.WGetCusOrderBeginDate;
-					self.filterForm.endDate = res.result.WGetCusOrderEndDate;
-
-					self.pageConfig.beginDate = new Date(res.result.WGetCusOrderBeginDate);
-					self.pageConfig.endDate = new Date(res.result.WGetCusOrderEndDate);
+					if( this.config.getConfig ){
+						self.filterForm.beginDate = res.result.WGetCusOrderBeginDate;
+						self.filterForm.endDate = res.result.WGetCusOrderEndDate;
+						self.pageConfig.beginDate = new Date(res.result.WGetCusOrderBeginDate);
+						self.pageConfig.endDate = new Date(res.result.WGetCusOrderEndDate);
+					}
 					self.pageConfig.minDate = new Date(res.result.WGetCusOrderMinDate);
 					self.pageConfig.maxDate = new Date(res.result.WGetCusOrderMaxDate);
 					
 				}).then(()=>{
+					if( isReset ){
+						return ;
+					}
 					this.getDailyOrder( this.filterForm );
-				}).then(()=>{
-
-					sessionStorage.setItem('daily/wGetCusOrder---pageConfig',JSON.stringify(this.pageConfig));
 				});
 			},
 			getDailyOrder( data ){
@@ -148,28 +149,21 @@
 				});
 			},
 			resetClick(){
-				let init = JSON.parse(sessionStorage.getItem('daily/wGetCusOrder---pageConfig'));
 				this.filterForm = {
-					beginDate:dateTimeFormat( init.beginDate,'yyyy-MM-dd' ),
-					endDate:dateTimeFormat( init.endDate,'yyyy-MM-dd' ),
+					beginDate:'',
+					endDate:'',
 					addUserId:false,
-					orderCusId:'',
 					cusName:''
 				};
+				this.$refs.cusPicker.cusPickerClean();
+				sessionStorage.removeItem('daily/wGetCusorder');
+				this.config.getConfig = true;
+				this.config.switch.rem.checked = false;
+				this.getDailyConfig( true );
 			},
 			filterClick(){
 				this.config.popup.rightFilter.show = false;
 				this.getDailyOrder( this.filterForm );
-			},
-			filterRemClick( checked ){
-				this.removeItem();
-				if( checked === false ){
-					this.config.switch.rem.checked = false;
-				}else{
-					this.config.switch.rem.checked = true;
-					sessionStorage.setItem('daily/wGetCusorder---pageConfig',JSON.stringify(this.pageConfig));
-					sessionStorage.setItem('daily/wGetCusorder',JSON.stringify(this.filterForm));
-				}
 			},
 			cusPickerCancel(){
 				this.config.popup.cusFilter.show = false;
@@ -178,52 +172,46 @@
 				this.config.popup.cusFilter.show = false;
 				this.filterForm.cusName = data.key;
 			},
-			getPageName(){
-				return 'daily/wGetCusOrder';
-			},
 			timePickerCancel(){
 				this.config.popup.timeFilter.end.show = false;
 				this.config.popup.timeFilter.start.show = false;
 			},
 			timeBeginConfirm( value ){
 				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.beginDate = value.value;
 				this.timePickerCancel();
 			},
 			timeEndConfirm( value ){
 				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.endDate = value.value;
 				this.timePickerCancel();
-			},
-			removeItem(){
-				sessionStorage.removeItem('daily/wGetCusorder');
-				sessionStorage.removeItem('daily/wGetCusorder---pageConfig');
+			}
+		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','客户每日订单');
+			if( sessionStorage.getItem('daily/wGetCusorder') !== null   ){
+				let storageData = JSON.parse(sessionStorage.getItem('daily/wGetCusorder'));
+				this.filterForm = storageData;
+				this.pageConfig.beginDate = new Date(storageData.beginDate);
+				this.pageConfig.endDate = new Date(storageData.endDate);
+				this.config.getConfig = false;
+				this.config.switch.rem.checked = true;
 			}
 		},
 		mounted(){
 			this.getDailyConfig();
 			this.getDailyUser();
-			this.removeItem();
 		},
-		created(){
-			this.$store.commit('staff/setHeaderTitle','客户每日订单');
-			if( sessionStorage.getItem('daily/wGetCusorder') !== null   ){
-				this.filterForm = JSON.parse(sessionStorage.getItem('daily/wGetCusorder'));
-			}
-			if( sessionStorage.getItem('daily/wGetCusorder---pageConfig') !== null  ){
-				this.pageConfig = JSON.parse(sessionStorage.getItem('daily/wGetCusorder---pageConfig'));
+		destroyed(){
+			if( this.config.switch.rem.checked ){
+				sessionStorage.setItem('daily/wGetCusorder',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('daily/wGetCusorder');
 			}
 		},
 		computed:{
 			
 		},
 		watch:{
-			filterForm:{
-				handler( val, oldVal ){
-					this.config.switch.rem.checked = false;
-				},
-				deep:true
-			}
+			
 		}
 	}
 </script>

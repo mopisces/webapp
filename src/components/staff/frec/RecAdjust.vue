@@ -5,7 +5,7 @@
 				<div class="van-tabs__nav van-tabs__nav--card">
 					<div :class="config.tabs.payClass"  @click="tabsClick(1)">收款</div>
 					<div :class="config.tabs.adjustClass" @click="tabsClick(0)">调账</div>
-					<div class="van-tab" @click="filterShow()">筛选</div>
+					<div class="van-tab" @click="config.popup.filterShow = true">筛选</div>
 				</div>
 			</div>
 		</div>
@@ -16,11 +16,11 @@
 			<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" slot="filter-field-2"/>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
-			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" :title="config.radio.title" slot="filter-field-5"></radio-cell>
+			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-5"></radio-cell>
 			<radio-cell :radioInfo.sync="filterForm.payType" :radioColumns="pageConfig.payType" title="科目" slot="filter-field-6"></radio-cell>
-			<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick"/>
+			<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7"/>
 		</popup-filter>
-		<cus-picker :show.sync="config.popup.cusShow" :searchData.sync="info.cusPicker.searchData" :index.sync="info.cusPicker.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
+		<cus-picker ref="cusPicker" :show.sync="config.popup.cusShow" :searchData.sync="info.cusPicker.searchData" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timeShow.end"  :dateTime.sync="pageConfig.endDate"   :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
@@ -50,6 +50,7 @@
 			return {
 				radio:'1',
 				config:{
+					getConfig:true,
 					table:{
 						columns:[
 							{field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
@@ -87,7 +88,6 @@
 							{ title:'操作日期', value:0},
 							{ title:'生效日期', value:1},
 						],
-						title:''
 					}
 				},
 				info:{
@@ -98,7 +98,6 @@
 						checked:false
 					},
 					cusPicker:{
-						defaultIndex:-1,
 						searchData:'',
 						columns:[],
 					}
@@ -118,32 +117,28 @@
 					beginDate:new Date(),
 					endDate:new Date(),
 					payType:[],
-					defaultIndex:-1,
-
 				}
 			}
 		},
 		methods:{
-			filterShow(){
-				this.config.popup.filterShow = true;
-			},
-			recAdjustConfig(){
+			recAdjustConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.frec.recAdjustConfig().then(res=>{
-					self.filterForm.beginDate = res.result.date.RecAdjustBeginDate;
-					self.filterForm.endDate = res.result.date.RecAdjustEndDate;
-
-					self.pageConfig.beginDate = new Date(res.result.date.RecAdjustBeginDate);
-					self.pageConfig.endDate = new Date(res.result.date.RecAdjustEndDate);
-
+					if( this.config.getConfig ){
+						self.filterForm.beginDate = res.result.date.RecAdjustBeginDate;
+						self.filterForm.endDate = res.result.date.RecAdjustEndDate;
+						self.pageConfig.beginDate = new Date(res.result.date.RecAdjustBeginDate);
+						self.pageConfig.endDate = new Date(res.result.date.RecAdjustEndDate);
+					}
 					self.pageConfig.maxDate = new Date(res.result.date.RecAdjustMaxDate);
 					self.pageConfig.minDate = new Date(res.result.date.RecAdjustMinDate);
 					res.result.pay_type.forEach((item,index)=>{
 						self.pageConfig.payType.push({title:item.ShortName,value:item.ShortName});
 					});
 				}).then(()=>{
-					sessionStorage.setItem('frec/recAdjust---filterInit',JSON.stringify(this.filterForm));
-				}).then(()=>{
+					if( isReset ){
+						return ;
+					}
 					this.recAdjustMain( this.filterForm );
 				});
 			},
@@ -167,9 +162,6 @@
 				}
 				this.recAdjustMain(this.filterForm);
 			},
-			fieldClick(){
-				this.config.popup.cusShow = true;
-			},
 			cusPickerCancel(){
 				this.config.popup.cusShow = false;
 				this.filterForm.cusName = '';
@@ -178,26 +170,23 @@
 				this.config.popup.cusShow = false;
 				this.filterForm.cusName = data.key;
 			},
-			filterRemClick( checked ){
-				this.removeItem();
-				if( checked === false ){
-					this.info.switch.checked = false;
-				}else{
-					this.info.switch.checked = true;
-					sessionStorage.setItem('frec/recAdjust',JSON.stringify(this.filterForm));
-					sessionStorage.setItem('frec/recAdjust---pageConfig',JSON.stringify(this.pageConfig));
-				}
-			},
 			filterClick(){
 				this.config.popup.filterShow = false;
 				this.recAdjustMain( this.filterForm );
 			},
 			resetClick(){
-				this.filterForm = Object.assign(this.filterForm,JSON.parse(sessionStorage.getItem('frec/recAdjust---filterInit')));
-				this.removeItem();
-			},
-			timePickerOverlay(){
-				this.timePickerCancel();
+				this.filterForm = {
+					cusName:'',
+					taskId:'',
+					adjustType:1,
+					dateType:0,
+					beginDate:'',
+					endDate:'',
+					payType:'全部'
+				};
+				this.info.switch.checked = false;
+				this.config.getConfig = true;
+				this.recAdjustConfig(true);
 			},
 			timePickerCancel(){
 				this.config.popup.timeShow.start = false;
@@ -205,42 +194,35 @@
 			},
 			timeBeginConfirm( value ){
 				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.beginDate = value.value;
 				this.timePickerCancel();
 			},
 			timeEndConfirm( value ){
 				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.endDate = value.value;
 				this.timePickerCancel();
-			},
-			getPageName(){
-				return 'frec/recAdjust';
-			},
-			removeItem(){
-				sessionStorage.removeItem('frec/recAdjust');
-				sessionStorage.removeItem('frec/recAdjust---pageConfig');
 			}
-		},
-		mounted(){
-			this.recAdjustConfig();
-			this.removeItem();
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','收款调账');
 			if( sessionStorage.getItem('frec/recAdjust') !== null  ){
-				this.filterForm = JSON.parse(sessionStorage.getItem('frec/recAdjust'));
+				let storageData = JSON.parse(sessionStorage.getItem('frec/recAdjust'));
+				this.filterForm = storageData;
+				this.pageConfig.beginDate = new Date(storageData.beginDate);
+				this.pageConfig.endDate = new Date(storageData.endDate);
+				this.config.getConfig = false;
+				this.info.switch.checked = true;
 			}
-			if( sessionStorage.getItem('frec/recAdjust---pageConfig') !== null  ){
-				this.pageConfig = JSON.parse(sessionStorage.getItem('frec/recAdjust---pageConfig'));
+		},
+		mounted(){
+			this.recAdjustConfig();
+		},
+		destroyed(){
+			if( this.info.switch.checked ){
+				sessionStorage.setItem('frec/recAdjust',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('frec/recAdjust');
 			}
 		},
 		watch:{
-			filterForm:{
-				handler( val, oldVal ){
-					this.info.switch.checked = false;
-				},
-				deep:true
-			}
 			
 		}
 	}

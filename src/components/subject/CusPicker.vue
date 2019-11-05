@@ -14,20 +14,22 @@
 			[Picker.name]: Picker,
 			[Search.name]: Search
 		},
-		props:['show','searchData','index'],
+		props:['show','searchData'],
 		data(){
 			return {
 				columns:[],
 				popupShow:this.show,
-				defaultIndex:this.index,
+				defaultIndex:-1,
 				cusName:this.searchData,
 			}
 		},
 		methods:{
 			cusPickerCancel(){
+				this.defaultIndex = -1;
 				this.$emit('cusPickerCancel');
 			},
 			cusPickerConfirm( value, index ){
+				this.defaultIndex = index;
 				this.$emit('cusPickerConfirm',{key:value.key,index:index});
 			},
 			cusPickerSearch(){
@@ -45,6 +47,9 @@
 			},
 			cusPickerOverlay(){
 				this.cusPickerCancel();
+			},
+			cusPickerClean(){
+				this.defaultIndex = -1;
 			}
 		},
 		mounted(){

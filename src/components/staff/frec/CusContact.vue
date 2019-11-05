@@ -4,9 +4,9 @@
 		<popup-filter :filterShow.sync="config.popup.filterShow"  @resetClick="resetClick" @filterClick="filterClick">
 			<van-field readonly clickable label="客户名称" :value="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusShow = true"  slot="filter-field-1"></van-field>
 			<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" slot="filter-field-2"/>
-			<van-switch-cell v-model="pageConfig.switchChecked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" @change="filterRemClick"/>
+			<van-switch-cell v-model="pageConfig.switchChecked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7"/>
 		</popup-filter>
-		<cus-picker :show.sync="config.popup.cusShow" :searchData.sync="cusPicker.searchData" :index.sync="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
+		<cus-picker ref="cusPicker" :show.sync="config.popup.cusShow" :searchData.sync="cusPicker.searchData" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
    		<template>
    			<div class="container">
    				<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500"></v-table>
@@ -66,7 +66,6 @@
 					searchData:'',
 				},
 				pageConfig:{
-					defaultIndex:-1,
 					switchChecked:false,
 				}
 			}
@@ -94,59 +93,34 @@
 			resetClick(){
 				this.filterForm.cusName = '';
 				this.filterForm.taskId = '';
-				this.pageConfig.defaultIndex = -1;
-				this.removeItem();
+				this.$refs.cusPicker.cusPickerClean();
+				this.pageConfig.switchChecked = false;
 			},
 			filterClick(){
 				this.config.popup.filterShow = false;
 				this.cusContact( this.filterForm );
-			},
-			filterRemClick( checked ){
-				if( checked === false ){
-					this.pageConfig.switchChecked = false;
-					this.removeItem();
-				}else{
-					this.pageConfig.switchChecked = true;
-					sessionStorage.setItem('frec/cusContact',JSON.stringify(this.filterForm));
-					sessionStorage.setItem('frec/cusContact---pageConfig',JSON.stringify(this.pageConfig));
-				}
-			},
-			getPageName(){
-				return 'frec/cusContact';
-			},
-			removeItem(){
-				sessionStorage.removeItem('frec/cusContact');
-				sessionStorage.removeItem('frec/cusContact---pageConfig');
+			}
+		},
+		
+		created(){
+			this.$store.commit('staff/setHeaderTitle','客户来往统计');
+			if( sessionStorage.getItem('frec/cusContact') !== null  ){
+				this.filterForm = JSON.parse(sessionStorage.getItem('frec/cusContact'));
+				this.pageConfig.switchChecked = true;
 			}
 		},
 		mounted(){
 			this.cusContact( this.filterForm );
-			this.removeItem();
 		},
-		created(){
-			if( sessionStorage.getItem('frec/cusContact') !== null  ){
-				try{
-					this.filterForm = JSON.parse(sessionStorage.getItem('frec/cusContact'));
-				}catch(err){
-					sessionStorage.removeItem('frec/cusContact');
-				}
+		destroyed(){
+			if( this.pageConfig.switchChecked ){
+				sessionStorage.setItem('frec/cusContact',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('frec/cusContact');
 			}
-			if( sessionStorage.getItem('frec/cusContact---pageConfig') !== null  ){
-				try{
-					this.pageConfig = JSON.parse(sessionStorage.getItem('frec/cusContact---pageConfig'));
-				}catch(err){
-					sessionStorage.removeItem('frec/cusContact---pageConfig');
-				}
-			}
-			this.$store.commit('staff/setHeaderTitle','客户来往统计');
 		},
 		watch:{
-			filterForm:{
-				handler( val, oldVal ){
-					this.pageConfig.switchChecked = false;
-				},
-				deep:true,
-			}
+			
 		}
 	}
 </script>

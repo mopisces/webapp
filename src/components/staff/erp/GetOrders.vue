@@ -62,9 +62,9 @@
 			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.radioColumns" title="日期类型" slot="filter-field-3"></radio-cell>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
-			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" slot="filter-field-5" @change="filterRemClick"/>
+			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" slot="filter-field-5"/>
 		</popup-filter>
-		<cus-picker :show.sync="config.popup.cusShow" :searchData.sync="cusPicker.searchData" :index.sync="pageConfig.defaultIndex" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
+		<cus-picker ref="cusPicker" :show.sync="config.popup.cusShow" :searchData.sync="cusPicker.searchData" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate"  @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow.sync="config.popup.detailShow" @detailClose="detailClose"></order-detail>
@@ -98,9 +98,7 @@
 		},
 		data(){
 			return {
-				active:'0',
 				pageConfig:{
-					defaultIndex:-1,
 					beginDate:new Date(),
 					minDate:new Date(),
 					maxDate:new Date(),
@@ -111,7 +109,6 @@
 				},
 				config:{
 					getConfig:true,
-					isInit:true,
 					popup:{
 						filterShow:false,
 						cusShow:false,
@@ -195,7 +192,10 @@
 					beginDate:'',
 					endDate:''
 				};
+				this.$refs.cusPicker.cusPickerClean();
 				sessionStorage.removeItem('erp/getOrders');
+				this.config.getConfig = true;
+				this.config.switch.checked = false;
 				this.getConfig( true );
 			},
 			filterClick(){
@@ -209,36 +209,22 @@
 			cusPickerConfirm( result ){
 				this.config.popup.cusShow = false;
 				this.filterForm.cusName = '';
-				this.pageConfig.defaultIndex = -1;
 				if( JSON.stringify(result.value) !== '[]' ){
-					this.pageConfig.defaultIndex = result.index;
 					this.filterForm.cusName = result.key;
 				}
 			},
-
 			timePickerCancel(){
 				this.config.popup.timeShow.start = false;
 				this.config.popup.timeShow.end = false;
 			},
 			timeBeginConfirm( value ){
 				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.beginDate = value.value;
 				this.timePickerCancel();
 			},
 			timeEndConfirm( value ){
 				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.endDate = value.value;
 				this.timePickerCancel();
 			},
-			filterRemClick( checked ){
-				if( checked ){
-					let storageData = Object.assign({},this.filterForm,{defaultIndex:this.pageConfig.defaultIndex})
-					sessionStorage.setItem('erp/getOrders',JSON.stringify(storageData));
-				}else{
-					sessionStorage.removeItem('erp/getOrders');
-				}
-			},
-
 			getConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.erp.erpConfig().then(res=>{
@@ -265,6 +251,10 @@
 					data.curPage = 1;
 				}
 				this.$request.staff.erp.erpOrders( data ).then(res=>{
+					if( res.result == null || res.result.length < 6 ){
+						self.config.list.pushLoading.finished = true;
+					}
+					self.config.list.pushLoading.loading = false;
 					if( isReloading ){
 						self.info.panelList = [];
 						self.info.panelList = res.result;
@@ -272,10 +262,6 @@
 						res.result.forEach((item,index)=>{
 							self.info.panelList.push(item);
 						});
-					}
-					self.config.list.pushLoading.loading = false;
-					if( res.result == null || res.result.length < 6 ){
-						self.config.list.pushLoading.finished = true;
 					}
 				});
 			},
@@ -291,10 +277,8 @@
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','ERP订单');
-			if( sessionStorage.getItem('erp/getOrders') ){
+			if( sessionStorage.getItem('erp/getOrders') !== null ){
 				let storageData = JSON.parse(sessionStorage.getItem('erp/getOrders'));
-				this.pageConfig.defaultIndex = storageData.defaultIndex;
-				delete storageData.defaultIndex;
 				this.filterForm = storageData;
 				this.pageConfig.beginDate = new Date(storageData.beginDate);
 				this.pageConfig.endDate = new Date(storageData.endDate);
@@ -303,10 +287,20 @@
 			}
 		},
 		mounted(){
-			
+
 		},
 		updated(){
-
+			
+		},
+		beforeDestory(){
+			
+		},
+		destroyed(){
+			if( this.config.switch.checked ){
+				sessionStorage.setItem('erp/getOrders',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('erp/getOrders');
+			}
 		},
 		computed:{
 			orderState(){
@@ -316,14 +310,6 @@
 		watch:{
 			orderState( newV,oldV ){
 				this.getErpOrders( this.filterForm, true );
-			},
-			filterForm:{
-				handler( newV, oldV ){
-					if( this.config.getConfig ){
-						this.config.switch.checked = false;
-					}
-				},
-				deep:true
 			}
 		}
 	}
