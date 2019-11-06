@@ -78,6 +78,12 @@ let routes = [
                 meta: { title: '扫描装货' },
                 component: resolve => require(['../components/staff/stow/Lists.vue'], resolve),
             },
+             {
+                path:'stow/detail',
+                name:'stow/detail',
+                meta: { title: '扫描装货/详情' },
+                component: resolve => require(['../components/staff/stow/Detail.vue'], resolve),
+            },
             {
                 path:'statis/getProInfo',
                 meta: { title: '生产分析总计' },

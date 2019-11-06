@@ -30,7 +30,7 @@ const paperbuy = {
 	},
 	paperDetail( data ){
 		let postData = {
-			paper_buy_po_no: data.pONo
+			paper_buy_po_no: data.PONo
 		};
 		return post(staff.paperbuy.paperDetail,postData);
 	}

@@ -14,7 +14,6 @@
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
-
 		},
 		data(){
 			return {
@@ -43,9 +42,9 @@
 							{field: 'To5Area', title: '折5面积', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'CusNames', title: '拼车客户', width: 120, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Remark', title: '备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'custome-adv', title: '送货单',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'PrepareButton',isResize:true},
-							{field: 'custome-adv', title: '明细',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'prepare-button',isResize:true},
-							{field: 'custome-adv', title: '装货',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'prepare-button',isResize:true}
+							{field: 'custome-adv', title: '送货单',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'stow-table-delivery',isResize:true},
+							{field: 'custome-adv', title: '明细',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'stow-table-detail',isResize:true},
+							{field: 'custome-adv', title: '装货',width: 100, titleAlign: 'center',componentName:'stow-table-loading',columnAlign:'center',isResize:true}
 						]
 					}
 				},
@@ -55,6 +54,9 @@
 			}
 		},
 		methods:{
+			threeFn( row ){
+				console.log(row)
+			},
 			getConfig(){
 				this.$request.staff.stow.stowListConfig().then(res=>{
 					console.log(res)
@@ -67,11 +69,15 @@
 				});
 			}
 		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','扫描装货');
+			this.getTableData();
+		},
 		mounted(){
 
 		},
-		created(){
-			this.getTableData();
+		destroyed(){
+
 		},
 		computed:{
 			
@@ -81,3 +87,4 @@
 		}
 	}
 </script>
+

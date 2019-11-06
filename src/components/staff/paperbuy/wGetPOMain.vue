@@ -1,13 +1,15 @@
 <template>
 	<div>
-		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		<van-tabs v-model="config.tabs.active">
+		<van-sticky :offset-top="46">
+			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
+		</van-sticky>
+		<van-tabs v-model="config.tabs.active" sticky :offset-top="76">
 			<van-tab title="全部">
 				<div v-for="(value,key) in radioData" :key=" 'divider' + key ">
 					<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;">
 		      			 {{ value.prevNext }}
 		  			</div>
-		  			<div role="button" tabindex="0" class="van-cell van-cell--clickable" style="text-align:center;" v-for="(item,index) in cellList[value.prevNext]"  @click="detailClick(item)">
+		  			<div role="button" tabindex="0" class="van-cell van-cell--clickable" style="text-align:center;" v-for="(item,index) in cellList[value.prevNext]"  @click="detailClick(item,value.prevNext)" :key=" 'all' + index ">
 		  				<div class="van-cell__title" >
 							<span>{{ item.PONo }}</span>
 						</div>
@@ -26,8 +28,8 @@
 			</van-tab>
 			<van-tab title="按日期">
 				<prev-next @radioConfirm="radioConfirm" :radioData="radioData" :radioVal="radioVal"  v-if=" config.tabs.active == 1 "></prev-next>
-				<div role="button" tabindex="0" class="van-cell van-cell--clickable" style="text-align:center;" v-for="(item,index) in cellList[radioVal]" >
-	  				<div class="van-cell__title"  @click="detailClick(item)">
+				<div role="button" tabindex="0" class="van-cell van-cell--clickable" style="text-align:center;" v-for="(item,index) in cellList[radioVal]" :key=" 'date' + index "  @click="detailClick(item,radioVal)">
+	  				<div class="van-cell__title" >
 						<span>{{ item.PONo }}</span>
 					</div>
 					<div class="van-cell__title" >
@@ -50,25 +52,29 @@
 		</popup-filter>
 		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
 		<time-picker :dateTimeShow.sync="config.popup.timeShow.end"  :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
+		<paper-buy-detail :detailShow.sync="config.popup.detailShow" :detailItem="config.detailTable.item" v-if="config.popup.detailShow" ></paper-buy-detail >
 	</div>
 </template>
 <script>
-	import { Button, Field, SwitchCell, Tab, Tabs } from 'vant';
+	import { Button, Field, SwitchCell, Sticky, Tab, Tabs } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import TimePicker from '@/components/subject/TimePicker.vue';
 	import PrevNext from '@/components/subject/PrevNext.vue';
+	import PaperBuyDetail from '@/components/subject/PaperBuyDetail.vue';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
+			[Sticky.name]: Sticky,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 
 			PopupFilter,
 			TimePicker,
-			PrevNext
+			PrevNext,
+			PaperBuyDetail
 		},
 		data(){
 			return {
@@ -81,13 +87,17 @@
 						timeShow:{
 							start:false,
 							end:false,
-						}
+						},
+						detailShow:false
 					},
 					tabs:{
 						active:0
 					},
 					switch:{
 						checked:false
+					},
+					detailTable:{
+						item:{}
 					}
 				},
 				filterForm:{
@@ -157,9 +167,12 @@
 			radioConfirm( value ){
 				this.radioVal = value;
 			},
-			detailClick( item ){
-				this.$router.push('/staff/paperbuy/wGetPOMainConfig');
-				sessionStorage.setItem('wGetPOMainDetail',JSON.stringify(item));
+			detailClick( item, date ){
+
+				item['Date'] = date; 
+				console.log(item);
+				this.config.detailTable.item = item;
+				this.config.popup.detailShow = true;
 			}
 		},	
 		created(){

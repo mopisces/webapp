@@ -51,7 +51,7 @@
 						{text:'传单统计',iconName:'chuandan',url:'/staff/statis/getSchSum',state:'#0bf147'},
 						{text:'库存统计',iconName:'storage',url:'/staff/statis/getOrdStock',state:'#0bf147'},
 						{text:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo',state:'#0bf147'},
-						{text:'原纸采购',iconName:'caigou',url:'/staff/paperbuy/wGetPOMain',state:'#eff30c'},
+						{text:'原纸采购',iconName:'caigou',url:'/staff/paperbuy/wGetPOMain',state:'#0bf147'},
 						{text:'原纸收货',iconName:'che2',url:'/staff/paperbuy/wGetPOIn',state:'#0bf147'},
 						{text:'原纸出库',iconName:'ccgl-chukucaozuo-5',url:'/staff/paper/doStockOut',state:'#eff30c'},
 						{text:'原纸入库',iconName:'ruku',url:'/staff/paper/doRStockIn',state:'#eff30c'},
