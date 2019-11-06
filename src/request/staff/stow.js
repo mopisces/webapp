@@ -15,6 +15,9 @@ const stow = {
 		};
 		return post(staff.stow.stowList,postData);
 	},
+	detailConfig(){
+		return post(staff.stow.detailConfig);
+	},
 	getPDNDetail( data ){
 		return post(staff.stow.getPDNDetail,{list_no:data.listNo});
 	}

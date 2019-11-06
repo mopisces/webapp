@@ -45,6 +45,7 @@ const staff = {
 	stow:{
 		stowListConfig:`${base.staff}stowListConfig`,
 		stowList:`${base.staff}stowList`,
+		detailConfig:`${base.staff}stowDetailConfig`,
 		getPDNDetail:`${base.staff}getPDNDetail`,
 	},
 	statis:{
