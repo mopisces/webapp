@@ -1,49 +1,60 @@
 <template>
 	<div>
 		<div v-if=" config.isEdit == 1 ">
-			<van-field v-model="formData.value" placeholder="请输入订单号" label="条形码编号" input-align="center">
+			<van-field v-model="fieldData.strOrderId" placeholder="请输入订单号" label="订单号" input-align="center" :disabled=" !config.button.showLoadButton ">
 			 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon" color="#0bf147" />
 			</van-field>
-			<van-field readonly v-model="formData.value" placeholder="订单信息" label="条形码编号" input-align="center">
-			</van-field>
-			<div class="van-row" style="text-align:left;">
-				<div class="van-col van-col--12">
-					<van-field v-model="formData.value" placeholder="附加费" label="附加费" input-align="center" type="number" :maxlength="8">
-					</van-field>
-				</div>
-				<div class="van-col van-col--12">
-					<van-field v-model="formData.value" placeholder="库存数" label="库存数" input-align="center" type="number" :maxlength="10">
-					</van-field>
-				</div>
-			</div>
-			<div class="van-row" style="text-align:left;">
-				<div class="van-col van-col--12">
-					<van-field v-model="formData.value" placeholder="送货数" label="送货数" input-align="center" type="number" :maxlength="8">
-					</van-field>
-				</div>
-				<div class="van-col van-col--12">
-					<van-field v-model="formData.value" placeholder="赠品数" label="赠品数" input-align="center" type="number" :maxlength="10">
-					</van-field>
-				</div>
-			</div>
-			<van-field readonly clickable label="送货公司" v-model="filterForm.value" placeholder="选择送货公司" input-align="center">
+			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="false">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
-			<van-field v-model="formData.value1" placeholder="送货备注" label="送货备注" input-align="center"  type="textarea" autosize rows="2"  maxlength="50" show-word-limit>
+			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize rows="2">
 			</van-field>
-			<div class="van-row van-row--flex van-row--justify-end">
+			<div class="van-row" style="text-align:left;">
+				<div class="van-col van-col--12">
+					<van-field v-model="fieldData.dOtherFee" placeholder="附加费" label="附加费" input-align="center" type="number" :maxlength="8">
+					</van-field>
+				</div>
+				<div class="van-col van-col--12">
+					<van-field v-model="fieldData.areaQty" placeholder="库存数" label="库存数" input-align="center" type="number" :maxlength="10" readonly>
+					</van-field>
+				</div>
+			</div>
+			<div class="van-row" style="text-align:left;">
+				<div class="van-col van-col--12">
+					<van-field v-model="fieldData.iDeliQty" placeholder="送货数" label="送货数" input-align="center" type="number" :maxlength="8">
+					</van-field>
+				</div>
+				<div class="van-col van-col--12">
+					<van-field v-model="fieldData.iFreeQty" placeholder="赠品数" label="赠品数" input-align="center" type="number" :maxlength="10">
+					</van-field>
+				</div>
+			</div>
+			<van-field readonly clickable label="送货公司" v-model="filterForm.strCusSubNo" placeholder="选择送货公司" input-align="center">
+				<van-icon slot="right-icon" size="16" name="arrow"/>
+			</van-field>
+			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center"  type="textarea" autosize rows="2"  maxlength="50" show-word-limit>
+			</van-field>
+			<div class="van-row van-row--flex van-row--justify-end" v-if=" config.button.showLoadButton ">
 				<div class="van-col van-col--6">
-					<van-button type="primary">主要按钮</van-button>
+					<van-button type="primary" style="width:90%">装货</van-button>
 				</div>
 				<div class="van-col van-col--6">
-					<van-button plain type="primary">朴素按钮</van-button>
+					<van-button plain type="primary" style="width:90%">重置</van-button>
+				</div>
+			</div>
+			<div class="van-row van-row--flex van-row--justify-end" v-else>
+				<div class="van-col van-col--6">
+					<van-button type="primary" style="width:90%">修改</van-button>
+				</div>
+				<div class="van-col van-col--6">
+					<van-button plain type="primary" style="width:100%">取消修改</van-button>
 				</div>
 			</div>
 		</div>
 		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-else>
 			明细
 		</div>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc">
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;height:500px;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc">
 		</v-table>
 	</div>
 </template>
@@ -62,6 +73,9 @@
 		data(){
 			return {
 				config:{
+					button:{
+						showLoadButton:true
+					},
 					table:{
 						columns:[
 							{field: 'OrderId', title: '订单编号', width: 100, titleAlign: 'center', titleCellClassName:'table-title-class',columnAlign: 'center',isResize:true,isFrozen: true},
@@ -72,7 +86,7 @@
 							{field: 'Width', title: '板宽', width: 80, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
 						]
 					},
-					isEdit:0
+					isEdit:0,
 				},
 				table:{
 					data:[]
@@ -81,9 +95,17 @@
 					listNo:'',
 					orderType:'',
 				},
-				formData:{
-					value:'',
-					value1:''
+				fieldData:{
+					strOrderId:'',      //订单号
+					strStockArea:'',	//库区
+					strOrderInfo:'',    //订单信息
+					dOtherFee:'',		//附加费
+					iDeliQty:'',        //送货数
+					iFreeQty:'',		//赠品数
+					strCusSubNo:'',		//送货子公司
+					strDNRemark:'',		//送货备注,
+					orderType:'',		//订单类型
+					areaQty:''			//库存数
 				}
 			}
 		},
@@ -96,13 +118,29 @@
 			},
 			customCompFunc( params ){
 				if( params.type === 'edit' ){
-					this.rowEdit( params.index, params.rowData )
+					this.rowEdit( params.index, params.rowData );
 				}else if( params.type === 'delete' ){
-					this.rowDelete( params.index, params.rowData )
+					this.rowDelete( params.index, params.rowData );
 				}
 			},
 			rowEdit( index, rowData ){
-				
+				console.log(rowData);
+				this.config.button.showLoadButton = false;
+				this.fieldData.strOrderId = rowData.strOrderId;
+				let orderInfo = '订单客户:' + rowData.CusId + ' ' + rowData.CusShortName + ' 材质编号:' + rowData.BoardId + ' 长宽:' + rowData.Length + 'x' + rowData.Width;
+				if( rowData.BoxL > 0 ){
+					orderInfo += '长宽高:' + rowData.BoxL + 'x' + rowData.BoxW + 'x' + rowData.BoxH;
+				}
+				orderInfo += ' 订单数:' + rowData.OrdQty;
+				if( rowData.MatName !== '' && rowData.OrderType === 'x' ){
+					orderInfo += ' 货品名称:' + rowData.MatName;
+				}
+				this.fieldData.strOrderInfo = orderInfo;
+				this.fieldData.iDeliQty = rowData.DeliQty;
+				this.fieldData.iFreeQty = rowData.FreeQty;
+				this.fieldData.dOtherFee = rowData.OtherFee;
+				this.fieldData.strCusSubNo = rowData.CusSubNo;
+				this.fieldData.strDNRemark = rowData.DNRemark;
 			},
 			rowDelete( index, rowData ){
 
