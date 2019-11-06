@@ -39,7 +39,7 @@
 					<van-button type="primary" style="width:90%">装货</van-button>
 				</div>
 				<div class="van-col van-col--6">
-					<van-button plain type="primary" style="width:90%">重置</van-button>
+					<van-button plain type="primary" style="width:90%" @click="resetClick()">重置</van-button>
 				</div>
 			</div>
 			<div class="van-row van-row--flex van-row--justify-end" v-else>
@@ -203,7 +203,11 @@
 				this.fieldData.strCusSubNo  = '';
 				this.fieldData.deliArea     = '';
 				this.deliveryAddress.fit    = [];
-				this.config.popup.deliAreaShow = false;
+				this.config.popup.deliAreaShow    = false;
+				this.config.button.showLoadButton = true;
+			},
+			resetClick(){
+				
 			}
 		},
 		created(){
