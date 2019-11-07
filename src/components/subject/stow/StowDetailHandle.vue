@@ -22,7 +22,7 @@
 				this.$emit('on-custom-comp',params);
 			},
 			deleteData(rowData,index){
-				let params = {type:'detele',index:this.index,rowData:this.rowData};
+				let params = {type:'delete',index:this.index,rowData:this.rowData};
 				this.$emit('on-custom-comp',params);
 			}
 		},

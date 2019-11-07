@@ -36,7 +36,7 @@
 			</van-field>
 			<div class="van-row van-row--flex van-row--justify-end" v-if=" config.button.showLoadButton ">
 				<div class="van-col van-col--6">
-					<van-button type="primary" style="width:90%">装货</van-button>
+					<van-button type="primary" style="width:90%" @click="onLoadClick()">装货</van-button>
 				</div>
 				<div class="van-col van-col--6">
 					<van-button plain type="primary" style="width:90%" @click="resetClick()">重置</van-button>
@@ -54,7 +54,7 @@
 		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-else>
 			明细
 		</div>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;height:500px;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc">
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;height:500px;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" >
 		</v-table>
 		<van-popup v-model="config.popup.deliAreaShow" position="top" :style="{ height: '100%', width:'100%' }">
 			<div class="header" style="width:100%;position:fixed;height:46px;top:0px;text-align:center;">
@@ -67,7 +67,7 @@
 			<div style="width:100%;margin-top:46px;"></div>
 			<van-radio-group v-model="fieldData.deliArea" v-if="config.popup.deliAreaShow">
 				<van-cell-group>
-					<div role="button" tabindex="0" class="van-cell van-cell--clickable"  v-for="(item,index) in deliveryAddress.fit">
+					<div role="button" tabindex="0" class="van-cell van-cell--clickable"  v-for="(item,index) in deliveryAddress.fit" :key=" 'address' + index ">
 						<div class="van-cell__title">
 							<span>{{ item.CusSubNo }}</span><br/>
 							<span v-if="item.SubDNAddress">{{ item.SubDNAddress }}</span><br/>
@@ -83,6 +83,7 @@
 <script>
 	import { VTable, VPagination } from 'vue-easytable';
 	import { Button, Cell, CellGroup, Popup, Icon, Field, RadioGroup, Radio } from 'vant';
+	import { Dialog, Toast  } from 'vant';
 	export default {
 		components:{
 			[VTable.name]: VTable,
@@ -114,6 +115,7 @@
 							{field: 'StockArea', title: '库区', width: 80, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
 							{field: 'Length', title: '板长', width: 80, titleAlign: 'center', titleCellClassName:'table-title-class',columnAlign: 'center',isResize:true},
 							{field: 'Width', title: '板宽', width: 80, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
+							{field: 'BoardId', title: '材质编号', width: 100, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
 						]
 					},
 					isEdit:0,
@@ -141,9 +143,21 @@
 					all:[],
 					fit:[]
 				},
+				erpDelForm:{
+					iPListNo:'',
+					iDNId:'',
+					strFactoryId:'',
+					strUserId:''
+				}
 			}
 		},
 		methods:{
+			async erpDelDNDetail( data ){
+				let self = this;
+				this.$request.staff.stow.erpDelDNDetail( data ).then(res=>{
+
+				});
+			},
 			detailConfig(){
 				let self = this;
 				this.$request.staff.stow.detailConfig().then(res=>{
@@ -173,6 +187,7 @@
 					orderInfo += '长宽高:' + rowData.BoxL + 'x' + rowData.BoxW + 'x' + rowData.BoxH;
 				}
 				orderInfo += ' 订单数:' + rowData.OrdQty;
+				this.fieldData.areaQty = rowData.StockQty;
 				if( rowData.MatName !== '' && rowData.OrderType === 'x' ){
 					orderInfo += ' 货品名称:' + rowData.MatName;
 				}
@@ -192,9 +207,25 @@
 
 			},
 			rowDelete( index, rowData ){
+				this.erpDelForm.iPListNo     = rowData.iPListNo;
+				this.erpDelForm.iDNId        = rowData.iDNId;
+				Dialog.confirm({
+					title:'erp删除暂缺',
+					message:'确定删除订单' + rowData.strOrderId + '?',
+					beforeClose:this.beforeDialogClose
+				});
+			},
+			beforeDialogClose( action, done ){
 
+				if(action === 'confirm'){
+					//this.erpDelDNDetail( this.erpDelForm );
+					done();
+				}else{
+					done();
+				}
 			},
 			cancelClick(){
+				this.fieldData.strOrderId   = '';
 				this.fieldData.strOrderInfo = '';
 				this.fieldData.iDeliQty     = '';
 				this.fieldData.iFreeQty     = '';
@@ -208,14 +239,27 @@
 			},
 			resetClick(){
 				
+			},
+			onLoadClick(){
+				if( this.fieldData.strOrderId === '' ){
+					Toast.fail('请输入订单号');
+					return ;
+				}
+				if( this.fieldData.iDeliQty <= 0 ){
+					Toast.fail('请输入有效的装货数');
+					return ;
+				}
+				if( this.fieldData.orderType === '' ){
+
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','扫描装货详情');
 			if( this.$route.query.listNo !== undefined && this.$route.query.orderType !== undefined && this.$route.query.isEdit !== undefined ){
-				this.filterForm.listNo = this.$route.query.listNo;
+				this.filterForm.listNo    = this.$route.query.listNo;
 				this.filterForm.orderType = this.$route.query.orderType;
-				this.config.isEdit = this.$route.query.isEdit;
+				this.config.isEdit        = this.$route.query.isEdit;
 				if( this.config.isEdit == 1 ){
 					this.config.table.columns.push({field: 'custome-adv', title: '操作', width: 150, titleAlign: 'center',titleCellClassName:'table-title-class',componentName:'stow-detail-handle', columnAlign: 'center',isResize:true})
 				}

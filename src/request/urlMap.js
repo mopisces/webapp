@@ -47,6 +47,7 @@ const staff = {
 		stowList:`${base.staff}stowList`,
 		detailConfig:`${base.staff}stowDetailConfig`,
 		getPDNDetail:`${base.staff}getPDNDetail`,
+
 	},
 	statis:{
 		getProInfo:`${base.staff}getProInfo`,
@@ -74,5 +75,9 @@ const staff = {
 		countOrder:`${base.staff}staffCountOrder`,
 		getDailyUser:`${base.staff}staffDailyUser`,
 	}
-}
-export { map, webappMap, adminUrl, staff};
+};
+
+const erp = {
+	delDNDetail:`${base.erp}WebCommon/DelDNDetail`,
+};
+export { map, webappMap, adminUrl, staff, erp};
