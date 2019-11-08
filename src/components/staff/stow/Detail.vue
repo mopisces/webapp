@@ -32,21 +32,21 @@
 			<van-field readonly label="送货公司" v-model="fieldData.deliArea" placeholder="选择送货公司" input-align="center" @click="config.popup.deliAreaShow = true">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
-			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center"  type="textarea" autosize rows="2"  maxlength="50" show-word-limit>
+			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center"  type="textarea" autosize maxlength="50" show-word-limit>
 			</van-field>
 			<div class="van-row van-row--flex van-row--justify-end" v-if=" config.button.showLoadButton ">
-				<div class="van-col van-col--6">
+				<div class="van-col van-col--8">
 					<van-button type="primary" style="width:90%" @click="onLoadClick()">装货</van-button>
 				</div>
-				<div class="van-col van-col--6">
+				<div class="van-col van-col--8">
 					<van-button plain type="primary" style="width:90%" @click="resetClick()">重置</van-button>
 				</div>
 			</div>
 			<div class="van-row van-row--flex van-row--justify-end" v-else>
-				<div class="van-col van-col--6">
+				<div class="van-col van-col--8">
 					<van-button type="primary" style="width:90%">修改</van-button>
 				</div>
-				<div class="van-col van-col--6">
+				<div class="van-col van-col--8">
 					<van-button plain type="primary" style="width:100%" @click="cancelClick()">取消修改</van-button>
 				</div>
 			</div>
@@ -152,7 +152,14 @@
 			}
 		},
 		methods:{
-			async erpDelDNDetail( data ){
+			erpAddDNDetail( data ){
+				let self = this;
+				this.$request.staff.stow.erpAddDNDetail( data ).then(res=>{
+					console.log(res.result);
+				});
+
+			},
+			erpDelDNDetail( data ){
 				let self = this;
 				this.$request.staff.stow.erpDelDNDetail( data ).then(res=>{
 
@@ -169,6 +176,15 @@
 			getPDNDetail( data ){
 				let self = this;
 				this.$request.staff.stow.getPDNDetail( data ).then(res=>{
+					self.table.data = res.result;
+				});
+			},
+			getOrdPackInfo( data ){
+				let self = this;
+				this.$request.staff.stow.getOrdPackInfo( data ).then(res=>{
+					res.result.forEach((item,index)=>{
+						
+					});
 					self.table.data = res.result;
 				});
 			},
@@ -216,9 +232,8 @@
 				});
 			},
 			beforeDialogClose( action, done ){
-
 				if(action === 'confirm'){
-					//this.erpDelDNDetail( this.erpDelForm );
+					this.erpDelDNDetail( this.erpDelForm );
 					done();
 				}else{
 					done();
@@ -238,7 +253,7 @@
 				this.config.button.showLoadButton = true;
 			},
 			resetClick(){
-				
+				this.cancelClick()
 			},
 			onLoadClick(){
 				if( this.fieldData.strOrderId === '' ){
@@ -250,7 +265,8 @@
 					return ;
 				}
 				if( this.fieldData.orderType === '' ){
-
+					Toast.fail('订单类型非法');
+					return ;
 				}
 			}
 		},
@@ -277,10 +293,19 @@
 			
 		},
 		computed:{
-			
+			strOrderIdChange(){
+				return this.fieldData.strOrderId;
+			}
 		},
 		watch:{
-
+			strOrderIdChange( newV, oldV ){
+				if( newV === undefined ){
+					return ;
+				}
+				if( newV.length === 11 ){
+					this.getOrdPackInfo( { strOrderId: newV } );
+				}
+			}
 		}
 	}
 </script>

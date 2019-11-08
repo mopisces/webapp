@@ -47,7 +47,7 @@ const staff = {
 		stowList:`${base.staff}stowList`,
 		detailConfig:`${base.staff}stowDetailConfig`,
 		getPDNDetail:`${base.staff}getPDNDetail`,
-
+		getOrdPackInfo:`${base.staff}getOrdPackInfo`,
 	},
 	statis:{
 		getProInfo:`${base.staff}getProInfo`,
@@ -78,6 +78,7 @@ const staff = {
 };
 
 const erp = {
-	delDNDetail:`${base.erp}WebCommon/DelDNDetail`,
+	delDNDetail:`${base.erp}WebCommon/DelDNDetail`,    //扫描装货详情
+	addDNDetail:`${base.erp}WebCommon/WebAddDNDetail`, //扫描装货详情
 };
 export { map, webappMap, adminUrl, staff, erp};
