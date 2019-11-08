@@ -183,7 +183,7 @@
 				let self = this;
 				this.$request.staff.stow.getOrdPackInfo( data ).then(res=>{
 					res.result.forEach((item,index)=>{
-						
+
 					});
 					self.table.data = res.result;
 				});
@@ -197,7 +197,7 @@
 			},
 			rowEdit( index, rowData ){
 				this.config.button.showLoadButton = false;
-				this.fieldData.strOrderId = rowData.strOrderId;
+				this.fieldData.strOrderId = rowData.OrderType +  rowData.OrderId;
 				let orderInfo = '订单客户:' + rowData.CusId + ' ' + rowData.CusShortName + ' 材质编号:' + rowData.BoardId + ' 长宽:' + rowData.Length + 'x' + rowData.Width;
 				if( rowData.BoxL > 0 ){
 					orderInfo += '长宽高:' + rowData.BoxL + 'x' + rowData.BoxW + 'x' + rowData.BoxH;
@@ -227,7 +227,7 @@
 				this.erpDelForm.iDNId        = rowData.iDNId;
 				Dialog.confirm({
 					title:'erp删除暂缺',
-					message:'确定删除订单' + rowData.strOrderId + '?',
+					message:'确定删除订单' + rowData.OrderType +  rowData.OrderId + '?',
 					beforeClose:this.beforeDialogClose
 				});
 			},

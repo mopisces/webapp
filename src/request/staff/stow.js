@@ -42,8 +42,8 @@ const stow = {
             iPListNo     : data,
             iDeliQty     : data,
             iFreeQty     : data,
-            iSchPNo      : data,
-            dDNPriceAdd  : data,
+            iSchPNo      : 0,
+            dDNPriceAdd  : 0.0,
             dOtherFee    : data,
             strOrderId   : data,
             strCusId     : '',
@@ -52,8 +52,8 @@ const stow = {
             strCusSubNo  : data,
             OrderType    : data,
             bModify      : data,
-            strFactoryId : '{$config[\'FactoryId\']}',
-            strUserId    : '{$ERPId}',
+            strFactoryId : '',
+            strUserId    : '',
 		};
 		return post(erp.addDNDetail,postData);
 	}
