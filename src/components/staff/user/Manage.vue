@@ -53,21 +53,25 @@
 		<new-popup :leftShow.sync="config.popup.qrCode.show" :position="config.popup.qrCode.position" :isClose="true" :title="config.popup.qrCode.title">
 			<div id="qrcode" slot="new-popup-qrcode" class="qrcode"></div>
 		</new-popup>
-		<new-popup :leftShow.sync="config.popup.auth.show" :position="config.popup.auth.position" isClose="2" :title="config.popup.auth.title" @saveClick="saveAuth()">
-			<van-checkbox-group v-model="result">
+		<new-popup :leftShow.sync="config.popup.auth.show" :position="config.popup.auth.position" isClose="3" :title="config.popup.auth.title" @saveClick="saveAuth()">
+			<van-checkbox-group v-model="config.checkboxes.result" slot="new-popup-1" v-if="config.popup.auth.show">
 				<van-cell-group>
-					<van-cell clickable v-for="(item, index) in authSelectAuth" :key="item"></van-cell>
+					<van-cell clickable v-for="(item, index) in authSelectAuth" :key="index" @click="toggle(index)" :title="item">
+						<van-checkbox :name="item" ref="checkboxes" shape="square" slot="right-icon"/>
+					</van-cell>
 				</van-cell-group>
 			</van-checkbox-group>
+			<van-button type="primary" size="large" @click="saveClick()" slot="new-popup-2">保存</van-button>
 		</new-popup>
 	</div>
 </template>
 <script>
-	import { Cell, CellGroup, Icon, Row, Col, Checkbox, CheckboxGroup, Panel, Tab, Tabs } from 'vant';
+	import { Button, Cell, CellGroup, Icon, Row, Col, Checkbox, CheckboxGroup, Panel, Tab, Tabs } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
 		components:{
+			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
 			[Icon.name]: Icon,
@@ -99,7 +103,9 @@
 							title:''
 						}
 					},
-					qrCode:{}
+					checkboxes:{
+						result:[]
+					}
 				},
 				listData:[],
 				authSelectAuth:[]
@@ -132,9 +138,14 @@
 			getAuthName( data ){
 				let self = this;
 				this.$request.staff.user.getAuthName( data ).then(res=>{
-
+					self.authSelectAuth = res.result.select;
+					self.config.checkboxes.result = res.result.available;
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.popup.auth.show = true;
+					})
 				});
-			}
+			},
 			qrcodeClick( item ){
 				this.config.popup.qrCode.title = '账号:' + item.UserName + '登录二维码';
 				this.getCommonQrCode( item );
@@ -148,11 +159,14 @@
 				});
 			},
 			authClick( item ){
-				this.config.popup.auth.show = true;
 				this.config.popup.auth.title = '账号  ' + item.UserName + '  权限';
+				this.getAuthName( item );
 			},
-			saveAuth(){
-
+			saveClick(){
+				console.log(this.config.checkboxes.result)
+			},
+			toggle( index ){
+				this.$refs.checkboxes[index].toggle();
 			}
 		},
 		created(){

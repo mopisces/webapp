@@ -20,10 +20,7 @@ const user = {
 		return post(staff.user.getCommonQrCode,postData);
 	},
 	getAuthName( data ){
-		let postData = {
-
-		};
-		return post(staff.user.getAuthName,postData);
+		return post(staff.user.getAuthName,{user_name:data.UserName});
 	}
 }
 export default user;
