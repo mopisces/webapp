@@ -13,11 +13,11 @@
 							</van-col>
 						</van-row>
 						<van-row type="flex" justify="default" slot="footer">
-							<van-col span="12">
+							<van-col span="12" @click="qrcodeClick( item )">
 								<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
 								<span>登录二维码</span>
 							</van-col>
-							<van-col span="12">
+							<van-col span="12" @click="authClick( item )">
 								<van-icon class-prefix="iconfont" size="16" name="quanxianguanli2"/>
 								<span>权限</span>
 							</van-col>
@@ -37,11 +37,11 @@
 							</van-col>
 						</van-row>
 						<van-row type="flex" justify="default" slot="footer">
-							<van-col span="12">
+							<van-col span="12" @click="qrcodeClick( item )">
 								<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
 								<span>登录二维码</span>
 							</van-col>
-							<van-col span="12">
+							<van-col span="12" @click="authClick( item )">
 								<van-icon class-prefix="iconfont" size="16" name="quanxianguanli2"/>
 								<span>权限</span>
 							</van-col>
@@ -50,27 +50,59 @@
 				</div>
 			</van-tab>
 		</van-tabs>
+		<new-popup :leftShow.sync="config.popup.qrCode.show" :position="config.popup.qrCode.position" :isClose="true" :title="config.popup.qrCode.title">
+			<div id="qrcode" slot="new-popup-qrcode" class="qrcode"></div>
+		</new-popup>
+		<new-popup :leftShow.sync="config.popup.auth.show" :position="config.popup.auth.position" isClose="2" :title="config.popup.auth.title" @saveClick="saveAuth()">
+			<van-checkbox-group v-model="result">
+				<van-cell-group>
+					<van-cell clickable v-for="(item, index) in authSelectAuth" :key="item"></van-cell>
+				</van-cell-group>
+			</van-checkbox-group>
+		</new-popup>
 	</div>
 </template>
 <script>
-	import { Icon, Row, Col, Panel, Tab, Tabs } from 'vant';
+	import { Cell, CellGroup, Icon, Row, Col, Checkbox, CheckboxGroup, Panel, Tab, Tabs } from 'vant';
+	import QRCode from 'qrcodejs2';
+	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
 		components:{
+			[Cell.name]: Cell,
+			[CellGroup.name]: CellGroup,
 			[Icon.name]: Icon,
 			[Row.name]: Row,
 			[Col.name]: Col,
+			[Checkbox.name]: Checkbox,
+			[CheckboxGroup.name]: CheckboxGroup,
 			[Panel.name]: Panel,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
+
+			NewPopup
 		},
 		data(){
 			return {
 				config:{
 					tab:{
 						active:'0'
-					}
+					},
+					popup:{
+						qrCode:{
+							show:false,
+							position:'right',
+							title:''
+						},
+						auth:{
+							show:false,
+							position:'left',
+							title:''
+						}
+					},
+					qrCode:{}
 				},
-				listData:[]
+				listData:[],
+				authSelectAuth:[]
 			}
 		},
 		methods:{
@@ -85,10 +117,46 @@
 				this.$request.staff.user.getWebUserStaff().then(res=>{
 					self.listData = res.result;
 				});
+			},
+			getCommonQrCode( data ){
+				let self = this;
+				this.$request.staff.user.getCommonQrCode( data ).then(res=>{
+					self.config.popup.qrCode.show = true;
+					this.$nextTick(()=>{
+						document.getElementById('qrcode').innerHTML = '';
+						let url = res.result;//登录地址
+						this.creatQrCode(url);
+					})
+				});
+			},
+			getAuthName( data ){
+				let self = this;
+				this.$request.staff.user.getAuthName( data ).then(res=>{
+
+				});
+			}
+			qrcodeClick( item ){
+				this.config.popup.qrCode.title = '账号:' + item.UserName + '登录二维码';
+				this.getCommonQrCode( item );
+			},
+			creatQrCode( url ){
+				let qrcode = new QRCode('qrcode',{
+					text         : url,
+			     	colorDark    : '#000000',
+			      	colorLight   : '#ffffff',
+			      	correctLevel : QRCode.CorrectLevel.H
+				});
+			},
+			authClick( item ){
+				this.config.popup.auth.show = true;
+				this.config.popup.auth.title = '账号  ' + item.UserName + '  权限';
+			},
+			saveAuth(){
+
 			}
 		},
 		created(){
-			this.$store.commit('staff/setHeaderTitle','');
+			this.$store.commit('staff/setHeaderTitle','用户管理');
 		},
 		mounted(){
 			if( this.config.tab.active == '0' ){
@@ -110,7 +178,6 @@
 		},
 		watch:{
 			tabActiveChange(newV,oldV){
-				console.log(newV == '0')
 				if( newV == '0' ){
 					this.getWebUserClient();
 				}else{
@@ -120,3 +187,9 @@
 		}
 	}
 </script>
+<style>
+	.qrcode img{
+		margin:50% auto;
+		width:60%;
+	}
+</style>

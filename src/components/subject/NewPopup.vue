@@ -13,6 +13,7 @@
 		<slot name="new-popup-5"></slot>
 		<slot name="new-popup-6"></slot>
 		<slot name="new-popup-7"></slot>
+		<slot name="new-popup-qrcode"></slot>
 		<div style="margin-bottom:50px"></div>
 		<van-button type="primary" size="large" @click="click()" class="van-tabbar--fixed">{{ buttonText }}</van-button>
 	</van-popup>
@@ -35,6 +36,9 @@
 			click(){
 				if( this.isClose ){
 					this.show = false;
+					if( this.isClose == 2 ){
+						this.$emit('saveClick');
+					}
 				}else{
 					this.$emit('refreshPopup');
 				}
@@ -47,6 +51,9 @@
 		created(){
 			if( this.isClose ){
 				this.buttonText = '关闭';
+				if( this.isClose == 2 ){
+					this.buttonText = '保存';
+				}
 			}else{
 				this.buttonText = '刷新';
 			}
