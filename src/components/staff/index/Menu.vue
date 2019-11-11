@@ -42,7 +42,7 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'用户管理',iconName:'guanwangicon31334',url:'',state:'#0b27f1'},
+						{text:'用户管理',iconName:'guanwangicon31334',url:'/staff/user/manage',state:'#eff30c'},
 						{text:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders',state:'#0bf147'},
 						{text:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder',state:'#eff30c'},
 						{text:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt',state:'#0bf147'},

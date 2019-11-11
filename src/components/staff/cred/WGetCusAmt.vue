@@ -14,7 +14,7 @@
 			<van-cell :title="item.CusShortName + '(' + item.CusId + ')' " is-link :value="item.LeftMinAmtCond + '/' + item.MinAmtCond " v-for="(item,index) in info.cell.data" :key="index" @click="cellClick(item.CusId)"/>
 		</van-cell-group>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
-			<van-field label="员工" readonly v-model="info.leftPopup.data.taskId" placeholder="员工" input-align="center" slot="new-popup-1"/>
+			<van-field label="员工" readonly v-model="info.leftPopup.data.userName" placeholder="员工" input-align="center" slot="new-popup-1"/>
 			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="center" slot="new-popup-2"/>
 			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="center" slot="new-popup-3"/>
 		</new-popup>
@@ -89,7 +89,7 @@
 				info:{
 					leftPopup:{
 						data:{
-							taskId:'该数据暂缺',
+							userName:'',
 							realAmt:'',
 							queryTime:''
 						}
@@ -109,6 +109,12 @@
 			}
 		},
 		methods:{
+			getUserInfo(){
+				let self = this;
+				this.$request.staff.user.getUserInfo().then(res=>{
+					self.info.leftPopup.data.userName = res.result.user_name
+				});
+			},
 			getInitData( data ){
 				let self = this;
 				this.$request.staff.cred.wGetCusAmt( data ).then(res=>{
@@ -151,6 +157,7 @@
 			}	
 		},
 		mounted(){
+			this.getUserInfo();
 			this.getInitData( this.filterForm );
 		},
 		destroyed(){

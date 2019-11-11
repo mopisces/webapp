@@ -27,6 +27,12 @@ const stow = {
 		};
 		return post(staff.stow.getOrdPackInfo,postData);
 	},
+	getStockArea( data ){
+		let postData = {
+			str_order_id : data.strOrderId
+		};
+		return post(staff.stow.getStockArea,postData);
+	},
 	erpDelDNDetail( data ){
 		let postData = {
 			iPListNo     : data.iPListNo,
@@ -38,24 +44,23 @@ const stow = {
 	},
 	erpAddDNDetail( data ){
 		let postData = {
-			iDNId        : data,
-            iPListNo     : data,
-            iDeliQty     : data,
-            iFreeQty     : data,
+			iDNId        : data.iDNId,
+            iPListNo     : data.iPListNo,
+            iDeliQty     : data.iDeliQty,
+            iFreeQty     : data.iFreeQty,
             iSchPNo      : 0,
             dDNPriceAdd  : 0.0,
-            dOtherFee    : data,
-            strOrderId   : data,
+            dOtherFee    : data.dOtherFee,
+            strOrderId   : data.strOrderId,
             strCusId     : '',
-            strStockArea : data,
-            strDNRemark  : data,
-            strCusSubNo  : data,
-            OrderType    : data,
-            bModify      : data,
-            strFactoryId : '',
-            strUserId    : '',
+            strStockArea : data.strStockArea,
+            strDNRemark  : data.strDNRemark,
+            strCusSubNo  : data.strCusSubNo,
+            OrderType    : data.OrderType,
+            bModify      : data.bModify,
 		};
 		return post(erp.addDNDetail,postData);
-	}
+	},
+
 }
 export default stow;

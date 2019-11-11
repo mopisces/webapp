@@ -8,6 +8,7 @@ import stow from './stow';
 import statis from './statis';
 import erp from './erp';
 import daily from './daily';
+import user from './user';
 export default {
 	calc,
 	frec,
@@ -18,5 +19,6 @@ export default {
 	stow,
 	statis,
 	erp,
-	daily
+	daily,
+	user
 }

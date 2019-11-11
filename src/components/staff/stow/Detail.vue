@@ -102,10 +102,10 @@
 			return {
 				config:{
 					popup:{
-						deliAreaShow:false
+						deliAreaShow : false
 					},
 					button:{
-						showLoadButton:true
+						showLoadButton : true
 					},
 					table:{
 						columns:[
@@ -118,36 +118,37 @@
 							{field: 'BoardId', title: '材质编号', width: 100, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
 						]
 					},
-					isEdit:0,
+					isEdit : 0,
 				},
 				table:{
-					data:[]
+					data : []
 				},
 				filterForm:{
-					listNo:'',
-					orderType:'',
+					listNo    : '',
+					orderType : '',
 				},
 				fieldData:{
-					strOrderId:'',      //订单号
-					strStockArea:'',	//库区
-					strOrderInfo:'',    //订单信息
-					dOtherFee:'',		//附加费
-					iDeliQty:'',        //送货数
-					iFreeQty:'',		//赠品数
-					strDNRemark:'',		//送货备注,
-					orderType:'',		//订单类型
-					areaQty:'',			//库存数
-					deliArea:''			//送货公司
+					strOrderId   : '',  //订单号
+					strStockArea : '',	//库区
+					strOrderInfo : '',  //订单信息
+					dOtherFee    : '',	//附加费
+					iDeliQty     : '',  //送货数
+					iFreeQty     : '',	//赠品数
+					strDNRemark  : '',	//送货备注,
+					orderType    : '',	//订单类型
+					areaQty      : '',	//库存数
+					deliArea     : '',	//送货公司
+					iDNId        : ''
 				},
 				deliveryAddress:{
 					all:[],
 					fit:[]
 				},
 				erpDelForm:{
-					iPListNo:'',
-					iDNId:'',
-					strFactoryId:'',
-					strUserId:''
+					iPListNo     : '',
+					iDNId        : '',
+					strFactoryId : '',
+					strUserId    : ''
 				}
 			}
 		},
@@ -157,7 +158,6 @@
 				this.$request.staff.stow.erpAddDNDetail( data ).then(res=>{
 					console.log(res.result);
 				});
-
 			},
 			erpDelDNDetail( data ){
 				let self = this;
@@ -165,10 +165,18 @@
 
 				});
 			},
+			getStockArea( data ){
+				let self = this;
+				this.$request.staff.stow.getStockArea( data ).then(res=>{
+					console.log(res.result)
+				});
+			},
 			detailConfig(){
 				let self = this;
 				this.$request.staff.stow.detailConfig().then(res=>{
 					self.deliveryAddress.all  = res.result.cus_dn_select;
+				}).then(()=>{
+					this.getUserInfo();
 				}).then(()=>{
 					this.getPDNDetail( this.filterForm );
 				});
@@ -223,8 +231,8 @@
 
 			},
 			rowDelete( index, rowData ){
-				this.erpDelForm.iPListNo     = rowData.iPListNo;
-				this.erpDelForm.iDNId        = rowData.iDNId;
+				this.erpDelForm.iPListNo     = rowData.PListNo;
+				this.erpDelForm.iDNId        = rowData.DNId;
 				Dialog.confirm({
 					title:'erp删除暂缺',
 					message:'确定删除订单' + rowData.OrderType +  rowData.OrderId + '?',
@@ -268,6 +276,29 @@
 					Toast.fail('订单类型非法');
 					return ;
 				}
+				let postData = {
+					iDNId        : this.bModDetail?this.DNDetail.iDNId:0,
+                    iPListNo     : this.PListNo,
+                    iDeliQty     : this.DNDetail.iDeliQty,
+                    iFreeQty     : this.DNDetail.iFreeQty,
+                    dOtherFee    : this.DNDetail.dOtherFee,
+                    strOrderId   : this.DNDetail.strOrderId,
+                    strStockArea : this.DNDetail.strStockArea,
+                    strDNRemark  : this.DNDetail.strDNRemark,
+                    strCusSubNo  : this.DNDetail.strCusSubNo,
+                    OrderType    : this.DNDetail.OrderType,
+                    bModify      : this.bModDetail,
+                    strFactoryId : this.erpDelForm.strFactoryId,
+                    strUserId    : this.erpDelForm.strUserId,
+				};
+				this.erpAddDNDetail( postData );
+			},
+			getUserInfo(){
+				let self = this;
+				this.$request.staff.user.getUserInfo().then(res=>{
+					self.erpDelForm.strFactoryId = res.result.factory_id;
+					self.erpDelForm.strUserId    = res.result.erp_id 
+				});
 			}
 		},
 		created(){

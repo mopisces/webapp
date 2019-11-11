@@ -133,6 +133,11 @@ let routes = [
                 path:'daily/getOrdersP',
                 meta: { title: '每日订单详细信息' },
                 component: resolve => require(['../components/staff/daily/GetOrdersP.vue'], resolve),
+            },
+            {
+                path:'user/manage',
+                meta: { title: '用户管理' },
+                component: resolve => require(['../components/staff/user/Manage.vue'], resolve),
             }
         ]
     }

@@ -48,6 +48,7 @@ const staff = {
 		detailConfig:`${base.staff}stowDetailConfig`,
 		getPDNDetail:`${base.staff}getPDNDetail`,
 		getOrdPackInfo:`${base.staff}getOrdPackInfo`,
+		getStockArea:`${base.staff}getStockArea`,
 	},
 	statis:{
 		getProInfo:`${base.staff}getProInfo`,
@@ -74,6 +75,11 @@ const staff = {
 		dailyDetail:`${base.staff}staffDailyDetail`,
 		countOrder:`${base.staff}staffCountOrder`,
 		getDailyUser:`${base.staff}staffDailyUser`,
+	},
+	user:{
+		staffUserInfo:`${base.staff}staffUserInfo`,
+		getWebUserClient:`${base.staff}staffWebUserClient`,
+		getWebUserStaff:`${base.staff}staffWebUserStaff`,
 	}
 };
 
