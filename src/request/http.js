@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Toast } from 'vant';
 import Vue from 'vue';
-Vue.use(Toast);
+//Vue.use(Toast);
 
 const errorHandle = (errorCode,msg) => {
 	switch(errorCode){
@@ -30,11 +30,11 @@ httpServer.interceptors.response.use(
 		if( response.status !== 200 || response.data.errorCode != '00000' ){
 			errorHandle(response.data.errorCode,response.data.msg);
 		}
-		Toast.loading({
+		/*Toast.loading({
 			mask: true,
 			message: '加载中...',
 			loadingType: 'spinner'
-		});
+		});*/
 		return Promise.resolve(response);
 	},
 	error =>{

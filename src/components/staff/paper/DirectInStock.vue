@@ -63,11 +63,11 @@
 		methods:{
 
 		},
-		mounted(){
-
-		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','直接入库');
+		},
+		mounted(){
+
 		},
 		computed:{
 			

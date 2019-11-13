@@ -137,9 +137,9 @@
 				this.$request.staff.daily.dailyConfig().then(res=>{
 					if( this.config.getConfig ){
 						self.filterForm.beginDate = res.result.WGetCusOrderBeginDate;
-						self.filterForm.endDate = res.result.WGetCusOrderEndDate;
+						self.filterForm.endDate   = res.result.WGetCusOrderEndDate;
 						self.pageConfig.beginDate = new Date(res.result.WGetCusOrderBeginDate);
-						self.pageConfig.endDate = new Date(res.result.WGetCusOrderEndDate);
+						self.pageConfig.endDate   = new Date(res.result.WGetCusOrderEndDate);
 					}
 					self.pageConfig.minDate = new Date(res.result.WGetCusOrderMinDate);
 					self.pageConfig.maxDate = new Date(res.result.WGetCusOrderMaxDate);
@@ -199,8 +199,8 @@
 				let storageData = JSON.parse(sessionStorage.getItem('daily/wGetCusorder'));
 				this.filterForm = storageData;
 				this.pageConfig.beginDate = new Date(storageData.beginDate);
-				this.pageConfig.endDate = new Date(storageData.endDate);
-				this.config.getConfig = false;
+				this.pageConfig.endDate   = new Date(storageData.endDate);
+				this.config.getConfig     = false;
 				this.config.switch.rem.checked = true;
 			}
 		},

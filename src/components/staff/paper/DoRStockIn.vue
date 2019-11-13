@@ -88,8 +88,8 @@
                         self.formData.StockNo = res.resultStr.split(',')[1];
                     }
                 });
-                wx.error(()=>{
-                	Toast.fail('微信扫码失败');
+                wx.error((err)=>{
+                	Toast.fail(err.errMsg);
                 });
 			},
 			paperGetInInfo( data ){

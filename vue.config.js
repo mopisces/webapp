@@ -20,7 +20,7 @@ module.exports = {
     }
   },
   devServer: {
-    port: 1104,
+    port: 1103,
   },
   lintOnSave: false 
 }

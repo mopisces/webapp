@@ -65,11 +65,11 @@
 				});
 			}
 		},
-		mounted(){
-			this.getPageConfig();
-		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸出库');
+		},
+		mounted(){
+			this.getPageConfig();
 		},
 		computed:{
 			opTime(){

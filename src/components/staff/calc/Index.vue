@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-tabs v-model="config.tabs.active" sticky :offset-top="46">
+		<van-tabs v-model="config.tabs.active" sticky>
 			<van-tab :title="item" v-for="(item,index) in config.tabs.title" :key="index">
 				<van-cell-group>
 					<van-field readonly clickable label="客户" :value="commonForm.cusName"  placeholder="选择客户" @click="cusPicker()" required input-align="right"></van-field>
@@ -203,7 +203,7 @@
 				this.config.popup.show = false;
 			},
 			boxPicker(){
-				this.config.popup.show = true;
+				this.config.popup.show  = true;
 				this.config.picker.type = 2;
 				if( this.info.boxPicker.columns.length == 0 ){
 					this.boxPickerSearch();
@@ -266,4 +266,3 @@
 		width:60%;
 	}
 </style>
-固定ip: 

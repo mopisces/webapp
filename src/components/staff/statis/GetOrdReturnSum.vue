@@ -206,7 +206,7 @@
 				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrdReturnSum'));
 				this.filterForm = storageData;
 				this.pageConfig.beginDate = new Date(storageData.beginDate);
-				this.pageConfig.endDate = new Date(storageData.endDate);
+				this.pageConfig.endDate   = new Date(storageData.endDate);
 				this.config.getConfig = false;
 				this.config.switchCell.checked = true;
 			}

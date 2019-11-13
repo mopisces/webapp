@@ -34,6 +34,11 @@ let routes = [
                 component: resolve => require(['../components/staff/frec/RecAdjust.vue'], resolve),
             },
             {
+                path:'stock/mStockDetailR',
+                meta: { title: '库区修改' },
+                component: resolve => require(['../components/staff/stock/MStockDetailR.vue'], resolve),
+            },
+            {
                 path:'stock/deliveryArea',
                 meta: { title: '库区面积' },
                 component: resolve => require(['../components/staff/stock/DeliveryArea.vue'], resolve),

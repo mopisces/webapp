@@ -6,12 +6,13 @@ const stow = {
 	stowListConfig(){
 		return post(staff.stow.stowListConfig);
 	},
-	stowList(){
+	stowList( data ){
+		console.log(data)
 		let postData = {
-			list_begin_date : '2019-05-08',
-			list_end_date   : '2019-11-08',
-			show_pack       : 0,
-			show_sign       : 0
+			list_begin_date : data.beginDate,
+			list_end_date   : data.endDate,
+			show_pack       : data.showPack == true ? 1 : 0,
+			show_sign       : data.showSign == true ? 1 : 0
 		};
 		return post(staff.stow.stowList,postData);
 	},

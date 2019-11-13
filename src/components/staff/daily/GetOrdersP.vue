@@ -257,12 +257,12 @@
 			},
 			timeEndConfirm( value ){
 				this.filterCount.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.endDate = value.value;
+				this.pageConfig.endDate  = value.value;
 				this.timePickerClose();
 			},
 			timeBeginConfirm( value ){
 				this.filterCount.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.beginDate = value.value;
+				this.pageConfig.beginDate  = value.value;
 				this.timePickerClose();
 			}
 			
