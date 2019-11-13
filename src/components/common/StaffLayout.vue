@@ -20,7 +20,6 @@
 	</div>
 </template>
 <script>
-	import BScroll from 'better-scroll';
 	import { NavBar, Tabbar, TabbarItem, Icon, Cell } from 'vant';
 	export default{
 		components:{
@@ -53,9 +52,6 @@
 			},
 			onChange( active ){
 				console.log(active);
-			},
-			scrollInit(){
-				this.scroll = new BScroll(this.$refs.wrapper, this.options);
 			},
 			reload(){
 				this.isRouterAlive = false;

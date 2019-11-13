@@ -44,7 +44,7 @@
 					gridItem:[
 						{text:'用户管理',iconName:'guanwangicon31334',url:'/staff/user/manage',state:'#eff30c'},
 						{text:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders',state:'#0bf147'},
-						{text:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder',state:'#eff30c'},
+						{text:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder',state:'#0bf147'},
 						{text:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt',state:'#0bf147'},
 						{text:'订单统计',iconName:'dingdan2',url:'/staff/statis/getOrderSum',state:'#0bf147'},
 						{text:'退货统计',iconName:'tuihuo1',url:'/staff/statis/getOrdReturnSum',state:'#0bf147'},

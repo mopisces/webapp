@@ -18,5 +18,9 @@ module.exports = {
         return assetFilename.endsWith('.js');
       }
     }
-  }
+  },
+  devServer: {
+    port: 1104,
+  },
+  lintOnSave: false 
 }

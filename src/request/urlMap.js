@@ -10,9 +10,11 @@ const adminUrl = {
 };
 const staff = {
 	calc : {
+		getCalcConfig  : `${base.staff}getCalcConfig`,
 		boardPicker    : `${base.staff}boardPicker`,
 		boxPicker      : `${base.staff}boxPicker`,
-		calBdQuotaInfo : `${base.delphi}CalBdQuotaInfo`,
+		getTrimAndArea : `${base.staff}getTrimAndArea`,
+
 	},
 	frec : {
 		cusPicker       : `${base.staff}frecCusPicker`,
@@ -87,7 +89,9 @@ const staff = {
 };
 
 const erp = {
-	delDNDetail:`${base.erp}WebCommon/DelDNDetail`,    //扫描装货详情
-	addDNDetail:`${base.erp}WebCommon/WebAddDNDetail`, //扫描装货详情
+	delDNDetail    : `${base.erp}WebCommon/DelDNDetail`,    //扫描装货详情
+	addDNDetail    : `${base.erp}WebCommon/WebAddDNDetail`, //扫描装货详情
+	calBdQuotaInfo : `${base.erp}CalBdQuotaInfo`,           //订单试算
+	CalBdPriceInfo : `${base.erp}CalBdPriceInfo`,           //订单试算
 };
 export { map, webappMap, adminUrl, staff, erp};

@@ -15,7 +15,7 @@
 		</van-cell-group>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
 			<div slot="new-popup-1">
-				<!-- <van-field v-model="staffInfo." readonly label="员工" input-align="center"/> -->
+				<van-field v-model="staffInfo.userName" readonly label="员工" input-align="center"/>
 				<van-field v-model="filterForm.beginDate" readonly label="开始日期" input-align="center"/>
 				<van-field v-model="filterForm.endDate" readonly label="结束日期" input-align="center"/>
 				<van-field v-model="staffInfo.ordAmt" readonly label="下单金额" input-align="center"/>
@@ -60,62 +60,71 @@
 		data(){
 			return {
 				config:{
-					getConfig:true,
+					getConfig : true,
 					popup:{
 						leftPopup:{
-							show :false,
-							title:'员工信息',
-							position:'left'
+							show     : false,
+							title    : '员工信息',
+							position : 'left'
 						},
 						rightFilter:{
 							show :false,
 						},
 						cusFilter:{
-							show:false
+							show : false
 						},
 						timeFilter:{
 							start:{
-								show:false
+								show : false
 							},
 							end:{
-								show:false
+								show : false
 							}
 						}
 					},
 					switch:{
 						rem:{
-							checked:true
+							checked : true
 						}
 					}
 				},
 				staffInfo:{
-					ordAmt:'',
-					tLength:'',
-					tSalesArea:'',
+					ordAmt     : '',
+					tLength    : '',
+					tSalesArea : '',
+					userName   : ''
 				},
 				cellInfo:[],
 				filterForm:{
-					beginDate:'',
-					endDate:'',
-					addUserId:false,
-					cusName:''
+					beginDate : '',
+					endDate   : '',
+					addUserId : false,
+					cusName   : ''
 				},
 				pageConfig:{
-					searchData:'',
-					beginDate:new Date(),
-					endDate:new Date(),
-					minDate:new Date(),
-					maxDate:new Date(),
+					searchData : '',
+					beginDate  : new Date(),
+					endDate    : new Date(),
+					minDate    : new Date(),
+					maxDate    : new Date(),
 				}
 			}
 		},
 		methods:{
+			getUserInfo(){
+				let self = this;
+				this.$request.staff.user.getUserInfo().then(res=>{
+					self.staffInfo.userName = res.result.user_name+'('+ res.result.erp_id +')';
+				});
+			},
 			getDailyUser( data ){
 				let self = this;
 				this.$request.staff.daily.getDailyUser().then(res=>{
 					self.staffInfo.ordAmt     = res.result.OrdAmt;
 					self.staffInfo.tLength    = res.result.TLength;
 					self.staffInfo.tSalesArea = res.result.TSalesArea;
+				}).then(()=>{
+					this.getUserInfo();
 				});
 			},
 			cellClick(item){

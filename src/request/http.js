@@ -32,7 +32,8 @@ httpServer.interceptors.response.use(
 		}
 		Toast.loading({
 			mask: true,
-			message: '加载中...'
+			message: '加载中...',
+			loadingType: 'spinner'
 		});
 		return Promise.resolve(response);
 	},

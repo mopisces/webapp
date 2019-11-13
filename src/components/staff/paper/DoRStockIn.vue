@@ -30,34 +30,34 @@
 		},
 		data(){
 			return {
-				value:'',
+				value : '',
 				formData:{
-					stockInNo:'',
-					inOpTime:'',
-					inWeight:0
+					stockInNo : '',
+					inOpTime  : '',
+					inWeight  : 0
 				},
 				autoData:{
-					paperWidth:'',
-					paperCode:'',
-					paperWt:'',
-					oriWt:''
+					paperWidth : '',
+					paperCode  : '',
+					paperWt    : '',
+					oriWt      : ''
 				},
 				pageConfig:{
-					show:false,
-					maxDate:new Date(),
-					minDate:new Date(),
-					pickerDate:new Date(),
-					errorMessage:''
+					show         : false,
+					maxDate      : new Date(),
+					minDate      : new Date(),
+					pickerDate   : new Date(),
+					errorMessage : ''
 				},
-				wxConfig:{}
+				wxConfig : {}
 			}
 		},
 		methods:{
 			getPageConfig(){
 				let self = this;
 				this.$request.staff.paper.paperWxConfig().then(res=>{
-					self.pageConfig.maxDate = new Date(res.result.time.DoRStockInMaxDate);
-					self.pageConfig.minDate = new Date(res.result.time.DoRStockInMinDate);
+					self.pageConfig.maxDate    = new Date(res.result.time.DoRStockInMaxDate);
+					self.pageConfig.minDate    = new Date(res.result.time.DoRStockInMinDate);
 					self.pageConfig.pickerDate = new Date(res.result.time.DoRStockInOpTime);
 
 					self.formData.inOpTime = res.result.time.DoRStockInOpTime;

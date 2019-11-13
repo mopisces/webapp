@@ -1,25 +1,27 @@
 <template>
 	<div>
 		<van-popup v-model="popupShow" :style="{ height: '100%', width:'100%' }" position="bottom">
-			<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
-				<div class="van-nav-bar__left">
-					<span class="van-nav-bar__text">统计下的ERP订单</span>
+			<van-sticky>
+				<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
+					<div class="van-nav-bar__left">
+						<span class="van-nav-bar__text">统计下的ERP订单</span>
+					</div>
+					<div class="van-nav-bar__title van-ellipsis"></div>
+					<div class="van-nav-bar__right" @click="closeClick">
+						<i class="van-icon van-icon-cross" style="font-size: 16px;"><!----></i>
+					</div>
 				</div>
-				<div class="van-nav-bar__title van-ellipsis"></div>
-				<div class="van-nav-bar__right" @click="closeClick">
-					<i class="van-icon van-icon-cross" style="font-size: 16px;"><!----></i>
-				</div>
-			</div>
-			<van-notice-bar color="#1989fa" background="#ecf9ff">
-				<span>统计类型:{{ statisFomatter(filterForm.sType) }}&nbsp;&nbsp;</span>
-				<span v-if="filterForm.limitValue">条件对象:{{ factorFormatter(filterForm.limitFactor) }}&nbsp;&nbsp;</span>
-				<span v-if="filterForm.limitValue">条件值:{{ filterForm.limitValue }}&nbsp;&nbsp;</span>
-				<span >日期类型:{{ dateFomatter(filterForm.dateType) }}&nbsp;&nbsp;</span>
-				开始日期:{{ filterForm.beginDate }}&nbsp;&nbsp;
-				结束日期:{{ filterForm.endDate }}&nbsp;&nbsp;
-				<span v-if="filterForm.remainDay">出库超期天数:{{ filterForm.remainDay }}&nbsp;&nbsp;</span>
-				<span v-if="filterForm.diffDay">交货超期天数:{{ filterForm.diffDay }}</span>
-			</van-notice-bar>
+				<van-notice-bar color="#1989fa" background="#ecf9ff">
+					<span>统计类型:{{ statisFomatter(filterForm.sType) }}&nbsp;&nbsp;</span>
+					<span v-if="filterForm.limitValue">条件对象:{{ factorFormatter(filterForm.limitFactor) }}&nbsp;&nbsp;</span>
+					<span v-if="filterForm.limitValue">条件值:{{ filterForm.limitValue }}&nbsp;&nbsp;</span>
+					<span >日期类型:{{ dateFomatter(filterForm.dateType) }}&nbsp;&nbsp;</span>
+					开始日期:{{ filterForm.beginDate }}&nbsp;&nbsp;
+					结束日期:{{ filterForm.endDate }}&nbsp;&nbsp;
+					<span v-if="filterForm.remainDay">出库超期天数:{{ filterForm.remainDay }}&nbsp;&nbsp;</span>
+					<span v-if="filterForm.diffDay">交货超期天数:{{ filterForm.diffDay }}</span>
+				</van-notice-bar>
+			</van-sticky>
 			<van-pull-refresh v-model="pullRefresh.reloading" @refresh="pullOnRefresh">
 				<van-list v-model="pushLoading.loading" :finished="pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
 					<van-panel v-for="(item,index) in listInfo" :key="index">
@@ -62,7 +64,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Row, Col, Popup, PullRefresh, List, NoticeBar, Panel } from 'vant';
+	import { Button, Row, Col, Popup, PullRefresh, List, NoticeBar, Panel, Sticky  } from 'vant';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
 	export default {
 		components:{
@@ -74,31 +76,32 @@
 			[List.name]: List,
 			[NoticeBar.name]: NoticeBar,
 			[Panel.name]: Panel,
+			[Sticky.name]: Sticky,
 
 			OrderDetail
 		},
 		props:['show','filterForm','type'],
 		data(){
 			return {
-				popupShow:this.show,
+				popupShow : this.show,
 				pullRefresh:{
-					reloading:false,
+					reloading : false,
 				},
 				pushLoading:{
-					loading:false,
-					finished:false
+					loading  : false,
+					finished : false
 				},
-				listInfo:[],
+				listInfo : [],
 				formData:{
-					curPage:0,
+					curPage : 0,
 				},
 				orderDetail:{
-					show:false,
-					orderId:'',
-					orderType:''
+					show      : false,
+					orderId   : '',
+					orderType : ''
 				},
 				noticeStr:{
-					limitValue:''
+					limitValue : ''
 				},
 			}
 		},
@@ -114,8 +117,9 @@
 				};
 				if( this.filterForm.limitFactor ){
 					data.limitFactor = this.filterForm.limitFactor;
-					data.limitValue = this.filterForm.limitValue;
+					data.limitValue  = this.filterForm.limitValue;
 				}
+				console.log(this.formData.curPage);
 				this.$request.staff.statis.statisDetail( data ).then(res=>{
 					res.result.forEach((item,index)=>{
 						self.listInfo.push(item);
@@ -197,11 +201,11 @@
 				}
 			}
 		},
-		mounted(){
-
-		},
 		created(){
 			
+		},
+		mounted(){
+
 		},
 		computed:{
 			

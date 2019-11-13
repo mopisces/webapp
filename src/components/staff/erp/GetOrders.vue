@@ -99,33 +99,33 @@
 		data(){
 			return {
 				pageConfig:{
-					beginDate:new Date(),
-					minDate:new Date(),
-					maxDate:new Date(),
-					endDate:new Date()
+					beginDate : new Date(),
+					minDate   : new Date(),
+					maxDate   : new Date(),
+					endDate   : new Date()
 				},
 				cusPicker:{
-					searchData:'',
+					searchData : '',
 				},
 				config:{
-					getConfig:true,
+					getConfig : true,
 					popup:{
-						filterShow:false,
-						cusShow:false,
+						filterShow : false,
+						cusShow    : false,
 						timeShow:{
-							start:false,
-							end:false
+							start : false,
+							end   : false
 						},
-						detailShow:false,
+						detailShow : false,
 					},
 					list:{
 						pullRefresh:{
-							reloading:false,
-							isInit:true
+							reloading : false,
+							isInit    : true
 						},
 						pushLoading:{
-							finished:false,
-							loading:false
+							finished : false,
+							loading  : false
 						}
 					},
 					radio:{
@@ -135,62 +135,67 @@
 						],
 					},
 					switch:{
-						checked:false
+						checked : false
 					}
 				},
 				info:{
-					panelList:[],
+					panelList : [],
 				},
 				filterForm:{
-					orderId:'',
-					boardLength:'',
-					boardWidth:'',
-					boxLength:'',
-					boxWidth:'',
-					boxHeight:'',
-					orderQuantity:'',
-					cusName:'',
-					dateType:'1',
-					beginDate:'',
-					endDate:'',
-					curPage:1,
-					erpState:0
+					orderId       : '',
+					boardLength   : '',
+					boardWidth    : '',
+					boxLength     : '',
+					boxWidth      : '',
+					boxHeight     : '',
+					orderQuantity : '',
+					cusName       : '',
+					dateType      : '1',
+					beginDate     : '',
+					endDate       : '',
+					curPage       : 0,
+					erpState      : 0
 				},
 				detailData:{
-					orderId:'',
-					orderType:'',
-					strOrderId:''
+					orderId    : '',
+					orderType  : '',
+					strOrderId : ''
 				}
 			}
 		},
 		methods:{
 			pullOnRefresh(){
-				this.getErpOrders( this.filterForm , true);
+				this.filterForm.curPage = 0;
 				this.config.list.pullRefresh.reloading = false;
+				this.config.list.pushLoading.finished  = false;
+				this.config.list.pushLoading.loading   = true;;
+				this.onLoad();
 			},
 			onLoad(){
 				if( this.config.list.pullRefresh.isInit ){
+					this.filterForm.curPage = 1;
 					this.getConfig();
 					this.config.list.pullRefresh.isInit = false;
 				}else{
+					this.filterForm.curPage++;
 					this.getErpOrders( this.filterForm );
 				}
 			},
 			resetClick(){
 				this.filterForm = {
-					orderId:'',
-					boardLength:'',
-					boardWidth:'',
-					boxLength:'',
-					boxWidth:'',
-					boxHeight:'',
-					orderQuantity:'',
-					cusName:'',
-					dateType:'1',
-					curPage:1,
-					erpState:0,
-					beginDate:'',
-					endDate:''
+					orderId       : '',
+					boardLength   : '',
+					boardWidth    : '',
+					boxLength     : '',
+					boxWidth      : '',
+					boxHeight     : '',
+					orderQuantity : '',
+					cusName       : '',
+					dateType      : '1',
+					curPage       : 0,
+					erpState      : 0,
+					beginDate     : '',
+					endDate       : ''
 				};
 				this.$refs.cusPicker.cusPickerClean();
 				sessionStorage.removeItem('erp/getOrders');
@@ -199,7 +204,8 @@
 				this.getConfig( true );
 			},
 			filterClick(){
-				this.getErpOrders( this.filterForm ,true );
+				this.info.panelList = [];
+				this.pullOnRefresh();
 				this.config.popup.filterShow = false;
 			},
 			cusPickerCancel(){
@@ -244,25 +250,16 @@
 					this.getErpOrders( this.filterForm );
 				});
 			},
-			getErpOrders( data , isReloading = false ){
+			getErpOrders( data ){
 				let self = this;
-				data.curPage++;
-				if( isReloading ){
-					data.curPage = 1;
-				}
 				this.$request.staff.erp.erpOrders( data ).then(res=>{
 					if( res.result == null || res.result.length < 6 ){
 						self.config.list.pushLoading.finished = true;
 					}
 					self.config.list.pushLoading.loading = false;
-					if( isReloading ){
-						self.info.panelList = [];
-						self.info.panelList = res.result;
-					}else{
-						res.result.forEach((item,index)=>{
-							self.info.panelList.push(item);
-						});
-					}
+					res.result.forEach((item,index)=>{
+						self.info.panelList.push(item);
+					});
 				});
 			},
 			detailShowClick( strOrderId ){
@@ -309,7 +306,8 @@
 		},
 		watch:{
 			orderState( newV,oldV ){
-				this.getErpOrders( this.filterForm, true );
+				this.info.panelList = [];
+				this.pullOnRefresh();
 			}
 		}
 	}

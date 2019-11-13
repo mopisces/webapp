@@ -1,14 +1,16 @@
 <template>
 	<van-popup v-model="detailShow" :style="{ width: '100%',height:'100%' }" position="top">
-		<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
-			<div class="van-nav-bar__left">
-				<span class="van-nav-bar__text">订单详情</span>
+		<van-sticky>
+			<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
+				<div class="van-nav-bar__left">
+					<span class="van-nav-bar__text">订单详情</span>
+				</div>
+				<div class="van-nav-bar__title van-ellipsis"></div>
+				<div class="van-nav-bar__right" @click="closeClick">
+					<i class="van-icon van-icon-cross" style="font-size: 16px;"><!----></i>
+				</div>
 			</div>
-			<div class="van-nav-bar__title van-ellipsis"></div>
-			<div class="van-nav-bar__right" @click="closeClick">
-				<i class="van-icon van-icon-cross" style="font-size: 16px;"><!----></i>
-			</div>
-		</div>
+		</van-sticky>
 		<div v-if=" info.orderDNRe != null ">
 			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;">
       		退货明细
@@ -620,10 +622,11 @@
 	</van-popup>
 </template>
 <script>
-	import { Popup } from 'vant';
+	import { Popup, Sticky  } from 'vant';
 	export default {
 		components:{
 			[Popup.name]: Popup,
+			[Sticky.name]: Sticky
 		},
 		props:['orderId','orderType','detailShow'],
 		data(){
