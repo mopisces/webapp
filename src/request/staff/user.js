@@ -21,6 +21,16 @@ const user = {
 	},
 	getAuthName( data ){
 		return post(staff.user.getAuthName,{user_name:data.UserName});
+	},
+	saveAuthName( data ){
+		let postData = {
+			user_name     : data.userName,
+			user_pass     : data.userPass,
+			user_type     : data.userType,
+			auth_url_name : data.authName			
+		};
+		console.log(data);
+		return post(staff.user.saveAuthName,postData);
 	}
 }
 export default user;

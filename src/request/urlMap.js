@@ -82,6 +82,7 @@ const staff = {
 		getWebUserStaff  : `${base.staff}staffWebUserStaff`,
 		getCommonQrCode  : `${base.staff}staffGetCommonQrcode`,
 		getAuthName      : `${base.staff}staffGetAuthName`,
+		saveAuthName     : `${base.staff}staffSaveAuthUrl`,
 	}
 };
 

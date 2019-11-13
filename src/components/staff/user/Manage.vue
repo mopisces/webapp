@@ -53,7 +53,7 @@
 		<new-popup :leftShow.sync="config.popup.qrCode.show" :position="config.popup.qrCode.position" :isClose="true" :title="config.popup.qrCode.title">
 			<div id="qrcode" slot="new-popup-qrcode" class="qrcode"></div>
 		</new-popup>
-		<new-popup :leftShow.sync="config.popup.auth.show" :position="config.popup.auth.position" isClose="3" :title="config.popup.auth.title" @saveClick="saveAuth()">
+		<new-popup :leftShow.sync="config.popup.auth.show" :position="config.popup.auth.position" isClose="3" :title="config.popup.auth.title">
 			<van-checkbox-group v-model="config.checkboxes.result" slot="new-popup-1" v-if="config.popup.auth.show">
 				<van-cell-group>
 					<van-cell clickable v-for="(item, index) in authSelectAuth" :key="index" @click="toggle(index)" :title="item">
@@ -66,7 +66,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Icon, Row, Col, Checkbox, CheckboxGroup, Panel, Tab, Tabs } from 'vant';
+	import { Button, Cell, CellGroup, Icon, Row, Col, Checkbox, CheckboxGroup, Toast, Panel, Tab, Tabs } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
@@ -79,6 +79,7 @@
 			[Col.name]: Col,
 			[Checkbox.name]: Checkbox,
 			[CheckboxGroup.name]: CheckboxGroup,
+			[Toast.name]: Toast,
 			[Panel.name]: Panel,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
@@ -108,7 +109,12 @@
 					}
 				},
 				listData:[],
-				authSelectAuth:[]
+				authSelectAuth:[],
+				authChangeForm:{
+					userName:'',
+					userPass:'',
+					userType:''
+				}
 			}
 		},
 		methods:{
@@ -146,6 +152,16 @@
 					})
 				});
 			},
+			saveAuthName( data ){
+				let self = this;
+				this.$request.staff.user.saveAuthName( data ).then(res=>{
+					if( res.errorCode != '00000' ){
+						Toast.fail(res.msg);
+					}else{
+						Toast.success(res.msg);
+					}
+				});
+			},
 			qrcodeClick( item ){
 				this.config.popup.qrCode.title = '账号:' + item.UserName + '登录二维码';
 				this.getCommonQrCode( item );
@@ -161,9 +177,13 @@
 			authClick( item ){
 				this.config.popup.auth.title = '账号  ' + item.UserName + '  权限';
 				this.getAuthName( item );
+				this.authChangeForm.userName = item.UserName;
+				this.authChangeForm.userPass = item.PassWord;
+				this.authChangeForm.userType = item.UserType;
 			},
 			saveClick(){
-				console.log(this.config.checkboxes.result)
+				let postData = Object.assign({},this.authChangeForm,{ authName: this.config.checkboxes.result.join(',') });
+				this.saveAuthName(postData);
 			},
 			toggle( index ){
 				this.$refs.checkboxes[index].toggle();
