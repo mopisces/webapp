@@ -3,6 +3,7 @@
 		<van-field v-model="formData.stockInNo" placeholder="请输入订单号" label="条形码编号" input-align="center">
 		 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon" color="#0bf147" @click="scanQRCode()"/>
 		</van-field>
+		{{ formData.stockInNo }}
 		<van-field readonly label="门幅(mm)" v-model="autoData.paperWidth" placeholder="自动查询" input-align="center"></van-field>
 		<van-field readonly label="纸质" v-model="autoData.paperCode" placeholder="自动查询" input-align="center" :error-message="pageConfig.errorMessage"></van-field>
 		<van-field readonly label="克重(g)" v-model="autoData.paperWt" placeholder="自动查询" input-align="center" :error-message="pageConfig.errorMessage"></van-field>
@@ -55,7 +56,9 @@
 		methods:{
 			getPageConfig(){
 				let self = this;
-				this.$request.staff.paper.paperWxConfig().then(res=>{
+				//let url = this.$store.state.staff.domain + this.$route.fullPath;
+				//let url = encodeURIComponent(location.href.split('#')[0])
+				this.$request.staff.paper.paperWxConfig( 1 ).then(res=>{
 					self.pageConfig.maxDate    = new Date(res.result.time.DoRStockInMaxDate);
 					self.pageConfig.minDate    = new Date(res.result.time.DoRStockInMinDate);
 					self.pageConfig.pickerDate = new Date(res.result.time.DoRStockInOpTime);
@@ -64,7 +67,7 @@
 					self.wxConfig = res.result.wx_config;
 				}).then(()=>{
 					wx.config({
-		                debug     : false,
+		                debug     : true,
 		                appId     : this.wxConfig.appId,
 		                timestamp : this.wxConfig.timestamp,
 		                nonceStr  : this.wxConfig.nonceStr,
@@ -84,12 +87,13 @@
 				let self = this;
 				wx.scanQRCode({
                     needResult: 1,
-                    success: (res)=>{
-                        self.formData.StockNo = res.resultStr.split(',')[1];
+                    success: function(res){
+                    	Toast.success(res.resultStr);
+                        self.formData.stockInNo = res.resultStr;
                     }
                 });
                 wx.error((err)=>{
-                	Toast.fail(err.errMsg);
+                	Toast.fail('微信扫码失败');
                 });
 			},
 			paperGetInInfo( data ){
@@ -109,6 +113,7 @@
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸入库');
+			console.log(window.location.hostname);
 		},
 		mounted(){
 			this.getPageConfig();

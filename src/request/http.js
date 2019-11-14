@@ -16,7 +16,7 @@ httpServer.defaults.timeout = 5000;
 httpServer.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 httpServer.interceptors.request.use(
 	config => {
-		let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1NzM2MDM0NDcsImV4cCI6MTU3MzY4OTg0NywiU1Nob3J0TmFtZSI6bnVsbCwiU3ViRmFjSWQiOiIiLCJ0YWciOiJzdGFmZiIsIlVzZXJOYW1lIjoiQ1IiLCJQYXNzV29yZCI6IkNSIiwiVXNlclR5cGUiOiIxIiwiRVJQSWQiOiJDUiIsIlRhc2tJZCI6bnVsbCwiT25lQ2VudFBheSI6IjAiLCJST1dfTlVNQkVSIjoiMSJ9.4hRiVyyIJpD5Q2XJTPQI-OkVjqCimoxmWfnH3PfdYW8';
+		let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1NzM2ODk1MjQsImV4cCI6MTU3Mzc3NTkyNCwiU1Nob3J0TmFtZSI6bnVsbCwiU3ViRmFjSWQiOiIiLCJ0YWciOiJzdGFmZiIsIlVzZXJOYW1lIjoiQ1IiLCJQYXNzV29yZCI6IkNSIiwiVXNlclR5cGUiOiIxIiwiRVJQSWQiOiJDUiIsIlRhc2tJZCI6bnVsbCwiT25lQ2VudFBheSI6IjAiLCJST1dfTlVNQkVSIjoiMSJ9.DlUYqCfa6acYJIrw4YTMtcX33Bjurs0LSTM3KBoq4N8';
 		config.headers.Authentication = auth;
 		return config;
 	},

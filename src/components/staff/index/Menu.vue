@@ -19,7 +19,7 @@
 		</div>
 			
 		<van-grid square :gutter="10" :column-num="3">
-			<van-grid-item v-for="(item,index) in config.gridItem" :key="index" :to="item.url" :text="item.text">
+			<van-grid-item v-for="(item,index) in config.gridItem" :key="index" :url="item.url" :text="item.text">
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="item.state"/>
 			</van-grid-item>
 		</van-grid>
@@ -63,16 +63,27 @@
 						{text:'库区面积',iconName:'fangwumianji',url:'/staff/stock/deliveryArea',state:'#0bf147'},
 						{text:'订单试算',iconName:'jisuanqi',url:'/staff/calc/index',state:'#eff30c'},
 						{text:'收款调账',iconName:'yewutiaozhang',url:'/staff/frec/recAdjust',state:'#0bf147'},
-						{text:'客户往来统计',iconName:'kehu',url:'/staff/frec/cusContact',state:'#0bf147'},
-					]
-				}
+						{text:'客户往来统计',iconName:'kehu',url: '/staff/frec/cusContact',state:'#0bf147'},
+					],
+					domian:{
+						wx80:'http://luodangfrp2.leaper.ltd',
+						normal:'http://test.leaper.ltd:1104'
+					}
+				},
+				
 			}
 		},
 		methods:{
 			
 		},
 		mounted(){
-
+			/*this.config.gridItem.forEach((item,index)=>{
+				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' ){
+					item.url = this.config.domian.wx80 + item.url;
+				}else{
+					item.url = this.config.domian.normal + item.url;
+				}
+			})*/
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');

@@ -7,7 +7,8 @@ const staff = {
 		detailForm:{
 			orderId:'',
 			orderType:''
-		}
+		},
+		domain:'http://test.leaper.ltd:1104'
 	},
 	mutations:{
 		setHeaderTitle( state, title ){

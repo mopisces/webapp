@@ -14,8 +14,8 @@ const paper = {
 		};
 		return post(staff.paper.staffPaperSafe,postData);
 	},
-	paperWxConfig(){
-		return post(staff.paper.paperWxConfig);
+	paperWxConfig( url ){
+		return post(staff.paper.paperWxConfig,{wx_sign_url:url});
 	},
 	stockConfig(){
 		return post(staff.paper.stockConfig);
