@@ -9,6 +9,7 @@ import statis from './statis';
 import erp from './erp';
 import daily from './daily';
 import user from './user';
+import wx from './wx';
 export default {
 	calc,
 	frec,
@@ -20,5 +21,6 @@ export default {
 	statis,
 	erp,
 	daily,
-	user
+	user,
+	wx
 }

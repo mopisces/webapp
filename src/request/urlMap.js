@@ -27,7 +27,7 @@ const staff = {
 	},
 	paper:{
 		staffPaperSafe : `${base.staff}staffPaperSafe`,
-		paperWxConfig  : `${base.staff}staffPaperWxConfig`,
+		paperConfig    : `${base.staff}staffPaperConfig`,
 		stockConfig    : `${base.staff}staffSStockConfig`,
 		stockMain      : `${base.staff}staffSStock`,
 		paperGetInInfo : `${base.staff}staffPaperGetInInfo`,
@@ -85,6 +85,10 @@ const staff = {
 		getCommonQrCode  : `${base.staff}staffGetCommonQrcode`,
 		getAuthName      : `${base.staff}staffGetAuthName`,
 		saveAuthName     : `${base.staff}staffSaveAuthUrl`,
+	},
+	wx:{
+		scanWxConfig : `${base.staff}staffGetWxConfig`,
+		portValuable : `${base.staff}staffPortValuable`,
 	}
 };
 

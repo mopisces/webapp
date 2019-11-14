@@ -149,10 +149,17 @@
 					iDNId        : '',
 					strFactoryId : '',
 					strUserId    : ''
-				}
+				},
+				wxConfig:{}
 			}
 		},
 		methods:{
+			getScanConfig(){
+				let self = this;
+				this.$request.staff.wx.getScanConfig({urlType:3}).then(res=>{
+					self.wxConfig = res.result;
+				});
+			},
 			erpAddDNDetail( data ){
 				let self = this;
 				this.$request.staff.stow.erpAddDNDetail( data ).then(res=>{

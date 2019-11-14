@@ -11,7 +11,7 @@
 			<div style="margin-bottom:50px;"></div>
 		</div>
 		<van-tabbar v-model="active" @change="onChange">
-			<van-tabbar-item icon="home-o" url="http://test.leaper.ltd:1104/staff/index/menu">首页</van-tabbar-item>
+			<van-tabbar-item icon="home-o" :url="config.url.index">首页</van-tabbar-item>
 			<van-tabbar-item @click="logout">
 				退出
 				<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
@@ -33,7 +33,13 @@
 			return {
 				isRouterAlive:true,
 				config:{
-					headerTitle:''
+					headerTitle:'',
+					url:{
+						menu: ''
+					},
+					tabbar:{
+						showIndex:false
+					}
 				},
 				options:{
 					scrollbar :true,
@@ -61,13 +67,25 @@
 			},
 			logout(){
 				console.log('logout');
+			},
+			portValuable(){
+				let self = this;
+				if( sessionStorage.getItem('app_domain') !== null ){
+					let domainInfo        = JSON.parse(sessionStorage.getItem('app_domain'));
+					self.config.url.index = domainInfo.app_normal_domain + '/staff/index/menu';
+				}
+				this.$request.staff.wx.portValuable().then(res=>{
+					sessionStorage.setItem('app_domain',JSON.stringify(res.result));
+					self.config.url.index = res.result.app_normal_domain + '/staff/index/menu';
+				});
 			}
-		},
-		mounted(){
-
 		},
 		created(){
 			this.config.headerTitle = this.$store.state.staff.layout.title;
+			this.portValuable();
+		},
+		mounted(){
+
 		},
 		computed:{
 			setTitle(){

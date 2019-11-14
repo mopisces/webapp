@@ -29,7 +29,6 @@ const user = {
 			user_type     : data.userType,
 			auth_url_name : data.authName			
 		};
-		console.log(data);
 		return post(staff.user.saveAuthName,postData);
 	}
 }

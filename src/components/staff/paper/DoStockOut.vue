@@ -43,7 +43,8 @@
 					stockOutOpTime:'',
 					stockOutSFlute:'',
 					stockOutBzwt:0
-				}
+				},
+				wxConfig:{}
 			}
 		},
 		methods:{
@@ -56,12 +57,18 @@
 			},
 			getPageConfig(){
 				let self = this;
-				this.$request.staff.paper.paperWxConfig().then(res=>{
-					self.pageConfig.maxDate = new Date(res.result.time.DoStockOutMaxDate);
-					self.pageConfig.minDate = new Date(res.result.time.DoStockOutMinDate);
-					self.pageConfig.pickerDate = new Date(res.result.time.DoStockOutOpTime);
+				this.$request.staff.paper.paperConfig().then(res=>{
+					self.pageConfig.maxDate = new Date(res.result.DoStockOutMaxDate);
+					self.pageConfig.minDate = new Date(res.result.DoStockOutMinDate);
+					self.pageConfig.pickerDate = new Date(res.result.DoStockOutOpTime);
 
-					self.formData.stockOutOpTime = res.result.time.DoStockOutOpTime;
+					self.formData.stockOutOpTime = res.result.DoStockOutOpTime;
+				});
+			},
+			getScanConfig(){
+				let self = this;
+				this.$request.staff.wx.getScanConfig({urlType:1}).then(res=>{
+					self.wxConfig = res.result;
 				});
 			}
 		},

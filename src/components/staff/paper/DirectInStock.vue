@@ -56,12 +56,17 @@
 				},
 				pageConfig:{
 					show:false,
-
-				}
+				},
+				wxConfig:{}
 			}
 		},
 		methods:{
-
+			getScanConfig(){
+				let self = this;
+				this.$request.staff.wx.getScanConfig({urlType:2}).then(res=>{
+					self.wxConfig = res.result;
+				});
+			},
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','直接入库');

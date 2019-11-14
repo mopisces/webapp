@@ -56,15 +56,20 @@
 		methods:{
 			getPageConfig(){
 				let self = this;
-				//let url = this.$store.state.staff.domain + this.$route.fullPath;
-				//let url = encodeURIComponent(location.href.split('#')[0])
-				this.$request.staff.paper.paperWxConfig( 1 ).then(res=>{
-					self.pageConfig.maxDate    = new Date(res.result.time.DoRStockInMaxDate);
-					self.pageConfig.minDate    = new Date(res.result.time.DoRStockInMinDate);
-					self.pageConfig.pickerDate = new Date(res.result.time.DoRStockInOpTime);
+				this.$request.staff.paper.paperConfig().then(res=>{
+					self.pageConfig.maxDate    = new Date(res.result.DoRStockInMaxDate);
+					self.pageConfig.minDate    = new Date(res.result.DoRStockInMinDate);
+					self.pageConfig.pickerDate = new Date(res.result.DoRStockInOpTime);
 
-					self.formData.inOpTime = res.result.time.DoRStockInOpTime;
-					self.wxConfig = res.result.wx_config;
+					self.formData.inOpTime = res.result.DoRStockInOpTime;
+				}).then(()=>{
+					this.getScanConfig();
+				});
+			},
+			getScanConfig(){
+				let self = this;
+				this.$request.staff.wx.getScanConfig( {urlType:0} ).then(res=>{
+					self.wxConfig = res.result;
 				}).then(()=>{
 					wx.config({
 		                debug     : true,
@@ -85,6 +90,9 @@
 			},
 			scanQRCode(){
 				let self = this;
+				if( Math.round(new Date().getTime()/1000) >= self.wxConfig.timestamp + Number(7200) ){
+					this.getScanConfig();
+				}
 				wx.scanQRCode({
                     needResult: 1,
                     success: function(res){
@@ -113,7 +121,6 @@
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸入库');
-			console.log(window.location.hostname);
 		},
 		mounted(){
 			this.getPageConfig();

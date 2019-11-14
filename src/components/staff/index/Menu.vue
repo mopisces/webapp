@@ -74,19 +74,33 @@
 			}
 		},
 		methods:{
-			
+			portValuable(){
+				if( sessionStorage.getItem('app_domain') !== null ){
+					let domainInfo = JSON.parse(sessionStorage.getItem('app_domain'));
+					console.log(domainInfo);
+					this.domian.wx80      = domainInfo.app_wx_domain;
+					this.domian.normal    = domainInfo.app_normal_domain;
+				}
+				let self = this;
+				this.$request.staff.wx.portValuable().then(res=>{
+					sessionStorage.setItem('app_domain',JSON.stringify(res.result));
+					this.domian.wx80   = res.result.app_wx_domain;
+					this.domian.normal = res.result.app_normal_domain;
+				});
+			}
+		},
+		created(){
+			this.$store.commit('staff/setHeaderTitle','菜单页面');
 		},
 		mounted(){
-			/*this.config.gridItem.forEach((item,index)=>{
+			this.portValuable();
+			this.config.gridItem.forEach((item,index)=>{
 				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' ){
 					item.url = this.config.domian.wx80 + item.url;
 				}else{
 					item.url = this.config.domian.normal + item.url;
 				}
-			})*/
-		},
-		created(){
-			this.$store.commit('staff/setHeaderTitle','菜单页面');
+			})
 		},
 		computed:{
 			
