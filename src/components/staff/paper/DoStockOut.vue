@@ -1,8 +1,7 @@
 <template>
 	<div>
-		<van-field v-model="formData.stockOutNo" placeholder="请输入订单号" label="条形码编号" input-align="center">
-		 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon" color="#0bf147"/>
-		</van-field>
+		<wx-scan :scanResult.sync="formData.stockOutNo" urlType="0"></wx-scan>
+		{{ formData.stockOutNo }}
 		<van-field readonly label="门幅(mm)" v-model="value" placeholder="自动查询" input-align="center"></van-field>
 		<van-field readonly label="纸质" v-model="value" placeholder="自动查询" input-align="center"></van-field>
 		<van-field readonly label="克重(g)" v-model="value" placeholder="自动查询" input-align="center"></van-field>
@@ -17,16 +16,17 @@
 	</div>
 </template>
 <script>
-	import { Button, Icon, Field   } from 'vant';
+	import { Button, Field   } from 'vant';
 	import TimePicker from '@/components/subject/TimePicker.vue';
 	import { dateTimeFormat } from '@/util/index';
+	import WxScan from '@/components/subject/WxScan.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
-			[Icon.name]: Icon,
 			[Field.name]: Field,
 
-			TimePicker
+			TimePicker,
+			WxScan
 		},
 		data(){
 			return {
@@ -43,8 +43,7 @@
 					stockOutOpTime:'',
 					stockOutSFlute:'',
 					stockOutBzwt:0
-				},
-				wxConfig:{}
+				}
 			}
 		},
 		methods:{
@@ -58,19 +57,13 @@
 			getPageConfig(){
 				let self = this;
 				this.$request.staff.paper.paperConfig().then(res=>{
-					self.pageConfig.maxDate = new Date(res.result.DoStockOutMaxDate);
-					self.pageConfig.minDate = new Date(res.result.DoStockOutMinDate);
-					self.pageConfig.pickerDate = new Date(res.result.DoStockOutOpTime);
-
+					self.pageConfig.maxDate      = new Date(res.result.DoStockOutMaxDate);
+					self.pageConfig.minDate      = new Date(res.result.DoStockOutMinDate);
+					self.pageConfig.pickerDate   = new Date(res.result.DoStockOutOpTime);
 					self.formData.stockOutOpTime = res.result.DoStockOutOpTime;
 				});
-			},
-			getScanConfig(){
-				let self = this;
-				this.$request.staff.wx.getScanConfig({urlType:1}).then(res=>{
-					self.wxConfig = res.result;
-				});
 			}
+			
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸出库');
@@ -91,7 +84,9 @@
 				this.formData.stockOutOpTime = dateTimeFormat(newVal,'yyyy-MM-dd');
 			},
 			outNo( newVal,oldVal ){
-				
+				if( newV.length === 12 ){
+					console.log(1)
+				}
 			}
 		}
 	}

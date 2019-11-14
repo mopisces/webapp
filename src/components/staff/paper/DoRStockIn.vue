@@ -1,9 +1,6 @@
 <template>
 	<div>
-		<van-field v-model="formData.stockInNo" placeholder="请输入订单号" label="条形码编号" input-align="center">
-		 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon" color="#0bf147" @click="scanQRCode()"/>
-		</van-field>
-		{{ formData.stockInNo }}
+		<wx-scan :scanResult.sync="formData.stockInNo" urlType="1"></wx-scan>
 		<van-field readonly label="门幅(mm)" v-model="autoData.paperWidth" placeholder="自动查询" input-align="center"></van-field>
 		<van-field readonly label="纸质" v-model="autoData.paperCode" placeholder="自动查询" input-align="center" :error-message="pageConfig.errorMessage"></van-field>
 		<van-field readonly label="克重(g)" v-model="autoData.paperWt" placeholder="自动查询" input-align="center" :error-message="pageConfig.errorMessage"></van-field>
@@ -16,18 +13,18 @@
 	</div>
 </template>
 <script>
-	import wx from 'weixin-js-sdk';
-	import { Button, Icon, Field, Toast } from 'vant';
+	import { Button, Field, Toast } from 'vant';
 	import TimePicker from '@/components/subject/TimePicker.vue';
+	import WxScan from '@/components/subject/WxScan.vue';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Button.name]: Button,
-			[Icon.name]: Icon,
 			[Field.name]: Field,
 			[Toast.name]: Toast,
 
-			TimePicker
+			TimePicker,
+			WxScan
 		},
 		data(){
 			return {
@@ -49,8 +46,7 @@
 					minDate      : new Date(),
 					pickerDate   : new Date(),
 					errorMessage : ''
-				},
-				wxConfig : {}
+				}
 			}
 		},
 		methods:{
@@ -62,23 +58,6 @@
 					self.pageConfig.pickerDate = new Date(res.result.DoRStockInOpTime);
 
 					self.formData.inOpTime = res.result.DoRStockInOpTime;
-				}).then(()=>{
-					this.getScanConfig();
-				});
-			},
-			getScanConfig(){
-				let self = this;
-				this.$request.staff.wx.getScanConfig( {urlType:0} ).then(res=>{
-					self.wxConfig = res.result;
-				}).then(()=>{
-					wx.config({
-		                debug     : true,
-		                appId     : this.wxConfig.appId,
-		                timestamp : this.wxConfig.timestamp,
-		                nonceStr  : this.wxConfig.nonceStr,
-		                signature : this.wxConfig.signature,
-		                jsApiList : ['scanQRCode']
-		            });
 				});
 			},
 			timePickerConfirm( val ){
@@ -88,22 +67,6 @@
 			timePickerCancel(){
 				this.pageConfig.show = false;
 			},
-			scanQRCode(){
-				let self = this;
-				if( Math.round(new Date().getTime()/1000) >= self.wxConfig.timestamp + Number(7200) ){
-					this.getScanConfig();
-				}
-				wx.scanQRCode({
-                    needResult: 1,
-                    success: function(res){
-                    	Toast.success(res.resultStr);
-                        self.formData.stockInNo = res.resultStr;
-                    }
-                });
-                wx.error((err)=>{
-                	Toast.fail('微信扫码失败');
-                });
-			},
 			paperGetInInfo( data ){
 				let self = this;
 				this.$request.staff.paper.paperGetInInfo( data ).then(res=>{
@@ -112,9 +75,9 @@
 						Toast.fail(res.result);
 					}else{
 						self.autoData.paperWidth = Math.round(res.result.PaperWidth);
-						self.autoData.paperCode = res.result.PaperCode;
-						self.autoData.paperWt = res.result.PaperWt;
-						self.autoData.oriWt = res.result.OriWt;
+						self.autoData.paperCode  = res.result.PaperCode;
+						self.autoData.paperWt    = res.result.PaperWt;
+						self.autoData.oriWt      = res.result.OriWt;
 					}
 				});
 			}

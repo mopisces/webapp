@@ -74,9 +74,14 @@
 					let domainInfo        = JSON.parse(sessionStorage.getItem('app_domain'));
 					self.config.url.index = domainInfo.app_normal_domain + '/staff/index/menu';
 				}
+				this.isRouterAlive = false;
 				this.$request.staff.wx.portValuable().then(res=>{
 					sessionStorage.setItem('app_domain',JSON.stringify(res.result));
 					self.config.url.index = res.result.app_normal_domain + '/staff/index/menu';
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.isRouterAlive = true;
+					})
 				});
 			}
 		},

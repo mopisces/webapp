@@ -1,8 +1,6 @@
 <template>
 	<div>
-		<van-field v-model="formData.inNo" placeholder="请输入订单号" label="条形码编号" input-align="center">
-		 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon" color="#0bf147" />
-		</van-field>
+		<wx-scan :scanResult.sync="formData.inNo" urlType="2"></wx-scan>
 		<van-field readonly v-model="formData.inNo" placeholder="订单信息" label="条形码编号" input-align="center">
 		</van-field>
 		<div class="van-row" style="text-align:left;">
@@ -41,11 +39,14 @@
 </template>
 <script>
 	import { Button, Icon, Field } from 'vant';
+	import WxScan from '@/components/subject/WxScan.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Icon.name]: Icon,
 			[Field.name]: Field,
+
+			WxScan
 		},
 		data(){
 			return {
@@ -56,17 +57,11 @@
 				},
 				pageConfig:{
 					show:false,
-				},
-				wxConfig:{}
+				}
 			}
 		},
 		methods:{
-			getScanConfig(){
-				let self = this;
-				this.$request.staff.wx.getScanConfig({urlType:2}).then(res=>{
-					self.wxConfig = res.result;
-				});
-			},
+			
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','直接入库');

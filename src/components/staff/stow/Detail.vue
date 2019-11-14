@@ -1,9 +1,7 @@
 <template>
 	<div>
 		<div v-if=" config.isEdit == 1 ">
-			<van-field v-model="fieldData.strOrderId" placeholder="请输入订单号" label="订单号" input-align="center" :disabled=" !config.button.showLoadButton ">
-			 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon" color="#0bf147" />
-			</van-field>
+			<wx-scan :scanResult.sync="fieldData.strOrderId" urlType="3"></wx-scan>
 			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="false">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
@@ -84,6 +82,7 @@
 	import { VTable, VPagination } from 'vue-easytable';
 	import { Button, Cell, CellGroup, Popup, Icon, Field, RadioGroup, Radio } from 'vant';
 	import { Dialog, Toast  } from 'vant';
+	import WxScan from '@/components/subject/WxScan.vue';
 	export default {
 		components:{
 			[VTable.name]: VTable,
@@ -97,6 +96,8 @@
 			[Field.name]: Field,
 			[RadioGroup.name]: RadioGroup,
 			[Radio.name]: Radio,
+
+			WxScan
 		},
 		data(){
 			return {
@@ -149,17 +150,10 @@
 					iDNId        : '',
 					strFactoryId : '',
 					strUserId    : ''
-				},
-				wxConfig:{}
+				}
 			}
 		},
 		methods:{
-			getScanConfig(){
-				let self = this;
-				this.$request.staff.wx.getScanConfig({urlType:3}).then(res=>{
-					self.wxConfig = res.result;
-				});
-			},
 			erpAddDNDetail( data ){
 				let self = this;
 				this.$request.staff.stow.erpAddDNDetail( data ).then(res=>{
