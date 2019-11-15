@@ -31,6 +31,7 @@ const staff = {
 		stockConfig     : `${base.staff}staffSStockConfig`,
 		stockMain       : `${base.staff}staffSStock`,
 		paperGetInInfo  : `${base.staff}staffPaperGetInInfo`,
+		paperDoRStockIn : `${base.staff}staffPaperDoRStockIn`,
 		paperGetOutInfo : `${base.staff}staffPaperGetOutInfo`,
 		paperOutMain    : `${base.staff}staffPaperOutMain`,
 	},

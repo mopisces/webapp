@@ -93,13 +93,13 @@
 		},
 		mounted(){
 			this.portValuable();
-			this.config.gridItem.forEach((item,index)=>{
+			/*this.config.gridItem.forEach((item,index)=>{
 				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' ){
 					item.url = this.config.domian.wx80 + item.url;
 				}else{
 					item.url = this.config.domian.normal + item.url;
 				}
-			});
+			});*/
 		},
 		computed:{
 			

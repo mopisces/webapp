@@ -26,6 +26,7 @@
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
+			[Dialog.name]: Dialog,
 			[Toast.name]: Toast ,
 
 			TimePicker,
@@ -66,9 +67,12 @@
 						{ type: 'string', required: true, message: '请输入订单号'},
 						{ pattern:'/^[a-zA-Z1-9][a-zA-Z0-9]{11}$/', message: '订单号格式错误' } 
 					],
-					stockOutBzwt : [
+					stockOutOpClass : [],
+					stockOutSFlute  : [],
+					stockOutBzwt    : [
 						{ pattern: '/^\d{1,14}(\.\d{1,2})?$/' , required: true, message: '请输入剥纸重量' },
 					],
+					stockOutOpTime  : [],
 					/*前端数据验证规则与后台要一致*/
 				},
 				validator:{}

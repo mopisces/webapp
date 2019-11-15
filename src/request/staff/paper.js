@@ -27,11 +27,19 @@ const paper = {
 		};
 		return post(staff.paper.stockMain,postData);
 	},
-	paperGetInInfo( data ){
+	paperGetInInfo( inNo ){
 		let postData = {
-			stock_in_info_no : data.stockInNo
+			stock_in_info_no : inNo
 		};
 		return post(staff.paper.paperGetInInfo,postData);
+	},
+	paperDoRStockIn( data ){
+		let postData = {
+			stock_in_no      : data.stockInNo,
+			stock_in_op_time : data.inOpTime,
+			stock_in_weight  : data.inWeight
+		};
+		return post(staff.paper.paperDoRStockIn,postData);
 	},
 	paperGetOutInfo( outNo ){
 		let postData = {
