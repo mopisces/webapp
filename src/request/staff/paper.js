@@ -56,6 +56,9 @@ const paper = {
 			stock_out_bzwt     : data.stockOutBzwt
 		};
 		return post(staff.paper.paperOutMain,postData);
+	},
+	directInConfig(){
+		return post(staff.paper.directInConfig);
 	}
 }
 export default paper;

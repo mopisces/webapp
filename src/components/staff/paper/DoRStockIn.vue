@@ -9,7 +9,7 @@
 		<van-field readonly clickable label="入库日期" v-model="formData.inOpTime" input-align="center"  @click="pageConfig.show = true "></van-field>
 		<time-picker :dateTimeShow.sync="pageConfig.show" :dateTime.sync="pageConfig.pickerDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm">
 		</time-picker>
-		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:100px;" @click="stockInConfirm()">入库</van-button>
+		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:100px;" @click="stockInConfirm()" :disabled="config.button.disabled">入库</van-button>
 	</div>
 </template>
 <script>
@@ -34,6 +34,9 @@
 					field:{
 						error       : false,
 						placeholder : '自动查询'
+					},
+					button:{
+						disabled : true
 					}
 				},
 				formData:{
@@ -90,6 +93,7 @@
 					}else{
 						self.config.field.placeholder = '自动查询失败';
 						self.config.field.error       = true;
+						self.config.button.disabled   = false; 
 					}
 				});
 			},

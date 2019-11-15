@@ -23,7 +23,8 @@
 				</van-field>
 			</div>
 		</div>
-		<van-field readonly clickable label="入库日期" v-model="formData.inOpTime" input-align="center"  @click="pageConfig.show = true " placeholder="选择入库日期">
+		<van-field readonly clickable label="库区"></van-field>
+		<van-field readonly clickable label="入库日期" v-model="formData.inOpTime" input-align="center"  @click="config.popup.timePicker.show = true " placeholder="选择入库日期">
 			<van-icon slot="right-icon" size="16" name="arrow"/>
 		</van-field>
 	   	<van-field v-model="message" autosize label="备注" type="textarea" maxlength="50" placeholder="请输入备注" rows="2" show-word-limit/>
@@ -35,17 +36,21 @@
 				<van-button type="primary" size="normal" style="width:60%">重置</van-button>
 			</div>
 		</div>
+		<time-picker :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="pageConfig.pickerDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.show = false" @onConfirm="timePickerConfirm"></time-picker>
 	</div>
 </template>
 <script>
 	import { Button, Icon, Field } from 'vant';
+	import TimePicker from '@/components/subject/time/TimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
+	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Icon.name]: Icon,
 			[Field.name]: Field,
 
+			TimePicker,
 			WxScan
 		},
 		data(){
@@ -55,19 +60,42 @@
 					inNo:'',
 					inOpTime:'',
 				},
+				config:{
+					popup:{
+						timePicker:{
+							show : false
+						}
+					}
+				},
+				formData:{
+					strOrderId   : '',
+					strOrderInfo : '',
+					dInDate : ''
+				},
 				pageConfig:{
-					show:false,
+					pickerDate : new Date(),
+					maxDate    : new Date(),
+					minDate    : new Date(),
 				}
 			}
 		},
 		methods:{
-			
+			directInConfig(){
+				let self = this;
+				this.$request.staff.paper.directInConfig().then(res=>{
+					console.log(res.result)
+				});
+			},
+			timePickerConfirm( val ){
+				console.log(val);
+				//this.formData.dInDate = dateTimeFormat(val.value,'yyyy-MM-dd');
+			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','直接入库');
 		},
 		mounted(){
-
+			this.directInConfig();
 		},
 		computed:{
 			

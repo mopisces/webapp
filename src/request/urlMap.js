@@ -34,6 +34,7 @@ const staff = {
 		paperDoRStockIn : `${base.staff}staffPaperDoRStockIn`,
 		paperGetOutInfo : `${base.staff}staffPaperGetOutInfo`,
 		paperOutMain    : `${base.staff}staffPaperOutMain`,
+		directInConfig  : `${base.staff}staffPaperDirectInConfig`,
 	},
 	paperbuy:{
 		paperInConfig  : `${base.staff}staffPaperInConfig`,
