@@ -65,7 +65,6 @@
 		created(){
 			if( sessionStorage.getItem('app_domain') !== null ){
 				let domainInfo = JSON.parse(sessionStorage.getItem('app_domain'));
-				console.log(domainInfo.portValuable)
 				if( domainInfo.portValuable == 1 ){
 					this.scanValuable = true;
 				}

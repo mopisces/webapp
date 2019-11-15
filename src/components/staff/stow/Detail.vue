@@ -163,7 +163,7 @@
 			erpDelDNDetail( data ){
 				let self = this;
 				this.$request.staff.stow.erpDelDNDetail( data ).then(res=>{
-
+					console.log(res.result)
 				});
 			},
 			getStockArea( data ){

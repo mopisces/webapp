@@ -20,14 +20,14 @@
 	</div>
 </template>
 <script>
-	import { NavBar, Tabbar, TabbarItem, Icon, Cell } from 'vant';
+	import { Cell, Icon, NavBar, Tabbar, TabbarItem,  } from 'vant';
 	export default{
 		components:{
+			[Cell.name]: Cell,
+			[Icon.name]: Icon,
 			[NavBar.name]: NavBar,
 			[Tabbar.name]: Tabbar,
 			[TabbarItem.name]: TabbarItem,
-			[Icon.name]: Icon,
-			[Cell.name]: Cell,
 		},
 		data(){
 			return {

@@ -66,7 +66,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Icon, Row, Col, Checkbox, CheckboxGroup, Toast, Panel, Tab, Tabs } from 'vant';
+	import { Button, CellGroup, Cell, Icon, Row, Col, Checkbox, CheckboxGroup, Toast, Panel, Tab, Tabs } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {

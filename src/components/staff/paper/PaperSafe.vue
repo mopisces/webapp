@@ -43,7 +43,6 @@
 		},
 		data(){
 			return {
-				active:'1',
 				config:{
 					popup:{
 						filterShow:false

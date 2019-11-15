@@ -39,11 +39,11 @@
 	</van-popup>
 </template>
 <script>
-	import { Popup, Button, Field } from 'vant';
+	import { Button, Popup, Field } from 'vant';
 	export default {
 		components:{
-			[Popup.name]: Popup,
 			[Button.name]: Button,
+			[Popup.name]: Popup,
 			[Field.name]: Field,
 		},
 		props:['detailShow','detailItem'],

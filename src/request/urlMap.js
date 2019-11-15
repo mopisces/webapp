@@ -26,11 +26,13 @@ const staff = {
 		deliveryArea : `${base.staff}deliveryArea`,
 	},
 	paper:{
-		staffPaperSafe : `${base.staff}staffPaperSafe`,
-		paperConfig    : `${base.staff}staffPaperConfig`,
-		stockConfig    : `${base.staff}staffSStockConfig`,
-		stockMain      : `${base.staff}staffSStock`,
-		paperGetInInfo : `${base.staff}staffPaperGetInInfo`,
+		staffPaperSafe  : `${base.staff}staffPaperSafe`,
+		paperConfig     : `${base.staff}staffPaperConfig`,
+		stockConfig     : `${base.staff}staffSStockConfig`,
+		stockMain       : `${base.staff}staffSStock`,
+		paperGetInInfo  : `${base.staff}staffPaperGetInInfo`,
+		paperGetOutInfo : `${base.staff}staffPaperGetOutInfo`,
+		paperOutMain    : `${base.staff}staffPaperOutMain`,
 	},
 	paperbuy:{
 		paperInConfig  : `${base.staff}staffPaperInConfig`,
