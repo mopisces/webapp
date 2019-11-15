@@ -1,6 +1,6 @@
 <template>
 	<van-popup v-model="show" position="bottom" @click-overlay="clickOverlay" :close-on-click-overlay="false">
-		<van-datetime-picker v-model="pickerTime" :min-date="new Date(minDate)" :max-date="new Date(maxDate)" type="date" show-toolbar @cancel="onCancel" @confirm="onConfirm">
+		<van-datetime-picker v-model="pickerTime" :min-date="min" :max-date="max" type="date" show-toolbar @cancel="onCancel" @confirm="onConfirm">
 		</van-datetime-picker>
 	</van-popup>
 </template>
@@ -15,8 +15,10 @@
 		props:['dateTimeShow','dateTime','minDate','maxDate'],
 		data(){
 			return {
+				pickerTime : new Date(this.dateTime),
 				show : this.dateTimeShow,
-				pickerTime : new Date(this.dateTime)
+				max  : new Date(this.maxDate),
+				min  : new Date(this.minDate),
 			}
 		},
 		methods:{
@@ -24,12 +26,10 @@
 				this.show = false;
 			},
 			onCancel(){
-				this.$emit('onCancel');
+				this.clickOverlay();
 			},
 			onConfirm( value ){
-				console.log(value)
-				let time = dateTimeFormat(value.value,'yyyy-MM-dd');
-				this.$emit('onConfirm',{value:time});
+				this.clickOverlay();
 			}
 		},
 		created(){
@@ -49,10 +49,10 @@
 				this.$emit("update:dateTimeShow", newV);
 			},
 			dateTime(newV,oldV){
-				this.pickerTime = newV;
+				this.pickerTime = new Date(this.dateTime);
 			},
 			pickerTime(newV,oldV){
-				this.$emit("update:dateTime", newV);
+				this.$emit("update:dateTime", dateTimeFormat(newV,'yyyy-MM-dd'));
 			},
 		}
 	}

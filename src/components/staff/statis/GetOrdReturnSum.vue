@@ -162,11 +162,15 @@
 					if( isReset ){
 						return ;
 					}
-					this.getOrdReturnSum( this.filterForm );
+					
+					this.$nextTick(()=>{
+						this.getOrdReturnSum( this.filterForm );
+					});
 				});
 			},
 			getOrdReturnSum( data ){
 				let self = this;
+
 				this.$request.staff.statis.getOrdReturnSum( data ).then(res=>{
 					self.panelList = res.result;
 					this.finished = false;

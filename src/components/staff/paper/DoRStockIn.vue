@@ -6,15 +6,15 @@
 		<van-field readonly label="克重(g)" v-model="autoData.paperWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
 		<van-field readonly label="重量(kg)" v-model="autoData.oriWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
 		<van-field label="回仓重量" type="number" v-model="formData.inWeight" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
-		<van-field readonly clickable label="入库日期" v-model="formData.inOpTime" input-align="center"  @click="pageConfig.show = true "></van-field>
-		<time-picker :dateTimeShow.sync="pageConfig.show" :dateTime.sync="pageConfig.pickerDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timePickerConfirm">
-		</time-picker>
+		<van-field readonly clickable label="入库日期" v-model="formData.inOpTime" input-align="center"  @click="config.popup.timePicker.show = true "></van-field>
+		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.inOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate">
+		</new-time-picker>
 		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:100px;" @click="stockInConfirm()" :disabled="config.button.disabled">入库</van-button>
 	</div>
 </template>
 <script>
 	import { Button, Field, Dialog, Toast } from 'vant';
-	import TimePicker from '@/components/subject/TimePicker.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import { dateTimeFormat } from '@/util/index';
 	import schema from 'async-validator';
@@ -25,7 +25,7 @@
 			[Dialog.name]: Dialog,
 			[Toast.name]: Toast,
 
-			TimePicker,
+			NewTimePicker,
 			WxScan
 		},
 		data(){
@@ -37,6 +37,12 @@
 					},
 					button:{
 						disabled : true
+					},
+					popup:{
+						timePicker:{
+							show : false,
+							isFinishLoad:false
+						}
 					}
 				},
 				formData:{
@@ -68,19 +74,15 @@
 			getPageConfig(){
 				let self = this;
 				this.$request.staff.paper.paperConfig().then(res=>{
-					self.pageConfig.maxDate    = new Date(res.result.DoRStockInMaxDate);
-					self.pageConfig.minDate    = new Date(res.result.DoRStockInMinDate);
-					self.pageConfig.pickerDate = new Date(res.result.DoRStockInOpTime);
+					self.pageConfig.maxDate = res.result.DoRStockInMaxDate;
+					self.pageConfig.minDate = res.result.DoRStockInMinDate;
 
 					self.formData.inOpTime = res.result.DoRStockInOpTime;
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.popup.timePicker.isFinishLoad = true;
+					})
 				});
-			},
-			timePickerConfirm( val ){
-				this.formData.inOpTime = dateTimeFormat(val.value,'yyyy-MM-dd');
-				this.timePickerCancel();
-			},
-			timePickerCancel(){
-				this.pageConfig.show = false;
 			},
 			paperGetInInfo( data ){
 				let self = this;
