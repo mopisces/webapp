@@ -203,18 +203,6 @@
 				this.pullOnRefresh();
 				this.config.popup.filterShow = false;
 			},
-			timePickerCancel(){
-				this.config.popup.timeShow.start = false;
-				this.config.popup.timeShow.end = false;
-			},
-			timeBeginConfirm( value ){
-				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.timePickerCancel();
-			},
-			timeEndConfirm( value ){
-				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.timePickerCancel();
-			},
 			getConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.erp.erpConfig().then(res=>{
@@ -226,7 +214,9 @@
 					self.pageConfig.maxDate = res.result.Wap1GetOrdersMaxDate;
 					self.pageConfig.minDate = res.result.Wap1GetOrdersMinDate;
 				}).then(()=>{
-					this.config.popup.timePicker.isFinishLoad = true;
+					this.$nextTick(()=>{
+						this.config.popup.timePicker.isFinishLoad = true;
+					});
 				}).then(()=>{
 					if( isReset ){
 						return ;
@@ -261,8 +251,6 @@
 			if( sessionStorage.getItem('erp/getOrders') !== null ){
 				let storageData = JSON.parse(sessionStorage.getItem('erp/getOrders'));
 				this.filterForm = storageData;
-				this.pageConfig.beginDate = new Date(storageData.beginDate);
-				this.pageConfig.endDate = new Date(storageData.endDate);
 				this.config.getConfig = false;
 				this.config.switch.checked = true;
 			}

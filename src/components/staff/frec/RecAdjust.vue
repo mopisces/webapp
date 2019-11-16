@@ -12,25 +12,23 @@
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
-			<van-field readonly clickable label="客户名称" v-model="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusShow = true" slot="filter-field-1"></van-field>
-			<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" slot="filter-field-2"/>
-			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
-			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
-			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-5"></radio-cell>
-			<radio-cell :radioInfo.sync="filterForm.payType" :radioColumns="pageConfig.payType" title="科目" slot="filter-field-6"></radio-cell>
-			<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7"/>
+			<div slot="filter-field-1">
+				<cus-picker :cusName.sync="filterForm.cusName" ></cus-picker>
+				<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center"/>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell>
+				<radio-cell :radioInfo.sync="filterForm.payType" :radioColumns="pageConfig.payType" title="科目"></radio-cell>
+				<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)"/>
+			</div>
 		</popup-filter>
-		<cus-picker ref="cusPicker" :show.sync="config.popup.cusShow" :searchData.sync="info.cusPicker.searchData" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.end"  :dateTime.sync="pageConfig.endDate"   :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
 	import { Field, SwitchCell } from 'vant';
-	import { dateTimeFormat } from '@/util/index';
-	import CusPicker from '@/components/subject/CusPicker.vue';
+	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import TimePicker from '@/components/subject/TimePicker.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
@@ -43,7 +41,7 @@
 
 			CusPicker,
 			PopupFilter,
-			TimePicker,
+			NewTimePicker,
 			RadioCell
 		},
 		data(){
@@ -77,10 +75,8 @@
 					},
 					popup:{
 						filterShow:false,
-						cusShow:false,
-						timeShow:{
-							start:false,
-							end :false
+						timePicker:{
+							isFinishLoad:false
 						}
 					},
 					radio:{
@@ -114,8 +110,6 @@
 				pageConfig:{
 					maxDate:'',
 					minDate:'',
-					beginDate:new Date(),
-					endDate:new Date(),
 					payType:[],
 				}
 			}
@@ -127,13 +121,15 @@
 					if( this.config.getConfig ){
 						self.filterForm.beginDate = res.result.date.RecAdjustBeginDate;
 						self.filterForm.endDate = res.result.date.RecAdjustEndDate;
-						self.pageConfig.beginDate = new Date(res.result.date.RecAdjustBeginDate);
-						self.pageConfig.endDate = new Date(res.result.date.RecAdjustEndDate);
 					}
-					self.pageConfig.maxDate = new Date(res.result.date.RecAdjustMaxDate);
-					self.pageConfig.minDate = new Date(res.result.date.RecAdjustMinDate);
+					self.pageConfig.maxDate = res.result.date.RecAdjustMaxDate;
+					self.pageConfig.minDate = res.result.date.RecAdjustMinDate;
 					res.result.pay_type.forEach((item,index)=>{
 						self.pageConfig.payType.push({title:item.ShortName,value:item.ShortName});
+					});
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.popup.timePicker.isFinishLoad = true;
 					});
 				}).then(()=>{
 					if( isReset ){
@@ -187,18 +183,6 @@
 				this.info.switch.checked = false;
 				this.config.getConfig = true;
 				this.recAdjustConfig(true);
-			},
-			timePickerCancel(){
-				this.config.popup.timeShow.start = false;
-				this.config.popup.timeShow.end = false;
-			},
-			timeBeginConfirm( value ){
-				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.timePickerCancel();
-			},
-			timeEndConfirm( value ){
-				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.timePickerCancel();
 			}
 		},
 		created(){
@@ -206,8 +190,6 @@
 			if( sessionStorage.getItem('frec/recAdjust') !== null  ){
 				let storageData = JSON.parse(sessionStorage.getItem('frec/recAdjust'));
 				this.filterForm = storageData;
-				this.pageConfig.beginDate = new Date(storageData.beginDate);
-				this.pageConfig.endDate = new Date(storageData.endDate);
 				this.config.getConfig = false;
 				this.info.switch.checked = true;
 			}
