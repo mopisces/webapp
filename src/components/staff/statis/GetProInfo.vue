@@ -16,19 +16,24 @@
 			</div>
 		</van-cell>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
-			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-1"></van-field>
+			<div slot="filter-field-1">
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
+			</div>
+			<!-- van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-1"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-2"></van-field>
-			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-3"/>
+			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-3"/> -->
 		</popup-filter>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
+		<!-- <time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker> -->
 	</div>
 </template>
 <script>
 	import {  Button, Cell, Field, SwitchCell, DropdownMenu, DropdownItem, Sticky } from 'vant';
 	import Highcharts from 'highcharts/highstock';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import TimePicker from '@/components/subject/TimePicker.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
@@ -41,7 +46,7 @@
 			[Sticky.name]: Sticky,
 
 			PopupFilter,
-			TimePicker
+			NewTimePicker
 		},
 		data(){
 			return {
@@ -59,9 +64,8 @@
 					},
 					popup:{
 						filterShow:false,
-						timeShow:{
-							start:false,
-							end:false
+						timePicker:{
+							isFinishLoad:false
 						}
 					},
 					switch:{
@@ -69,10 +73,8 @@
 					}
 				},
 				pageConfig:{
-					maxDate:new Date(),
-					minDate:new Date(),
-					beginDate:new Date(),
-					endDate:new Date()
+					maxDate:'',
+					minDate:''
 				},
 				filterInfo:{
 					statis:'lists',
@@ -120,13 +122,15 @@
 				let self = this;
 				this.$request.staff.statis.getProInfoConfig().then(res=>{
 					if( this.config.getConfig ){
-						self.pageConfig.beginDate = new Date(res.result.GetProInfoBeginDate);
-						self.pageConfig.endDate = new Date(res.result.GetProInfoEndDate);
 						self.filterForm.beginDate = res.result.GetProInfoBeginDate;
 						self.filterForm.endDate = res.result.GetProInfoEndDate;
 					}
-					self.pageConfig.maxDate = new Date(res.result.GetProInfoMaxDate);
-					self.pageConfig.minDate = new Date(res.result.GetProInfoMinDate);
+					self.pageConfig.maxDate = res.result.GetProInfoMaxDate;
+					self.pageConfig.minDate = res.result.GetProInfoMinDate;
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.popup.timePicker.isFinishLoad = true;
+					});
 				}).then(()=>{
 					if( isReset ){
 						return ;
@@ -150,26 +154,12 @@
 				});
 			},
 			resetClick(){
-
 				this.config.getConfig = true;
 				getProInfoConfig( true );
 			},
 			filterClick(){
 				this.getProInfo( this.filterForm );
 				this.config.popup.filterShow = false;	
-			},
-
-			timePickerCancel(){
-				this.config.popup.timeShow.start = false;
-				this.config.popup.timeShow.end = false;
-			},
-			timeBeginConfirm( value ){
-				this.filterForm.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.timePickerCancel();
-			},
-			timeEndConfirm( value ){
-				this.filterForm.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.timePickerCancel();
 			}
 		},
 		created(){
