@@ -2,11 +2,12 @@
 	<div>
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 		<popup-filter :filterShow.sync="config.popup.filterShow"  @resetClick="resetClick" @filterClick="filterClick">
-			<van-field readonly clickable label="客户名称" :value="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusShow = true"  slot="filter-field-1"></van-field>
-			<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center" slot="filter-field-2"/>
-			<van-switch-cell v-model="pageConfig.switchChecked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7"/>
+			<div slot="filter-field-1">
+				<cus-picker :cusName.sync="filterForm.cusName" ></cus-picker>
+				<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center"/>
+				<van-switch-cell v-model="pageConfig.switchChecked" title="记住筛选条件(本次登录有效)"/>
+			</div>
 		</popup-filter>
-		<cus-picker ref="cusPicker" :show.sync="config.popup.cusShow" :searchData.sync="cusPicker.searchData" @cusPickerCancel="cusPickerCancel"  @cusPickerConfirm="cusPickerConfirm"></cus-picker>
    		<template>
    			<div class="container">
    				<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500"></v-table>
@@ -18,7 +19,7 @@
 <script>
 	import { Button, Field, SwitchCell } from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
-	import CusPicker from '@/components/subject/CusPicker.vue';
+	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	export default {
 		components:{
@@ -37,7 +38,6 @@
 				config:{
 					popup:{
 						filterShow:false,
-						cusShow:false
 					},
 					table:{
 						columns: [
@@ -62,28 +62,12 @@
 					cusName:'',
 					taskId:'',
 				},
-				cusPicker:{
-					searchData:'',
-				},
 				pageConfig:{
 					switchChecked:false,
 				}
 			}
 		},
 		methods:{
-			cusPickerConfirm( result ){
-				this.config.popup.cusShow = false;
-				this.filterForm.cusName = '';
-				this.pageConfig.defaultIndex = -1;
-				if( JSON.stringify(result.value) !== '[]' ){
-					this.pageConfig.defaultIndex = result.index;
-					this.filterForm.cusName = result.key;
-				}
-			},
-			cusPickerCancel(){
-				this.config.popup.cusShow = false;
-				this.filterForm.cusName = '';
-			},
 			cusContact( data ){
 				let self = this;
 				this.$request.staff.frec.cusContact( data ).then(res=>{
