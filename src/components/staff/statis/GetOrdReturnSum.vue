@@ -36,13 +36,19 @@
   		</div>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="returnQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
-			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-1"></radio-cell>
+			<div slot="filter-field-1">
+				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" />
+			</div>
+			<!-- <radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-1"></radio-cell>
 			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timePicker.startShow = true" slot="filter-field-2"></van-field>
 			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timePicker.endShow = true" slot="filter-field-3"></van-field>
-			<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" slot="filter-field-4" @change="switchChange"/>
+			<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" slot="filter-field-4" @change="switchChange"/> -->
 		</popup-filter>
-		<time-picker :dateTimeShow.sync="config.popup.timePicker.startShow" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.startShow = false" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timePicker.endShow" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.endShow = false" @onConfirm="timeEndConfirm"></time-picker>
+		<!-- <time-picker :dateTimeShow.sync="config.popup.timePicker.startShow" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.startShow = false" @onConfirm="timeBeginConfirm"></time-picker>
+		<time-picker :dateTimeShow.sync="config.popup.timePicker.endShow" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.endShow = false" @onConfirm="timeEndConfirm"></time-picker> -->
 	</div>
 </template>
 <script>
@@ -51,7 +57,7 @@
 	import StatisOrderList from '@/components/subject/StatisOrderList.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
-	import TimePicker from '@/components/subject/TimePicker.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
@@ -65,7 +71,7 @@
 			StatisOrderList,
 			PopupFilter,
 			RadioCell,
-			TimePicker
+			NewTimePicker
 		},
 		data(){
 			return {
@@ -156,12 +162,9 @@
 					if( this.config.getConfig ){
 						self.filterForm.beginDate = res.result.GetOrdReturnSumBeginDate;
 						self.filterForm.endDate = res.result.GetOrdReturnSumEndDate;
-
-						self.pageConfig.beginDate = new Date(res.result.GetOrdReturnSumBeginDate);
-						self.pageConfig.endDate = new Date(res.result.GetOrdReturnSumEndDate);
 					}
-					self.pageConfig.minDate = new Date(res.result.GetOrdReturnSumMinDate);
-					self.pageConfig.maxDate = new Date(res.result.GetOrdReturnSumMaxDate);
+					self.pageConfig.minDate = res.result.GetOrdReturnSumMinDate;
+					self.pageConfig.maxDate = res.result.GetOrdReturnSumMaxDate;
 				}).then(()=>{
 					if( isReset ){
 						return ;
@@ -212,8 +215,6 @@
 			if( sessionStorage.getItem('statis/getOrdReturnSum') ){
 				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrdReturnSum'));
 				this.filterForm = storageData;
-				this.pageConfig.beginDate = new Date(storageData.beginDate);
-				this.pageConfig.endDate   = new Date(storageData.endDate);
 				this.config.getConfig = false;
 				this.config.switchCell.checked = true;
 			}
@@ -222,40 +223,19 @@
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
 		},
 		updated(){
-			this.config.isInit = false;
+			
+		},
+		destroyed(){
+
 		},
 		computed:{
 			statisStateChange(){
 				return this.filterForm.statisState;
-			},
-			filterFormBeginDateChange(){
-				return this.filterForm.beginDate;
-			},
-			filterFormEndDateChange(){
-				return this.filterForm.endDate;
-			},
-			filterFormDateTypeChange(){
-				return this.filterForm.dateType;
 			}
 		},
 		watch:{
 			statisStateChange(newV,oldV){
 				this.onRefresh( this.filterForm );
-			},
-			filterFormBeginDateChange(newV,oldV){
-				if( !this.config.isInit ){
-					this.config.switchCell.checked = false;
-				}
-			},
-			filterFormEndDateChange(newV,oldV){
-				if( !this.config.isInit ){
-					this.config.switchCell.checked = false;
-				}
-			},
-			filterFormDateTypeChange(newV,oldV){
-				if( !this.config.isInit ){
-					this.config.switchCell.checked = false;
-				}
 			}
 		}
 	}

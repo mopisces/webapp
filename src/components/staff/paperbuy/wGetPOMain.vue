@@ -46,22 +46,21 @@
 			</van-tab>
 		</van-tabs>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
-			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-1"></van-field>
-			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-2"></van-field>
-			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7"/>
+			<div slot="filter-field-1">
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"/>
+			</div>
 		</popup-filter>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.end"  :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 		<paper-buy-detail :detailShow.sync="config.popup.detailShow" :detailItem="config.detailTable.item" v-if="config.popup.detailShow" ></paper-buy-detail >
 	</div>
 </template>
 <script>
 	import { Button, Field, SwitchCell, Sticky, Tab, Tabs } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import TimePicker from '@/components/subject/TimePicker.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PaperBuyDetail from '@/components/subject/PaperBuyDetail.vue';
-	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -72,7 +71,7 @@
 			[Tabs.name]: Tabs,
 
 			PopupFilter,
-			TimePicker,
+			NewTimePicker,
 			PrevNext,
 			PaperBuyDetail
 		},
@@ -84,9 +83,8 @@
 					getConfig:true,
 					popup:{
 						filterShow:false,
-						timeShow:{
-							start:false,
-							end:false,
+						timePicker:{
+							isFinishLoad:false
 						},
 						detailShow:false
 					},
@@ -105,10 +103,8 @@
 					endDate:'',
 				},
 				pageConfig:{
-					beginDate:new Date(),
-					endDate:new Date(),
-					maxDate:new Date(),
-					minDate:new Date(),
+					maxDate:'',
+					minDate:'',
 				},
 				cellList:{},
 			}
@@ -124,29 +120,17 @@
 				this.config.popup.filterShow = false;
 				this.config.tabs.active = 0;
 			},
-			timePickerCancel(){
-				this.config.popup.timeShow.start = false;
-				this.config.popup.timeShow.end = false;
-			},
-			timeBeginConfirm( val ){
-				this.filterForm.beginDate = dateTimeFormat( val.value,'yyyy-MM-dd' );
-				this.timePickerCancel();
-			},
-			timeEndConfirm( val ){
-				this.filterForm.endDate = dateTimeFormat( val.value,'yyyy-MM-dd' );
-				this.timePickerCancel();
-			},
 			paperBuyConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.paperbuy.paperBuyConfig().then(res=>{
 					if( self.config.getConfig ){
-						self.pageConfig.beginDate = new Date(res.result.WGetPOMainBeginDate);
-						self.pageConfig.endDate = new Date(res.result.WGetPOMainEndDate);
 						self.filterForm.beginDate = res.result.WGetPOMainBeginDate;
 						self.filterForm.endDate = res.result.WGetPOMainEndDate;
 					}
-					self.pageConfig.maxDate = new Date(res.result.WGetPOMainMaxDate);
-					self.pageConfig.minDate = new Date(res.result.WGetPOMainMinDate);
+					self.pageConfig.maxDate = res.result.WGetPOMainMaxDate;
+					self.pageConfig.minDate = res.result.WGetPOMainMinDate;
+				}).then(()=>{
+					this.config.popup.timePicker.isFinishLoad = true;
 				}).then(()=>{
 					if( isReset ){
 						return ;
@@ -180,8 +164,6 @@
 			if( sessionStorage.getItem('paperbuy/wGetPOMain') !== null ){
 				let storageData = JSON.parse(sessionStorage.getItem('paperbuy/wGetPOMain'));
 				this.filterForm = storageData;
-				this.pageConfig.beginDate = new Date(storageData.beginDate);
-				this.pageConfig.endDate = new Date(storageData.endDate);
 				this.config.getConfig = false;
 				this.config.switch.checked = true;
 			}

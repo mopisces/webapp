@@ -72,13 +72,13 @@
   		</div>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="returnQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
-			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-1"></radio-cell>
-			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timePicker.startShow = true" slot="filter-field-2"></van-field>
-			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timePicker.endShow = true" slot="filter-field-3"></van-field>
-			<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" slot="filter-field-4" @change="switchChange"/>
+			<div slot="filter-field-1">
+				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件"/>
+			</div>
 		</popup-filter>
-		<time-picker :dateTimeShow.sync="config.popup.timePicker.startShow" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.startShow = false" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timePicker.endShow" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.endShow = false" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
@@ -87,8 +87,7 @@
 	import StatisOrderList from '@/components/subject/StatisOrderList.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
-	import TimePicker from '@/components/subject/TimePicker.vue';
-	import { dateTimeFormat } from '@/util/index';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -101,14 +100,13 @@
 			StatisOrderList,
 			PopupFilter,
 			RadioCell,
-			TimePicker
+			NewTimePicker
 		},
 		data(){
 			return {
 				finished:false,
 				config:{
 					getConfig:true,
-					isInit:true,
 					switchCell:{
 						checked:false,
 					},
@@ -119,8 +117,7 @@
 							show:false
 						},
 						timePicker:{
-							startShow:false,
-							endShow:false
+							isFinishLoad:false
 						}
 					},
 					selectOption:{
@@ -169,10 +166,8 @@
 					statisState:0
 				},
 				pageConfig:{
-					beginDate:new Date(),
-					endDate:new Date(),
-					maxDate:new Date(),
-					minDate:new Date(),
+					maxDate:'',
+					minDate:'',
 				}
 			}
 		},
@@ -189,12 +184,11 @@
 					if( this.config.getConfig ){
 						self.filterForm.beginDate = res.result.GetOrderSumBeginDate;
 						self.filterForm.endDate = res.result.GetOrderSumEndDate;
-
-						self.pageConfig.beginDate = new Date(res.result.GetOrderSumBeginDate);
-						self.pageConfig.endDate = new Date(res.result.GetOrderSumEndDate);
 					}
-					self.pageConfig.minDate = new Date(res.result.GetOrderSumMinDate);
-					self.pageConfig.maxDate = new Date(res.result.GetOrderSumMaxDate);
+					self.pageConfig.minDate = res.result.GetOrderSumMinDate;
+					self.pageConfig.maxDate = res.result.GetOrderSumMaxDate;
+				}).then(()=>{
+					this.config.popup.timePicker.isFinishLoad = true;
 				}).then(()=>{
 					if( isReset ){
 						return ;
@@ -220,21 +214,6 @@
 			filterClick(){
 				this.onRefresh();
 				this.config.popup.filterShow = false;
-			},
-			timeBeginConfirm( val ){
-				this.filterForm.beginDate = dateTimeFormat(val.value,'yyyy-MM-dd');
-				this.config.popup.timePicker.startShow = false;
-			},
-			timeEndConfirm( val ){
-				this.filterForm.endDate = dateTimeFormat(val.value,'yyyy-MM-dd');
-				this.config.popup.timePicker.endShow = false;
-			},
-			switchChange( checked ){
-				if( checked ){
-					sessionStorage.setItem('statis/getOrderSum',JSON.stringify(this.filterForm));
-				}else{
-					sessionStorage.removeItem('statis/getOrderSum');
-				}
 			}
 		},
 		created(){
@@ -242,8 +221,6 @@
 			if( sessionStorage.getItem('statis/getOrderSum') ){
 				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrderSum'));
 				this.filterForm = storageData;
-				this.pageConfig.beginDate = new Date(storageData.beginDate);
-				this.pageConfig.endDate = new Date(storageData.endDate);
 				this.config.getConfig = false;
 				this.config.switchCell.checked = true;
 			}
@@ -253,40 +230,23 @@
 			this.getOrderSumConfig();
 		},
 		updated(){
-			this.config.isInit = false;
+			
+		},
+		destroyed(){
+			if( this.config.switchCell.checked ){
+				sessionStorage.setItem('statis/getOrderSum',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('statis/getOrderSum');
+			}
 		},
 		computed:{
 			statisStateChange(){
 				return this.filterForm.statisState;
-			},
-			filterFormBeginDateChange(){
-				return this.filterForm.beginDate;
-			},
-			filterFormEndDateChange(){
-				return this.filterForm.endDate;
-			},
-			filterFormDateTypeChange(){
-				return this.filterForm.dateType;
 			}
 		},
 		watch:{
 			statisStateChange(newV,oldV){
 				this.onRefresh( this.filterForm );
-			},
-			filterFormBeginDateChange(newV,oldV){
-				if( !this.config.isInit ){
-					this.config.switchCell.checked = false;
-				}
-			},
-			filterFormEndDateChange(newV,oldV){
-				if( !this.config.isInit ){
-					this.config.switchCell.checked = false;
-				}
-			},
-			filterFormDateTypeChange(newV,oldV){
-				if( !this.config.isInit ){
-					this.config.switchCell.checked = false;
-				}
 			}
 		}
 	}
