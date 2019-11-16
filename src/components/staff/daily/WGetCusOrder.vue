@@ -24,11 +24,13 @@
 			</div>
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick" id="popup-filter">
-			<cus-picker :cusName.sync="filterForm.cusName" slot="filter-field-1"></cus-picker>
-			<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期" slot="filter-field-2"></new-time-picker>
-			<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期" slot="filter-field-3"></new-time-picker>
-			<van-switch-cell v-model="filterForm.addUserId" title="下单员" slot="filter-field-4"/>
-			<van-switch-cell v-model="config.switch.rem.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" />
+			<div slot="filter-field-1">
+				<cus-picker :cusName.sync="filterForm.cusName"></cus-picker>
+				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<van-switch-cell v-model="filterForm.addUserId" title="下单员"/>
+				<van-switch-cell v-model="config.switch.rem.checked" title="记住筛选条件(本次登录有效)"/>
+			</div>
 		</popup-filter>
 	</div>
 </template>
