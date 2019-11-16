@@ -5,11 +5,10 @@
 		<van-field readonly label="纸质" v-model="infoData.paperCode" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
 		<van-field readonly label="克重(g)" v-model="infoData.paperWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
 		<van-field readonly label="重量(kg)" v-model="infoData.curWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center" ></van-field>
-		<van-field label="班次" v-model="formData.stockOutOpClass" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
-		<van-field label="机台" v-model="formData.stockOutSFlute" placeholder="输入班次" input-align="center"></van-field>
+		<van-field label="班次" v-model="formData.stockOutOpClass" placeholder="输入班次" input-align="center"></van-field>
+		<van-field label="机台" v-model="formData.stockOutSFlute" placeholder="输入机台" input-align="center"></van-field>
 		<van-field label="剥纸重量" v-model="formData.stockOutBzwt" type="number" input-align="center"></van-field>
-		<van-field readonly clickable label="出库日期" v-model="formData.stockOutOpTime" input-align="center"  @click="config.popup.timePicker.show = true "></van-field>
-		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.stockOutOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate">
+		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="formData.stockOutOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="出库日期">
 		</new-time-picker>
 		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:55px;" @click="stockOutConfirm()" :disabled="config.button.disabled">
 			出库
@@ -85,7 +84,6 @@
 			getPageConfig(){
 				let self = this;
 				this.$request.staff.paper.paperConfig().then(res=>{
-					/*返回数据填充未完成*/
 					self.pageConfig.maxDate      = res.result.DoStockOutMaxDate;
 					self.pageConfig.minDate      = res.result.DoStockOutMinDate;
 					self.formData.stockOutOpTime = res.result.DoStockOutOpTime;
@@ -99,10 +97,10 @@
 				let self = this;
 				this.$request.staff.paper.paperGetOutInfo( outNo ).then(res=>{
 					if( res.errorCode == '00000' ){
-						self.infoData.paperWidth = res.result
-						self.infoData.paperCode  = res.result
-						self.infoData.paperWt    = res.result
-						self.infoData.curWt      = res.result
+						self.infoData.paperWidth = Math.round(res.result.PaperWidth);
+						self.infoData.paperCode  = res.result.PaperCode;
+						self.infoData.paperWt    = res.result.PaperWt;
+						self.infoData.curWt      = Math.round(res.result.CurWt);
 						self.config.button.disabled = false;
 					}else{
 						self.config.field.placeholder = '查询失败';

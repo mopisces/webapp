@@ -6,8 +6,7 @@
 		<van-field readonly label="克重(g)" v-model="autoData.paperWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
 		<van-field readonly label="重量(kg)" v-model="autoData.oriWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
 		<van-field label="回仓重量" type="number" v-model="formData.inWeight" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
-		<van-field readonly clickable label="入库日期" v-model="formData.inOpTime" input-align="center"  @click="config.popup.timePicker.show = true "></van-field>
-		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.inOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate">
+		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="formData.inOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="入库日期">
 		</new-time-picker>
 		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:100px;" @click="stockInConfirm()" :disabled="config.button.disabled">入库</van-button>
 	</div>
@@ -39,7 +38,6 @@
 					},
 					popup:{
 						timePicker:{
-							show : false,
 							isFinishLoad:false
 						}
 					}
@@ -47,7 +45,7 @@
 				formData:{
 					stockInNo : '',
 					inOpTime  : '',
-					inWeight  : 0
+					inWeight  : ''
 				},
 				autoData:{
 					paperWidth : '',
@@ -56,9 +54,16 @@
 					oriWt      : ''
 				},
 				rules:{
-					stockInNo : [],
+					stockInNo : [
+						{ type: 'string', required: true, message: '请输入订单号'},
+						{ pattern:'/^[a-zA-Z1-9][a-zA-Z0-9]{11}$/', message: '订单号格式错误' } 
+					],
 					inOpTime  : [],
 					inWeight  : []
+				},
+				pageConfig:{
+					maxDate:'',
+					minDate:''
 				},
 				validator:{}
 			}
@@ -69,8 +74,7 @@
 				this.$request.staff.paper.paperConfig().then(res=>{
 					self.pageConfig.maxDate = res.result.DoRStockInMaxDate;
 					self.pageConfig.minDate = res.result.DoRStockInMinDate;
-
-					self.formData.inOpTime = res.result.DoRStockInOpTime;
+					self.formData.inOpTime  = res.result.DoRStockInOpTime;
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timePicker.isFinishLoad = true;

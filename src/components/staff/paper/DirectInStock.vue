@@ -1,8 +1,6 @@
 <template>
 	<div>
 		<wx-scan :scanResult.sync="formData.inNo" urlType="2"></wx-scan>
-		<van-field readonly v-model="formData.inNo" placeholder="订单信息" label="条形码编号" input-align="center">
-		</van-field>
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
 				<van-field v-model="formData.inNo" placeholder="入库数" label="入库数" input-align="center" type="number" :maxlength="3">
@@ -23,10 +21,8 @@
 				</van-field>
 			</div>
 		</div>
-		<van-field readonly clickable label="库区"></van-field>
-		<van-field readonly clickable label="入库日期" v-model="formData.dInDate" input-align="center"  @click="config.popup.timePicker.show = true " placeholder="选择入库日期">
-			<van-icon slot="right-icon" size="16" name="arrow"/>
-		</van-field>
+		<van-field readonly clickable label="库区" ></van-field>
+		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.dInDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="选择入库日期"></new-time-picker>
 	   	<van-field v-model="message" autosize label="备注" type="textarea" maxlength="50" placeholder="请输入备注" rows="2" show-word-limit/>
 	   	<div class="van-row" style="text-align:center;margin-top:50px;" >
 			<div class="van-col van-col--12">
@@ -36,19 +32,22 @@
 				<van-button type="primary" size="normal" style="width:60%">重置</van-button>
 			</div>
 		</div>
-		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.dInDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate"></new-time-picker>
+	
 	</div>
 </template>
 <script>
 	import { Button, Icon, Field } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
-	import { dateTimeFormat } from '@/util/index';
+	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Icon.name]: Icon,
 			[Field.name]: Field,
+
+			[VTable.name]: VTable,
+			[VPagination.name]: VPagination,
 
 			NewTimePicker,
 			WxScan
@@ -83,6 +82,7 @@
 			directInConfig(){
 				let self = this;
 				this.$request.staff.paper.directInConfig().then(res=>{
+					console.log(res.result)
 					self.pageConfig.maxDate = res.result.time.DirectInStockMaxDate;
 					self.pageConfig.minDate = res.result.time.DirectInStockMinDate;
 					self.formData.dInDate   = res.result.time.DirectInStockDate;
@@ -100,14 +100,10 @@
 			this.directInConfig();
 		},
 		computed:{
-			dInDateChange(){
-				return this.formData.dInDate;
-			}
+			
 		},
 		watch:{
-			dInDateChange( newVal, oldVal ){
-				console.log(newVal)
-			}
+			
 		}
 	}
 </script>

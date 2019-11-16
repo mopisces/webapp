@@ -36,7 +36,6 @@
 </template>
 <script>
 	import { Button, Cell, CellGroup, Popup, Field, SwitchCell, Sticky  } from 'vant';
-	import { dateTimeFormat } from '@/util/index';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';

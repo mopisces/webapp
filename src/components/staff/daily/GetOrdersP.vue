@@ -74,7 +74,6 @@
 </template>
 <script>
 	import { Button, Icon, Popup, Field, Step, Steps, Sticky } from 'vant';
-	import { dateTimeFormat } from '@/util/index';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';

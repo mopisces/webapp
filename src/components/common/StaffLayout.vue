@@ -20,7 +20,7 @@
 	</div>
 </template>
 <script>
-	import { Cell, Icon, NavBar, Tabbar, TabbarItem,  } from 'vant';
+	import { Cell, Icon, NavBar, Tabbar, TabbarItem } from 'vant';
 	export default{
 		components:{
 			[Cell.name]: Cell,
