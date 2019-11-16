@@ -42,13 +42,7 @@
 				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
 				<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" />
 			</div>
-			<!-- <radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型" slot="filter-field-1"></radio-cell>
-			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timePicker.startShow = true" slot="filter-field-2"></van-field>
-			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timePicker.endShow = true" slot="filter-field-3"></van-field>
-			<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" slot="filter-field-4" @change="switchChange"/> -->
 		</popup-filter>
-		<!-- <time-picker :dateTimeShow.sync="config.popup.timePicker.startShow" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.startShow = false" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timePicker.endShow" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="config.popup.timePicker.endShow = false" @onConfirm="timeEndConfirm"></time-picker> -->
 	</div>
 </template>
 <script>
@@ -58,7 +52,6 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
-	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -77,7 +70,6 @@
 			return {
 				finished:true,
 				config:{
-					isInit:true,
 					getConfig:true,
 					switchCell:{
 						checked:false
@@ -101,17 +93,17 @@
 					},
 					selectOption:{
 						statisType:[
-							{ text: '汇总', value: '0', factor:'' },
-							{ text: '按退货原因', value:'1', factor:'returnCause'},
-							{ text: '按客户', value: '2', factor:'cusId' }
+							{ text: '汇总', value: 0, factor:'' },
+							{ text: '按退货原因', value:1, factor:'returnCause'},
+							{ text: '按客户', value: 2, factor:'cusId' }
 						],
 						chartType:['all'],
 						chartProperties:[
-							{ text: '退货数', value: '0' },
-							{ text: '退货附加费', value: '1' },
-							{ text: '销售面积', value: '2' },
-							{ text: '金额', value: '3' },
-							{ text: '总款数', value: '4' },
+							{ text: '退货数', value:'returnQty' },
+							{ text: '退货附加费', value: 'returnFee' },
+							{ text: '销售面积', value: 'tSalesArea' },
+							{ text: '金额', value: 'amt' },
+							{ text: '总款数', value: 'sumCount' },
 						]
 					}
 				},
@@ -121,15 +113,13 @@
 					dateType: 4,
 					beginDate:'',
 					endDate:  '',
-					statisState:0,
 					limitFactor:'',
-					limitValue:''
+					limitValue:'',
+					statisState:0,
 				},
 				pageConfig:{
-					minDate:new Date(),
-					maxDate:new Date(),
-					beginDate:new Date(),
-					endDate:new Date()
+					minDate:'',
+					maxDate:'',
 				}
 			}
 		},
@@ -141,20 +131,10 @@
 				this.config.popup.detailShow = true;
 			},
 			onRefresh(){
-				if( this.config.isInit ){
-					this.getOrdReturnSumConfig();
-				}else{
-					this.getOrdReturnSum( this.filterForm );
-				}
+				this.getOrdReturnSum( this.filterForm );
 			},
 			selectOption( val ){
 				this.filterForm.statisState = val.statisType;
-				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
-					if(this.config.selectOption.statisType[i].value == val.statisType){
-						this.filterForm.limitFactor = this.config.selectOption.statisType[i].factor;
-						break;
-					}
-				}
 			},
 			getOrdReturnSumConfig( isReset = false ){
 				let self = this;
@@ -166,6 +146,10 @@
 					self.pageConfig.minDate = res.result.GetOrdReturnSumMinDate;
 					self.pageConfig.maxDate = res.result.GetOrdReturnSumMaxDate;
 				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.popup.timePicker.isFinishLoad = true;
+					});
+				}).then(()=>{
 					if( isReset ){
 						return ;
 					}
@@ -176,7 +160,6 @@
 			},
 			getOrdReturnSum( data ){
 				let self = this;
-
 				this.$request.staff.statis.getOrdReturnSum( data ).then(res=>{
 					self.panelList = res.result;
 					this.finished = false;
@@ -193,21 +176,6 @@
 			filterClick(){
 				this.onRefresh();
 				this.config.popup.filterShow = false;
-			},
-			timeBeginConfirm( val ){
-				this.filterForm.beginDate = dateTimeFormat(val.value,'yyyy-MM-dd');
-				this.config.popup.timePicker.startShow = false;
-			},
-			timeEndConfirm( val ){
-				this.filterForm.endDate = dateTimeFormat(val.value,'yyyy-MM-dd');
-				this.config.popup.timePicker.endShow = false;
-			},
-			switchChange(checked){
-				if( checked ){
-					sessionStorage.setItem('statis/getOrdReturnSum',JSON.stringify(this.filterForm));
-				}else{
-					sessionStorage.removeItem('statis/getOrdReturnSum');
-				}
 			}
 		},
 		created(){
@@ -221,12 +189,17 @@
 		},
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
+			this.getOrdReturnSumConfig();
 		},
 		updated(){
 			
 		},
 		destroyed(){
-
+			if( this.config.switchCell.checked ){
+				sessionStorage.setItem('statis/getOrdReturnSum',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('statis/getOrdReturnSum');
+			}
 		},
 		computed:{
 			statisStateChange(){

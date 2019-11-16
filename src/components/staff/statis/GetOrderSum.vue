@@ -188,11 +188,14 @@
 					self.pageConfig.minDate = res.result.GetOrderSumMinDate;
 					self.pageConfig.maxDate = res.result.GetOrderSumMaxDate;
 				}).then(()=>{
-					this.config.popup.timePicker.isFinishLoad = true;
+					this.$nextTick(()=>{
+						this.config.popup.timePicker.isFinishLoad = true;
+					});
 				}).then(()=>{
 					if( isReset ){
 						return ;
 					}
+					
 					this.getOrderSum( this.filterForm );
 				});
 			},
