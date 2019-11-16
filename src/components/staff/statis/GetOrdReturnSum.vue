@@ -135,7 +135,11 @@
 				this.config.popup.detailShow = true;
 			},
 			onRefresh(){
-				this.getOrdReturnSum( this.filterForm );
+				if( this.config.isInit ){
+					this.getOrdReturnSumConfig();
+				}else{
+					this.getOrdReturnSum( this.filterForm );
+				}
 			},
 			selectOption( val ){
 				this.filterForm.statisState = val.statisType;
@@ -162,7 +166,6 @@
 					if( isReset ){
 						return ;
 					}
-					
 					this.$nextTick(()=>{
 						this.getOrdReturnSum( this.filterForm );
 					});
@@ -217,7 +220,6 @@
 		},
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
-			this.getOrdReturnSumConfig();
 		},
 		updated(){
 			this.config.isInit = false;

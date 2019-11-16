@@ -36,7 +36,7 @@
 				<van-button type="primary" size="normal" style="width:60%">重置</van-button>
 			</div>
 		</div>
-		<new-time-picker v-if="pickerLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.dInDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate"></new-time-picker>
+		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.dInDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate"></new-time-picker>
 	</div>
 </template>
 <script>
@@ -55,7 +55,6 @@
 		},
 		data(){
 			return {
-				pickerLoad:false,
 				message:'',
 				formData:{
 					inNo:'',
@@ -64,7 +63,8 @@
 				config:{
 					popup:{
 						timePicker:{
-							show : false
+							show : false,
+							isFinishLoad:false
 						}
 					}
 				},
@@ -88,7 +88,7 @@
 					self.formData.dInDate   = res.result.time.DirectInStockDate;
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.pickerLoad = true;
+						this.config.popup.timePicker.isFinishLoad = true;
 					})
 				});
 			}

@@ -15,7 +15,9 @@
 		<slot name="new-popup-7"></slot>
 		<slot name="new-popup-qrcode"></slot>
 		<div style="margin-bottom:50px"></div>
-		<van-button type="primary" size="large" @click="click()" class="van-tabbar--fixed" v-if=" isClose != 3 ">{{ buttonText }}</van-button>
+		<van-button type="primary" size="large" @click="click()" v-if=" isClose != 3 ">
+			{{ buttonText }}
+		</van-button>
 	</van-popup>
 </template>
 <script>

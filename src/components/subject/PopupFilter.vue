@@ -44,6 +44,7 @@
 			},
 			filterClick(){
 				this.$emit('filterClick');
+				this.filterOverlayClick();
 			},
 			filterOverlayClick(){
 				this.show = false;

@@ -16,7 +16,6 @@
 	import { Button, Field, Dialog, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
-	import { dateTimeFormat } from '@/util/index';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -55,12 +54,6 @@
 					paperCode  : '',
 					paperWt    : '',
 					oriWt      : ''
-				},
-				pageConfig:{
-					show         : false,
-					maxDate      : new Date(),
-					minDate      : new Date(),
-					pickerDate   : new Date(),
 				},
 				rules:{
 					stockInNo : [],

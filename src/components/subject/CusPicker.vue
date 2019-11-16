@@ -1,5 +1,5 @@
 <template>
-	<van-popup v-model="popupShow" position="bottom" @click-overlay="cusPickerOverlay()" :close-on-click-overlay="false">
+	<van-popup v-model="popupShow" position="bottom" @click-overlay="cusPickerOverlay()">
 		<van-picker show-toolbar :columns="columns" :default-index="defaultIndex" @cancel="cusPickerCancel()" @confirm="cusPickerConfirm" cancel-button-text="清空">
 			<van-search slot="title" v-model="cusName" @search="cusPickerSearch" :clearable="false" style="width:50%"></van-search>
 		</van-picker>

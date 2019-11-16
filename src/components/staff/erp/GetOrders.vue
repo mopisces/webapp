@@ -48,7 +48,7 @@
 				</van-panel>
 			</van-list>
 		</van-pull-refresh>
-		<popup-filter :filterShow.sync="config.popup.filterShow"  @resetClick="resetClick" @filterClick="filterClick">
+		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<van-field label="订单编号" v-model="filterForm.orderId" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="板长" v-model="filterForm.boardLength" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
@@ -57,25 +57,22 @@
 				<van-field label="箱宽" v-model="filterForm.boxWidth" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="箱高" v-model="filterForm.boxHeight" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="精确查询" input-align="center" type="number" maxlength="10"></van-field>
+				<cus-picker :cusName.sync="filterForm.cusName" ></cus-picker>
+				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.radioColumns" title="日期类型"></radio-cell>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
-			<van-field readonly clickable label="客户名称" :value="filterForm.cusName" placeholder="选择客户名称" input-align="center" @click="config.popup.cusShow = true"  slot="filter-field-2"></van-field>
-			<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.radioColumns" title="日期类型" slot="filter-field-3"></radio-cell>
-			<van-field readonly clickable label="开始日期" v-model="filterForm.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true" slot="filter-field-3"></van-field>
-			<van-field readonly clickable label="结束日期" v-model="filterForm.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true" slot="filter-field-4"></van-field>
-			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" slot="filter-field-5"/>
 		</popup-filter>
-		<cus-picker ref="cusPicker" :show.sync="config.popup.cusShow" :searchData.sync="cusPicker.searchData" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm"></cus-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate"  @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow.sync="config.popup.detailShow" @detailClose="detailClose"></order-detail>
 	</div>
 </template>
 <script>
 	import { Button, Field, PullRefresh, List, SwitchCell, Panel, Sticky, Tab, Tabs } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import CusPicker from '@/components/subject/CusPicker.vue';
+	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
-	import TimePicker from '@/components/subject/TimePicker.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
@@ -93,7 +90,7 @@
 			PopupFilter,
 			CusPicker,
 			RadioCell,
-			TimePicker,
+			NewTimePicker,
 			OrderDetail
 		},
 		data(){
@@ -111,10 +108,8 @@
 					getConfig : true,
 					popup:{
 						filterShow : false,
-						cusShow    : false,
-						timeShow:{
-							start : false,
-							end   : false
+						timePicker:{
+							isFinishLoad:false
 						},
 						detailShow : false,
 					},
@@ -208,17 +203,6 @@
 				this.pullOnRefresh();
 				this.config.popup.filterShow = false;
 			},
-			cusPickerCancel(){
-				this.config.popup.cusShow = false;
-				this.filterForm.cusName = '';
-			},
-			cusPickerConfirm( result ){
-				this.config.popup.cusShow = false;
-				this.filterForm.cusName = '';
-				if( JSON.stringify(result.value) !== '[]' ){
-					this.filterForm.cusName = result.key;
-				}
-			},
 			timePickerCancel(){
 				this.config.popup.timeShow.start = false;
 				this.config.popup.timeShow.end = false;
@@ -238,11 +222,11 @@
 						self.filterForm.beginDate = res.result.Wap1GetOrdersBeginDate;
 						self.filterForm.endDate = res.result.Wap1GetOrdersEndDate;
 
-						self.pageConfig.beginDate = new Date(res.result.Wap1GetOrdersBeginDate);
-						self.pageConfig.endDate = new Date(res.result.Wap1GetOrdersEndDate);
 					}
-					self.pageConfig.maxDate = new Date(res.result.Wap1GetOrdersMaxDate);
-					self.pageConfig.minDate = new Date(res.result.Wap1GetOrdersMinDate);
+					self.pageConfig.maxDate = res.result.Wap1GetOrdersMaxDate;
+					self.pageConfig.minDate = res.result.Wap1GetOrdersMinDate;
+				}).then(()=>{
+					this.config.popup.timePicker.isFinishLoad = true;
 				}).then(()=>{
 					if( isReset ){
 						return ;

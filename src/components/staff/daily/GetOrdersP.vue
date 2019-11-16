@@ -65,13 +65,11 @@
 				<van-field label="板宽" v-model="filterForm.boardWidth" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<van-field label="压线" v-model="filterForm.scoreInfo" placeholder="模糊查询" input-align="center"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
-				<van-field readonly clickable label="开始日期" v-model="filterCount.beginDate" placeholder="选择开始日期" input-align="center" @click="config.popup.timeShow.start = true"></van-field>
-				<van-field readonly clickable label="结束日期" v-model="filterCount.endDate" placeholder="选择结束日期" input-align="center" @click="config.popup.timeShow.end = true"></van-field>
+				<new-time-picker :dateTime.sync="filterCount.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker :dateTime.sync="filterCount.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
 				<radio-cell :radioInfo.sync="filterForm.sState" :radioColumns="config.step.status" :title="config.radio.title"></radio-cell>
 			</div>
 		</popup-filter>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.start" :dateTime.sync="pageConfig.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="timePickerCancel" @onConfirm="timeBeginConfirm"></time-picker>
-		<time-picker :dateTimeShow.sync="config.popup.timeShow.end" :dateTime.sync="pageConfig.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate"  @onCancel="timePickerCancel" @onConfirm="timeEndConfirm"></time-picker>
 	</div>
 </template>
 <script>
@@ -79,7 +77,7 @@
 	import { dateTimeFormat } from '@/util/index';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import TimePicker from '@/components/subject/TimePicker.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
@@ -93,7 +91,7 @@
 			[Sticky.name]: Sticky,
 			
 			PopupFilter,
-			TimePicker,
+			NewTimePicker,
 			RadioCell,
 			PrevNext,
 			NewPopup
@@ -114,10 +112,6 @@
 						},
 						rightFilter:{
 							show :false,
-						},
-						timeShow:{
-							start:false,
-							end:false
 						}
 					},
 					prevNext:{
@@ -171,10 +165,8 @@
 				},
 				fieldData:[],
 				pageConfig:{
-					beginDate:new Date(),
-					endDate:new Date(),
-					maxDate:new Date(),
-					minDate:new Date()
+					maxDate:'',
+					minDate:''
 				}
 			}
 		},
@@ -247,23 +239,6 @@
 			async filterClick(){
 				await this.getCountOrder( this.filterCount );
 				this.config.popup.rightFilter.show = false;
-			},
-			timePickerClose(){
-				this.config.popup.timeShow.start = false;
-				this.config.popup.timeShow.end   = false;
-			},
-			timePickerCancel(){
-				this.timePickerClose();
-			},
-			timeEndConfirm( value ){
-				this.filterCount.endDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.endDate  = value.value;
-				this.timePickerClose();
-			},
-			timeBeginConfirm( value ){
-				this.filterCount.beginDate = dateTimeFormat( value.value,'yyyy-MM-dd' );
-				this.pageConfig.beginDate  = value.value;
-				this.timePickerClose();
 			}
 			
 		},
@@ -275,10 +250,8 @@
 			this.$store.commit('staff/setHeaderTitle','每日订单详细信息');
 			if( sessionStorage.getItem('daily/wGetCusOrder/info') !== null ){
 				this.form = JSON.parse(sessionStorage.getItem('daily/wGetCusOrder/info'));
-				this.pageConfig.maxDate    = new Date(this.form.maxDate);
-				this.pageConfig.minDate    = new Date(this.form.minDate);
-				this.pageConfig.beginDate  = new Date(this.form.beginDate);
-				this.pageConfig.endDate    = new Date(this.form.endDate);
+				this.pageConfig.maxDate    = this.form.maxDate;
+				this.pageConfig.minDate    = this.form.minDate;
 				this.filterCount.cusId     = this.form.CusId;
 				this.filterCount.beginDate = this.form.beginDate;
 				this.filterCount.endDate   = this.form.endDate;

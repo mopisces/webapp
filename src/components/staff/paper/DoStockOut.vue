@@ -8,9 +8,9 @@
 		<van-field label="班次" v-model="formData.stockOutOpClass" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
 		<van-field label="机台" v-model="formData.stockOutSFlute" placeholder="输入班次" input-align="center"></van-field>
 		<van-field label="剥纸重量" v-model="formData.stockOutBzwt" type="number" input-align="center"></van-field>
-		<van-field readonly clickable label="出库日期" v-model="formData.stockOutOpTime" input-align="center"  @click="pageConfig.show = true "></van-field>
-		<time-picker :dateTimeShow.sync="pageConfig.show" :dateTime.sync="pageConfig.pickerDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" @onCancel="" @onConfirm="timePickerConfirm">
-		</time-picker>
+		<van-field readonly clickable label="出库日期" v-model="formData.stockOutOpTime" input-align="center"  @click="config.popup.timePicker.show = true "></van-field>
+		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.stockOutOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate">
+		</new-time-picker>
 		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:55px;" @click="stockOutConfirm()" :disabled="config.button.disabled">
 			出库
 		</van-button>
@@ -18,9 +18,8 @@
 </template>
 <script>
 	import { Button, Field, Dialog, Toast } from 'vant';
-	import TimePicker from '@/components/subject/TimePicker.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
-	import { dateTimeFormat } from '@/util/index';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -29,7 +28,7 @@
 			[Dialog.name]: Dialog,
 			[Toast.name]: Toast ,
 
-			TimePicker,
+			NewTimePicker,
 			WxScan
 		},
 		data(){
@@ -41,13 +40,17 @@
 					},
 					button:{
 						disabled:true
+					},
+					popup:{
+						timePicker:{
+							show:false,
+							isFinishLoad:false
+						}
 					}
 				},
 				pageConfig:{
-					minDate    : new Date(),
-					maxDate    : new Date(),
-					pickerDate : new Date(),
-					show       : false
+					maxDate:'',
+					minDate:''
 				},
 				formData:{
 					stockOutNo      : '',
@@ -79,21 +82,17 @@
 			}
 		},
 		methods:{
-			timePickerCancel(){
-				this.pageConfig.show = false;
-			},
-			timePickerConfirm(val){
-				this.pageConfig.beginDate = val.value;
-				this.timePickerCancel();
-			},
 			getPageConfig(){
 				let self = this;
 				this.$request.staff.paper.paperConfig().then(res=>{
 					/*返回数据填充未完成*/
-					self.pageConfig.maxDate      = new Date(res.result.DoStockOutMaxDate);
-					self.pageConfig.minDate      = new Date(res.result.DoStockOutMinDate);
-					self.pageConfig.pickerDate   = new Date(res.result.DoStockOutOpTime);
+					self.pageConfig.maxDate      = res.result.DoStockOutMaxDate;
+					self.pageConfig.minDate      = res.result.DoStockOutMinDate;
 					self.formData.stockOutOpTime = res.result.DoStockOutOpTime;
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.popup.timePicker.isFinishLoad = true;
+					})
 				});
 			},
 			getOutInfo( outNo ){
@@ -149,17 +148,11 @@
 			this.getPageConfig();
 		},
 		computed:{
-			opTime(){
-				return this.pageConfig.beginDate;
-			},
 			outNo(){
 				return this.formData.stockOutNo;
 			}
 		},
 		watch:{
-			opTime( newVal,oldVal ){
-				this.formData.stockOutOpTime = dateTimeFormat(newVal,'yyyy-MM-dd');
-			},
 			outNo( newVal,oldVal ){
 				if( newVal.length === 12 ){
 					this.getOutInfo( newVal );

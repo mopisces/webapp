@@ -1,24 +1,28 @@
 <template>
-	<van-popup v-model="show" position="bottom" @click-overlay="clickOverlay" :close-on-click-overlay="false">
-		<van-datetime-picker v-model="pickerTime" :min-date="min" :max-date="max" type="date" show-toolbar @cancel="onCancel" @confirm="onConfirm">
-		</van-datetime-picker>
-	</van-popup>
+	<div>
+		<van-field clickable placeholder="请选择日期" input-align="center" :label="label" @click="show = true" v-model="dateTime"></van-field>
+		<van-popup v-model="show" position="bottom" @click-overlay="clickOverlay" :close-on-click-overlay="false" get-container="body">
+			<van-datetime-picker v-model="pickerTime" :min-date="min" :max-date="max" type="date" show-toolbar @cancel="onCancel" @confirm="onConfirm">
+			</van-datetime-picker>
+		</van-popup>
+	</div>
 </template>
 <script>
-	import { Popup, DatetimePicker  } from 'vant';
+	import { Popup, Field, DatetimePicker  } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Popup.name]: Popup,
+			[Field.name]: Field,
 			[DatetimePicker.name]: DatetimePicker,
 		},
-		props:['dateTimeShow','dateTime','minDate','maxDate'],
+		props:['dateTime','minDate','maxDate','label'],
 		data(){
 			return {
 				pickerTime : new Date(this.dateTime),
-				show : this.dateTimeShow,
 				max  : new Date(this.maxDate),
 				min  : new Date(this.minDate),
+				show : false
 			}
 		},
 		methods:{
@@ -29,6 +33,7 @@
 				this.clickOverlay();
 			},
 			onConfirm( value ){
+				this.$emit("update:dateTime", dateTimeFormat(value,'yyyy-MM-dd'));
 				this.clickOverlay();
 			}
 		},
@@ -42,18 +47,9 @@
 			
 		},
 		watch:{
-			dateTimeShow(newV,oldV){
-				this.show = newV;
-			},
-			show(newV,oldV){
-				this.$emit("update:dateTimeShow", newV);
-			},
 			dateTime(newV,oldV){
 				this.pickerTime = new Date(this.dateTime);
-			},
-			pickerTime(newV,oldV){
-				this.$emit("update:dateTime", dateTimeFormat(newV,'yyyy-MM-dd'));
-			},
+			}
 		}
 	}
 </script>
