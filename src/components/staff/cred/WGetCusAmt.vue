@@ -19,19 +19,19 @@
 			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="center" slot="new-popup-3"/>
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
-			<van-field readonly clickable label="客户名称" v-model="filterForm.cusId" placeholder="选择客户名称" input-align="center" @click="config.popup.cusPicker.show = true" slot="filter-field-1"></van-field>
-			<radio-cell :radioInfo.sync="filterForm.isStopped" :radioColumns="config.radio.isStopped.options" :title="config.radio.isStopped.title" slot="filter-field-2"></radio-cell>
-			<radio-cell :radioInfo.sync="filterForm.isSettleDay" :radioColumns="config.radio.isSettleDay.options" :title="config.radio.isSettleDay.title" slot="filter-field-3"></radio-cell>
-			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" />
+			<div slot="filter-field-1">
+				<cus-picker :cusName.sync="filterForm.cusId" ></cus-picker>
+				<radio-cell :radioInfo.sync="filterForm.isStopped" :radioColumns="config.radio.isStopped.options" :title="config.radio.isStopped.title"></radio-cell>
+				<radio-cell :radioInfo.sync="filterForm.isSettleDay" :radioColumns="config.radio.isSettleDay.options" :title="config.radio.isSettleDay.title"></radio-cell>
+				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"/>
+			</div>
 		</popup-filter>
-		<cus-picker ref="cusPicker" :show.sync="config.popup.cusPicker.show" :searchData.sync="cusPicker.searchData" @cusPickerCancel="cusPickerCancel" @cusPickerConfirm="cusPickerConfirm">
-		</cus-picker>
 	</div>
 </template>
 <script>
 	import { Button, Cell, CellGroup, Field, SwitchCell, Sticky } from 'vant';
 	import NewPopup from '@/components/subject/NewPopup.vue';
-	import CusPicker from '@/components/subject/CusPicker.vue';
+	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	export default {
