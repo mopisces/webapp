@@ -237,16 +237,11 @@
 				Dialog.confirm({
 					title:'erp删除暂缺',
 					message:'确定删除订单' + rowData.OrderType +  rowData.OrderId + '?',
-					beforeClose:this.beforeDialogClose
-				});
-			},
-			beforeDialogClose( action, done ){
-				if(action === 'confirm'){
+				}).then(()=>{
 					this.erpDelDNDetail( this.erpDelForm );
-					done();
-				}else{
-					done();
-				}
+				}).catch(()=>{
+					Dialog.close();
+				});
 			},
 			cancelClick(){
 				this.fieldData.strOrderId   = '';
@@ -309,7 +304,7 @@
 				this.filterForm.orderType = this.$route.query.orderType;
 				this.config.isEdit        = this.$route.query.isEdit;
 				if( this.config.isEdit == 1 ){
-					this.config.table.columns.push({field: 'custome-adv', title: '操作', width: 150, titleAlign: 'center',titleCellClassName:'table-title-class',componentName:'stow-detail-handle', columnAlign: 'center',isResize:true})
+					this.config.table.columns.push({field: 'stowDetailHandle', title: '操作', width: 150, titleAlign: 'center',titleCellClassName:'table-title-class',componentName:'table-operate', columnAlign: 'center',isResize:true})
 				}
 			}else{
 				this.$router.go(-1);

@@ -68,9 +68,9 @@
 							{field: 'To5Area', title: '折5面积', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'CusNames', title: '拼车客户', width: 120, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Remark', title: '备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'custome-adv', title: '送货单',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'stow-table-delivery',isResize:true},
-							{field: 'custome-adv', title: '明细',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'stow-table-detail',isResize:true},
-							{field: 'custome-adv', title: '装货',width: 100, titleAlign: 'center',componentName:'stow-table-loading',columnAlign:'center',isResize:true}
+							{field: 'stowDelivery', title: '送货单',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'table-operate',isResize:true},
+							{field: 'stowDetail', title: '明细',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'table-operate',isResize:true},
+							{field: 'stowLoading', title: '装货',width: 100, titleAlign: 'center',componentName:'table-operate',columnAlign:'center',isResize:true}
 						]
 					},
 					switchCell:{

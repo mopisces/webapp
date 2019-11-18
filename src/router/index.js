@@ -9,6 +9,11 @@ export const asyncRouterMap = [
 
 let routes = [
     {
+        path:'/login/select',
+        component: resolve => require(['../components/login/LoginSelect.vue'], resolve),
+        meta: { title: '登录选择界面' },
+    },
+    {
         path:'/staff',
         component: resolve => require(['../components/common/StaffLayout.vue'], resolve),
         meta: { title: '内部人员使用' },

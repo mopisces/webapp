@@ -7,7 +7,6 @@ const stow = {
 		return post(staff.stow.stowListConfig);
 	},
 	stowList( data ){
-		console.log(data)
 		let postData = {
 			list_begin_date : data.beginDate,
 			list_end_date   : data.endDate,

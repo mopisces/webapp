@@ -31,7 +31,7 @@
 				<van-button type="primary" size="normal" style="width:60%" @click="onSubmit">入库</van-button>
 			</div>
 			<div class="van-col van-col--12">
-				<van-button type="primary" size="normal" style="width:60%">重置</van-button>
+				<van-button type="primary" size="normal" style="width:60%" @click="resetClick">重置</van-button>
 			</div>
 		</div>
 		<van-popup v-model="config.popup.area.show" position="bottom" :style="{ height: '100%' }">
@@ -54,11 +54,12 @@
 	</div>
 </template>
 <script>
-	import { Popup, Button, Icon, Field, Dialog, Sticky } from 'vant';
+	import { Popup, Button, Icon, Field, Dialog, Toast, Sticky } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import { VTable, VPagination } from 'vue-easytable';
+	import schema from 'async-validator';
 	export default {
 		components:{
 			[Popup.name]: Popup,
@@ -66,6 +67,7 @@
 			[Icon.name]: Icon,
 			[Field.name]: Field,
 			[Dialog.name]: Dialog,
+			[Toast.name]: Toast,
 			[Sticky.name]: Sticky,
 
 			[VTable.name]: VTable,
@@ -89,7 +91,10 @@
 					},
 					table:{
 						columns:[
-
+							{field: 'directInStock', title: '操作',width: 100, titleAlign: 'center',componentName:'table-operate',columnAlign:'center',isResize:true},
+							{field: 'StockArea', title: '传单库区', titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'LeftQty', title: '未装订单数', titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'LeftSArea', title: '未装折五面积', titleAlign: 'center', columnAlign: 'center',isResize:true},
 						]
 					}
 				},
@@ -115,7 +120,14 @@
 					bSAreaControl : false,//库区控制
 					bMStockArea   : false,//显示库区
 				},
-				tableData:[]
+				tableData:[],
+				validator:{},
+				rules:{
+					strOrderId : [
+						{ type: 'string', required: true, message: '请输入订单号'},
+						{ pattern:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
+					]
+				}
 			}
 		},
 		methods:{
@@ -139,13 +151,20 @@
 			getLastSchArea( orderId ){
 				let self = this;
 				this.$request.staff.paper.getLastSchArea( orderId ).then(res=>{
-					console.log(res)
+					
 				});
 			},
 			getOrdSchArea( orderId ){
 				let self = this;
 				this.$request.staff.paper.getOrdSchArea( orderId ).then(res=>{
-					console.log(res)
+					self.tableData = res.result;
+					if( res.result.length === 0 ){
+						self.formData.strSchArea = '';
+					}else if( res.result.length === 1 ){
+						self.formData.strSchArea = res.result[0].StockArea
+					}else{
+
+					}
 				});
 			},
 			getOrdInInfo( orderId ){
@@ -159,6 +178,14 @@
 				});
 			},
 			onSubmit(){
+				let self = this;
+				this.validator.validate( this.formData ).then(()=>{
+					self.getUserInfo();
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});				
+			},
+			getUserInfo(){
 				let self = this;
 				this.$request.staff.user.getUserInfo().then(res=>{
 					self.formData.strFactoryId = res.result.factory_id;
@@ -176,32 +203,40 @@
 						Dialog.alert({
 							title   : '入库失败',
 							message : res.result[0]
-						}).then(()=>{
-
 						});
 					}else{
 						Dialog.alert({
 							message: '入库成功',
 						}).then(()=>{
-
+							this.submitReset();
 						});
 					}
 				});
 			},
 			submitReset(){
 				this.pageInfo.strOrderInfo = '';
-				this.tableData = [];
-				/*this.StockDetail.strStockArea = this.StockDetail.strStockArea_ = '';
-				this.StockDetail.strSchArea = '';
-				this.StockDetail.strRemark = '';
-				this.StockDetail.iQty = null;
-				this.StockDetail.iFinishedQty = 0;*/
+				this.tableData             = [];
+				this.formData.strStockArea = this.StockDetail.strStockArea_ = '';
+				this.formData.strSchArea   = '';
+				this.formData.strRemark    = '';
+				this.formData.iQty         = null;
+				this.pageInfo.iFinishedQty = 0;
+			},
+			resetClick(){
+				this.formData.strOrderId = '';
+				this.submitReset();
+			},
+			customCompFunc( params ){
+				if( params.type == 'operate' ){
+					this.formData.strSchArea = params.rowData.StockArea;
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','直接入库');
 		},
 		mounted(){
+			this.validator = new schema(this.rules);
 			this.directInConfig();
 		},
 		computed:{
