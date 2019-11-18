@@ -35,6 +35,9 @@ const staff = {
 		paperGetOutInfo : `${base.staff}staffPaperGetOutInfo`,
 		paperOutMain    : `${base.staff}staffPaperOutMain`,
 		directInConfig  : `${base.staff}staffPaperDirectInConfig`,
+		getLastSchArea  : `${base.staff}staffPaperGetLastSchArea`,
+		getOrdSchArea   : `${base.staff}staffPaperGetOrdSchArea`,
+		getOrdInInfo    : `${base.staff}staffPapergetOrdInInfo`,
 	},
 	paperbuy:{
 		paperInConfig  : `${base.staff}staffPaperInConfig`,
@@ -101,5 +104,6 @@ const erp = {
 	addDNDetail    : `${base.erp}WebCommon/WebAddDNDetail`, //扫描装货详情
 	calBdQuotaInfo : `${base.erp}CalBdQuotaInfo`,           //订单试算
 	CalBdPriceInfo : `${base.erp}CalBdPriceInfo`,           //订单试算
+	DirectInStock  : `${base.erp}WebCommon/DirectInStock`,  //直接入库
 };
 export { map, webappMap, adminUrl, staff, erp};

@@ -1,5 +1,5 @@
 <template>
-	<van-field v-model="result" placeholder="请输入订单号" label="条形码编号" input-align="center">
+	<van-field v-model="result" placeholder="请输入订单号" label="条形码编号" input-align="center" maxlength="12">
 	 	<van-icon class-prefix="iconfont" size="18" name="saomiao4" slot="right-icon" color="#0bf147" @click="scanQRCode()" v-if="scanValuable"/>
 	</van-field>
 </template>

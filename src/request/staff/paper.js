@@ -1,5 +1,5 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
+import { staff,erp } from '../urlMap';
 import axios from 'axios';
 
 const paper = {
@@ -59,6 +59,29 @@ const paper = {
 	},
 	directInConfig(){
 		return post(staff.paper.directInConfig);
+	},
+	getLastSchArea( orderId ){
+		return post(staff.paper.getLastSchArea,{ direct_in_order_id : orderId });
+	},
+	getOrdSchArea( orderId ){
+		return post(staff.paper.getOrdSchArea,{ direct_in_order_id : orderId });
+	},
+	getOrdInInfo( orderId ){
+		return post(staff.paper.getOrdInInfo,{ direct_in_order_id : orderId });
+	},
+	directInStock( data ){
+		let postData = {
+			iQty         : data.iQty,
+			dInDate      : data.iQty,
+			strOrderId   : data.strOrderId,
+			strRemark    : data.strRemark,
+			strWorkGorup : data.strWorkGorup,
+			strStockArea : data.strStockArea,
+			strSchArea   : data.strSchArea,
+			strFactoryId : data,
+			strUserId    : data
+		};
+		return post(erp.DirectInStock,postData);
 	}
 }
 export default paper;

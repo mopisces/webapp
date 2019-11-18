@@ -74,7 +74,6 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
-	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Button.name]: Button,

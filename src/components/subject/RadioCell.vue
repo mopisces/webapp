@@ -1,7 +1,7 @@
 <template>
 	<van-radio-group v-model="value">
 		<van-cell-group :title="title">
-			<van-cell  v-for="(item,index) in radioColumns" :title="item.title" :key="index" clickable>
+			<van-cell  v-for="(item,index) in radioColumns" :title="item.title" :key="index" clickable @click=" value = item.value ">
 				<van-radio slot="right-icon" :name="item.value"  />
 			</van-cell>
 		</van-cell-group>

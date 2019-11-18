@@ -9,10 +9,10 @@ const errorHandle = {
 				Dialog({ message: msg});
 				break;
 			case 20250:
-				Dialog({ message: '20250' });
+				//Dialog({ message: '20250' });
 				break;
 			default :
-				Dialog({ message: '提示123' });
+				//Dialog({ message: '提示123' });
 				break;
 		}
 	}
