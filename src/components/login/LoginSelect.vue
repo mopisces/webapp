@@ -1,47 +1,172 @@
 <template>
-	<div style="height:100%;width:100%;">
-		<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
-			<div class="van-nav-bar__title van-ellipsis">绍兴合润</div>
+	<div :style="pageInfo.bg">
+		<div style="width:100%;height:20%;position:fixed;top:5%;text-align:center;">
+			<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
 		</div>
-		<div style="width: 100%;height:40%;position: fixed;top: 30%;text-align:center;">
-			<van-grid>
-				<van-image src="https://img.yzcdn.cn/vant/cat.jpeg" width="30%" height="80%" solt="icon"/>
-				<span solt="text">客户登录</span>
-			</van-grid>
+		<div style="width:100%;height:5%;position:fixed;top:28%;text-align:center;font-weight:500;font-size:1rem;">
+			{{ pageInfo.factoryName }}
 		</div>
-		<div class="footer" style="width: 100%;position: fixed;bottom: 0;">
+		<div style="width: 80%;height:40%;position: fixed;top: 35%;left:10%;text-align:center;">
+			<van-tabs v-model="formData.userType" animated>
+				<van-tab title="客户登录">
+				</van-tab>
+				<van-tab title="员工登录">
+				</van-tab>
+			</van-tabs>
+			<van-field v-model="formData.userName" label="用户名" placeholder="请输入登录名" required/>
+			<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
+			<van-field v-model="formData.subFactory" label="分厂" required
+					placeholder="请选择分厂" clickable readonly  @click="config.popup.show = true" v-if="config.field.show && formData.userType == 1 ">
+				<van-icon name="arrow" slot="right-icon"/>
+			</van-field>
+			<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
+		</div>
+		<div class="footer" style="width: 100%;position: fixed;bottom: 1%;">
 			<van-row type="flex" justify="center" style="text-align:center;">
-				<van-col span="18">杭州利鹏科技有限公司 提供技术支持</van-col>
+				<van-col span="18">Copyright © 2019 杭州利鹏科技有限公司.</van-col>
 			</van-row>
 			<van-row type="flex" justify="center" style="text-align:center;">
-				<van-col span="18">联系电话：18768443628</van-col>
+				<van-col span="18">Powered by 杭州利鹏科技有限公司.</van-col>
+			</van-row>
+			<van-row type="flex" justify="center" style="text-align:center;">
+				<van-col span="18">Contact：18768443628</van-col>
 			</van-row>
 		</div>
+		<div :style="config.style.div"></div>
+		<van-popup v-model="config.popup.show" position="bottom" :style="{ height: '50%' }">
+			<van-picker :columns="config.picker.columns" :default-index="0" show-toolbar @cancel="config.popup.show = false" @confirm="confirm" title="请选择分厂"/>
+		</van-popup>
 	</div>
 </template>
 <script>
-	import { Image, Row, Col, Grid, GridItem } from 'vant';
+	import { Button, Icon, Image, Row, Col, Popup, Field, Picker, Toast, Tab, Tabs } from 'vant';
+	import schema from 'async-validator';
 	export default {
 		components:{
+			[Button.name]: Button,
+			[Icon.name]: Icon,
 			[Image.name]: Image,
 			[Row.name]: Row,
 			[Col.name]: Col,
-			[Grid.name]: Grid,
-			[GridItem.name]: GridItem,
+			[Popup.name]: Popup,
+			[Field.name]: Field,
+			[Picker.name]: Picker,
+			[Toast.name]: Toast,
+			[Tab.name]: Tab,
+			[Tabs.name]: Tabs,
 		},
 		data(){
 			return {
+				config:{
+					style:{
+						div:''
+					},
+					popup:{
+						show:false
+					},
+					picker:{
+						columns:[]
+					},
+					field:{
+						show:true
+					}
+				},
+				formData:{
+					userType:0,
+					userName:'',
+					userPass:'',
+					subFactory:'',
+					subFactoryId:''
+				},
+				pageInfo:{
+					factoryId:'',
+					factoryLogo:require('@/assets/logo.png'),
+					factoryName:'',
+					bg:'background: url('+ require('@/assets/bg.png') +') no-repeat;background-size:cover;'
+				},
+				validator:{},
+				rules:{
+					userName:[
+						{ type: 'string', required: true, message: '请输入用户名'},
+						/*{ pattern: '/^[a-zA-Z0-9]{2,12}$/', message: '用户名格式错误'},*/
+					],
+					userPass:[
+						{ type: 'string', required: true, message: '请输入密码'},
+						/*{ pattern: '/^[a-zA-Z0-9]{2,12}$/', message: '密码格式错误'},*/
+					],
+					userType:[
+						{ type:'number' , pattern: '/^[0-1]{1}$/', message: '用户类型格式错误'},
+					]/*,
+					subFactoryId:[
+						{ type: 'string', pattern: '/^[a-zA-Z0-9]{2,12}$/', message: '分厂格式错误'},
+					]*/
 
+				}
 			}
 		},
 		methods:{
-
+			confirm(value, index){
+				this.formData.subFactory = value.text + '(' + value.key + ')';
+				this.formData.subFactoryId = value.key;
+				this.config.popup.show = false;
+			},
+			getSF(){
+				let self = this;
+				this.$request.staff.login.getSF().then(res=>{
+					self.pageInfo.factoryId   = res.result.factory_info.FactoryId;
+					//self.pageInfo.factoryLogo = res.result.factory_info.FactoryLogo;
+					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
+					if( res.result.sub_factory.length !== 0 ){
+						res.result.sub_factory.forEach((item,index)=>{
+							self.config.picker.columns.push({text:item.SShortName,key:item.SubFacId});
+						});
+					}else{
+						self.config.field.show = false;
+					}
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.formData.subFactory = this.config.picker.columns[0].text + '(' + this.config.picker.columns[0].key + ')';
+					})
+				});
+			},
+			onLogin(){
+				let self = this;
+				if( this.formData.userType == 0 ){
+					this.formData.subFactoryId = '';
+				}
+				this.validator.validate(this.formData).then(()=>{
+					self.login( self.formData );
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});				
+			},
+			login( data ){
+				this.$request.login.login.login( data ).then(res=>{
+					sessionStorage.setItem('jpdn-login-token',res.result.access_token);
+					sessionStorage.setItem('jpdn-login-refresh',res.result.refresh_token);
+					sessionStorage.setItem('jpdn-login-username',data.userName);
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.$router.push('/staff/index/menu');
+					});
+				});
+			},
+			quickLogin(){
+				this.$request.login.login.login( this.$route.query.token ).then(res=>{
+					console.log(res)
+				});
+			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','用户登录');
+			this.config.style.div = 'width:100%;height:' + window.screen.height + 'px';
+			if( this.$route.query.token.length > 100 ){
+				this.quickLogin();
+			}	
 		},
 		mounted(){
-
+			this.validator = new schema(this.rules);
+			this.getSF();
 		},
 		updated(){
 			
@@ -50,10 +175,15 @@
 			
 		},
 		computed:{
-			
+			tabActiveChange(){
+				return this.formData.userType;
+			}
 		},
 		watch:{
-
+			tabActiveChange( newV, oldV ){
+				this.formData.userName = '';
+				this.formData.userPass = '';
+			}
 		}
 	}
 </script>

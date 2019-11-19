@@ -92,10 +92,14 @@ const staff = {
 		getCommonQrCode  : `${base.staff}staffGetCommonQrcode`,
 		getAuthName      : `${base.staff}staffGetAuthName`,
 		saveAuthName     : `${base.staff}staffSaveAuthUrl`,
+		userGetQrcode    : `${base.staff}staffUserGetQrcode`,
 	},
 	wx:{
 		scanWxConfig : `${base.staff}staffGetWxConfig`,
 		portValuable : `${base.staff}staffPortValuable`,
+	},
+	login:{
+		getSF : `${base.staff}getSF`,
 	}
 };
 
@@ -106,4 +110,11 @@ const erp = {
 	CalBdPriceInfo : `${base.erp}CalBdPriceInfo`,           //订单试算
 	DirectInStock  : `${base.erp}WebCommon/DirectInStock`,  //直接入库
 };
-export { map, webappMap, adminUrl, staff, erp};
+
+const index = {
+	index:{
+		index    : `${base.index}login`,
+		getToken : `${base.index}getToken`,
+	}
+};
+export { map, webappMap, adminUrl, staff, erp, index};

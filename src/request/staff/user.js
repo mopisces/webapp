@@ -30,6 +30,9 @@ const user = {
 			auth_url_name : data.authName			
 		};
 		return post(staff.user.saveAuthName,postData);
+	},
+	getQrcode(){
+		return post(staff.user.userGetQrcode);
 	}
 }
 export default user;

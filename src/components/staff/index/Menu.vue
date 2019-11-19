@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<div style="margin-top:10px;"></div>
-		<div class="vant-row">
+		<div class="vant-row" style="margin-bottom:10px">
 			<div class="van-col van-col--6">
-				<div class="van-tabbar-item" style="height:44px;">账号：AQ</div>
+				<div class="van-tabbar-item" style="height:44px;">账号：{{ userName }}</div>
 			</div>
 			<div class="van-col van-col--8">
 				<van-button type="info"  plain hairline round>
@@ -12,7 +12,7 @@
 				</van-button>
 			</div>
 			<div class="van-col van-col--10">
-				<van-button type="info"  plain hairline round >
+				<van-button type="info" plain hairline round @click="qrClick">
 					<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
 					登录二维码
 				</van-button>
@@ -23,15 +23,28 @@
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="item.state"/>
 			</van-grid-item>
 		</van-grid>
+		<van-popup v-model="config.popup.qrcode.show" position="top" :style="{ height : '100%', width: '100%'}">
+			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
+				<div class="van-nav-bar__title van-ellipsis">
+					当前账号登录二维码
+				</div>
+			</div>
+			<div id="qrcode" class="qrcode"></div>
+			<van-button type="primary" size="normal" style="position:fixed;bottom:0;width:100%;" @click="config.popup.qrcode.show = false">
+				关闭
+			</van-button>
+		</van-popup>
 	</div>
 </template>
 <script>
-	import { Button, Cell, Icon, Grid, GridItem } from 'vant';
+	import { Button, Cell, Icon, Popup, Grid, GridItem } from 'vant';
+	import QRCode from 'qrcodejs2';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[Icon.name]: Icon,
+			[Popup.name]: Popup,
 			[Grid.name]: Grid,
 			[GridItem.name]: GridItem,
 		},
@@ -68,9 +81,15 @@
 					domian:{
 						wx80:'http://luodangfrp2.leaper.ltd',
 						normal:'http://test.leaper.ltd:1104'
+					},
+					popup:{
+						qrcode:{
+							show:false
+						}
 					}
 				},
-				
+				userName:'',
+				loginUrl:''
 			}
 		},
 		methods:{
@@ -86,12 +105,31 @@
 					this.config.domian.wx80   = res.result.app_wx_domain;
 					this.config.domian.normal = res.result.app_normal_domain;
 				});
+			},
+			qrClick(){
+				this.config.popup.qrcode.show = true;
+				this.getQrcode();
+			},
+			getQrcode(){
+				let self = this;
+				this.$request.staff.user.getQrcode().then(res=>{
+					self.loginUrl = 'http://localhost:1103/login/select?token=' + res.result;
+				}).then(()=>{
+					document.getElementById('qrcode').innerHTML = '';
+					new QRCode('qrcode',{
+						text         : this.loginUrl,
+				     	colorDark    : '#000000',
+				      	colorLight   : '#ffffff',
+				      	correctLevel : QRCode.CorrectLevel.H
+					});
+				});
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
 		},
 		mounted(){
+			this.userName = sessionStorage.getItem('jpdn-login-username');
 			this.portValuable();
 			/*this.config.gridItem.forEach((item,index)=>{
 				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' ){
@@ -109,3 +147,9 @@
 		}
 	}
 </script>
+<style>
+	.qrcode img{
+		margin:50% auto;
+		width:60%;
+	}
+</style>

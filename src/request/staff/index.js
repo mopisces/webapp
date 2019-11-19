@@ -10,6 +10,7 @@ import erp from './erp';
 import daily from './daily';
 import user from './user';
 import wx from './wx';
+import login from './login';
 export default {
 	calc,
 	frec,
@@ -22,5 +23,6 @@ export default {
 	erp,
 	daily,
 	user,
-	wx
+	wx,
+	login
 }

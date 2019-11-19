@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { Toast } from 'vant';
-import errorHandle from './errorHandle';
+import { Dialog, Toast } from 'vant';
+import base from './base';
+//import errorHandle from './errorHandle';
 /*import Vue from 'vue';
 Vue.use(Toast);*/
 
@@ -12,12 +13,14 @@ Vue.use(Toast);*/
 	}
 }*/
 
+
 var httpServer = axios.create();
 httpServer.defaults.timeout = 5000;
 httpServer.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 httpServer.interceptors.request.use(
 	config => {
-		let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1NzQwMzg0NzgsImV4cCI6MTU3NDEyNDg3OCwiU1Nob3J0TmFtZSI6bnVsbCwiU3ViRmFjSWQiOiIiLCJ0YWciOiJzdGFmZiIsIlVzZXJOYW1lIjoiQ1IiLCJQYXNzV29yZCI6IkNSIiwiVXNlclR5cGUiOiIxIiwiRVJQSWQiOiJDUiIsIlRhc2tJZCI6bnVsbCwiT25lQ2VudFBheSI6IjAiLCJST1dfTlVNQkVSIjoiMSJ9.IQv3HI-UncaKMekiHehHvMgMxW3PsZKzloi0DJuQg-I';
+		//let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1NzQxMjE4MzAsImV4cCI6MTU3NDIwODIzMCwiU1Nob3J0TmFtZSI6bnVsbCwiU3ViRmFjSWQiOiIiLCJ0YWciOiJzdGFmZiIsIlVzZXJOYW1lIjoiQ1IiLCJQYXNzV29yZCI6IkNSIiwiVXNlclR5cGUiOiIxIiwiRVJQSWQiOiJDUiIsIlRhc2tJZCI6bnVsbCwiT25lQ2VudFBheSI6IjAiLCJST1dfTlVNQkVSIjoiMSJ9.rZ_Fi3NxSvLv8enljsZHSuUNgxKssyods7RVhqn4xgU';
+		let auth = sessionStorage.getItem('jpdn-login-token') == null ? '' : sessionStorage.getItem('jpdn-login-token');
 		config.headers.Authentication = auth;
 		return config;
 	},
@@ -46,5 +49,38 @@ httpServer.interceptors.response.use(
 	}
 );
 
-
+const errorHandle = {
+	mainHandle( errorCode,msg ){
+		switch(errorCode){
+			case 10014:
+				console.log(10014)
+				break;
+			case 20201:
+				Dialog({ message: msg });
+				break;
+			case 20250:
+				//Dialog({ message: '20250' });
+				break;
+			case 20215:
+				if( sessionStorage.getItem('jpdn-login-token' !== null) && sessionStorage.getItem('jpdn-login-refresh') !== null ){
+					let postData = {
+						access_token  : sessionStorage.getItem('jpdn-login-token'),
+						refresh_token : sessionStorage.getItem('jpdn-login-refresh')
+					};
+					httpServer.post(`${base.index}getToken`,postData).then((res)=>{
+						console.log(res)
+					});
+				}
+				break;
+			case 20216:
+				Dialog({ message: '登录过期,请重新登录' }).then(()=>{
+					router.push('/login/select')
+				});
+				break;
+			default :
+				//Dialog({ message: '提示123' });
+				break;
+		}
+	}
+}
 export default httpServer;

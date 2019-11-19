@@ -3,6 +3,7 @@ const base = {
 	staff:'http://test.leaper.ltd:1105/public/v1/staff/',
 	//staff:'http://localhost:8001/public/v1/staff/',
 	erp:'http://localhost:38081/datasnap/rest/TServerMethods1/',
+	index:'http://test.leaper.ltd:1105/public/v1/index/'
 };
 
 export default base;
