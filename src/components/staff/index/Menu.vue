@@ -34,10 +34,24 @@
 				关闭
 			</van-button>
 		</van-popup>
+		<van-popup v-model="config.popup.changePass.show">
+			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
+				<div class="van-nav-bar__title van-ellipsis">
+					修改密码
+				</div>
+				<van-field v-model="formData.account" label="账号" input-align="center"  readonly/>
+				<van-field v-model="formData.oldPass" label="原密码" input-align="center"  readonly type="password"/>
+				<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" show-word-limit/>
+				<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6" show-word-limit />
+				<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0;" @click="changePass( formData )">
+					提交
+				</van-button>
+			</div>
+		</van-popup>
 	</div>
 </template>
 <script>
-	import { Button, Cell, Icon, Popup, Grid, GridItem } from 'vant';
+	import { Button, Cell, Icon, Popup, Toast, Grid, GridItem } from 'vant';
 	import QRCode from 'qrcodejs2';
 	export default {
 		components:{
@@ -45,6 +59,7 @@
 			[Cell.name]: Cell,
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
+			[Toast.name]: Toast,
 			[Grid.name]: Grid,
 			[GridItem.name]: GridItem,
 		},
@@ -85,11 +100,21 @@
 					popup:{
 						qrcode:{
 							show:false
+						},
+						changePass:{
+							show:false
 						}
 					}
 				},
 				userName:'',
-				loginUrl:''
+				loginUrl:'',
+				formData:{
+					account     : '',
+					oldPass     : '',
+					newPass     : '',
+					confirmPass : '',
+
+				}
 			}
 		},
 		methods:{
@@ -122,6 +147,17 @@
 				      	colorLight   : '#ffffff',
 				      	correctLevel : QRCode.CorrectLevel.H
 					});
+				});
+			},
+			changePass( data ){
+				let self = this;
+				this.$request.staff.user.changePass( data ).then(res=>{
+					if( res.result.errorCode === '00000' ){
+						Toast.success('密码更新成功');
+						self.config.popup.changePass.show = false;
+					}
+				}).catch(()=>{
+					Toast.fail('密码更新失败');
 				});
 			}
 		},

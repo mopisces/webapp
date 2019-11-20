@@ -33,6 +33,13 @@ const user = {
 	},
 	getQrcode(){
 		return post(staff.user.userGetQrcode);
+	},
+	changePass( data ){
+		let postData = {
+			old_pass : data,
+			new_pass : data
+		};
+		return post(staff.user.changePass,postData);
 	}
 }
 export default user;

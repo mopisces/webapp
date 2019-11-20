@@ -95,6 +95,7 @@ const staff = {
 		getAuthName      : `${base.staff}staffGetAuthName`,
 		saveAuthName     : `${base.staff}staffSaveAuthUrl`,
 		userGetQrcode    : `${base.staff}staffUserGetQrcode`,
+		changePass       : `${base.staff}staffChangePwd`,
 	},
 	wx:{
 		scanWxConfig : `${base.staff}staffGetWxConfig`,

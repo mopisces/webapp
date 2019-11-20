@@ -16,7 +16,7 @@
 	                    		<input v-model="boardForm.width" type="number" placeholder="板宽" class="cell-input">
 							</div>
 						</van-cell>
-						<van-field v-model="boardForm.scoreInfo" placeholder="压线和=板宽(格式：x+x+x)" label="压线" />
+						<van-field v-model="boardForm.scoreInfo" placeholder="压线和=板宽(格式：x+x+x)" label="压线" input-align="right"/>
 					</template>
 					<template v-if="config.tabs.active == 1 ">
 						<van-field readonly clickable label="箱型" :value="boxForm.boxId"  placeholder="选择箱型" @click="boxPicker()" required input-align="right"></van-field>
@@ -240,7 +240,22 @@
 			},
 			calBdPriceInfo(){
 				let data = {
-
+					strFactoryId: '{$config[\'FactoryId\']}',
+                    strCusId: _this.form.CusId,
+                    strBoardId: _this.form.BoardId,
+                    bAddTrim: _this.form.bAddTrim,
+                    bAddArea: _this.form.bAddArea,
+                    bEdge: _this.form.bEdge,
+                    iLength: _this.Type === 's'?_this.form.Length:null,
+                    iWidth: _this.Type === 's'?_this.form.Width:null,
+                    strScoreInfo: _this.Type === 's'?_this.form.ScoreInfo:null,
+                    iQty: _this.Type === 's'?_this.form.OrdQty1:_this.form.OrdQty2,
+                    strBoxId: _this.Type === 'c'?_this.form.BoxId:null,
+                    iBoxL: _this.Type === 'c'?_this.form.BoxL:null,
+                    iBoxW: _this.Type === 'c'?_this.form.BoxW:null,
+                    iBoxH: _this.Type === 'c'?_this.form.BoxH:null,
+                    iTonLen: _this.Type === 'c'?_this.form.TonLen:null,
+                    iULen: _this.Type === 'c'?_this.form.ULen:null
 				};
 				this.$request.staff.calc.calBdPriceInfo( data ).then((res)=>{
 					console.log(res)
