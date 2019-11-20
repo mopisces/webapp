@@ -113,7 +113,7 @@
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = 'http://localhost:1103/login/select?token=' + res.result;
+					self.loginUrl = 'http://test.leaper.ltd:1104/login/select?token=' + res.result;
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{

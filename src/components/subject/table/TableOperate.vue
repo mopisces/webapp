@@ -9,10 +9,10 @@
 	   		</button>
 		</div>
 		<div v-if=" field === 'stowDelivery' ">
-			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="update()" v-if=" rowData.CarState == 0 ">
+			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="prepare()" v-if=" rowData.CarState == 0 ">
 	   			<span class="van-button__text">准备</span>
 	   		</button>
-			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="update()" v-if="rowData.CarState == 1 ">
+			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="cancelPre()" v-if="rowData.CarState == 1 ">
 	   			<span class="van-button__text">取消准备</span>
 	   		</button>
 		</div>
@@ -31,18 +31,28 @@
 				<span class="van-button__text">操作</span>
 			</button>
 		</div>
+		<div v-if=" field === 'stockOperate' ">
+			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="stockOperate()">
+				<span class="van-button__text">操作</span>
+			</button>
+		</div>
+
 	</div>
 </template>
 <script>
-	import { Button } from 'vant';
+	import { Button, Dialog, Toast  } from 'vant';
 	export default {
 		components:{
-			[Button.name]: Button
+			[Button.name]: Button,
+			[Toast.name]: Toast,
 		},
 		props:['rowData','field','index'],
 		data(){
 			return {
-
+				userInfo:{
+					strFactoryId : '',
+					strUserId    : '',
+				}
 			}
 		},
 		methods:{
@@ -55,8 +65,30 @@
 				this.$emit('on-custom-comp',params);
 			},
 			prepare(){
-				let params = {type:'prepare',index:this.index,rowData:this.rowData};
-				this.$emit('on-custom-comp',params);
+				Dialog.confirm({
+					message: '确定准备吗?'
+				}).then(()=>{
+					if( this.rowData.CarCode === '' ){
+						Toast.fail('请选择车牌');
+						return ;
+					}
+					if( this.rowData.CarPId === '' ){
+						Toast.fail('请选择司机');
+						return ;
+					}
+					this.getUserInfo('prepare');
+				}).catch(()=>{
+					Dialog.close();
+				});
+			},
+			cancelPre(){
+				Dialog.confirm({
+					message: '确定取消准备吗?'
+				}).then(()=>{
+					this.getUserInfo('cancelPre');
+				}).catch(()=>{
+					Dialog.close();
+				});
 			},
 			detail(){
 				this.$router.push({
@@ -81,6 +113,22 @@
 			operate(){
 				let params = {type:'operate',index:this.index,rowData:this.rowData};
 				this.$emit('on-custom-comp',params);
+			},
+			stockOperate(){
+				let params = {type:'stockOperate',index:this.index,rowData:this.rowData};
+				this.$emit('on-custom-comp',params);
+			},
+			getUserInfo( type ){
+				let self = this;
+				this.$request.staff.user.getUserInfo().then(res=>{
+					self.userInfo.strFactoryId = res.result.factory_id;
+					self.userInfo.strUserId    = res.result.erp_id;
+				}).then(()=>{
+					this.$nextTick(()=>{
+						let params = {type:type,index:this.index,rowData:this.rowData,userInfo:this.userInfo};
+						this.$emit('on-custom-comp',params);
+					})
+				});
 			}
 		},
 		created(){

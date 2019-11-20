@@ -61,6 +61,21 @@ const stow = {
 		};
 		return post(erp.addDNDetail,postData);
 	},
-
+	preparePack( data ){
+		let postData = {
+			iPListNo     : data.pListNo,
+			strFactoryId : data.strFactoryId,
+			strUserId    : data.strUserId
+		};
+		return post(erp.preparePack,postData);
+	},
+	unPreparePack( data ){
+		let postData = {
+			iPListNo     : data.pListNo,
+			strFactoryId : data.strFactoryId,
+			strUserId    : data.strUserId
+		};
+		return post(erp.unPreparePack,postData);
+	}
 }
 export default stow;

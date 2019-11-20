@@ -14,7 +14,6 @@ const erp = {
 		return post(staff.erp.erpConfig);
 	},
 	erpOrders( data ){
-		console.log(data.curPage);
 		let postData={
 			erp_begin_date     : data.beginDate,
 			erp_end_date       : data.endDate,
@@ -33,6 +32,5 @@ const erp = {
 
 		return post(staff.erp.erpOrders,postData);
 	}
-
 }
 export default erp;

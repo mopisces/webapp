@@ -238,11 +238,11 @@
 					console.log(err);
 				});
 			},
-			CalBdPriceInfo(){
+			calBdPriceInfo(){
 				let data = {
 
 				};
-				this.$request.staff.calc.CalBdPriceInfo( data ).then((res)=>{
+				this.$request.staff.calc.calBdPriceInfo( data ).then((res)=>{
 					console.log(res)
 				});
 			}

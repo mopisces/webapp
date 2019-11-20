@@ -1,7 +1,8 @@
 <template>
 	<div>
 		<div v-if=" config.isEdit == 1 ">
-			<wx-scan :scanResult.sync="fieldData.strOrderId" urlType="3"></wx-scan>
+			<van-field v-model="fieldData.strOrderId" disabled label="订单号" input-align="center" v-if=" fieldData.bModDetail "></van-field>
+			<wx-scan :scanResult.sync="fieldData.strOrderId" urlType="3" v-else></wx-scan>
 			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="false">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
@@ -32,20 +33,20 @@
 			</van-field>
 			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center"  type="textarea" autosize maxlength="50" show-word-limit>
 			</van-field>
-			<div class="van-row van-row--flex van-row--justify-end" v-if=" config.button.showLoadButton ">
+			<div class="van-row van-row--flex van-row--justify-end" v-if=" fieldData.bModDetail ">
+				<div class="van-col van-col--8">
+					<van-button type="primary" style="width:90%" @click="onLoadClick()">修改</van-button>
+				</div>
+				<div class="van-col van-col--8">
+					<van-button plain type="primary" style="width:100%" @click="cancelClick()">取消修改</van-button>
+				</div>
+			</div>
+			<div class="van-row van-row--flex van-row--justify-end" v-else>
 				<div class="van-col van-col--8">
 					<van-button type="primary" style="width:90%" @click="onLoadClick()">装货</van-button>
 				</div>
 				<div class="van-col van-col--8">
 					<van-button plain type="primary" style="width:90%" @click="resetClick()">重置</van-button>
-				</div>
-			</div>
-			<div class="van-row van-row--flex van-row--justify-end" v-else>
-				<div class="van-col van-col--8">
-					<van-button type="primary" style="width:90%">修改</van-button>
-				</div>
-				<div class="van-col van-col--8">
-					<van-button plain type="primary" style="width:100%" @click="cancelClick()">取消修改</van-button>
 				</div>
 			</div>
 		</div>
@@ -139,7 +140,9 @@
 					orderType    : '',	//订单类型
 					areaQty      : '',	//库存数
 					deliArea     : '',	//送货公司
-					iDNId        : ''
+					iDNId        : '',
+					strCusSubNo  : '',
+					bModDetail   : false //是否是修改模式
 				},
 				deliveryAddress:{
 					all:[],
@@ -179,7 +182,9 @@
 				}).then(()=>{
 					this.getUserInfo();
 				}).then(()=>{
-					this.getPDNDetail( this.filterForm );
+					this.$nextTick(()=>{
+						this.getPDNDetail( this.filterForm );
+					})
 				});
 			},
 			getPDNDetail( data ){
@@ -205,7 +210,7 @@
 				}
 			},
 			rowEdit( index, rowData ){
-				this.config.button.showLoadButton = false;
+				this.fieldData.bModDetail = true;
 				this.fieldData.strOrderId = rowData.OrderType +  rowData.OrderId;
 				let orderInfo = '订单客户:' + rowData.CusId + ' ' + rowData.CusShortName + ' 材质编号:' + rowData.BoardId + ' 长宽:' + rowData.Length + 'x' + rowData.Width;
 				if( rowData.BoxL > 0 ){
@@ -253,8 +258,8 @@
 				this.fieldData.strCusSubNo  = '';
 				this.fieldData.deliArea     = '';
 				this.deliveryAddress.fit    = [];
-				this.config.popup.deliAreaShow    = false;
-				this.config.button.showLoadButton = true;
+				this.config.popup.deliAreaShow = false;
+				this.fieldData.bModDetail  = false;
 			},
 			resetClick(){
 				this.cancelClick()
@@ -273,17 +278,17 @@
 					return ;
 				}
 				let postData = {
-					iDNId        : this.bModDetail?this.DNDetail.iDNId:0,
+					iDNId        : this.fieldData.bModDetail?this.DNDetail.iDNId:0,
                     iPListNo     : this.PListNo,
-                    iDeliQty     : this.DNDetail.iDeliQty,
-                    iFreeQty     : this.DNDetail.iFreeQty,
-                    dOtherFee    : this.DNDetail.dOtherFee,
-                    strOrderId   : this.DNDetail.strOrderId,
-                    strStockArea : this.DNDetail.strStockArea,
-                    strDNRemark  : this.DNDetail.strDNRemark,
-                    strCusSubNo  : this.DNDetail.strCusSubNo,
-                    OrderType    : this.DNDetail.OrderType,
-                    bModify      : this.bModDetail,
+                    iDeliQty     : this.fieldData.iDeliQty,
+                    iFreeQty     : this.fieldData.iFreeQty,
+                    dOtherFee    : this.fieldData.dOtherFee,
+                    strOrderId   : this.fieldData.strOrderId,
+                    strStockArea : this.fieldData.strStockArea,
+                    strDNRemark  : this.fieldData.strDNRemark,
+                    strCusSubNo  : this.fieldData.strCusSubNo,
+                    OrderType    : this.fieldData.OrderType,
+                    bModify      : this.fieldData.bModDetail,
                     strFactoryId : this.erpDelForm.strFactoryId,
                     strUserId    : this.erpDelForm.strUserId,
 				};

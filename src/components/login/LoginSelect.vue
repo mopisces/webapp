@@ -160,9 +160,14 @@
 		created(){
 			this.$store.commit('staff/setHeaderTitle','用户登录');
 			this.config.style.div = 'width:100%;height:' + window.screen.height + 'px';
-			if( this.$route.query.token.length > 100 ){
+			if( typeof (this.$route.query.token) != 'undefined' ){
+				if( this.$route.query.token.length > 100 ){
+					this.quickLogin();
+				}
+			}
+			/*if( this.$route.query.token.length != undefined && this.$route.query.token.length > 100 ){
 				this.quickLogin();
-			}	
+			}	*/
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

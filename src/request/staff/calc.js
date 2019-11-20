@@ -23,11 +23,11 @@ const calc = {
 		};
 		return post(erp.calBdQuotaInfo,postData);
 	},
-	CalBdPriceInfo( data ){
+	calBdPriceInfo( data ){
 		let postData = {
 
 		};
-		return post(erp.CalBdPriceInfo,postData);
+		return post(erp.calBdPriceInfo,postData);
 	}
 }
 export default calc;

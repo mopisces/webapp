@@ -81,7 +81,7 @@ const paper = {
 			strFactoryId : data,
 			strUserId    : data
 		};
-		return post(erp.DirectInStock,postData);
+		return post(erp.directInStock,postData);
 	}
 }
 export default paper;

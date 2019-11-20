@@ -23,7 +23,9 @@ const staff = {
 		recAdjustMain   : `${base.staff}frecAdjustMain`,
 	},
 	stock:{
-		deliveryArea : `${base.staff}deliveryArea`,
+		deliveryArea   : `${base.staff}deliveryArea`,
+		mStockDetailR  : `${base.staff}mStockDetailR`,
+		getStockDetail : `${base.staff}getStockDetail`,
 	},
 	paper:{
 		staffPaperSafe  : `${base.staff}staffPaperSafe`,
@@ -106,9 +108,12 @@ const staff = {
 const erp = {
 	delDNDetail    : `${base.erp}WebCommon/DelDNDetail`,    //扫描装货详情
 	addDNDetail    : `${base.erp}WebCommon/WebAddDNDetail`, //扫描装货详情
+	preparePack    : `${base.erp}WebCommon/PreparePack`,    //扫描装货列表(准备)
+	unPreparePack  : `${base.erp}WebCommon/UnPreparePack`,  //扫描装货列表(取消准备)
 	calBdQuotaInfo : `${base.erp}CalBdQuotaInfo`,           //订单试算
-	CalBdPriceInfo : `${base.erp}CalBdPriceInfo`,           //订单试算
-	DirectInStock  : `${base.erp}WebCommon/DirectInStock`,  //直接入库
+	calBdPriceInfo : `${base.erp}CalBdPriceInfo`,           //订单试算
+	directInStock  : `${base.erp}WebCommon/DirectInStock`,  //直接入库
+	mStockDetailR  : `${base.erp}WebCommon/MStockDetailR`,  //库存修改
 };
 
 const index = {

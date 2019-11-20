@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc">
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -19,7 +19,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, Checkbox, Field, SwitchCell } from 'vant';
+	import { Button, Cell, Checkbox, Field, SwitchCell, Toast } from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
@@ -30,6 +30,7 @@
 			[Checkbox.name]: Checkbox,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
+			[Toast.name]: Toast,
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,
@@ -93,6 +94,46 @@
 			}
 		},
 		methods:{
+			customCompFunc(params){
+				let data = {
+					pListNo      : params.rowData.PListNo,
+					strFactoryId : params.userInfo.strFactoryId,
+					strUserId    : params.userInfo.strUserId,
+					index        : params.index
+				};
+				if( params.type === 'prepare' ){
+					this.preparePack( data );
+				}
+				if( params.type === 'cancelPre' ){
+					this.unPreparePack( data );
+				}
+			},
+			preparePack( data ){
+				let self = this;	
+				this.$request.staff.stow.preparePack( data ).then(res=>{
+					if( res.result[1] === false ){
+						Toast.fail('准备失败');
+					}else{
+						self.table.data[data.index].CarState = 1;
+						Toast.success('准备成功');
+					}
+				}).catch((err)=>{
+					Toast.fail('准备失败');
+				});
+			},
+			unPreparePack( data ){
+				let self = this;	
+				this.$request.staff.stow.preparePack( data ).then(res=>{
+					if( respon.result[1] === false ){
+						Toast.fail('取消准备失败');
+					}else{
+						self.table.data[data.index].CarState = 0;
+						Toast.success('取消准备成功');
+					}
+				}).catch((err)=>{
+					Toast.fail('取消准备失败');
+				});
+			},
 			switchChange( checked ){
 				if( checked ){
 					sessionStorage.setItem('stow/lists',JSON.stringify(this.filterForm));
