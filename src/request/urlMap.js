@@ -10,11 +10,11 @@ const adminUrl = {
 };
 const staff = {
 	calc : {
-		getCalcConfig  : `${base.staff}getCalcConfig`,
-		boardPicker    : `${base.staff}boardPicker`,
-		boxPicker      : `${base.staff}boxPicker`,
-		getTrimAndArea : `${base.staff}getTrimAndArea`,
-
+		getCalcConfig    : `${base.staff}getCalcConfig`,
+		boardPicker      : `${base.staff}boardPicker`,
+		boxPicker        : `${base.staff}boxPicker`,
+		getTrimAndArea   : `${base.staff}getTrimAndArea`,
+		getTonLenAndULen : `${base.staff}getTonLenAndULen`,
 	},
 	frec : {
 		cusPicker       : `${base.staff}frecCusPicker`,

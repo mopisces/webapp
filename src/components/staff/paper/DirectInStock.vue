@@ -125,7 +125,7 @@
 				rules:{
 					strOrderId : [
 						{ type: 'string', required: true, message: '请输入订单号'},
-						{ pattern:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
+						{ regexp:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
 					]
 				}
 			}
@@ -216,7 +216,8 @@
 			submitReset(){
 				this.pageInfo.strOrderInfo = '';
 				this.tableData             = [];
-				this.formData.strStockArea = this.StockDetail.strStockArea_ = '';
+				this.formData.strStockArea = '';
+				this.pageInfo.stockAreaOpt = []; 
 				this.formData.strSchArea   = '';
 				this.formData.strRemark    = '';
 				this.formData.iQty         = null;

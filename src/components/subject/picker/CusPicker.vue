@@ -31,6 +31,7 @@
 			cusPickerConfirm( value, index ){
 				this.defaultIndex = index;
 				this.cusId = value.key;
+
 				this.cusPickerOverlay();
 			},
 			cusPickerSearch(){

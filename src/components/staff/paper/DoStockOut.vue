@@ -67,12 +67,12 @@
 				rules:{
 					stockOutNo : [ 
 						{ type: 'string', required: true, message: '请输入订单号'},
-						{ pattern:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
+						{ regexp:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
 					],
 					stockOutOpClass : [],
 					stockOutSFlute  : [],
 					stockOutBzwt    : [
-						{ pattern: '/^\d{1,14}(\.\d{1,2})?$/' , required: true, message: '请输入剥纸重量' },
+						{ regexp: '/^\d{1,14}(\.\d{1,2})?$/' , required: true, message: '请输入剥纸重量' },
 					],
 					stockOutOpTime  : [],
 					/*前端数据验证规则与后台要一致*/

@@ -88,18 +88,15 @@
 				rules:{
 					userName:[
 						{ type: 'string', required: true, message: '请输入用户名'},
-						/*{ pattern: '/^[a-zA-Z0-9]{2,12}$/', message: '用户名格式错误'},*/
+						{ regexp: '/^[a-zA-Z0-9]{2,12}$/', message: '用户名格式错误'},
 					],
 					userPass:[
 						{ type: 'string', required: true, message: '请输入密码'},
-						/*{ pattern: '/^[a-zA-Z0-9]{2,12}$/', message: '密码格式错误'},*/
+						{ regexp: '/^[a-zA-Z0-9]{2,12}$/', message: '密码格式错误'},
 					],
 					userType:[
-						{ type:'number' , pattern: '/^[0-1]{1}$/', message: '用户类型格式错误'},
-					]/*,
-					subFactoryId:[
-						{ type: 'string', pattern: '/^[a-zA-Z0-9]{2,12}$/', message: '分厂格式错误'},
-					]*/
+						{ type:'number' , regexp: '/^[0-1]{1}$/', message: '用户类型格式错误'},
+					]
 
 				}
 			}
@@ -114,7 +111,6 @@
 				let self = this;
 				this.$request.staff.login.getSF().then(res=>{
 					self.pageInfo.factoryId   = res.result.factory_info.FactoryId;
-					//self.pageInfo.factoryLogo = res.result.factory_info.FactoryLogo;
 					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
 					if( res.result.sub_factory.length !== 0 ){
 						res.result.sub_factory.forEach((item,index)=>{
@@ -165,9 +161,6 @@
 					this.quickLogin();
 				}
 			}
-			/*if( this.$route.query.token.length != undefined && this.$route.query.token.length > 100 ){
-				this.quickLogin();
-			}	*/
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

@@ -6,7 +6,7 @@
 				<div class="van-tabbar-item" style="height:44px;">账号：{{ userName }}</div>
 			</div>
 			<div class="van-col van-col--8">
-				<van-button type="info"  plain hairline round>
+				<van-button type="info"  plain hairline round @click="getChangePass()">
 					<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
 					更改密码
 				</van-button>
@@ -34,31 +34,45 @@
 				关闭
 			</van-button>
 		</van-popup>
-		<van-popup v-model="config.popup.changePass.show">
+		<van-popup v-model="config.popup.changePass.show" position="top" :style="{ height : '100%', width: '100%'}">
 			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
 				<div class="van-nav-bar__title van-ellipsis">
 					修改密码
 				</div>
-				<van-field v-model="formData.account" label="账号" input-align="center"  readonly/>
-				<van-field v-model="formData.oldPass" label="原密码" input-align="center"  readonly type="password"/>
-				<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" show-word-limit/>
-				<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6" show-word-limit />
-				<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0;" @click="changePass( formData )">
-					提交
-				</van-button>
 			</div>
+			<div style="margin-top:46px;"></div>
+			<van-field v-model="formData.account" label="账号" input-align="center"  readonly/>
+			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  readonly type="password"/>
+			<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6"/>
+			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6"/>
+			<div class="van-row van-row--flex van-row--justify-space-between" style="position:fixed;bottom:0;width:100%;">
+				<div class="van-col van-col--10">
+					<van-button type="primary" size="normal" style="width:100%;" @click="changeClick()">
+						提交
+					</van-button>
+				</div>
+				<div class="van-col van-col--10">
+					<van-button type="primary" size="normal" style="width:100%;" @click=" config.popup.changePass.show = false ">
+						取消
+					</van-button>
+				</div>
+			</div>
+			
+			
 		</van-popup>
 	</div>
 </template>
 <script>
-	import { Button, Cell, Icon, Popup, Toast, Grid, GridItem } from 'vant';
+	import { Button, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
 	import QRCode from 'qrcodejs2';
+	import schema from 'async-validator';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
+			[Field.name]: Field,
 			[Toast.name]: Toast,
 			[Grid.name]: Grid,
 			[GridItem.name]: GridItem,
@@ -114,6 +128,19 @@
 					newPass     : '',
 					confirmPass : '',
 
+				},
+				validator:{},
+				rules:{
+					oldPass : [
+						{  type:'string' , require : true, message: '请填写原密码' },
+						{  Pattern:'/^[0-9a-zA-Z]{6,12}$/' , message: '原密码不符合规则' },
+					],
+					newPass : [
+						{  type:'string' , require : true, message: '请填写新密码' },
+					],
+					confirmPass : [
+						{  type:'string' , require : true, message: '请填写确认密码' },
+					]
 				}
 			}
 		},
@@ -149,6 +176,18 @@
 					});
 				});
 			},
+			getChangePass(){
+				this.formData.account = sessionStorage.getItem('jpdn-login-username');
+				this.config.popup.changePass.show = true ;
+			},
+			changeClick(){
+				let self = this;
+				this.validator.validate(this.formData).then(()=>{
+					self.changePass( self.formData );
+				}).then(()=>{
+					Toast.fail(errors[0].message);
+				});
+			},
 			changePass( data ){
 				let self = this;
 				this.$request.staff.user.changePass( data ).then(res=>{
@@ -159,7 +198,8 @@
 				}).catch(()=>{
 					Toast.fail('密码更新失败');
 				});
-			}
+			},
+
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
@@ -167,6 +207,7 @@
 		mounted(){
 			this.userName = sessionStorage.getItem('jpdn-login-username');
 			this.portValuable();
+			this.validator = new schema(this.rules);
 			/*this.config.gridItem.forEach((item,index)=>{
 				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' ){
 					item.url = this.config.domian.wx80 + item.url;

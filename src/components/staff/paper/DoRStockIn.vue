@@ -56,7 +56,7 @@
 				rules:{
 					stockInNo : [
 						{ type: 'string', required: true, message: '请输入订单号'},
-						{ pattern:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
+						{ regexp:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
 					],
 					inOpTime  : [],
 					inWeight  : []
