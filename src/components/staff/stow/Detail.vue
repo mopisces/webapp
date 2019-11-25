@@ -3,7 +3,7 @@
 		<div v-if=" config.isEdit == 1 ">
 			<van-field v-model="fieldData.strOrderId" disabled label="订单号" input-align="center" v-if=" fieldData.bModDetail "></van-field>
 			<wx-scan :scanResult.sync="fieldData.strOrderId" urlType="3" v-else></wx-scan>
-			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="false">
+			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="pageConfig.bMStockArea" @click=" config.popup.stockAreaShow = true ">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
 			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize rows="2">
@@ -77,6 +77,27 @@
 			</van-radio-group>
 			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0px;" @click="config.popup.deliAreaShow = false">确定</van-button>
 		</van-popup>
+		<van-popup v-model="config.popup.stockAreaShow" position="top" :style="{ height: '100%', width:'100%' }">
+			<div class="header" style="width:100%;position:fixed;height:46px;top:0px;text-align:center;">
+				<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
+					<div class="van-nav-bar__title van-ellipsis">
+						请选择库区
+					</div>
+				</div>
+			</div>
+			<div style="width:100%;margin-top:46px;"></div>
+			<van-radio-group v-model="fieldData.strStockArea" v-if="config.popup.stockAreaShow">
+				<van-cell-group>
+					<div role="button" tabindex="0" class="van-cell van-cell--clickable"  v-for="(item,index) in strStockAreaAll" :key=" 'stock' + index ">
+						<div class="van-cell__title">
+							<span>{{ item.StockArea }}</span><br/>
+						</div>
+						<van-radio slot="right-icon" :name="item.StockArea" />
+					</div>
+				</van-cell-group>
+			</van-radio-group>
+			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0px;" @click="config.popup.stockAreaShow = false">确定</van-button>
+		</van-popup>
 	</div>
 </template>
 <script>
@@ -84,6 +105,7 @@
 	import { Button, Cell, CellGroup, Popup, Icon, Field, RadioGroup, Radio } from 'vant';
 	import { Dialog, Toast  } from 'vant';
 	import WxScan from '@/components/subject/WxScan.vue';
+	import schema from 'async-validator';
 	export default {
 		components:{
 			[VTable.name]: VTable,
@@ -104,7 +126,8 @@
 			return {
 				config:{
 					popup:{
-						deliAreaShow : false
+						deliAreaShow  : false,
+						stockAreaShow : false
 					},
 					button:{
 						showLoadButton : true
@@ -144,6 +167,7 @@
 					strCusSubNo  : '',
 					bModDetail   : false //是否是修改模式
 				},
+				strStockAreaAll:[],
 				deliveryAddress:{
 					all:[],
 					fit:[]
@@ -153,6 +177,29 @@
 					iDNId        : '',
 					strFactoryId : '',
 					strUserId    : ''
+				},
+				rules:{
+					strOrderId : [
+						{ required : true , message : '请输入有效订单号' },
+					],
+					iDeliQty : [
+						{ required : true, message : '请输入有效的装货数' },
+						{ iDeliQty(rule, value, callback, source, options){
+							let errors = [];
+							if( value <= 0 ){
+								errors.push(new Error('请输入有效的装货数'));
+							}
+							return errors;
+						} },
+					],
+					OrderType : [
+						{ required : true , message : '订单类型非法' }
+					]
+				},
+				validator:{},
+				pageConfig:{
+					bMStockArea    : false,
+					bPackAddODefSQ : false
 				}
 			}
 		},
@@ -160,25 +207,52 @@
 			erpAddDNDetail( data ){
 				let self = this;
 				this.$request.staff.stow.erpAddDNDetail( data ).then(res=>{
-					console.log(res.result);
+					if( res.result[1] === false  ){
+						Toast.fail('装货出错');
+					}else{
+						Toast.success('装货成功');
+						self.cancelClick();
+						self.getPDNDetail( this.filterForm );
+					}
 				});
 			},
 			erpDelDNDetail( data ){
 				let self = this;
 				this.$request.staff.stow.erpDelDNDetail( data ).then(res=>{
-					console.log(res.result)
+					if( res.result[1] === false ){
+						Toast.fail('装货出错');
+					}else{
+						for (var i = self.table.data.length - 1; i >= 0; i--) {
+							if( self.table.data[i].DNId === data.iDNId){
+								break;
+							}
+						}
+						self.table.data.splice(i,1);
+					}
 				});
 			},
-			getStockArea( data ){
+			getStockArea( strOrderId ){
 				let self = this;
-				this.$request.staff.stow.getStockArea( data ).then(res=>{
-					console.log(res.result)
+				this.$request.staff.stow.getStockArea( strOrderId ).then(res=>{
+					res.result.forEach((item,index)=>{
+						self.strStockAreaAll.push(item);
+					});
+				}).then(()=>{
+					if( this.fieldData.strStockArea != '' ){
+						return ;
+					}
+					this.$nextTick(()=>{
+						this.fieldData.strStockArea = this.strStockAreaAll[0].StockArea;
+						this.fieldData.areaQty      = this.strStockAreaAll[0].Qty;
+					})
 				});
 			},
 			detailConfig(){
 				let self = this;
 				this.$request.staff.stow.detailConfig().then(res=>{
-					self.deliveryAddress.all  = res.result.cus_dn_select;
+					self.deliveryAddress.all       = res.result.cus_dn_select;
+					self.pageConfig.bMStockArea    = res.result.config_info.bMStockArea == 1 ? true : false;
+					self.pageConfig.bPackAddODefSQ = res.result.config_info.bPackAddODefSQ == 1 ? true : false;
 				}).then(()=>{
 					this.getUserInfo();
 				}).then(()=>{
@@ -193,13 +267,45 @@
 					self.table.data = res.result;
 				});
 			},
-			getOrdPackInfo( data ){
+			getOrdPackInfo( strOrderId ){
 				let self = this;
-				this.$request.staff.stow.getOrdPackInfo( data ).then(res=>{
-					res.result.forEach((item,index)=>{
+				this.$request.staff.stow.getOrdPackInfo( strOrderId ).then(res=>{
+					if( res.errorCode != '00000' ){
+						Toast.fail('请输入有效订单号');
+						return ;
+					}
+					self.fieldData.orderType    = res.result.OrderType;
+					self.fieldData.strOrderInfo = '订单客户:' + res.result.CusId + ' ' + res.result.CusShortName + ' 材质编号:' + res.result.BoardId + ' 长宽:' + res.result.Length + 'x' + res.result.Width;
+					if( res.result.BoxL > 0 ){
+						self.fieldData.strOrderInfo += '长宽高:' + res.result.BoxL + 'x' + res.result.BoxW + 'x' + res.result.BoxH;
+					}
+					self.fieldData.strOrderInfo += ' 订单数:' + res.result.OrdQty;
+					self.fieldData.areaQty       = res.result.StockQty;
+					if( res.result.DNHint !== '' ){
+						self.fieldData.strOrderInfo += ' 客户备注:' + res.result.DNHint;
+					}
+					if( res.result.MatName !== '' && res.result.OrderType === 'x' ){
+						self.fieldData.strOrderInfo += ' 货品名称:' + res.result.MatName
+					}
+					self.fieldData.iFreeQty    = 0;
+					self.fieldData.strDNRemark = res.result.DNRemark;
+					self.fieldData.deliArea    = res.result.CusSubNo;
+					self.deliveryAddress.fit   = [];
 
-					});
-					self.table.data = res.result;
+					for (var i = self.deliveryAddress.all.length - 1; i >= 0; i--) {
+						if( self.deliveryAddress.all[i].CusId === res.result.CusId){
+							self.deliveryAddress.fit.push(this.deliveryAddress.all[i]);
+						}
+					}
+					if( self.pageConfig.bPackAddODefSQ ){
+						self.fieldData.iDeliQty = self.fieldData.areaQty;
+					}else{
+						self.fieldData.iDeliQty = res.result.OrdQty - res.result.PackQty;
+					}
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.getStockArea( this.fieldData.strOrderId );
+					})
 				});
 			},
 			customCompFunc( params ){
@@ -234,7 +340,8 @@
 						this.deliveryAddress.fit.push(this.deliveryAddress.all[i]);
 					}
 				}
-
+				this.fieldData.strStockArea = rowData.StockArea;
+				this.getStockArea( this.fieldData.strOrderId );
 			},
 			rowDelete( index, rowData ){
 				this.erpDelForm.iPListNo     = rowData.PListNo;
@@ -249,6 +356,13 @@
 				});
 			},
 			cancelClick(){
+
+				this.fieldData.bModDetail      = false;
+				this.config.popup.deliAreaShow = false;
+				this.resetClick();
+			},
+			resetClick(){
+				this.fieldData.areaQty      = '';
 				this.fieldData.strOrderId   = '';
 				this.fieldData.strOrderInfo = '';
 				this.fieldData.iDeliQty     = '';
@@ -258,11 +372,6 @@
 				this.fieldData.strCusSubNo  = '';
 				this.fieldData.deliArea     = '';
 				this.deliveryAddress.fit    = [];
-				this.config.popup.deliAreaShow = false;
-				this.fieldData.bModDetail  = false;
-			},
-			resetClick(){
-				this.cancelClick()
 			},
 			onLoadClick(){
 				if( this.fieldData.strOrderId === '' ){
@@ -278,8 +387,8 @@
 					return ;
 				}
 				let postData = {
-					iDNId        : this.fieldData.bModDetail?this.DNDetail.iDNId:0,
-                    iPListNo     : this.PListNo,
+					iDNId        : this.fieldData.bModDetail ? this.fieldData.iDNId : 0,
+                    iPListNo     : this.erpDelForm.PListNo,
                     iDeliQty     : this.fieldData.iDeliQty,
                     iFreeQty     : this.fieldData.iFreeQty,
                     dOtherFee    : this.fieldData.dOtherFee,
@@ -287,12 +396,20 @@
                     strStockArea : this.fieldData.strStockArea,
                     strDNRemark  : this.fieldData.strDNRemark,
                     strCusSubNo  : this.fieldData.strCusSubNo,
-                    OrderType    : this.fieldData.OrderType,
+                    OrderType    : this.fieldData.orderType,
                     bModify      : this.fieldData.bModDetail,
                     strFactoryId : this.erpDelForm.strFactoryId,
                     strUserId    : this.erpDelForm.strUserId,
 				};
-				this.erpAddDNDetail( postData );
+				if(JSON.stringify( this.validator ) == "{}"){
+					this.validator = new schema( this.rules );
+				}
+				let self = this;
+				this.validator.validate(postData).then(()=>{
+					self.erpAddDNDetail( postData );
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});
 			},
 			getUserInfo(){
 				let self = this;
@@ -307,6 +424,8 @@
 			if( this.$route.query.listNo !== undefined && this.$route.query.orderType !== undefined && this.$route.query.isEdit !== undefined ){
 				this.filterForm.listNo    = this.$route.query.listNo;
 				this.filterForm.orderType = this.$route.query.orderType;
+				this.erpDelForm.PListNo   = this.$route.query.listNo;
+				this.fieldData.orderType  = this.$route.query.orderType;
 				this.config.isEdit        = this.$route.query.isEdit;
 				if( this.config.isEdit == 1 ){
 					this.config.table.columns.push({field: 'stowDetailHandle', title: '操作', width: 150, titleAlign: 'center',titleCellClassName:'table-title-class',componentName:'table-operate', columnAlign: 'center',isResize:true})
@@ -327,6 +446,9 @@
 		computed:{
 			strOrderIdChange(){
 				return this.fieldData.strOrderId;
+			},
+			strStockAreaChange(){
+				return this.fieldData.strStockArea;
 			}
 		},
 		watch:{
@@ -334,8 +456,17 @@
 				if( newV === undefined ){
 					return ;
 				}
-				if( newV.length === 11 ){
-					this.getOrdPackInfo( { strOrderId: newV } );
+				if( newV.length === 11 && !this.fieldData.bModDetail ){
+					this.getOrdPackInfo( newV );
+				}
+			},
+			strStockAreaChange( newV, oldV ){
+				if( newV !== '' ){
+					for (var i = this.strStockAreaAll.length - 1; i >= 0; i--) {
+						if( this.strStockAreaAll[i].StockArea === newV ){
+							this.fieldData.areaQty = this.strStockAreaAll[i].Qty;
+						}
+					}
 				}
 			}
 		}

@@ -78,8 +78,8 @@ const paper = {
 			strWorkGorup : data.strWorkGorup,
 			strStockArea : data.strStockArea,
 			strSchArea   : data.strSchArea,
-			strFactoryId : data,
-			strUserId    : data
+			strFactoryId : data.strFactoryId,
+			strUserId    : data.strUserId
 		};
 		return post(erp.directInStock,postData);
 	}

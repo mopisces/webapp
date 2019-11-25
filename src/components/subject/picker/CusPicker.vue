@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-field v-model="cusId" clickable @click="popupShow = true" placeholder="选择客户名称" input-align="center" label="客户名称"></van-field>
+		<van-field v-model="cusId" clickable @click="popupShow = true" placeholder="选择客户名称" input-align="center" label="客户名称" readonly></van-field>
 		<van-popup v-model="popupShow" position="bottom" @click-overlay="cusPickerOverlay()" get-container="body">
 			<van-picker show-toolbar :columns="columns" :default-index="defaultIndex" @cancel="cusPickerClean()" @confirm="cusPickerConfirm" cancel-button-text="清空">
 				<van-search slot="title" v-model="searchData" @search="cusPickerSearch" :clearable="false" style="width:50%"></van-search>

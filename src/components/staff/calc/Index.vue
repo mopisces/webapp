@@ -65,7 +65,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Popup, Field, Picker, Search, SwitchCell, Dialog, Toast,  Tab, Tabs} from 'vant';
+	import { Button, Cell, CellGroup, Popup, Field, Picker, Search, SwitchCell, Toast,  Tab, Tabs} from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import schema from 'async-validator';
 	export default {
@@ -78,7 +78,6 @@
 			[Picker.name]: Picker,
 			[Search.name]: Search,
 			[SwitchCell.name]: SwitchCell,
-			[Dialog.Component.name]: Dialog.Component,
 			[Toast.name]: Toast,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
@@ -210,7 +209,7 @@
 						boxH : [
 							{ required : true, message : '请填写箱高' },
 							{ type : 'integer' , regexp : '/^[1-9][0-9]{4}$/', message: '箱高格式不正确' }
-						]
+						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
 							{ type:'integer' , regexp : '/^[1-9][0-9]{6}$/',message : '订单格式不正确'}
@@ -323,7 +322,7 @@
 						self.calcResult.oriPrice = res.result[0].dOriPrice;
 						Toast.success('平方报价 => ' + self.calcResult.oriPrice);
 					});
-				}).catch(()=>{
+				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
 			},
@@ -370,8 +369,8 @@
 							self.calcResult.strScoreInfo = res.result[0][0].strScoreInfo;
 						}  
 					});
-				}).catch(()=>{
-					Toast.fail(errors[0].message);
+				}).catch(({ errors, fields })=>{
+					Toast.fail(err.errors[0].message);
 				});
 			},
 		},

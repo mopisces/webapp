@@ -61,7 +61,16 @@
 					</van-cell>
 				</van-cell-group>
 			</van-checkbox-group>
-			<van-button type="primary" size="large" @click="saveClick()" slot="new-popup-2">保存</van-button>
+			<div slot="new-popup-2">
+				<div class="van-row van-row--flex van-row--justify-space-between" style="text-align:center;">
+					<div class="van-col van-col--12">
+						<van-button type="primary" size="large" @click="saveClick()" style="width:60%;">保存</van-button>
+					</div>
+					<div class="van-col van-col--12">
+						<van-button type="danger" size="large" @click="config.popup.auth.show = false" style="width:60%;">取消</van-button>
+					</div>
+				</div>
+			</div>
 		</new-popup>
 	</div>
 </template>

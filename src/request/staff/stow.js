@@ -21,15 +21,15 @@ const stow = {
 	getPDNDetail( data ){
 		return post(staff.stow.getPDNDetail,{list_no:data.listNo});
 	},
-	getOrdPackInfo( data ){
+	getOrdPackInfo( strOrderId ){
 		let postData = {
-			str_order_id:data.strOrderId
+			str_order_id:strOrderId
 		};
 		return post(staff.stow.getOrdPackInfo,postData);
 	},
-	getStockArea( data ){
+	getStockArea( strOrderId ){
 		let postData = {
-			str_order_id : data.strOrderId
+			str_order_id : strOrderId
 		};
 		return post(staff.stow.getStockArea,postData);
 	},

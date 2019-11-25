@@ -124,8 +124,8 @@
 				validator:{},
 				rules:{
 					strOrderId : [
-						{ type: 'string', required: true, message: '请输入订单号'},
-						{ regexp:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
+						{ required: true, message: '请输入订单号'},
+						{ type: 'string', regexp:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
 					]
 				}
 			}

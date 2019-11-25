@@ -132,14 +132,22 @@
 				validator:{},
 				rules:{
 					oldPass : [
-						{  type:'string' , require : true, message: '请填写原密码' },
-						{  Pattern:'/^[0-9a-zA-Z]{6,12}$/' , message: '原密码不符合规则' },
+						{  require : true, message: '请填写原密码' },
+						{  type:'string' , regexp:'/^[0-9a-zA-Z]{2,12}$/' , message: '原密码不符合规则' },
 					],
 					newPass : [
-						{  type:'string' , require : true, message: '请填写新密码' },
+						{  require : true, message: '请填写新密码' },
+						{  type:'string' , regexp: '/^[0-9a-zA-Z]{6,12}$/', message: '新密码不符合规则' }
 					],
 					confirmPass : [
-						{  type:'string' , require : true, message: '请填写确认密码' },
+						{  require : true, message: '请填写确认密码' },
+						{  confirmPass(rule, value, callback, source, options){
+							let errors = [];
+							if( value !== source.newPass ){
+								errors.push(new Error('两次密码输入不一致'));
+							}
+							return errors;
+						}}
 					]
 				}
 			}

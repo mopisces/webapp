@@ -49,7 +49,7 @@
 					iQty         : 0,    //数量
 					strStockArea : '',   //库区
 					strRemark    : '',   //备注
-					ikey1        : 0,   //定位主键相关
+					ikey1        : 0,    //定位主键相关
 					ikey2        : 0,
                 	ikey3        : 0,
                 	iOpType      : 0,
@@ -102,8 +102,8 @@
 					strOrderId : [
 						{ type: 'string', required: true, message: '请输入订单号'},
 					],
-					strOrderInfo : [
-						{ type: 'number', required: true, message: '请输入数量'},
+					ikey1 : [
+						{ type : 'integer', regexp : '/^[1-9]+$/', required: true, message: '请扫描有效的订单号或选择有效记录修改'},
 					]
 				},
 				tableData:[],
@@ -159,7 +159,7 @@
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
 					self.erpModify( self.formData  );
-				}).catch(()=>{
+				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
 			},
@@ -172,7 +172,7 @@
 						Toast.success('修改成功');
 					}
 				}).then(()=>{
-					this.getStockDetailReload();
+					this.getStockDetailReload( this.formData.strOrderId );
 				});
 			},
 			getStockDetailReload( strOrderId ){
@@ -218,9 +218,14 @@
                 this.tableData             = [];
                 this.afterModifyReset();
 			},
-			getOrdPackInfoWatch( data ){
+			getOrdPackInfoWatch( strOrderId ){
 				let self = this;
-				this.$request.staff.stow.getOrdPackInfo( data ).then(res=>{
+				this.$request.staff.stow.getOrdPackInfo( strOrderId ).then(res=>{
+					if( res.ret != '1' ){
+						Toast.fail('修改错误');
+						self.packInfoReset();
+						return ;
+					}
 					self.formData.strOrderInfo = '订单客户:' + res.result.CusId + ' ' + res.result.CusShortName + ' 材质编号:' + res.result.BoardId + ' 长宽:' + res.result.Length + 'x' + res.result.Width;
 					if( res.result.BoxL > 0 ){
 						self.formData.strOrderInfo += '长宽高:' + res.result.BoxL + 'x' + res.result.BoxW + 'x' + res.result.BoxH
@@ -232,11 +237,8 @@
 					}
 					if( res.result.MatName !== '' && res.result.OrderType === 'x' ){
 						self.formData.strOrderInfo += ' 货品名称:' + res.result.MatName;
-					}	
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.getStockDetailSearch();
-					})
+					}
+					self.getStockDetailSearch( this.formData.strOrderId );	
 				});
 			}
 		},
@@ -245,6 +247,7 @@
 		},
 		mounted(){
 			this.getConfig();
+			this.validator = new schema( this.rules );
 		},
 		updated(){
 			
@@ -260,7 +263,7 @@
 		watch:{
 			strOrderIdChange( newV,oldV ){
 				if( newV !== null && newV.length === 11 ){
-					this.getOrdPackInfoWatch( {strOrderId:newV } );
+					this.getOrdPackInfoWatch( newV );
 				}
 			}
 		}
