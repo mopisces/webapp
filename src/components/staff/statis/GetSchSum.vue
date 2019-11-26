@@ -121,12 +121,6 @@
 			},
 			selectOption( val ){
 				this.filterForm.statisType = val.statisType;
-				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
-					if(this.config.selectOption.statisType[i].value == val.statisType){
-						this.filterForm.limitFactor = this.config.selectOption.statisType[i].factor;
-						break;
-					}
-				}
 			},
 			getSchSumConfig( isReset = false ){
 				let self = this;
