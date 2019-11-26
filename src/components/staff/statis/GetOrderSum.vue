@@ -64,7 +64,7 @@
 				</div>
 			</div>
 			<div slot="footer" style="text-align: right;">
-				<van-button size="small" type="info" @click="config.popup.detailShow = true">订单</van-button>
+				<van-button size="small" type="info" @click="detailShowClick( item )">订单</van-button>
 			</div>
 		</van-panel>
 		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
@@ -159,11 +159,13 @@
 				},
 				listInfo:[],
 				filterForm:{
-					sType:    1,
-					dateType: 1,
-					beginDate:'',
-					endDate:  '',
-					statisState:0
+					sType       : 1,
+					dateType    : 1,
+					beginDate   : '',
+					endDate     : '',
+					statisState : 0,
+					limitValue  : '',
+					limitFactor : 0
 				},
 				pageConfig:{
 					maxDate:'',
@@ -177,6 +179,12 @@
 			},
 			selectOption( val ){
 				this.filterForm.statisState = val.statisType;
+				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
+					if(this.config.selectOption.statisType[i].value == val.statisType){
+						this.filterForm.limitFactor = this.config.selectOption.statisType[i].factor;
+						break;
+					}
+				}
 			},
 			getOrderSumConfig( isReset = false ){
 				let self = this;
@@ -217,6 +225,22 @@
 			filterClick(){
 				this.onRefresh();
 				this.config.popup.filterShow = false;
+			},
+			detailShowClick( item ){
+				switch( this.filterForm.limitFactor ){
+					case 'flutes' :
+						this.filterForm.limitValue = item.Flutes;
+						break;
+					case 'cusId' :
+						this.filterForm.limitValue = item.CusId;
+						break;
+					case 'taskId' :
+						this.filterForm.limitValue = item.TaskId;
+						break;
+					default :
+						this.filterForm.limitValue = '';
+				}
+				this.config.popup.detailShow = true;
 			}
 		},
 		created(){

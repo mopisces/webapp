@@ -4,7 +4,9 @@
 			<van-tab :title="item" v-for="(item,index) in config.tabs.title" :key="index">
 				<van-cell-group>
 					<cus-picker :cusName.sync="commonForm.cusName" ></cus-picker>
-					<van-field readonly clickable label="材质" :value="commonForm.texName"  placeholder="选择材质" @click="texPicker()" required input-align="right"></van-field>
+					<van-field readonly clickable label="材质" :value="commonForm.texName"  placeholder="选择材质" @click="texPicker()" required input-align="center">
+						<van-icon name="arrow" slot="right-icon"/>
+					</van-field>
 					<van-switch-cell v-model="commonForm.bAddTrim" title="加修边" />
 					<van-switch-cell v-model="commonForm.bAddArea" title="加面积" />
 					<van-switch-cell v-model="commonForm.bEdge" title="毛片" />
@@ -16,10 +18,12 @@
 	                    		<input v-model="boardForm.width" type="number" placeholder="板宽" class="cell-input">
 							</div>
 						</van-cell>
-						<van-field v-model="boardForm.scoreInfo" placeholder="压线和=板宽(格式：x+x+x)" label="压线" input-align="right"/>
+						<van-field v-model="boardForm.scoreInfo" placeholder="压线和=板宽(格式：x+x+x)" label="压线" input-align="center"/>
 					</template>
 					<template v-if="config.tabs.active == 1 ">
-						<van-field readonly clickable label="箱型" :value="boxForm.boxId"  placeholder="选择箱型" @click="boxPicker()" required input-align="right"></van-field>
+						<van-field readonly clickable label="箱型" :value="boxForm.boxId"  placeholder="选择箱型" @click="boxPicker()" required input-align="center">
+							<van-icon name="arrow" slot="right-icon"/>
+						</van-field>
 						<van-cell title="规格" is-link  >
 							<div slot="right-icon">
 								<input type="number" placeholder="箱长(mm)" class="cell-input" v-model="boxForm.boxL">
@@ -29,21 +33,21 @@
 	                    		<input type="number" placeholder="箱高(mm)" class="cell-input"  v-model="boxForm.boxH">
 							</div>
 						</van-cell>
-						<van-field v-model="boxForm.tonLen" placeholder="输入箱舌(mm)" label="箱舌" input-align="right"/>
-						<van-field v-model="boxForm.uLen" placeholder="输入封箱调整(mm)" label="封箱调整" input-align="right"/>
+						<van-field v-model="boxForm.tonLen" placeholder="输入箱舌(mm)" label="箱舌" input-align="center"/>
+						<van-field v-model="boxForm.uLen" placeholder="输入封箱调整(mm)" label="封箱调整" input-align="center"/>
 					</template>
-					<van-field v-if="config.tabs.active == 0" v-model="boardForm.ordQty" placeholder="输入纸板订单数" label="订单数" input-align="right"/>
-					<van-field v-else v-model="boxForm.ordQty" placeholder="输入纸箱订单数" label="订单数" input-align="right"/>
-					<van-cell title="销售面积(㎡)"    readonly v-model="calcResult.saleArea"/>
-					<van-cell title="折扣"            readonly v-model="calcResult.disRate" />
-					<van-cell title="平方报价(元/㎡)" readonly v-model="calcResult.oriPrice" />
-					<van-cell title="片价(元/片)"     readonly v-model="calcResult.unitPrice" />
-					<van-cell title="平方价(元/㎡)"   readonly v-model="calcResult.squarePrice"/>
-					<van-cell title="金额(元)"        readonly v-model="calcResult.amt" />
+					<van-field v-if="config.tabs.active == 0" v-model="boardForm.ordQty" placeholder="输入纸板订单数" label="订单数" input-align="center"/>
+					<van-field v-else v-model="boxForm.ordQty" placeholder="输入纸箱订单数" label="订单数" input-align="center" />
+					<van-field label="销售面积(㎡)" placeholder="待计算" input-align="center" v-model="calcResult.saleArea" disabled></van-field>
+					<van-field label="折扣" placeholder="待计算" input-align="center" v-model="calcResult.disRate" disabled></van-field>
+					<van-field label="平方报价(元/㎡)" placeholder="待计算" input-align="center" v-model="calcResult.oriPrice" disabled></van-field>
+					<van-field label="片价(元/片)" placeholder="待计算" input-align="center" v-model="calcResult.unitPrice" disabled></van-field>
+					<van-field label="平方价(元/㎡)" placeholder="待计算" input-align="center" v-model="calcResult.squarePrice" disabled></van-field>
+					<van-field label="金额(元)" placeholder="待计算" input-align="center" v-model="calcResult.amt" disabled></van-field>
 					<div v-if=" config.tabs.active == 1 ">
-						<van-cell title="板长(mm)" readonly v-model="calcResult.boxL" />
-						<van-cell title="板宽(mm)" readonly v-model="calcResult.boxW" />
-						<van-cell title="压线"     readonly v-model="calcResult.strScoreInfo" />
+						<van-field label="板长(mm)" placeholder="待计算" input-align="center" v-model="calcResult.boxL" disabled></van-field>
+						<van-field label="板宽(mm)" placeholder="待计算" input-align="center" v-model="calcResult.boxW" disabled></van-field>
+						<van-field label="压线" placeholder="待计算" input-align="center" v-model="calcResult.strScoreInfo" disabled></van-field>
 					</div>
 					<van-button type="primary" size="large" round @click="CalBdPriceInfo()">
 						<span v-if="config.tabs.active == 0 ">纸板计算</span>
@@ -65,7 +69,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Popup, Field, Picker, Search, SwitchCell, Toast,  Tab, Tabs} from 'vant';
+	import { Button, Cell, CellGroup, Icon, Popup, Field, Picker, Search, SwitchCell, Toast, Tab, Tabs} from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import schema from 'async-validator';
 	export default {
@@ -73,6 +77,7 @@
 			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
+			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
 			[Picker.name]: Picker,
@@ -100,7 +105,7 @@
 					search:{
 						cusName : '',
 						texName : '',
-						boxId : ''
+						boxId   : ''
 					}
 				},
 				info:{
@@ -163,8 +168,8 @@
 							{ type : 'string', required : true, message : '请选择材质' }
 						],
 						length : [
-							{ required : true, message : '请输入板厂' },
-							{ type: 'integer' , regexp : '/^[1-9][0-9]{5}$/', message : '板厂格式错误' }
+							{ required : true, message : '请输入板长' },
+							{ type: 'integer' , regexp : '/^[1-9][0-9]{5}$/', message : '板长格式错误' }
 						],
 						width : [
 							{ required : true, message : '请输入板宽' },
@@ -244,7 +249,6 @@
 				});
 			},
 			getTonLenAndULen( IsContinueCallCalBdQuotaInfo = false ){
-				
 				if( this.pageConfig.calcAutoGetTonLenAndULen && this.config.tabs.active == 1 && this.commonForm.cusName.length != 0 && this.commonForm.texName.length != 0 ){
 					let data = {
 						cusName : this.commonForm.cusName,
@@ -254,13 +258,14 @@
 					this.$request.staff.calc.getTonLenAndULen( data ).then(res=>{
 						self.boxForm.tonLen = res.result[0].TonLen;
 						self.boxForm.uLen   = res.result[0].ULen;
-						Toast.success('箱舌 => ' + self.boxForm.tonLen + '&nbsp;&nbsp;&nbsp;封箱调整 => ' + self.boxForm.uLen );
+						Toast.success('箱舌 => ' + self.boxForm.tonLen + ' 封箱调整 => ' + self.boxForm.uLen );
 					}).then(()=>{
-						self.calBdQuotaInfo();
+						this.calBdQuotaInfo();
 					});
 				}else{
+					console.log(IsContinueCallCalBdQuotaInfo);
 					if( IsContinueCallCalBdQuotaInfo ){
-						self.calBdQuotaInfo();
+						this.calBdQuotaInfo();
 					}
 				}
 				
@@ -308,7 +313,7 @@
 				this.config.popup.show = false;
 			},
 			calBdQuotaInfo(){
-				if( this.pageConfig.calcAutoGetdOriPrice ){
+				if( !this.pageConfig.calcAutoGetdOriPrice ){
 					return ;
 				}
 				let validator = new schema( this.rules.commonRules );
@@ -389,6 +394,12 @@
 		computed:{
 			cusNameChange(){
 				return this.commonForm.cusName;
+			},
+			tabsActiveChange(){
+				return this.config.tabs.active;
+			},
+			texNameChange(){
+				return this.commonForm.texName;
 			}
 		},
 		watch:{
@@ -397,10 +408,17 @@
 					this.commonForm.bAddTrim = false;
 					this.commonForm.bAddArea = false;
 				}else{
-					if( !this.pageConfig.calcAutoGetTrimAndAreaByCus ){
+					if( this.pageConfig.calcAutoGetTrimAndAreaByCus ){
 						this.getTrimAndArea( newV );
 					}
 				}
+				this.getTonLenAndULen(true);
+			},
+			tabsActiveChange( newV, oldV ){
+				this.getTonLenAndULen(false);
+			},
+			texNameChange( newV, oldV ){
+				this.getTonLenAndULen(true);
 			}
 		}
 	}

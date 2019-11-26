@@ -1,15 +1,16 @@
 <template>
-	<div></div>
+	<div>
+	</div>
 </template>
 <script>
-	import { Button } from 'vant';
+	import { Field } from 'vant';
 	export default {
 		components:{
-			[Button.name]: Button,
+			[Field.name]: Field,
 		},
 		data(){
 			return {
-
+				value:''
 			}
 		},
 		methods:{

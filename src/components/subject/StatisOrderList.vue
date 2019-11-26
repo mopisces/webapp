@@ -119,7 +119,6 @@
 					data.limitFactor = this.filterForm.limitFactor;
 					data.limitValue  = this.filterForm.limitValue;
 				}
-				console.log(this.formData.curPage);
 				this.$request.staff.statis.statisDetail( data ).then(res=>{
 					res.result.forEach((item,index)=>{
 						self.listInfo.push(item);

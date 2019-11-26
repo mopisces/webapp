@@ -17,7 +17,7 @@
 			<van-field label="生产备注" v-model="filterForm.safeSRemark" input-align="center" placeholder="精确查询"  slot="filter-field-5"></van-field>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" />
 		</popup-filter>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" :column-cell-class-name="columnCellClass">
 		</v-table>
 	</div>
 </template>
@@ -77,12 +77,12 @@
 					data:[]
 				},
 				filterForm:{
-					safePaperState:0,
-					safePaperType: 0,
-					safePaperCode:'',
-					safePaperWidth:'',
-					safePaperName:'',
-					safeSRemark:''
+					safePaperState : 0,
+					safePaperType  : 0,
+					safePaperCode  : '',
+					safePaperWidth : '',
+					safePaperName  : '',
+					safeSRemark    : ''
 				}
 			}
 		},
@@ -108,7 +108,11 @@
 					self.table.data = res.result;
 				});
 			},
-			
+			columnCellClass( rowIndex,columnName,rowData ){
+				if( rowData.PCount < rowData.SafeCount ){
+					return 'less';
+				}
+			}	
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','安全库存');
@@ -139,3 +143,8 @@
 		}
 	}
 </script>
+<style>
+	.less{
+		color:red;
+	}
+</style>

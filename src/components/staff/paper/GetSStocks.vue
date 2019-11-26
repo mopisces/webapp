@@ -13,7 +13,7 @@
 			</v-table>
 		</template>
 		<template v-if=" filterForm.dataType == 2 ">
-			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.codeColumns" :table-data="tableData.codeData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.codeColumns" :table-data="tableData.codeData" row-hover-color="#eee" row-click-color="#edf7ff" :height="400" >
 			</v-table>
 		</template>
 	</div>

@@ -106,7 +106,7 @@
 			},
 			getDailyUser( data ){
 				let self = this;
-				this.$request.staff.daily.getDailyUser().then(res=>{
+				this.$request.staff.daily.getDailyUser( data ).then(res=>{
 					self.staffInfo.ordAmt     = res.result.OrdAmt;
 					self.staffInfo.tLength    = res.result.TLength;
 					self.staffInfo.tSalesArea = res.result.TSalesArea;
@@ -131,6 +131,10 @@
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timeFilter.isFinishLoad = true;
+					})
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.getDailyUser( this.filterForm );
 					})
 				}).then(()=>{
 					if( isReset ){
@@ -174,7 +178,6 @@
 		},
 		mounted(){
 			this.getDailyConfig();
-			this.getDailyUser();
 		},
 		destroyed(){
 			if( this.config.switch.rem.checked ){

@@ -13,7 +13,6 @@ let routes = [
         alias:'/login/select?token=:token',
         component: resolve => require(['../components/login/LoginSelect.vue'], resolve),
         meta: { title: '登录选择界面' },
-       
     },
     {
         path:'/staff',

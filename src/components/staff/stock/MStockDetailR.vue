@@ -157,6 +157,7 @@
 			},
 			onChangeClick(){
 				let self = this;
+				console.log(this.formData);
 				this.validator.validate(this.formData).then(()=>{
 					self.erpModify( self.formData  );
 				}).catch(({ errors, fields })=>{
@@ -186,6 +187,7 @@
 			getStockDetailSearch( strOrderId ){
 				let self = this;
 				this.$request.staff.stock.getStockDetail( strOrderId ).then(res=>{
+					self.tableData = res.result;
 					if( res.result.length == 0 ){
 						Toast.fail('该订单没有入库记录');
 						self.afterModifyReset();
@@ -221,7 +223,7 @@
 			getOrdPackInfoWatch( strOrderId ){
 				let self = this;
 				this.$request.staff.stow.getOrdPackInfo( strOrderId ).then(res=>{
-					if( res.ret != '1' ){
+					if( res.errorCode != '00000' ){
 						Toast.fail('修改错误');
 						self.packInfoReset();
 						return ;

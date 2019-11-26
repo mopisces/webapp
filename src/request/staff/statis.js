@@ -29,13 +29,15 @@ const statis = {
 	},
 	statisDetail( data ){
 		let postData = {
-			detail_begin_date : data.beginDate,
-			detail_end_date   : data.endDate,
-			detail_date_type  : data.dateType,
-			detail_cur_page   : data.curPage,
-			detail_s_type     : data.sType,
-			detail_remain_day : '0',
-			detail_diff_day   : '0',
+			detail_begin_date  : data.beginDate,
+			detail_end_date    : data.endDate,
+			detail_date_type   : data.dateType,
+			detail_cur_page    : data.curPage,
+			detail_s_type      : data.sType,
+			detail_remain_day  : '0',
+			detail_diff_day    : '0',
+			detail_limit_value : data.limitValue,
+			detail_limit_factor: data.limitFactor
 		}
 		if( data.limitFactor ){
 			switch( data.limitFactor ){

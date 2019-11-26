@@ -95,10 +95,10 @@
 		data(){
 			return {
 				pageConfig:{
-					beginDate : new Date(),
-					minDate   : new Date(),
-					maxDate   : new Date(),
-					endDate   : new Date()
+					beginDate : '',
+					minDate   : '',
+					maxDate   : '',
+					endDate   : ''
 				},
 				cusPicker:{
 					searchData : '',
@@ -187,11 +187,10 @@
 					cusName       : '',
 					dateType      : '1',
 					curPage       : 0,
-					erpState      : 0,
+					erpState      : this.filterForm.erpState,
 					beginDate     : '',
 					endDate       : ''
 				};
-				this.$refs.cusPicker.cusPickerClean();
 				sessionStorage.removeItem('erp/getOrders');
 				this.config.getConfig = true;
 				this.config.switch.checked = false;
@@ -220,7 +219,9 @@
 					if( isReset ){
 						return ;
 					}
-					this.getErpOrders( this.filterForm );
+					this.$nextTick(()=>{
+						this.getErpOrders( this.filterForm );
+					});
 				});
 			},
 			getErpOrders( data ){
@@ -236,9 +237,9 @@
 				});
 			},
 			detailShowClick( strOrderId ){
-				this.detailData.orderId = strOrderId.substring(1);
-				this.detailData.orderType = strOrderId[0];
-				this.detailData.strOrderId = strOrderId;
+				this.detailData.orderId      = strOrderId.substring(1);
+				this.detailData.orderType    = strOrderId[0];
+				this.detailData.strOrderId   = strOrderId;
 				this.config.popup.detailShow = true;
 			},
 			detailClose(){
@@ -250,7 +251,7 @@
 			if( sessionStorage.getItem('erp/getOrders') !== null ){
 				let storageData = JSON.parse(sessionStorage.getItem('erp/getOrders'));
 				this.filterForm = storageData;
-				this.config.getConfig = false;
+				this.config.getConfig      = false;
 				this.config.switch.checked = true;
 			}
 		},

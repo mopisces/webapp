@@ -49,9 +49,9 @@ const daily = {
 	},
 	getDailyUser( data ){
 		let postData = {
-			daily_begin_date  : '2017-11-02',
-			daily_end_date    : '2019-11-01',
-			daily_add_user_id : 0
+			daily_begin_date  : data.beginDate,
+			daily_end_date    : data.endDate,
+			daily_add_user_id : data.addUserId ? 1 : 0
 		};
 		return post(staff.daily.getDailyUser,postData);
 	}

@@ -32,7 +32,7 @@
 			</button>
 		</div>
 		<div v-if=" field === 'stockOperate' ">
-			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="stockOperate()">
+			<button class="van-button van-button--primary van-button--small"  @click="stockOperate()">
 				<span class="van-button__text">操作</span>
 			</button>
 		</div>
@@ -40,10 +40,9 @@
 	</div>
 </template>
 <script>
-	import { Button, Dialog, Toast  } from 'vant';
+	import { Dialog, Toast  } from 'vant';
 	export default {
 		components:{
-			[Button.name]: Button,
 			[Toast.name]: Toast,
 		},
 		props:['rowData','field','index'],

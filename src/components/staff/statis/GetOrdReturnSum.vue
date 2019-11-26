@@ -109,13 +109,13 @@
 				},
 				panelList:[],
 				filterForm:{
-					sType:    2,
-					dateType: 4,
-					beginDate:'',
-					endDate:  '',
-					limitFactor:'',
-					limitValue:'',
-					statisState:0,
+					sType       : 2,
+					dateType    : 4,
+					beginDate   : '',
+					endDate     : '',
+					limitFactor : '',
+					limitValue  : '',
+					statisState : 0,
 				},
 				pageConfig:{
 					minDate:'',
@@ -125,8 +125,15 @@
 		},
 		methods:{
 			orderClick( item ){
-				if( this.filterForm.limitFactor ){
-					this.filterForm.limitValue = item.ReturnCause;
+				switch( this.filterForm.limitFactor ){
+					case 'returnCause' :
+						this.filterForm.limitValue = item.ReturnCause;
+						break;
+					case 'cusId' : 
+						this.filterForm.limitValue = item.CusId;
+						break;
+					default :
+						this.filterForm.limitValue = '';
 				}
 				this.config.popup.detailShow = true;
 			},
@@ -135,6 +142,12 @@
 			},
 			selectOption( val ){
 				this.filterForm.statisState = val.statisType;
+				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
+					if(this.config.selectOption.statisType[i].value == val.statisType){
+						this.filterForm.limitFactor = this.config.selectOption.statisType[i].factor;
+						break;
+					}
+				}
 			},
 			getOrdReturnSumConfig( isReset = false ){
 				let self = this;

@@ -53,7 +53,6 @@
 				wx.scanQRCode({
                     needResult: 1,
                     success: function(res){
-                    	Toast.success(res.resultStr);
                         self.result = res.resultStr;
                     }
                 });

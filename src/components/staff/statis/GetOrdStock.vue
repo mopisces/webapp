@@ -22,7 +22,7 @@
 				</div>
 			</div>
 			<div slot="footer" style="text-align: right;">
-				<van-button size="small" type="info" @click="config.popup.detailShow = true">订单</van-button>
+				<van-button size="small" type="info" @click="detailShowClick(item)">订单</van-button>
 			</div>
 		</van-panel>
 		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
@@ -124,6 +124,12 @@
 			},
 			selectOption( val ){
 				this.filterForm.statisState = val.statisType;
+				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
+					if(this.config.selectOption.statisType[i].value  == val.statisType){
+						this.filterForm.factor = this.config.selectOption.statisType[i].factor;
+						break;
+					}
+				}
 			},
 			getOrdStockConfig( isReset = false ){
 				let self = this;
@@ -158,8 +164,8 @@
 				});
 			},
 			resetClick(){
-				this.filterForm.dateType = 1;
-				this.filterForm.diffDay = 0;
+				this.filterForm.dateType  = 1;
+				this.filterForm.diffDay   = 0;
 				this.filterForm.remainDay = 0;
 				sessionStorage.removeItem('statis/getOrdStock');
 				this.getOrdStockConfig( true );
@@ -167,6 +173,12 @@
 			filterClick(){
 				this.onRefresh();
 				this.config.popup.filterShow = false;
+			},
+			detailShowClick( item ){
+				switch( this.filterForm.statisType ){
+
+				}
+				this.config.popup.detailShow = true;
 			}
 		},
 		created(){
