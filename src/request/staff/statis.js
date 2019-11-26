@@ -36,8 +36,6 @@ const statis = {
 			detail_s_type      : data.sType,
 			detail_remain_day  : '0',
 			detail_diff_day    : '0',
-			detail_limit_value : data.limitValue,
-			detail_limit_factor: data.limitFactor
 		}
 		if( data.limitFactor ){
 			switch( data.limitFactor ){

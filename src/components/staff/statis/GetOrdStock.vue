@@ -175,8 +175,12 @@
 				this.config.popup.filterShow = false;
 			},
 			detailShowClick( item ){
-				switch( this.filterForm.statisType ){
-
+				switch( this.filterForm.factor ){
+					case 'cusId' :
+						this.filterForm.limitValue = item.CusId;
+						break;
+					default :
+						this.filterForm.limitValue = '';
 				}
 				this.config.popup.detailShow = true;
 			}
