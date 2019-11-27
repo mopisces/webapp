@@ -104,13 +104,15 @@
 					panelList:[],
 				},
 				filterForm:{
-					sType:    3,
-					dateType: 1,
-					beginDate:'',
-					endDate:  '',
-					remainDay:0,
-					diffDay:0,
-					statisState:0
+					sType       : 3,
+					dateType    : 1,
+					beginDate   : '',
+					endDate     : '',
+					remainDay   : 0,
+					diffDay     : 0,
+					statisState : 0,
+					limitFactor : '',
+					limitValue  : ''
 				},
 				pageConfig:{
 					maxDate:'',
@@ -126,10 +128,11 @@
 				this.filterForm.statisState = val.statisType;
 				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
 					if(this.config.selectOption.statisType[i].value  == val.statisType){
-						this.filterForm.factor = this.config.selectOption.statisType[i].factor;
+						this.filterForm.limitFactor = this.config.selectOption.statisType[i].factor;
 						break;
 					}
 				}
+				console.log(this.filterForm.limitFactor)
 			},
 			getOrdStockConfig( isReset = false ){
 				let self = this;
@@ -175,8 +178,9 @@
 				this.config.popup.filterShow = false;
 			},
 			detailShowClick( item ){
-				switch( this.filterForm.factor ){
+				switch( this.filterForm.limitFactor ){
 					case 'cusId' :
+						console.log(1)
 						this.filterForm.limitValue = item.CusId;
 						break;
 					default :

@@ -61,43 +61,43 @@
 		data(){
 			return {
 				config:{
-					getConfig:true,
+					getConfig : true,
 					switchCell:{
-						checked:false
+						checked : false
 					},
 					popup:{
-						filterShow:false,
+						filterShow : false,
 						chartSelect:{
-							show:false
+							show : false
 						},
 						timePicker:{
-							isFinishLoad:false
+							isFinishLoad : false
 						}
 					},
 					selectOption:{
 						statisType:[
-							{ text: '汇总', value: '0' },
+							{ text: '汇总',     value: '0' },
 							{ text: '按生产线', value: '1' },
-							{ text: '按门幅', value: '2' },
-							{ text: '按坑型', value: '3' },
+							{ text: '按门幅',   value: '2' },
+							{ text: '按坑型',   value: '3' },
 						],
 						chartType:['all'],
 						chartProperties:[
-							{ text: '总订单面积', value: 'sumOrdArea'},
-	                        { text: '总长度', value: 'sumLength'},
-	                        { text: '平均修边', value: 'avgTrim'},
-	                        { text: '平均门幅', value: 'avgPW'},
-	                        { text: '总款数', value: 'sumCount'},
+							{ text: '总订单面积', value: 'sumOrdArea' },
+	                        { text: '总长度',     value: 'sumLength' },
+	                        { text: '平均修边',   value: 'avgTrim' },
+	                        { text: '平均门幅',   value: 'avgPW' },
+	                        { text: '总款数',     value: 'sumCount' },
 						]
 					},
 					radio:{
 						options:[
-							{title:'全部',value:'0'},
-							{title:'已传',value:'1'},
-							{title:'已提取',value:'2'},
+							{ title:'全部',   value:'0' },
+							{ title:'已传',   value:'1' },
+							{ title:'已提取', value:'2' },
 						],
 						dateType:[
-							{title:'生产日期',value:'0'},
+							 {title:'生产日期', value:'0' },
 						]
 					}
 				},
@@ -110,8 +110,8 @@
 					dateType   : '0'
 				},
 				pageConfig:{
-					minDate:'',
-					maxDate:'',
+					minDate : '',
+					maxDate : '',
 				}
 			}
 		},
@@ -149,8 +149,8 @@
 				});
 			},
 			resetClick(){
-				this.filterForm.sState = '0';
-				this.filterForm.dateType = '0';
+				this.filterForm.sState         = '0';
+				this.filterForm.dateType       = '0';
 				this.config.switchCell.checked = false;
 				sessionStorage.removeItem('statis/getSchSum');
 				this.getSchSumConfig( true );
@@ -165,7 +165,7 @@
 			if( sessionStorage.getItem('statis/getSchSum') ){
 				let storageData = JSON.parse(sessionStorage.getItem('statis/getSchSum'));
 				this.filterForm = storageData;
-				this.config.getConfig = false;
+				this.config.getConfig          = false;
 				this.config.switchCell.checked = true;
 			}
 		},

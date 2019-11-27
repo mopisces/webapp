@@ -54,24 +54,24 @@
         				]
 					},
 					pull:{
-						isLoading:false
+						isLoading : false
 					},
 					popup:{
-						filterShow:false,
+						filterShow : false,
 						timePicker:{
-							isFinishLoad:false
+							isFinishLoad : false
 						}
 					},
 					switch:{
-						checked:false
+						checked : false
 					}
 				},
 				pageConfig:{
-					maxDate:'',
-					minDate:''
+					maxDate : '',
+					minDate : ''
 				},
 				filterInfo:{
-					statis:'lists',
+					statis : 'lists',
 				},
 				options:{
 					chart: {
@@ -100,8 +100,8 @@
 		            }
 				},
 				filterForm:{
-					beginDate:'',
-					endDate:''
+					beginDate : '',
+					endDate   : ''
 				}
 			}
 		},
@@ -161,7 +161,7 @@
 			if( sessionStorage.getItem('statis/getProInfo') !== null ){
 				let storageData = JSON.parse(sessionStorage.getItem('statis/getProInfo'));
 				this.filterForm = storageData;
-				this.config.getConfig = false;
+				this.config.getConfig      = false;
 				this.config.switch.checked = true;
 			}
 		},
