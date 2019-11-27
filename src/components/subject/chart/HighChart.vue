@@ -149,6 +149,40 @@
 							name : this.options.yTitle,
 							data : this.changePie3dData(this.options.data,this.options.categories)
 						}]
+					},
+					lineTimeSeries : {
+						chart : {
+							type : 'area'
+						},
+						title : {
+							text : this.options.xTitle
+						},
+						xAxis : {
+							allowDecimals: false
+						},
+						yAxis : {
+							title : {
+								text : this.options.yTitle
+							}
+						},
+						tooltip : {
+							pointFormat: '{series.name} -- <b>{point.y:,.0f}</b>'
+						},
+						plotOptions : {
+							area : {
+								marker : {
+									enabled: false,
+                					symbol: 'circle',
+                					radius: 2,
+                					states: { 
+                						hover : {
+                							enabled : true 
+                						}
+                					}
+								}
+							}
+						},
+						series : this.lineTimeSeries(this.options.data,this.options.categories)
 					}
 				}
 			}
@@ -170,8 +204,15 @@
 						chartOptions = this.baseOptions.pie3d;
 						break;
 					case 'pieDonut3d' : 
-						chartOptions = this.baseOptions.pieDonut3d
+						chartOptions = this.baseOptions.pieDonut3d;
+						break;
+					case 'lineTimeSeries' : 
+						chartOptions = this.baseOptions.lineTimeSeries;
+						break;
+					default : 
+						return ;
 				}
+				console.log(this.baseOptions.lineTimeSeries);
 				this.chart = new Highcharts.chart('highcharts-container',chartOptions);
 			},
 			changePieData( data, categories ){
@@ -187,6 +228,13 @@
 					pie3dData[ index ] = [categories[index], item ];
 				});
 				return pie3dData;
+			},
+			lineTimeSeries( data, categories ){
+				let lineTimeSeriesData = [];
+				data.forEach((item,index)=>{
+					lineTimeSeriesData[ index ] = [categories[index], item ];
+				});
+				return lineTimeSeriesData;
 			}
 		},
 		created(){
