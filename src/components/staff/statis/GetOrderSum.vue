@@ -12,64 +12,67 @@
 				</div>
 			</div>
 		</van-sticky>
-		<van-panel v-for="(item,index) in listInfo" :key="index">
-			<div slot="default">
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">坑型:    {{ item.Flutes }}</div>
-					<div class="van-col van-col--10">业务编码:{{ item.TaskId }}</div>
+		<div v-if="!config.chart.show">
+			<van-panel v-for="(item,index) in listInfo" :key="index">
+				<div slot="default">
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">坑型:    {{ item.Flutes }}</div>
+						<div class="van-col van-col--10">业务编码:{{ item.TaskId }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">业务员:  {{ item.TaskName }}</div>
+						<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+						<div class="van-col van-col--10">总面积:  {{ item.sumArea }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">总订单面积:{{ item.sumOrdArea }}</div>
+						<div class="van-col van-col--10">总体积:    {{ item.sumOrdVol }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">总长度:{{ item.sumLength }}</div>
+						<div class="van-col van-col--10">总金额:{{ item.sumAmt }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">订单总数:{{ item.sumQty }}</div>
+						<div class="van-col van-col--10">总款数:{{ item.sumCount }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">单坑面积:{{ item.sumArea1 }}</div>
+						<div class="van-col van-col--10">单坑长度:{{ item.sumLength1 }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">单坑金额:{{ item.sumAmt1 }}</div>
+						<div class="van-col van-col--10">单坑款数:{{ item.sumCount1 }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">双坑面积:{{ item.sumArea2 }}</div>
+						<div class="van-col van-col--10">双坑长度:{{ item.sumLength2 }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">双坑金额:{{ item.sumAmt2 }}</div>
+						<div class="van-col van-col--10">双坑款数:{{ item.sumCount2 }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">三坑面积:{{ item.sumArea3 }}</div>
+						<div class="van-col van-col--10">三坑长度:{{ item.sumLength3 }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">三坑金额:{{ item.sumAmt3 }}</div>
+						<div class="van-col van-col--10">三坑款数:{{ item.sumCount3 }}</div>
+					</div>
 				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">业务员:  {{ item.TaskName }}</div>
-					<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
+				<div slot="footer" style="text-align: right;">
+					<van-button size="small" type="info" @click="detailShowClick( item )">订单</van-button>
 				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
-					<div class="van-col van-col--10">总面积:  {{ item.sumArea }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">总订单面积:{{ item.sumOrdArea }}</div>
-					<div class="van-col van-col--10">总体积:    {{ item.sumOrdVol }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">总长度:{{ item.sumLength }}</div>
-					<div class="van-col van-col--10">总金额:{{ item.sumAmt }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">订单总数:{{ item.sumQty }}</div>
-					<div class="van-col van-col--10">总款数:{{ item.sumCount }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">单坑面积:{{ item.sumArea1 }}</div>
-					<div class="van-col van-col--10">单坑长度:{{ item.sumLength1 }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">单坑金额:{{ item.sumAmt1 }}</div>
-					<div class="van-col van-col--10">单坑款数:{{ item.sumCount1 }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">双坑面积:{{ item.sumArea2 }}</div>
-					<div class="van-col van-col--10">双坑长度:{{ item.sumLength2 }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">双坑金额:{{ item.sumAmt2 }}</div>
-					<div class="van-col van-col--10">双坑款数:{{ item.sumCount2 }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">三坑面积:{{ item.sumArea3 }}</div>
-					<div class="van-col van-col--10">三坑长度:{{ item.sumLength3 }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">三坑金额:{{ item.sumAmt3 }}</div>
-					<div class="van-col van-col--10">三坑款数:{{ item.sumCount3 }}</div>
-				</div>
-			</div>
-			<div slot="footer" style="text-align: right;">
-				<van-button size="small" type="info" @click="detailShowClick( item )">订单</van-button>
-			</div>
-		</van-panel>
-		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
-			我也是有底线的
-  		</div>
+			</van-panel>
+			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
+				我也是有底线的
+	  		</div>
+		</div>
+  		<high-chart :options="config.chart" v-if="config.chart.show"></high-chart>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="returnQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -88,6 +91,7 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import HighChart from '@/components/subject/chart/HighChart';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -100,42 +104,43 @@
 			StatisOrderList,
 			PopupFilter,
 			RadioCell,
-			NewTimePicker
+			NewTimePicker,
+			HighChart
 		},
 		data(){
 			return {
-				finished:false,
+				finished : false,
 				config:{
-					getConfig:true,
+					getConfig : true,
 					switchCell:{
-						checked:false,
+						checked : false,
 					},
 					popup:{
-						filterShow:false,
-						detailShow:false,
+						filterShow : false,
+						detailShow : false,
 						chartSelect:{
-							show:false
+							show : false
 						},
 						timePicker:{
-							isFinishLoad:false
+							isFinishLoad : false
 						}
 					},
 					selectOption:{
 						statisType:[
-							{ text: '汇总', value: 0, factor:'' },
-							{ text: '按坑型', value: 1, factor:'flutes' },
-							{ text: '按客户', value: 2, factor:'cusId' },
+							{ text: '汇总',     value: 0, factor:'' },
+							{ text: '按坑型',   value: 1, factor:'flutes' },
+							{ text: '按客户',   value: 2, factor:'cusId' },
 							{ text: '按业务员', value: 3, factor:'taskId' },
 						],
 						chartType:['all'],
 						chartProperties:[
-							{ text: '总面积', value: 'sumArea'},
+							{ text: '总面积',     value: 'sumArea'},
 	                        { text: '总订单面积', value: 'sumOrdArea'},
-	                        { text: '总体积', value: 'sumOrdVol'},
-	                        { text: '总长度', value: 'sumLength'},
-	                        { text: '总金额', value: 'sumAmt'},
+	                        { text: '总体积',   value: 'sumOrdVol'},
+	                        { text: '总长度',   value: 'sumLength'},
+	                        { text: '总金额',   value: 'sumAmt'},
 	                        { text: '订单总数', value: 'sumQty'},
-	                        { text: '总款数', value: 'sumCount'},
+	                        { text: '总款数',   value: 'sumCount'},
 	                        { text: '单坑面积', value: 'sumArea1'},
 	                        { text: '单坑长度', value: 'sumLength1'},
 	                        { text: '单坑金额', value: 'sumAmt1'},
@@ -152,9 +157,18 @@
 					},
 					radio:{
 						options:[
-							{title:'订单日期',value:1},
-							{title:'交货日期',value:2},
+							{ title:'订单日期', value:1 },
+							{ title:'交货日期', value:2 },
 						]
+					},
+					chart:{
+						xTitle  : '',
+						yTitle  : '',
+						categories : [],
+						data  : [],
+						chartProperties : '',
+						chartType : '',
+						show : false
 					}
 				},
 				listInfo:[],
@@ -168,8 +182,8 @@
 					limitFactor : 0
 				},
 				pageConfig:{
-					maxDate:'',
-					minDate:'',
+					maxDate : '',
+					minDate : '',
 				}
 			}
 		},
@@ -178,6 +192,12 @@
 				this.getOrderSum( this.filterForm );
 			},
 			selectOption( val ){
+				if( val.chartProperties != '' && val.chartType != '' ){
+					this.config.chart.chartProperties = val.chartProperties;
+					this.config.chart.chartType       = val.chartType;
+				}else{
+					this.config.chart.show = false;
+				}
 				this.filterForm.statisState = val.statisType;
 				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
 					if(this.config.selectOption.statisType[i].value == val.statisType){
@@ -203,7 +223,6 @@
 					if( isReset ){
 						return ;
 					}
-					
 					this.getOrderSum( this.filterForm );
 				});
 			},
@@ -215,6 +234,48 @@
 					if( res.result == null || res.result.length < 6 ){
 						this.finished = true;
 					}	
+				}).then(()=>{
+					this.config.chart.show = false;
+					if(this.config.chart.chartProperties == '' || this.config.chart.chartType == ''){return ;
+					}
+					this.config.chart.data       = [];
+					this.config.chart.categories = [];
+					this.$nextTick(()=>{
+						switch( this.filterForm.limitFactor ){
+							case  'flutes' :
+								this.config.chart.xTitle = '坑型分布';
+								this.config.chart.yTitle = '总面积';
+								this.listInfo.forEach((item,index)=>{
+									this.config.chart.categories.push(item.Flutes);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							case 'cusId' :
+								this.config.chart.xTitle = '客户分布';
+								this.config.chart.yTitle = '总面积';
+								this.listInfo.forEach((item,index)=>{
+									this.config.chart.categories.push(item.CusShortName);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							case 'taskId' :
+								this.config.chart.xTitle = '业务员分布';
+								this.config.chart.yTitle = '总面积';
+								this.listInfo.forEach((item,index)=>{
+									this.config.chart.categories.push(item.TaskId);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							default :
+								this.config.chart.xTitle = '汇总';
+								this.config.chart.yTitle = '总面积';
+								this.listInfo.forEach((item,index)=>{
+									this.config.chart.categories.push('汇总');
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+						}
+						this.config.chart.show = true;
+					});
 				});
 			},
 			resetClick(){
@@ -248,7 +309,7 @@
 			if( sessionStorage.getItem('statis/getOrderSum') ){
 				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrderSum'));
 				this.filterForm = storageData;
-				this.config.getConfig = false;
+				this.config.getConfig          = false;
 				this.config.switchCell.checked = true;
 			}
 		},

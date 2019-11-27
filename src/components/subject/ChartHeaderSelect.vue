@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<van-notice-bar color="#1989fa" background="#ecf9ff" mode="link" @click="noticeClick(0)">
-			统计类型:{{ config.notice.statisTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;
-			统计方式:{{ config.notice.statisWayText }}&nbsp;&nbsp;&nbsp;&nbsp;
+			<span>统计类型:{{ config.notice.statisTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			<span>统计方式:{{ config.notice.statisWayText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<span v-if="config.notice.chartTypeText">图表类型:{{ config.notice.chartTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<span v-if="config.notice.chartTypeText">图表属性:{{ config.notice.chartPropertiesText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
 		</van-notice-bar>
@@ -70,11 +70,11 @@
 				statisMethod:'list',
 				insideChartType:[
 					{ text: '3D饼状图', value: 'pie3d' },
-					{ text: '饼状图', value: 'pie' },
+					{ text: '饼状图',   value: 'pie' },
 					{ text: '3D环形图', value: 'pieDonut3d' },
-					{ text: '柱状图', value: 'columnRotatedLabels' },
-					{ text: '直线图', value: 'line' },
-					{ text: '走势图', value: 'lineTimeSeries' },
+					{ text: '柱状图',   value: 'columnRotatedLabels' },
+					{ text: '直线图',   value: 'line' },
+					{ text: '走势图',   value: 'lineTimeSeries' },
 				],
 				userChartType:[],
 				statisWay:[
