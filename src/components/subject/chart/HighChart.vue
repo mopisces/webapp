@@ -8,6 +8,7 @@
 		data(){
 			return {
 				chart : null,
+				chartSize : '60%',
 				baseOptions:{
 					line : {
 						chart: {
@@ -84,14 +85,12 @@
 								dataLabels: { 
 									enabled: true,
 									format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-									style: {
-										color : 'black'
-									} 
 								} 
 							}
 						},
 						series:[{
-							name: 'Brands',
+							size : this.chartSize,
+							name : this.options.yTitle,
 							colorByPoint: true,
 							data : this.changePieData(this.options.data,this.options.categories)
 						}]
@@ -123,6 +122,7 @@
 							}
 						},
 						series: [{
+							//size : this.chartSize,
 							type : 'pie',
 							name : this.options.yTitle,
 							data : this.changePie3dData(this.options.data,this.options.categories)
@@ -152,37 +152,57 @@
 					},
 					lineTimeSeries : {
 						chart : {
-							type : 'area'
+							zoomType : 'x'
 						},
 						title : {
 							text : this.options.xTitle
 						},
 						xAxis : {
-							allowDecimals: false
+							type : 'category'
+						},
+						tooltip: { 
+							pointFormat: this.options.yTitle + ' : <b>{point.y:.0f}</b>'
 						},
 						yAxis : {
+							min : 0,
 							title : {
 								text : this.options.yTitle
 							}
 						},
-						tooltip : {
-							pointFormat: '{series.name} -- <b>{point.y:,.0f}</b>'
+						legend : {
+							enabled : false
 						},
 						plotOptions : {
 							area : {
-								marker : {
-									enabled: false,
-                					symbol: 'circle',
-                					radius: 2,
-                					states: { 
-                						hover : {
-                							enabled : true 
-                						}
-                					}
-								}
+								fillColor : {
+									linearGradient : {
+										x1: 0,
+										y1: 0,
+										x2: 0,
+										y2: 1
+									},
+									stops : [
+										[0, Highcharts.getOptions().colors[0]],
+                        				[1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+									]
+								},
+								marker: {
+                    				radius: 2
+                				},
+                				lineWidth: 1,
+                				states: {
+                    				hover: {
+                        				lineWidth: 1
+                    				}
+                				},
+                				threshold: null
 							}
 						},
-						series : this.lineTimeSeries(this.options.data,this.options.categories)
+						series : [{
+							type : 'area',
+							name : '',
+							data : this.lineTimeSeriesData(this.options.data,this.options.categories)
+						}]
 					}
 				}
 			}
@@ -212,7 +232,6 @@
 					default : 
 						return ;
 				}
-				console.log(this.baseOptions.lineTimeSeries);
 				this.chart = new Highcharts.chart('highcharts-container',chartOptions);
 			},
 			changePieData( data, categories ){
@@ -229,7 +248,7 @@
 				});
 				return pie3dData;
 			},
-			lineTimeSeries( data, categories ){
+			lineTimeSeriesData( data, categories ){
 				let lineTimeSeriesData = [];
 				data.forEach((item,index)=>{
 					lineTimeSeriesData[ index ] = [categories[index], item ];

@@ -5,28 +5,31 @@
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="onRefresh()">刷新</van-button>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="config.popup.filterShow = true">筛选</van-button>
 		</van-sticky>
-		<van-panel v-for="(item,index) in panelList" :key="index">
-			<div slot="default">
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">生产线:{{ item.LineId }}</div>
-					<div class="van-col van-col--10">门幅:{{ item.SPaperWidth }}</div>
+		<high-chart v-if=" config.chart.show " :options=" config.chart "></high-chart>
+		<div v-else>
+			<van-panel v-for="(item,index) in panelList" :key="index">
+				<div slot="default">
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">生产线:{{ item.LineId }}</div>
+						<div class="van-col van-col--10">门幅:{{ item.SPaperWidth }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">坑型:{{ item.Flutes }}</div>
+						<div class="van-col van-col--10">总订单面积:{{ item.sumOrdArea }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">总长度:{{ item.sumLength }}</div>
+						<div class="van-col van-col--10">平均修边:{{ item.AvgTrim }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">平均门幅:{{ item.AvgPW }}</div>
+						<div class="van-col van-col--10">总款数:{{ item.sumCount }}</div>
+					</div>
 				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">坑型:{{ item.Flutes }}</div>
-					<div class="van-col van-col--10">总订单面积:{{ item.sumOrdArea }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">总长度:{{ item.sumLength }}</div>
-					<div class="van-col van-col--10">平均修边:{{ item.AvgTrim }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">平均门幅:{{ item.AvgPW }}</div>
-					<div class="van-col van-col--10">总款数:{{ item.sumCount }}</div>
-				</div>
-			</div>
-		</van-panel>
-		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;">
-			我也是有底线的
+			</van-panel>
+			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;">
+				我也是有底线的
+	  		</div>
   		</div>
   		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
   			<div slot="filter-field-1">
@@ -45,6 +48,7 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import HighChart from '@/components/subject/chart/HighChart';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -56,7 +60,8 @@
 			ChartHeaderSelect,
 			PopupFilter,
 			RadioCell,
-			NewTimePicker
+			NewTimePicker,
+			HighChart
 		},
 		data(){
 			return {
@@ -85,8 +90,8 @@
 						chartProperties:[
 							{ text: '总订单面积', value: 'sumOrdArea' },
 	                        { text: '总长度',     value: 'sumLength' },
-	                        { text: '平均修边',   value: 'avgTrim' },
-	                        { text: '平均门幅',   value: 'avgPW' },
+	                        { text: '平均修边',   value: 'AvgTrim' },
+	                        { text: '平均门幅',   value: 'AvgPW' },
 	                        { text: '总款数',     value: 'sumCount' },
 						]
 					},
@@ -99,6 +104,15 @@
 						dateType:[
 							 {title:'生产日期', value:'0' },
 						]
+					},
+					chart :{
+						show : false,
+						xTitle          : '',
+						yTitle          : '',
+						categories      : [],
+						data            : [],
+						chartProperties : '',
+						chartType       : '',
 					}
 				},
 				panelList:[],
@@ -120,7 +134,15 @@
 				this.getSchSum( this.filterForm );
 			},
 			selectOption( val ){
+				if( val.chartProperties != '' && val.chartType != '' ){
+					this.config.chart.chartProperties = val.chartProperties;
+					this.config.chart.chartType       = val.chartType;
+					//this.config.chart.show            = true;
+				}else{
+					this.config.chart.show = false;
+				}
 				this.filterForm.statisType = val.statisType;
+				this.onRefresh();
 			},
 			getSchSumConfig( isReset = false ){
 				let self = this;
@@ -146,6 +168,50 @@
 				let self = this;
 				this.$request.staff.statis.getSchSum( data ).then(res=>{
 					self.panelList = res.result;
+				}).then(()=>{
+					this.config.chart.show = false;
+					if(this.config.chart.chartProperties == '' || this.config.chart.chartType == ''){return ;
+					}
+					this.config.chart.data       = [];
+					this.config.chart.categories = [];
+					this.$nextTick(()=>{
+						for (var i = this.config.selectOption.chartProperties.length - 1; i >= 0; i--) {
+							if( this.config.selectOption.chartProperties[i].value == this.config.chart.chartProperties ){
+								this.config.chart.yTitle = this.config.selectOption.chartProperties[i].text;
+								break;
+							}
+						}
+						switch( this.filterForm.statisType ){
+							case '1' :
+								this.config.chart.xTitle = '生产线分布';
+								this.panelList.forEach((item,index)=>{
+									this.config.chart.categories.push(item.LineId);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							case '2' :
+								this.config.chart.xTitle = '门幅分布';
+								this.panelList.forEach((item,index)=>{
+									this.config.chart.categories.push(item.SPaperWidth);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							case '3' :
+							 	this.config.chart.xTitle = '坑型分布';
+								this.panelList.forEach((item,index)=>{
+									this.config.chart.categories.push(item.Flutes);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							default : 
+								this.config.chart.xTitle     = '汇总';
+								this.config.chart.categories = ['汇总'];
+								this.panelList.forEach((item,index)=>{
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+						}
+						this.config.chart.show = true;
+					});
 				});
 			},
 			resetClick(){
@@ -184,14 +250,14 @@
 			}
 		},
 		computed:{
-			statisTypeChange(){
+			/*statisTypeChange(){
 				return this.filterForm.statisType;
-			}
+			}*/
 		},
 		watch:{
-			statisTypeChange( newV, oldV ){
+			/*statisTypeChange( newV, oldV ){
 				this.onRefresh();
-			}
+			}*/
 		}
 	}
 </script>

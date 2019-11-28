@@ -6,34 +6,37 @@
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="onRefresh()">刷新</van-button>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="config.popup.filterShow = true">筛选</van-button>
 		</van-sticky>
-		<van-panel v-for="(item,index) in panelList" :key="index">
-			<div slot="default">
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--20">退货原因:{{ item.ReturnCause }}</div>
+		<div v-if=" !config.chart.show ">
+			<van-panel v-for="(item,index) in panelList" :key="index">
+				<div slot="default">
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--20">退货原因:{{ item.ReturnCause }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
+						<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">退货数:{{ item.ReturnQty }}</div>
+						<div class="van-col van-col--10">退货附加费:{{ item.ReturnFee }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">销售面积:{{ item.TSalesArea }}</div>
+						<div class="van-col van-col--10">金额:{{ item.Amt }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--20">总数:{{ item.sumCount }}</div>
+					</div>
 				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
-					<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+				<div slot="footer" style="text-align: right;">
+					<van-button size="small" type="info" @click="orderClick(item)">订单</van-button>
 				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">退货数:{{ item.ReturnQty }}</div>
-					<div class="van-col van-col--10">退货附加费:{{ item.ReturnFee }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">销售面积:{{ item.TSalesArea }}</div>
-					<div class="van-col van-col--10">金额:{{ item.Amt }}</div>
-				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--20">总数:{{ item.sumCount }}</div>
-				</div>
-			</div>
-			<div slot="footer" style="text-align: right;">
-				<van-button size="small" type="info" @click="orderClick(item)">订单</van-button>
-			</div>
-		</van-panel>
-		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
-			我也是有底线的
+			</van-panel>
+			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
+				我也是有底线的
+	  		</div>
   		</div>
+  		<high-chart v-if="config.chart.show" :options="config.chart"></high-chart>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="returnQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -52,6 +55,7 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import HighChart from '@/components/subject/chart/HighChart';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -64,7 +68,8 @@
 			StatisOrderList,
 			PopupFilter,
 			RadioCell,
-			NewTimePicker
+			NewTimePicker,
+			HighChart
 		},
 		data(){
 			return {
@@ -99,12 +104,21 @@
 						],
 						chartType:['all'],
 						chartProperties:[
-							{ text: '退货数', value:'returnQty' },
-							{ text: '退货附加费', value: 'returnFee' },
-							{ text: '销售面积', value: 'tSalesArea' },
-							{ text: '金额', value: 'amt' },
-							{ text: '总款数', value: 'sumCount' },
+							{ text: '退货数',     value:'ReturnQty' },
+							{ text: '退货附加费', value: 'ReturnFee' },
+							{ text: '销售面积',   value: 'TSalesArea' },
+							{ text: '金额',       value: 'Amt' },
+							{ text: '总款数',     value: 'sumCount' },
 						]
+					},
+					chart:{
+						show            : false,
+						xTitle          : '',
+						yTitle          : '',
+						categories      : [],
+						data            : [],
+						chartProperties : '',
+						chartType       : '',
 					}
 				},
 				panelList:[],
@@ -141,6 +155,13 @@
 				this.getOrdReturnSum( this.filterForm );
 			},
 			selectOption( val ){
+				if( val.chartProperties != '' && val.chartType != '' ){
+					this.config.chart.chartProperties = val.chartProperties;
+					this.config.chart.chartType       = val.chartType;
+					//this.config.chart.show            = true;
+				}else{
+					this.config.chart.show = false;
+				}
 				this.filterForm.statisState = val.statisType;
 				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
 					if(this.config.selectOption.statisType[i].value == val.statisType){
@@ -148,6 +169,7 @@
 						break;
 					}
 				}
+				this.onRefresh();
 			},
 			getOrdReturnSumConfig( isReset = false ){
 				let self = this;
@@ -179,6 +201,43 @@
 					if( res.result == null || res.result.length < 6 ){
 						this.finished = true;
 					}
+				}).then(()=>{
+					this.config.chart.show = false;
+					if(this.config.chart.chartProperties == '' || this.config.chart.chartType == ''){return ;
+					}
+					this.config.chart.data       = [];
+					this.config.chart.categories = [];
+					this.$nextTick(()=>{
+						for (var i = this.config.selectOption.chartProperties.length - 1; i >= 0; i--) {
+							if( this.config.selectOption.chartProperties[i].value == this.config.chart.chartProperties ){
+								this.config.chart.yTitle = this.config.selectOption.chartProperties[i].text;
+								break;
+							}
+						}
+						switch( this.filterForm.limitFactor ){
+							case 'returnCause' : 
+								this.config.chart.xTitle = '退货原因分布';
+								this.panelList.forEach((item,index)=>{
+									this.config.chart.categories.push(item.ReturnCause);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							case 'cusId' : 
+								this.config.chart.xTitle = '客户分布';
+								this.panelList.forEach((item,index)=>{
+									this.config.chart.categories.push(item.CusShortName);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							default : 
+								this.config.chart.xTitle     = '汇总';
+								this.config.chart.categories = ['汇总'];
+								this.panelList.forEach((item,index)=>{
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+						}
+						this.config.chart.show = true;
+					});
 				});
 			},
 			resetClick(){
@@ -215,14 +274,10 @@
 			}
 		},
 		computed:{
-			statisStateChange(){
-				return this.filterForm.statisState;
-			}
+			
 		},
 		watch:{
-			statisStateChange(newV,oldV){
-				this.onRefresh( this.filterForm );
-			}
+			
 		}
 	}
 </script>

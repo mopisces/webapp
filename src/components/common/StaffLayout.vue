@@ -10,7 +10,7 @@
 			<router-view v-if="isRouterAlive" />
 			<div style="margin-bottom:50px;"></div>
 		</div>
-		<van-tabbar v-model="active" @change="onChange">
+		<van-tabbar v-model="active">
 			<van-tabbar-item icon="home-o" :url="config.url.index">首页</van-tabbar-item>
 			<van-tabbar-item @click="logout">
 				退出
@@ -52,12 +52,6 @@
 		methods:{
 			onClickLeft(){
 				this.$router.go(-1);
-			},
-			onClickRight(){
-				console.log('2');
-			},
-			onChange( active ){
-				console.log(active);
 			},
 			reload(){
 				this.isRouterAlive = false;

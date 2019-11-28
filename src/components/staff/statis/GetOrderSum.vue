@@ -136,23 +136,23 @@
 						chartProperties:[
 							{ text: '总面积',     value: 'sumArea'},
 	                        { text: '总订单面积', value: 'sumOrdArea'},
-	                        { text: '总体积',   value: 'sumOrdVol'},
-	                        { text: '总长度',   value: 'sumLength'},
-	                        { text: '总金额',   value: 'sumAmt'},
-	                        { text: '订单总数', value: 'sumQty'},
-	                        { text: '总款数',   value: 'sumCount'},
-	                        { text: '单坑面积', value: 'sumArea1'},
-	                        { text: '单坑长度', value: 'sumLength1'},
-	                        { text: '单坑金额', value: 'sumAmt1'},
-	                        { text: '单坑款数', value: 'sumCount1'},
-	                        { text: '双坑面积', value: 'sumArea2'},
-	                        { text: '双坑长度', value: 'sumLength2'},
-	                        { text: '双坑金额', value: 'sumAmt2'},
-	                        { text: '双坑款数', value: 'sumCount2'},
-	                        { text: '三坑面积', value: 'sumArea3'},
-	                        { text: '三坑长度', value: 'sumLength3'},
-	                        { text: '三坑金额', value: 'sumAmt3'},
-	                        { text: '三坑款数', value: 'sumCount3'},
+	                        { text: '总体积',     value: 'sumOrdVol'},
+	                        { text: '总长度',     value: 'sumLength'},
+	                        { text: '总金额',     value: 'sumAmt'},
+	                        { text: '订单总数',   value: 'sumQty'},
+	                        { text: '总款数',     value: 'sumCount'},
+	                        { text: '单坑面积',   value: 'sumArea1'},
+	                        { text: '单坑长度',   value: 'sumLength1'},
+	                        { text: '单坑金额',   value: 'sumAmt1'},
+	                        { text: '单坑款数',   value: 'sumCount1'},
+	                        { text: '双坑面积',   value: 'sumArea2'},
+	                        { text: '双坑长度',   value: 'sumLength2'},
+	                        { text: '双坑金额',   value: 'sumAmt2'},
+	                        { text: '双坑款数',   value: 'sumCount2'},
+	                        { text: '三坑面积',   value: 'sumArea3'},
+	                        { text: '三坑长度',   value: 'sumLength3'},
+	                        { text: '三坑金额',   value: 'sumAmt3'},
+	                        { text: '三坑款数',   value: 'sumCount3'},
 						]
 					},
 					radio:{
@@ -195,6 +195,7 @@
 				if( val.chartProperties != '' && val.chartType != '' ){
 					this.config.chart.chartProperties = val.chartProperties;
 					this.config.chart.chartType       = val.chartType;
+					//this.config.chart.show            = true;
 				}else{
 					this.config.chart.show = false;
 				}
@@ -205,6 +206,7 @@
 						break;
 					}
 				}
+				this.onRefresh( this.filterForm );
 			},
 			getOrderSumConfig( isReset = false ){
 				let self = this;
@@ -241,10 +243,15 @@
 					this.config.chart.data       = [];
 					this.config.chart.categories = [];
 					this.$nextTick(()=>{
+						for (var i = this.config.selectOption.chartProperties.length - 1; i >= 0; i--) {
+							if( this.config.selectOption.chartProperties[i].value == this.config.chart.chartProperties ){
+								this.config.chart.yTitle = this.config.selectOption.chartProperties[i].text;
+								break;
+							}
+						}
 						switch( this.filterForm.limitFactor ){
 							case  'flutes' :
 								this.config.chart.xTitle = '坑型分布';
-								this.config.chart.yTitle = '总面积';
 								this.listInfo.forEach((item,index)=>{
 									this.config.chart.categories.push(item.Flutes);
 									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
@@ -252,7 +259,6 @@
 								break;
 							case 'cusId' :
 								this.config.chart.xTitle = '客户分布';
-								this.config.chart.yTitle = '总面积';
 								this.listInfo.forEach((item,index)=>{
 									this.config.chart.categories.push(item.CusShortName);
 									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
@@ -260,17 +266,15 @@
 								break;
 							case 'taskId' :
 								this.config.chart.xTitle = '业务员分布';
-								this.config.chart.yTitle = '总面积';
 								this.listInfo.forEach((item,index)=>{
 									this.config.chart.categories.push(item.TaskId);
 									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
 								});
 								break;
 							default :
-								this.config.chart.xTitle = '汇总';
-								this.config.chart.yTitle = '总面积';
+								this.config.chart.xTitle     = '汇总';
+								this.config.chart.categories = ['汇总'];
 								this.listInfo.forEach((item,index)=>{
-									this.config.chart.categories.push('汇总');
 									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
 								});
 						}
@@ -328,14 +332,10 @@
 			}
 		},
 		computed:{
-			statisStateChange(){
-				return this.filterForm.statisState;
-			}
+			
 		},
 		watch:{
-			statisStateChange(newV,oldV){
-				this.onRefresh( this.filterForm );
-			}
+			
 		}
 	}
 </script>

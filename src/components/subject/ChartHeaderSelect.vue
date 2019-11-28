@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<van-notice-bar color="#1989fa" background="#ecf9ff" mode="link" @click="noticeClick(0)">
-			<span>统计类型:{{ config.notice.statisTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-			<span>统计方式:{{ config.notice.statisWayText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+		<van-notice-bar color="#1989fa" background="#ecf9ff" mode="link" @click="noticeClick(0)" wrapable>
+			统计类型:{{ config.notice.statisTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;
+			统计方式:{{ config.notice.statisWayText }}&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 			<span v-if="config.notice.chartTypeText">图表类型:{{ config.notice.chartTypeText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<span v-if="config.notice.chartTypeText">图表属性:{{ config.notice.chartPropertiesText }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
 		</van-notice-bar>
@@ -83,17 +83,17 @@
 				],
 				config:{
 					select:{
-						statisType:'',
-						statisWay:'',
-						chartType:'',
-						chartProperties:'',
+						statisType      : '',
+						statisWay       : '',
+						chartType       : '',
+						chartProperties : '',
 					},
 					notice:{
-						text:'',
-						statisTypeText:'',
-						statisWayText:'',
-						chartTypeText:'',
-						chartPropertiesText:''
+						text                : '',
+						statisTypeText      : '',
+						statisWayText       : '',
+						chartTypeText       : '',
+						chartPropertiesText : ''
 					}
 				},
 			}

@@ -6,27 +6,30 @@
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="onRefresh()">刷新</van-button>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="config.popup.filterShow = true">筛选</van-button>
 		</van-sticky>
-		<van-panel v-for="(item,index) in info.panelList" :key="index">
-			<div slot="default">
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
-					<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+		<high-chart v-if=" config.chart.show " :options="config.chart"></high-chart>
+		<div v-else>
+			<van-panel v-for="(item,index) in info.panelList" :key="index">
+				<div slot="default">
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
+						<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">库存数:{{ item.StockQty }}</div>
+						<div class="van-col van-col--10">库存面积:{{ item.StockArea }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--10">库存金额:{{ item.StockAmt }}</div>
+						<div class="van-col van-col--10">总数:{{ item.sumCount }}</div>
+					</div>
 				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">库存数:{{ item.StockQty }}</div>
-					<div class="van-col van-col--10">库存面积:{{ item.StockArea }}</div>
+				<div slot="footer" style="text-align: right;">
+					<van-button size="small" type="info" @click="detailShowClick(item)">订单</van-button>
 				</div>
-				<div class="van-row van-row--flex van-row--justify-center">
-					<div class="van-col van-col--10">库存金额:{{ item.StockAmt }}</div>
-					<div class="van-col van-col--10">总数:{{ item.sumCount }}</div>
-				</div>
-			</div>
-			<div slot="footer" style="text-align: right;">
-				<van-button size="small" type="info" @click="detailShowClick(item)">订单</van-button>
-			</div>
-		</van-panel>
-		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
-			我也是有底线的
+			</van-panel>
+			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
+				我也是有底线的
+	  		</div>
   		</div>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="stockQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
@@ -48,6 +51,7 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import HighChart from '@/components/subject/chart/HighChart';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -60,7 +64,8 @@
 			StatisOrderList,
 			PopupFilter,
 			RadioCell,
-			NewTimePicker
+			NewTimePicker,
+			HighChart
 		},
 		data(){
 			return {
@@ -77,10 +82,10 @@
 						],
 						chartType:['all'],
 						chartProperties:[
-							{ text: '库存数', value: 'stockQty'},
-	                        { text: '库存面积', value: 'stockArea'},
-	                        { text: '库存金额', value: 'stockAmt'},
-	                        { text: '总款数', value: 'sumCount'},
+							{ text: '库存数',   value: 'StockQty'},
+	                        { text: '库存面积', value: 'StockArea'},
+	                        { text: '库存金额', value: 'StockAmt'},
+	                        { text: '总款数',   value: 'sumCount'},
 						]
 					},
 					popup:{
@@ -98,6 +103,15 @@
 							{title:'订单日期',value:1},
 							{title:'交货日期',value:2},
 						]
+					},
+					chart:{
+						show            : false,
+						xTitle          : '',
+						yTitle          : '',
+						categories      : [],
+						data            : [],
+						chartProperties : '',
+						chartType       : '',
 					}
 				},
 				info:{
@@ -125,6 +139,13 @@
 				this.getOrdStock( this.filterForm );
 			},
 			selectOption( val ){
+				if( val.chartProperties != '' && val.chartType != '' ){
+					this.config.chart.chartProperties = val.chartProperties;
+					this.config.chart.chartType       = val.chartType;
+					//this.config.chart.show            = true;
+				}else{
+					this.config.chart.show = false;
+				}
 				this.filterForm.statisState = val.statisType;
 				for (var i = this.config.selectOption.statisType.length - 1; i >= 0; i--) {
 					if(this.config.selectOption.statisType[i].value  == val.statisType){
@@ -132,7 +153,7 @@
 						break;
 					}
 				}
-				console.log(this.filterForm.limitFactor)
+				this.onRefresh( this.filterForm );
 			},
 			getOrdStockConfig( isReset = false ){
 				let self = this;
@@ -164,6 +185,36 @@
 					if( res.result == null || res.result.length < 6 ){
 						this.finished = true;
 					}
+				}).then(()=>{
+					this.config.chart.show = false;
+					if(this.config.chart.chartProperties == '' || this.config.chart.chartType == ''){return ;
+					}
+					this.config.chart.data       = [];
+					this.config.chart.categories = [];
+					this.$nextTick(()=>{
+						for (var i = this.config.selectOption.chartProperties.length - 1; i >= 0; i--) {
+							if( this.config.selectOption.chartProperties[i].value == this.config.chart.chartProperties ){
+								this.config.chart.yTitle = this.config.selectOption.chartProperties[i].text;
+								break;
+							}
+						}
+						switch( this.filterForm.limitFactor ){
+							case 'cusId' :
+								this.config.chart.xTitle = '坑型分布';
+								this.info.panelList.forEach((item,index)=>{
+									this.config.chart.categories.push(item.CusShortName);
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+								break;
+							default : 
+								this.config.chart.xTitle     = '汇总';
+								this.config.chart.categories = ['汇总'];
+								this.info.panelList.forEach((item,index)=>{
+									this.config.chart.data.push(Number(item[this.config.chart.chartProperties]));
+								});
+						}
+						this.config.chart.show = true;
+					});
 				});
 			},
 			resetClick(){
@@ -213,14 +264,14 @@
 			}
 		},
 		computed:{
-			statisStateChange(){
+			/*statisStateChange(){
 				return this.filterForm.statisState;
-			}
+			}*/
 		},
 		watch:{
-			statisStateChange(newV,oldV){
+			/*statisStateChange(newV,oldV){
 				this.onRefresh( this.filterForm );
-			}
+			}*/
 		}
 	}
 </script>
