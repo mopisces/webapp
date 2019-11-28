@@ -69,11 +69,11 @@
 		},
 		data(){
 			return {
-				finished:false,
+				finished : false,
 				config:{
-					getConfig:true,
+					getConfig : true,
 					switchCell:{
-						checked:false,
+						checked : false,
 					},
 					selectOption:{
 						statisType:[
@@ -89,19 +89,19 @@
 						]
 					},
 					popup:{
-						filterShow:false,
-						detailShow:false,
+						filterShow : false,
+						detailShow : false,
 						chartSelect:{
-							show:false
+							show : false
 						},
 						timePicker:{
-							isFinishLoad:false
+							isFinishLoad : false
 						}
 					},
 					radio:{
 						options:[
-							{title:'订单日期',value:1},
-							{title:'交货日期',value:2},
+							{ title:'订单日期', value:1 },
+							{ title:'交货日期', value:2 },
 						]
 					},
 					chart:{
@@ -129,8 +129,8 @@
 					limitValue  : ''
 				},
 				pageConfig:{
-					maxDate:'',
-					minDate:''
+					maxDate : '',
+					minDate : ''
 				}
 			}
 		},
@@ -264,14 +264,10 @@
 			}
 		},
 		computed:{
-			/*statisStateChange(){
-				return this.filterForm.statisState;
-			}*/
+			
 		},
 		watch:{
-			/*statisStateChange(newV,oldV){
-				this.onRefresh( this.filterForm );
-			}*/
+			
 		}
 	}
 </script>

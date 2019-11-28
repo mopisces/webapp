@@ -7,7 +7,8 @@ const states = {
 			orderId:'',
 			orderType:''
 		}
-	}
+	},
+	navList : {}
 };
 
 export default states;

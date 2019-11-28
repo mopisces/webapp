@@ -82,7 +82,7 @@
 					factoryId:'',
 					factoryLogo:require('@/assets/logo.png'),
 					factoryName:'',
-					bg:'background: url('+ require('@/assets/bg.png') +') no-repeat;background-size:cover;'
+					bg:'background: url('+ require('@/assets/bg.png') +') no-repeat;background-size:cover;width:100%;height:100%;'
 				},
 				validator:{},
 				rules:{
@@ -98,14 +98,18 @@
 						{ type:'number' , regexp: '/^[0-1]{1}$/', message: '用户类型格式错误'},
 					]
 
+				},
+				result:{
+					userName : '',
+					authName : ''
 				}
 			}
 		},
 		methods:{
 			confirm(value, index){
-				this.formData.subFactory = value.text + '(' + value.key + ')';
+				this.formData.subFactory   = value.text + '(' + value.key + ')';
 				this.formData.subFactoryId = value.key;
-				this.config.popup.show = false;
+				this.config.popup.show     = false;
 			},
 			getSF(){
 				let self = this;
@@ -137,21 +141,33 @@
 				});				
 			},
 			login( data ){
+				let self = this;
 				this.$request.login.login.login( data ).then(res=>{
 					sessionStorage.setItem('jpdn-login-token',res.result.access_token);
 					sessionStorage.setItem('jpdn-login-refresh',res.result.refresh_token);
-					sessionStorage.setItem('jpdn-login-username',data.userName);
+					sessionStorage.setItem('jpdn-login-username',res.result.user_name);
+					self.result.userName = res.result.user_name;
+				});
+			},
+			quickLogin(){
+				let self = this;
+				this.$request.login.login.login( this.$route.query.token ).then(res=>{
+					sessionStorage.setItem('jpdn-login-token',res.result.access_token);
+					sessionStorage.setItem('jpdn-login-refresh',res.result.refresh_token);
+					sessionStorage.setItem('jpdn-login-username',res.result.user_name);
+					self.result.userName = res.result.user_name;
+				});
+			},
+			getAuthName( data ){
+				let self = this;
+				this.$request.staff.user.getAuthName( data ).then(res=>{
+					console.log(res.result)
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.$router.push('/staff/index/menu');
 					});
 				});
 			},
-			quickLogin(){
-				this.$request.login.login.login( this.$route.query.token ).then(res=>{
-					console.log(res)
-				});
-			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','用户登录');
@@ -175,12 +191,20 @@
 		computed:{
 			tabActiveChange(){
 				return this.formData.userType;
+			},
+			usernameChange(){
+				return this.result.userName;
 			}
 		},
 		watch:{
 			tabActiveChange( newV, oldV ){
 				this.formData.userName = '';
 				this.formData.userPass = '';
+			},
+			usernameChange( newV, oldV ){
+				if( typeof(newV) !== 'undefined' && newV.length > 0 ){
+					this.getAuthName( {UserName:newV} );
+				}
 			}
 		}
 	}

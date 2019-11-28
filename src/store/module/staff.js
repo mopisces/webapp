@@ -16,7 +16,8 @@ const staff = {
 		},
 		setDetailForm( state, data ){
 			state.detailForm = Object.assign({},state.detailForm,data);
-		}
+		},
+		
 	},
 	actions: {
 

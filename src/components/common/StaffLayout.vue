@@ -60,7 +60,8 @@
 				});
 			},
 			logout(){
-				console.log('logout');
+				sessionStorage.clear();
+				this.$router.push('/login/select');
 			},
 			portValuable(){
 				let self = this;
