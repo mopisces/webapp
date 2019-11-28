@@ -63,16 +63,6 @@ const userManage             = r => require.ensure([], () => r(require('@/compon
 Vue.use(Router);
 
 export const asyncStaffRouterMap = [
-	
-];
-
-let routes = [
-    {
-        path:'/login/select',
-        alias:'/login/select?token=:token',
-        component: resolve => require(['../components/login/LoginSelect.vue'], resolve),
-        meta: { title: '登录选择界面' },
-    },
     {
         path:'/staff',
         component: staffLayout,
@@ -210,6 +200,15 @@ let routes = [
                 component: userManage,
             }
         ]
+    }
+];
+
+let routes = [
+    {
+        path:'/login/select',
+        alias:'/login/select?token=:token',
+        component: loginSelect,
+        meta: { title: '登录选择界面' },
     }
 ];
 

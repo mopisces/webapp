@@ -161,10 +161,12 @@
 			getAuthName( data ){
 				let self = this;
 				this.$request.staff.user.getAuthName( data ).then(res=>{
-					console.log(res.result)
+					//console.log(res.result)
+					console.log(res.result.available)
+					self.$store.dispatch('permission', res.result.available)
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.$router.push('/staff/index/menu');
+						//this.$router.push('/staff/index/menu');
 					});
 				});
 			},
