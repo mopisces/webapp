@@ -8,7 +8,8 @@ const states = {
 			orderType:''
 		}
 	},
-	navList : null
+	navList : null,
+	wxConfig : null
 };
 
 export default states;

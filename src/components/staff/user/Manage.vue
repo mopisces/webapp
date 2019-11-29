@@ -168,6 +168,7 @@
 						Toast.fail(res.msg);
 					}else{
 						Toast.success(res.msg);
+						self.config.popup.auth.show = false;
 					}
 				});
 			},

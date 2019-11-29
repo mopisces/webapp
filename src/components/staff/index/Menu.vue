@@ -41,10 +41,10 @@
 				</div>
 			</div>
 			<div style="margin-top:46px;"></div>
-			<van-field v-model="formData.account" label="账号" input-align="center"  readonly/>
-			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  readonly type="password"/>
-			<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6"/>
-			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6"/>
+			<van-field v-model="formData.account" label="账号" input-align="center"  readonly />
+			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  type="password" required/>
+			<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" required/>
+			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6" required/>
 			<div class="van-row van-row--flex van-row--justify-space-between" style="position:fixed;bottom:0;width:100%;">
 				<div class="van-col van-col--10">
 					<van-button type="primary" size="normal" style="width:100%;" @click="changeClick()">
@@ -52,7 +52,7 @@
 					</van-button>
 				</div>
 				<div class="van-col van-col--10">
-					<van-button type="primary" size="normal" style="width:100%;" @click=" config.popup.changePass.show = false ">
+					<van-button type="primary" size="danger" style="width:100%;" @click=" config.popup.changePass.show = false ">
 						取消
 					</van-button>
 				</div>
@@ -209,8 +209,8 @@
 				});
 			},
 			authGrid( authName ){
-				if( sessionStorage.getItem('authGrid') ){
-					this.config.authGrid =  JSON.parse(sessionStorage.getItem('authGrid'));
+				if( sessionStorage.getItem('auth-grid') ){
+					this.config.authGrid =  JSON.parse(sessionStorage.getItem('auth-grid'));
 					return ;
 				}
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
@@ -221,25 +221,25 @@
 						}
 					}
 				}
-				sessionStorage.setItem('authGrid',JSON.stringify(this.config.authGrid) );
+				sessionStorage.setItem('auth-grid',JSON.stringify(this.config.authGrid) );
 			},
 			
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
-			this.authGrid( JSON.parse(sessionStorage.getItem('authUrl') ) );
 		},
 		mounted(){
 			this.userName = sessionStorage.getItem('jpdn-login-username');
 			this.portValuable();
 			this.validator = new schema(this.rules);
 			/*this.config.gridItem.forEach((item,index)=>{
-				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' ){
+				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' || item.text == '库存修改'){
 					item.url = this.config.domian.wx80 + item.url;
 				}else{
 					item.url = this.config.domian.normal + item.url;
 				}
 			});*/
+			this.authGrid( JSON.parse(sessionStorage.getItem('auth-url') ) );
 		},
 		computed:{
 			

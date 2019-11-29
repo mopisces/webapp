@@ -72,9 +72,9 @@
 					}
 				},
 				formData:{
-					userType:0,
-					userName:'',
-					userPass:'',
+					userType:1,
+					userName:'CR',
+					userPass:'CR',
 					subFactory:'',
 					subFactoryId:''
 				},
@@ -161,9 +161,9 @@
 			getAuthName( data ){
 				let self = this;
 				this.$request.staff.user.getAuthName( data ).then(res=>{
-					sessionStorage.setItem('authUrl',JSON.stringify(res.result.available));
-					self.$store.dispatch('permission', res.result.available);
-					this.$router.addRoutes(this.$store.state.navList);
+					sessionStorage.setItem('auth-url',JSON.stringify(res.result.available));
+					self.$store.dispatch('staff/permission', res.result.available);
+					this.$router.addRoutes(this.$store.state.staff.navList);
 					//this.$router.addRoutes( JSON.parse(sessionStorage.getItem('navList')) );
 				}).then(()=>{
 					this.$nextTick(()=>{

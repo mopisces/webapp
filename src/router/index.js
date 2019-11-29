@@ -3,9 +3,11 @@ import Router from 'vue-router';
 import store from '@/store';
 
 //公共页面
+//登录
 const loginSelect            = r => require.ensure([], () => r(require('@/components/login/LoginSelect')), 'loginSelect');
 //404
 const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
+const wxScan                 = r => require.ensure([], () => r(require('@/components/common/WxScanRes')), 'wxScan');
 //staff权限页面
 //布局页面
 const staffLayout            = r => require.ensure([], () => r(require('@/components/common/StaffLayout')), 'staffLayout');
@@ -189,12 +191,12 @@ export const asyncStaffRouterMap = [
             },
             {
                 path:'daily/wGetCusOrder',
-                meta: { title: '每日订单' },
+                meta: { title: '客户每日订单' },
                 component: dailyWGetCusOrder,
             },
             {
                 path:'daily/getOrdersP',
-                meta: { title: '每日订单详细信息' },
+                meta: { title: '客户每日订单详细信息' },
                 component: dailyGetOrdersP,
             },
             {
@@ -214,6 +216,23 @@ let routes = [
         meta: { title: '登录选择界面' },
     },
     {
+        path : '/common/wxscan',
+        component: wxScan,
+        meta:{ title: '微信扫一扫' }
+    },
+    {
+        path:'/staff',
+        component: staffLayout,
+        meta: { title: '内部人员使用' },
+        children:[
+            {
+                path:'stock/mStockDetailR',
+                meta: { title: '库存修改' },
+                component: stockMStockDetailR,
+            }
+        ]
+    },
+    {
         path:'*',
         component : error404,
         meta : { title:'您访问的页面不存在' }
@@ -227,9 +246,9 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    if( sessionStorage.getItem('authUrl') && store.state.navList == null ){
-        store.dispatch('permission', JSON.parse(sessionStorage.getItem('authUrl')));
-        router.addRoutes(store.state.navList);
+    if( sessionStorage.getItem('auth-url') && store.state.staff.navList == null ){
+        store.dispatch('staff/permission', JSON.parse(sessionStorage.getItem('auth-url')));
+        router.addRoutes(store.state.staff.navList);
         next({ ...to, replace: true });
     }else{
         next();

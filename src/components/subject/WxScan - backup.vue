@@ -12,7 +12,7 @@
 			[Field.name]: Field,
 			[Toast.name]: Toast,
 		},
-		props:['scanResult','urlType','redirect'],
+		props:['scanResult','urlType'],
 		data(){
 			return {
 				result: this.scanResult,
@@ -26,18 +26,20 @@
 				let self = this;
 				this.$request.staff.wx.getScanConfig( { urlType:this.urlType } ).then(res=>{
 					self.wxConfig = res.result;
+					window.alert(JSON.stringify(self.wxConfig));
 				}).then(()=>{
-					/*this.$store.commit('staff/setWxConfig',Object.assign({},this.wxConfig,{redirect:this.redirect}));
-					console.log(this.$store.state.staff.wxConfig);*/
-					
-					//window.location.href = 'http://luodangfrp2.leaper.ltd/common/wxScan?config=' + encodeURIComponent(JSON.stringify(config));
-				});
-				
+					wx.config({
+		                debug     : true,
+		                appId     : self.wxConfig.appId,
+		                timestamp : self.wxConfig.timestamp,
+		                nonceStr  : self.wxConfig.nonceStr,
+		                signature : self.wxConfig.signature,
+		                jsApiList : ['scanQRCode']
+		            });
+				})
 			},
 			scanQRCode(){
-				let config = Object.assign({},this.wxConfig,{ redirect : this.redirect })
-				window.location.href = 'http://luodangfrp2.leaper.ltd/common/wxScan?config=' + encodeURIComponent(JSON.stringify(config));
-				/*if( this.wxConfig.timestamp == undefined || Math.round(new Date().getTime()/1000) >= (this.wxConfig.timestamp + Number(7200)) ){
+				if( this.wxConfig.timestamp == undefined || Math.round(new Date().getTime()/1000) >= (this.wxConfig.timestamp + Number(7200)) ){
 					this.setWxConfig();
 				}else{
 					wx.config({
@@ -59,7 +61,7 @@
                 });
                 wx.error((err)=>{
                 	Toast.fail('微信扫码失败');
-                });*/
+                });
 			}
 		},
 		created(){
