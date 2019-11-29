@@ -19,7 +19,7 @@
 			</div>
 		</div>
 		<van-grid square :gutter="10" :column-num="3">
-			<van-grid-item v-for="(item,index) in config.gridItem" :key="index" :url="item.url" :text="item.text">
+			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="item.state"/>
 			</van-grid-item>
 		</van-grid>
@@ -107,6 +107,7 @@
 						{text:'收款调账',iconName:'yewutiaozhang',url:'/staff/frec/recAdjust',state:'#0bf147'},
 						{text:'客户往来统计',iconName:'kehu',url: '/staff/frec/cusContact',state:'#0bf147'},
 					],
+					authGrid:[],
 					domian:{
 						wx80:'http://luodangfrp2.leaper.ltd',
 						normal:'http://test.leaper.ltd:1104'
@@ -207,10 +208,26 @@
 					Toast.fail('密码更新失败');
 				});
 			},
-
+			authGrid( authName ){
+				if( sessionStorage.getItem('authGrid') ){
+					this.config.authGrid =  JSON.parse(sessionStorage.getItem('authGrid'));
+					return ;
+				}
+				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
+					for (var j = authName.length - 1; j >= 0; j--) {
+						if( authName[j] == this.config.gridItem[i].text ){
+							this.config.authGrid.push(this.config.gridItem[i]);
+							break;
+						}
+					}
+				}
+				sessionStorage.setItem('authGrid',JSON.stringify(this.config.authGrid) );
+			},
+			
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
+			this.authGrid( JSON.parse(sessionStorage.getItem('authUrl') ) );
 		},
 		mounted(){
 			this.userName = sessionStorage.getItem('jpdn-login-username');

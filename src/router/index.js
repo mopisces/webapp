@@ -1,8 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-//公共页面
-const loginSelect = r => require.ensure([], () => r(require('@/components/login/LoginSelect')), 'loginSelect');
+import store from '@/store';
 
+//公共页面
+const loginSelect            = r => require.ensure([], () => r(require('@/components/login/LoginSelect')), 'loginSelect');
+//404
+const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
 //staff权限页面
 //布局页面
 const staffLayout            = r => require.ensure([], () => r(require('@/components/common/StaffLayout')), 'staffLayout');
@@ -14,7 +17,7 @@ const clacIndex              = r => require.ensure([], () => r(require('@/compon
 const frecCusContact         = r => require.ensure([], () => r(require('@/components/staff/frec/CusContact')), 'frecCusContact');
 //收款调账
 const frecRecAdjust          = r => require.ensure([], () => r(require('@/components/staff/frec/RecAdjust')), 'frecRecAdjust');
-//库区修改
+//库存修改
 const stockMStockDetailR     = r => require.ensure([], () => r(require('@/components/staff/stock/MStockDetailR')), 'stockMStockDetailR');
 //库区面积
 const stockDeliveryArea      = r => require.ensure([], () => r(require('@/components/staff/stock/DeliveryArea')), 'stockDeliveryArea');
@@ -90,7 +93,7 @@ export const asyncStaffRouterMap = [
             },
             {
                 path:'stock/mStockDetailR',
-                meta: { title: '库区修改' },
+                meta: { title: '库存修改' },
                 component: stockMStockDetailR,
             },
             {
@@ -209,6 +212,11 @@ let routes = [
         alias:'/login/select?token=:token',
         component: loginSelect,
         meta: { title: '登录选择界面' },
+    },
+    {
+        path:'*',
+        component : error404,
+        meta : { title:'您访问的页面不存在' }
     }
 ];
 
@@ -218,6 +226,14 @@ let router = new Router({
     mode: 'history'
 });
 
-
+router.beforeEach((to, from, next) => {
+    if( sessionStorage.getItem('authUrl') && store.state.navList == null ){
+        store.dispatch('permission', JSON.parse(sessionStorage.getItem('authUrl')));
+        router.addRoutes(store.state.navList);
+        next({ ...to, replace: true });
+    }else{
+        next();
+    }
+});
 
 export default router;

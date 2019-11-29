@@ -8,7 +8,7 @@ const states = {
 			orderType:''
 		}
 	},
-	navList : {}
+	navList : null
 };
 
 export default states;

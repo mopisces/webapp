@@ -161,17 +161,19 @@
 			getAuthName( data ){
 				let self = this;
 				this.$request.staff.user.getAuthName( data ).then(res=>{
-					//console.log(res.result)
-					console.log(res.result.available)
-					self.$store.dispatch('permission', res.result.available)
+					sessionStorage.setItem('authUrl',JSON.stringify(res.result.available));
+					self.$store.dispatch('permission', res.result.available);
+					this.$router.addRoutes(this.$store.state.navList);
+					//this.$router.addRoutes( JSON.parse(sessionStorage.getItem('navList')) );
 				}).then(()=>{
 					this.$nextTick(()=>{
-						//this.$router.push('/staff/index/menu');
+						this.$router.push('/staff/index/menu');
 					});
 				});
 			},
 		},
 		created(){
+			sessionStorage.clear();
 			this.$store.commit('staff/setHeaderTitle','用户登录');
 			this.config.style.div = 'width:100%;height:' + window.screen.height + 'px';
 			if( typeof (this.$route.query.token) != 'undefined' ){
@@ -179,6 +181,7 @@
 					this.quickLogin();
 				}
 			}
+
 		},
 		mounted(){
 			this.validator = new schema(this.rules);
