@@ -310,7 +310,7 @@
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','订单统计');
-			if( sessionStorage.getItem('statis/getOrderSum') ){
+			if( sessionStorage.getItem('statis/getOrderSum') !== null ){
 				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrderSum'));
 				this.filterForm = storageData;
 				this.config.getConfig          = false;

@@ -10,8 +10,9 @@ const staff = {
 			orderType:''
 		},
 		domain:'http://test.leaper.ltd:1104',
-		wxConfig:null,
-		navList:null
+		wxConfig : null,
+		navList  : null,
+		backPath : '/staff/index/menu'
 	},
 	mutations:{
 		setHeaderTitle( state, title ){
@@ -20,11 +21,14 @@ const staff = {
 		setDetailForm( state, data ){
 			state.detailForm = Object.assign({},state.detailForm,data);
 		},
-		setNavList(state, navList){
+		setNavList( state, navList ){
 			state.navList = navList;
 		},
 		setWxConfig( state, config ){
 			state.wxConfig = config;
+		},
+		setBackPath( state, path ){
+			state.backPath = path;
 		}
 	},
 	actions: {

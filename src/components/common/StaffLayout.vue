@@ -51,7 +51,8 @@
 		},
 		methods:{
 			onClickLeft(){
-				this.$router.go(-1);
+				this.$router.push( this.$store.state.staff.backPath );
+				this.$store.commit('staff/setBackPath','/staff/index/menu');
 			},
 			reload(){
 				this.isRouterAlive = false;

@@ -417,23 +417,29 @@
 					self.erpDelForm.strFactoryId = res.result.factory_id;
 					self.erpDelForm.strUserId    = res.result.erp_id 
 				});
+			},
+			init(){
+				if( typeof(this.$route.query.scanRes) == 'string' ){
+					this.fieldData.strOrderId = this.$route.query.scanRes;
+				}
+				if( this.$route.query.listNo !== undefined && this.$route.query.orderType !== undefined && this.$route.query.isEdit !== undefined ){
+					this.filterForm.listNo    = this.$route.query.listNo;
+					this.filterForm.orderType = this.$route.query.orderType;
+					this.erpDelForm.PListNo   = this.$route.query.listNo;
+					this.fieldData.orderType  = this.$route.query.orderType;
+					this.config.isEdit        = this.$route.query.isEdit;
+					if( this.config.isEdit == 1 ){
+						this.config.table.columns.push({field: 'stowDetailHandle', title: '操作', width: 150, titleAlign: 'center',titleCellClassName:'table-title-class',componentName:'table-operate', columnAlign: 'center',isResize:true})
+					}
+				}else{
+					this.$router.go(-1);
+				}
 			}
 		},
 		created(){
-			Toast.success(this.$route.query.scanRes);
 			this.$store.commit('staff/setHeaderTitle','扫描装货详情');
-			if( this.$route.query.listNo !== undefined && this.$route.query.orderType !== undefined && this.$route.query.isEdit !== undefined ){
-				this.filterForm.listNo    = this.$route.query.listNo;
-				this.filterForm.orderType = this.$route.query.orderType;
-				this.erpDelForm.PListNo   = this.$route.query.listNo;
-				this.fieldData.orderType  = this.$route.query.orderType;
-				this.config.isEdit        = this.$route.query.isEdit;
-				if( this.config.isEdit == 1 ){
-					this.config.table.columns.push({field: 'stowDetailHandle', title: '操作', width: 150, titleAlign: 'center',titleCellClassName:'table-title-class',componentName:'table-operate', columnAlign: 'center',isResize:true})
-				}
-			}else{
-				this.$router.go(-1);
-			}
+			this.$store.commit('staff/setBackPath','/staff/stow/Lists');
+			this.init();
 		},
 		mounted(){
 			this.detailConfig();

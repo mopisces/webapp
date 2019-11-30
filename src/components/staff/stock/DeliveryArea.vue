@@ -14,7 +14,7 @@
 				config:{
 					table:{
 						columns:[
-							{field: 'SAreaCode', title: '库区', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SAreaCode', title: '库区', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true,isFrozen:true},
 							{field: 'MaxSArea', title: '库区面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'CurSArea', title: '已用面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'LeftArea', title: '剩余面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},

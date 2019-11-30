@@ -181,6 +181,9 @@
 					this.quickLogin();
 				}
 			}
+			if( typeof(this.$route.query.scanRes) == 'string' ){
+				this.formData.strOrderId = this.$route.query.scanRes;
+			}
 
 		},
 		mounted(){

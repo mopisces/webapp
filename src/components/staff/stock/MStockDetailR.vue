@@ -9,7 +9,7 @@
 		<van-field v-model="formData.strRemark" rows="1" autosize label="备注" type="textarea" placeholder="输入备注"></van-field>
 		<div class="van-row van-row--flex van-row--justify-end">
 			<div class="van-col van-col--8">
-				<van-button type="primary" style="width:90%" @click="onChangeClick()">修改</van-button>
+				<van-button type="primary" style="width:90%" @click="onChangeClick()" :disabled="config.button.change.disabled">修改</van-button>
 			</div>
 			<div class="van-col van-col--8">
 				<van-button plain type="primary" style="width:100%" @click="onResetClick()">重置</van-button>
@@ -95,6 +95,11 @@
 							}},
 							{field: 'Remark', title: '备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						]
+					},
+					button:{
+						change:{
+							disabled : true
+						}
 					}
 				},
 				validator:{},
@@ -240,13 +245,19 @@
 					if( res.result.MatName !== '' && res.result.OrderType === 'x' ){
 						self.formData.strOrderInfo += ' 货品名称:' + res.result.MatName;
 					}
+					this.config.button.change.disabled = false;
 					self.getStockDetailSearch( this.formData.strOrderId );	
 				});
+			},
+			init(){
+				if( typeof(this.$route.query.scanRes) == 'string' ){
+					this.formData.strOrderId = this.$route.query.scanRes;
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','库存修改');
-			Toast.success(this.$route.query.scanRes);
+			this.init();
 		},
 		mounted(){
 			this.getConfig();
