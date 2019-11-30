@@ -7,6 +7,7 @@ const wx = {
 			scan_url_type : data.urlType
 		};
 		return post(staff.wx.scanWxConfig,postData);
+		//return post(staff.wx.scanWxConfig);
 	},
 	portValuable(){
 		return post(staff.wx.portValuable);

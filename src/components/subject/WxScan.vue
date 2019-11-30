@@ -4,7 +4,6 @@
 	</van-field>
 </template>
 <script>
-	import wx from 'weixin-js-sdk';
 	import { Icon, Field, Toast  } from 'vant';
 	export default {
 		components:{
@@ -12,7 +11,7 @@
 			[Field.name]: Field,
 			[Toast.name]: Toast,
 		},
-		props:['scanResult','urlType','redirect'],
+		props:['scanResult','urlType'],
 		data(){
 			return {
 				result: this.scanResult,
@@ -22,44 +21,8 @@
 			}
 		},
 		methods:{
-			setWxConfig(){
-				let self = this;
-				this.$request.staff.wx.getScanConfig( { urlType:this.urlType } ).then(res=>{
-					self.wxConfig = res.result;
-				}).then(()=>{
-					/*this.$store.commit('staff/setWxConfig',Object.assign({},this.wxConfig,{redirect:this.redirect}));
-					console.log(this.$store.state.staff.wxConfig);*/
-					
-					//window.location.href = 'http://luodangfrp2.leaper.ltd/common/wxScan?config=' + encodeURIComponent(JSON.stringify(config));
-				});
-				
-			},
 			scanQRCode(){
-				let config = Object.assign({},this.wxConfig,{ redirect : this.redirect })
-				window.location.href = 'http://luodangfrp2.leaper.ltd/common/wxScan?config=' + encodeURIComponent(JSON.stringify(config));
-				/*if( this.wxConfig.timestamp == undefined || Math.round(new Date().getTime()/1000) >= (this.wxConfig.timestamp + Number(7200)) ){
-					this.setWxConfig();
-				}else{
-					wx.config({
-		                debug     : true,
-		                appId     : this.wxConfig.appId,
-		                timestamp : this.wxConfig.timestamp,
-		                nonceStr  : this.wxConfig.nonceStr,
-		                signature : this.wxConfig.signature,
-		                jsApiList : ['scanQRCode']
-		            });
-				}
-
-				let self = this;
-				wx.scanQRCode({
-                    needResult: 1,
-                    success: function(res){
-                        self.result = res.resultStr;
-                    }
-                });
-                wx.error((err)=>{
-                	Toast.fail('微信扫码失败');
-                });*/
+				window.location.href = 'http://luodangfrp2.leaper.ltd/common/wxScan?urlType=' + this.urlType;
 			}
 		},
 		created(){
@@ -71,7 +34,7 @@
 			}
 		},
 		mounted(){
-			this.setWxConfig();
+			
 		},
 		updated(){
 			
