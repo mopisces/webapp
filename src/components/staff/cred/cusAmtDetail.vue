@@ -56,11 +56,12 @@
 			this.getInitData(  this.form );
 		},
 		created(){
-			this.$store.commit('staff/setHeaderTitle','客户信用余额/详细信息');	
+			this.$store.commit('staff/setHeaderTitle','客户信用余额/详细信息');
+			this.$store.commit('staff/setBackPath','/staff/cred/WGetCusAmt');
 			if( sessionStorage.getItem('cred/wGetCusAmt/cusId') !== null ){
 				this.form.cusId = sessionStorage.getItem('cred/wGetCusAmt/cusId');
 			}else{
-				this.$router.go(-1);
+				this.$router.push( this.$store.state.staff.backPath );
 			}
 		},
 		computed:{

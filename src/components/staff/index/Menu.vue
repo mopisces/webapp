@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div style="margin-top:10px;"></div>
-		<div class="vant-row" style="margin-bottom:10px">
+		<div class="vant-row">
 			<div class="van-col van-col--6">
 				<div class="van-tabbar-item" style="height:44px;">账号：{{ userName }}</div>
 			</div>
@@ -18,6 +18,7 @@
 				</van-button>
 			</div>
 		</div>
+		<div style="width:100%;height:50px;"></div>
 		<van-grid square :gutter="10" :column-num="3">
 			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="item.state"/>

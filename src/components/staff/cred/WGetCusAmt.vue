@@ -154,7 +154,8 @@
 			if( sessionStorage.getItem('cred/wGetCusAmt') !== null  ){
 				this.filterForm = JSON.parse(sessionStorage.getItem('cred/wGetCusAmt'));
 				this.config.switch.checked = true;
-			}	
+			}
+			console.log(this.$store.state.staff.navList);	
 		},
 		mounted(){
 			this.getUserInfo();

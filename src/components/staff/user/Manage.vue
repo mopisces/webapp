@@ -147,7 +147,7 @@
 						document.getElementById('qrcode').innerHTML = '';
 						let url = res.result;//登录地址
 						this.creatQrCode(url);
-					})
+					});
 				});
 			},
 			getAuthName( data ){
@@ -158,7 +158,7 @@
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.auth.show = true;
-					})
+					});
 				});
 			},
 			saveAuthName( data ){

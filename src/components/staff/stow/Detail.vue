@@ -432,7 +432,7 @@
 						this.config.table.columns.push({field: 'stowDetailHandle', title: '操作', width: 150, titleAlign: 'center',titleCellClassName:'table-title-class',componentName:'table-operate', columnAlign: 'center',isResize:true})
 					}
 				}else{
-					this.$router.go(-1);
+					this.$router.push( this.$store.state.staff.backPath );
 				}
 			}
 		},

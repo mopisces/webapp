@@ -15,7 +15,7 @@ const staffLayout            = r => require.ensure([], () => r(require('@/compon
 const indexMenu              = r => require.ensure([], () => r(require('@/components/staff/index/Menu')), 'indexMenu');
 //订单试算
 const clacIndex              = r => require.ensure([], () => r(require('@/components/staff/calc/Index')), 'clacIndex');
-//客户来往统计
+//客户往来统计
 const frecCusContact         = r => require.ensure([], () => r(require('@/components/staff/frec/CusContact')), 'frecCusContact');
 //收款调账
 const frecRecAdjust          = r => require.ensure([], () => r(require('@/components/staff/frec/RecAdjust')), 'frecRecAdjust');
@@ -85,7 +85,7 @@ export const asyncStaffRouterMap = [
             },
             {
                 path:'frec/cusContact',
-                meta: { title: '客户来往统计' },
+                meta: { title: '客户往来统计' },
                 component: frecCusContact,
             },
             {
