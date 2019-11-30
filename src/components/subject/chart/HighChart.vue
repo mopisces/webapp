@@ -12,7 +12,9 @@
 				baseOptions:{
 					line : {
 						chart: {
-			                type: 'line'
+			                type: 'line',
+			                //backgroundColor: '#FCFFC5',
+			                //polar:true
 			            },
 			            title: {
 			                text: this.options.xTitle             // 标题
@@ -89,7 +91,6 @@
 							}
 						},
 						series:[{
-							size : this.chartSize,
 							name : this.options.yTitle,
 							colorByPoint: true,
 							data : this.changePieData(this.options.data,this.options.categories)

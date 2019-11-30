@@ -132,6 +132,7 @@
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸入库');
+			Toast.success(this.$route.query.scanRes);
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

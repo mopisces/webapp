@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="content">
 		<van-loading type="spinner" color="#1989fa" />
 	</div>
 </template>
@@ -35,7 +35,7 @@
 				wx.error((err)=>{
                 	Toast.fail(err);
                 });
-                
+
 				wx.ready(()=>{
 					wx.checkJsApi({
 						jsApiList: [
@@ -100,3 +100,12 @@
 		}
 	}
 </script>
+<style>
+	.content{
+        width:100%;
+        height:100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>

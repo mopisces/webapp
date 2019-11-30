@@ -420,6 +420,7 @@
 			}
 		},
 		created(){
+			Toast.success(this.$route.query.scanRes);
 			this.$store.commit('staff/setHeaderTitle','扫描装货详情');
 			if( this.$route.query.listNo !== undefined && this.$route.query.orderType !== undefined && this.$route.query.isEdit !== undefined ){
 				this.filterForm.listNo    = this.$route.query.listNo;
