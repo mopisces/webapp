@@ -164,10 +164,13 @@
 					sessionStorage.setItem('auth-url',JSON.stringify(res.result.available));
 					self.$store.dispatch('staff/permission', res.result.available);
 					this.$router.addRoutes(this.$store.state.staff.navList);
-					//this.$router.addRoutes( JSON.parse(sessionStorage.getItem('navList')) );
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.$router.push('/staff/index/menu');
+						if( this.formData.userType == 1 ){
+							this.$router.push('/staff/index/menu');
+						}else{
+							this.$router.push('/client/index/menu');
+						}
 					});
 				});
 			},

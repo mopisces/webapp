@@ -1,9 +1,3 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import store from '@/store';
-import client from './client';
-
-Vue.use(Router);
 //公共页面
 //登录
 const loginSelect            = r => require.ensure([], () => r(require('@/components/login/LoginSelect')), 'loginSelect');
@@ -65,8 +59,6 @@ const dailyWGetCusOrder      = r => require.ensure([], () => r(require('@/compon
 const dailyGetOrdersP        = r => require.ensure([], () => r(require('@/components/staff/daily/GetOrdersP')), 'dailyGetOrdersP');
 //用户管理
 const userManage             = r => require.ensure([], () => r(require('@/components/staff/user/Manage')), 'userManage');
-
-
 
 export const asyncStaffRouterMap = [
     {
@@ -209,40 +201,12 @@ export const asyncStaffRouterMap = [
     }
 ];
 
-let routes = [
-    {
-        path:'/login/select',
-        alias:'/login/select?token=:token',
-        component: loginSelect,
-        meta: { title: '登录选择界面' },
-    },
-    {
+const staff = [
+	{
         path : '/common/wxscan',
         component: wxScan,
         meta:{ title: '微信扫一扫' }
     },
-    {
-        path:'*',
-        component : error404,
-        meta : { title:'您访问的页面不存在' }
-    },
-    ...client,
 ];
 
-
-let router = new Router({
-    routes: routes,
-    mode: 'history'
-});
-
-router.beforeEach((to, from, next) => {
-    if( sessionStorage.getItem('auth-url') && store.state.staff.navList == null ){
-        store.dispatch('staff/permission', JSON.parse(sessionStorage.getItem('auth-url')));
-        router.addRoutes(store.state.staff.navList);
-        next({ ...to, replace: true });
-    }else{
-        next();
-    }
-});
-
-export default router;
+export

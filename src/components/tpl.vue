@@ -17,7 +17,7 @@
 
 		},
 		created(){
-			this.$store.commit('staff/setHeaderTitle','');
+			this.$store.commit('client/setHeaderTitle','');
 		},
 		mounted(){
 

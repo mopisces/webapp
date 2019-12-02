@@ -1,10 +1,4 @@
 import base from './base';
-const map = {
-	
-};
-const webappMap = {
-
-};
 const adminUrl = {
 	login: `${base.admin}login`
 };
@@ -123,4 +117,18 @@ const index = {
 		getToken : `${base.index}getToken`,
 	}
 };
-export { map, webappMap, adminUrl, staff, erp, index};
+
+const client = {
+	cred : {
+		creditBalanceAmt : `${base.client}creditBalanceAmt`
+	},
+	makeOffers : {
+		makeOffersRule  : `${base.client}makeOffersRule`,
+		makeOffersPrice : `${base.client}makeOffersPrice`,
+	},
+	ordersManage : {
+		erpOrdersConfig : `${base.client}erpOrdersConfig`,
+		erpOrders       : `${base.client}erpOrders`,
+	}
+};
+export { adminUrl, staff, erp, index, client };

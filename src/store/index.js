@@ -5,6 +5,7 @@ import actions from './action';
 import mutations from './mutation';
 import admin from './module/admin';
 import staff from './module/staff';
+import client from './module/client';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -13,6 +14,7 @@ export default new Vuex.Store({
  	actions,
  	modules:{
  		admin,
- 		staff
+ 		staff,
+ 		client,
  	}
 });	

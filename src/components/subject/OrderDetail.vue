@@ -11,7 +11,7 @@
 				</div>
 			</div>
 		</van-sticky>
-		<div v-if=" info.orderDNRe != null ">
+		<div v-if=" info.orderDNRe != null">
 			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;">
       		退货明细
   			</div>
