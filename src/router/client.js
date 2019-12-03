@@ -11,7 +11,8 @@ const getQuoRuleByCus  = r => require.ensure([], () => r(require('@/components/c
 const getQuoPriceByCus = r => require.ensure([], () => r(require('@/components/client/quo/GetQuoPriceByCus')), 'getQuoPriceByCus');
 //ERP订单
 const getOrders        = r => require.ensure([], () => r(require('@/components/client/order/GetOrders')), 'getOrders');
-
+//每日订单
+const getOrdersP       = r => require.ensure([], () => r(require('@/components/client/order/GetOrdersP')), 'getOrdersP');
 const client = [
 	{
         path:'/client',
@@ -42,6 +43,11 @@ const client = [
                 path:'order/getOrders',
                 meta: { title: 'ERP订单' },
                 component: getOrders,
+            },
+            {
+                path:'order/getOrdersP',
+                meta: { title: '每日订单' },
+                component: getOrdersP,
             }
         ]
     }

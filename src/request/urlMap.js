@@ -127,8 +127,12 @@ const client = {
 		makeOffersPrice : `${base.client}makeOffersPrice`,
 	},
 	ordersManage : {
-		erpOrdersConfig : `${base.client}erpOrdersConfig`,
-		erpOrders       : `${base.client}erpOrders`,
+		erpOrdersConfig   : `${base.client}erpOrdersConfig`,
+		erpOrders         : `${base.client}erpOrders`,
+		dailyOrdersConfig : `${base.client}dailyOrdersConfig`,
+		optionalDate      : `${base.client}optionalDate`,
+		cusInfo           : `${base.client}cusInfo`,
+		dailyOrders       : `${base.client}dailyOrders`, 
 	}
 };
 export { adminUrl, staff, erp, index, client };
