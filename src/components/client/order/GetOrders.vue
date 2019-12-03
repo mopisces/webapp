@@ -175,12 +175,12 @@
 			getConfig( isReset = false ){
 				let self = this;
 				this.$request.client.ordersManage.erpOrdersConfig().then(res=>{
-					if( !isReset ){
-						self.pageConfig.maxDate   = res.result.Wap0GetOrdersMaxDate;
-						self.pageConfig.minDate   = res.result.Wap0GetOrdersMinDate;
+					if( isReset ){
+						self.filterForm.beginDate = res.result.Wap0GetOrdersBeginDate;
+						self.filterForm.endDate   = res.result.Wap0GetOrdersEndDate;
 					}
-					self.filterForm.beginDate = res.result.Wap0GetOrdersBeginDate;
-					self.filterForm.endDate   = res.result.Wap0GetOrdersEndDate;
+					self.pageConfig.maxDate   = res.result.Wap0GetOrdersMaxDate;
+					self.pageConfig.minDate   = res.result.Wap0GetOrdersMinDate;
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timePicker.isFinishLoad = true;

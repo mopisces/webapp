@@ -120,7 +120,9 @@ const index = {
 
 const client = {
 	cred : {
-		creditBalanceAmt : `${base.client}creditBalanceAmt`
+		creditBalanceAmt       : `${base.client}creditBalanceAmt`,
+		statementAccountConfig : `${base.client}statementAccountConfig`,
+		statementAccount       : `${base.client}statementAccount`,
 	},
 	makeOffers : {
 		makeOffersRule  : `${base.client}makeOffersRule`,
@@ -133,6 +135,11 @@ const client = {
 		optionalDate      : `${base.client}optionalDate`,
 		cusInfo           : `${base.client}cusInfo`,
 		dailyOrders       : `${base.client}dailyOrders`, 
+	},
+	commonMaterial : {
+		getMaterial       : `${base.client}commonMaterial`, 
+		getMaterialConfig : `${base.client}getMaterialConfig`, 
+		materialSave      : `${base.client}materialSave`, 
 	}
 };
 export { adminUrl, staff, erp, index, client };

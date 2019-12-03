@@ -13,6 +13,10 @@ const getQuoPriceByCus = r => require.ensure([], () => r(require('@/components/c
 const getOrders        = r => require.ensure([], () => r(require('@/components/client/order/GetOrders')), 'getOrders');
 //每日订单
 const getOrdersP       = r => require.ensure([], () => r(require('@/components/client/order/GetOrdersP')), 'getOrdersP');
+//对账单
+const getCusFreeMB     = r => require.ensure([], () => r(require('@/components/client/order/GetCusFreeMB')), 'getCusFreeMB');
+//常用材质
+const lists            = r => require.ensure([], () => r(require('@/components/client/usedboard/Lists')), 'lists');
 const client = [
 	{
         path:'/client',
@@ -48,6 +52,16 @@ const client = [
                 path:'order/getOrdersP',
                 meta: { title: '每日订单' },
                 component: getOrdersP,
+            },
+            {
+                path:'order/getCusFreeMB',
+                meta: { title: '对账单' },
+                component: getCusFreeMB,
+            },
+            {
+                path:'usedboard/lists',
+                meta: { title: '常用材质' },
+                component: lists,
             }
         ]
     }

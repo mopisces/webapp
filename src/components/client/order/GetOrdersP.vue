@@ -67,12 +67,13 @@
 				<new-time-picker :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
 				<radio-cell :radioInfo.sync="filterForm.orderState" :radioColumns="config.step.status" title="订单状态"></radio-cell>
+				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
 	</div>
 </template>
 <script>
-	import { Button, Icon, Field, Step, Steps, Sticky } from 'vant';
+	import { Button, Icon, Field, SwitchCell, Step, Steps, Sticky } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -83,6 +84,7 @@
 			[Button.name]: Button,
 			[Icon.name]: Icon,
 			[Field.name]: Field,
+			[SwitchCell.name]: SwitchCell,
 			[Step.name]: Step,
 			[Steps.name]: Steps,
 			[Sticky.name]: Sticky,
@@ -117,7 +119,7 @@
 						show   : false,
 						active : 0,
 						status : [
-							{ title:'全部',     value:0 },
+							{ title:'全部',     value:8 },
 							{ title:'未排产',   value:1 },
 							{ title:'排产中',   value:2 },
 							{ title:'生产中',   value:3 },
@@ -126,6 +128,9 @@
 							{ title:'已送货',   value:6 },
 							{ title:'已签收',   value:7 },
 						]
+					},
+					switch:{
+						checked : false
 					}
 				},
 				radioData : [],
@@ -137,12 +142,9 @@
 					boardWidth    : '',
 					lineBall      : '',
 					orderQuantity : '',
-
-
 					beginDate     : '',
 					endDate       : '',
-					orderState    : '8', 
-
+					orderState    : 8, 
 					bookingDate   : ''
 				},
 				pageConfig:{
@@ -150,7 +152,8 @@
 					minDate : '',
 				},
 				leftPopupData  : {},
-				rightPopupData : {}
+				rightPopupData : {},
+				isReset : false
 			}
 		},
 		methods:{
@@ -160,13 +163,11 @@
 					this.dailyOrders(this.filterForm);
 				}
 			},
-			getConfig( isReset = false ){
+			getConfig(){
 				let self = this;
 				this.$request.client.ordersManage.dailyOrdersConfig().then(res=>{
-					if( !isReset ){
-						self.filterForm.beginDate = res.result.GetOrdersPBeginDate;
-						self.filterForm.endDate   = res.result.GetOrdersPEndDate;
-					}
+					self.filterForm.beginDate = res.result.GetOrdersPBeginDate;
+					self.filterForm.endDate   = res.result.GetOrdersPEndDate;
 					self.pageConfig.maxDate   = res.result.GetOrdersPMaxDate;
 					self.pageConfig.minDate   = res.result.GetOrdersPMinDate;
 				}).then(()=>{
@@ -184,6 +185,7 @@
 			},
 			optionalDate(){
 				let self = this;
+				this.config.prevNext.show   = false;
 				this.$request.client.ordersManage.dailyOrderOptionalDate( this.filterForm ).then(res=>{
 					self.radioData = res.result;
 					self.radioData.forEach((item,index)=>{
@@ -191,7 +193,8 @@
 					});
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.config.prevNext.show = true;
+						this.config.prevNext.show   = true;
+						this.filterForm.bookingDate = this.radioData[0].OrderDate;
 					});
 				});
 			},
@@ -221,14 +224,34 @@
 				this.config.step.show = !this.config.step.show;
 			},
 			resetClick(){
-
+				this.filterForm = {
+					orderId       : '',
+					cusPoNo       : '',
+					boardLength   : '',
+					boardWidth    : '',
+					lineBall      : '',
+					orderQuantity : '',
+					beginDate     : '',
+					endDate       : '',
+					orderState    : 8, 
+					bookingDate   : ''
+				};
+				this.config.switch.checked = false;
+				this.getConfig();
 			},
-			filterClick(){
-
+			async filterClick(){
+				await this.optionalDate();
+				this.dailyOrders();
+				this.config.popup.rightFilter.show = false;
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','每日订单');
+			if( sessionStorage.getItem('client-daily/getOrdersP') !== null ){
+				let storageData = JSON.parse(sessionStorage.getItem('client-daily/getOrdersP'));
+				this.filterForm = storageData;
+				this.config.switch.checked = true;
+			}
 		},
 		mounted(){
 			this.getConfig();
@@ -237,7 +260,11 @@
 			
 		},
 		destroyed(){
-			
+			if( this.config.switch.checked ){
+				sessionStorage.setItem('client-daily/getOrdersP',JSON.stringify(this.filterForm));
+			}else{
+				sessionStorage.removeItem('client-daily/getOrdersP');
+			}
 		},
 		computed:{
 			

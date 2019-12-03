@@ -132,40 +132,40 @@
 						active:0
 					},
 					radio:{
-						title:'订单状态'
+						title : '订单状态'
 					},
 					field:{
-						show:false
+						show : false
 					}
 				},
 				form:{
-					cusId:'',
-					beginDate:'',
-					endDate:''
+					cusId     : '',
+					beginDate : '',
+					endDate   : ''
 				},
 				leftPopupData:{},
 				rightPopupData:{},
 				radioData:[],
 				filterForm:{
-					orderId:'',
-					cusPoNo:'',
-					boardLength:'',
-					boardWidth:'',
-					scoreInfo:'',
-					orderQuantity:'',
-					orderDate:'',
-					sState:0,
+					orderId       : '',
+					cusPoNo       : '',
+					boardLength   : '',
+					boardWidth    : '',
+					scoreInfo     : '',
+					orderQuantity : '',
+					orderDate     : '',
+					sState        : 0,
 				},
 				filterCount:{
-					cusId:'',
-					beginDate:'',
-					endDate:'',
-					sState:0
+					cusId     : '',
+					beginDate : '',
+					endDate   : '',
+					sState    : 0
 				},
 				fieldData:[],
 				pageConfig:{
-					maxDate:'',
-					minDate:''
+					maxDate : '',
+					minDate : ''
 				}
 			}
 		},
@@ -237,13 +237,11 @@
 			},
 			async filterClick(){
 				await this.getCountOrder( this.filterCount );
+				this.filterForm.orderDate = this.radioData[0].OrderDate;
+				this.getDailyDetail( this.filterForm );
 				this.config.popup.rightFilter.show = false;
 			}
 			
-		},
-		mounted(){
-			this.getCusInfo( this.form );
-			this.getCountOrder( this.filterCount );
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','每日订单详细信息');
@@ -257,6 +255,13 @@
 			}else{
 				this.$router.go(-1);
 			}
+		},
+		mounted(){
+			this.getCusInfo( this.form );
+			this.getCountOrder( this.filterCount );
+		},
+		destroyed(){
+			
 		},
 		computed:{
 			sStateChange(){
