@@ -31,7 +31,7 @@
 						pullRefresh : {
 							reloading : false,
 							isInit    : true
-						}
+						},
 						pushLoading : {
 							loading  : false,
 							finished : false
