@@ -17,6 +17,8 @@ const getOrdersP       = r => require.ensure([], () => r(require('@/components/c
 const getCusFreeMB     = r => require.ensure([], () => r(require('@/components/client/order/GetCusFreeMB')), 'getCusFreeMB');
 //常用材质
 const lists            = r => require.ensure([], () => r(require('@/components/client/usedboard/Lists')), 'lists');
+//常用订单
+const orderList        = r => require.ensure([], () => r(require('@/components/client/usedorder/Lists')), 'orderList');
 const client = [
 	{
         path:'/client',
@@ -62,6 +64,11 @@ const client = [
                 path:'usedboard/lists',
                 meta: { title: '常用材质' },
                 component: lists,
+            },
+            {
+                path:'usedorder/lists',
+                meta: { title: '常用订单' },
+                component: orderList,
             }
         ]
     }
