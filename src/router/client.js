@@ -87,16 +87,19 @@ const client = [
             },
             {
                 path:'build/s',
+                name: 'sBuild',
                 meta: { title: '简单纸板下单' },
                 component: sBuild,
             },
             {
                 path:'build/c',
+                name: 'cBuild',
                 meta: { title: '纸箱纸板下单' },
                 component: cBuild,
             },
             {
                 path:'build/x',
+                name: 'xBuild',
                 meta: { title: '纸箱下单' },
                 component: xBuild,
             }

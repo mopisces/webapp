@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<van-field clickable placeholder="请选择日期" input-align="center" :label="label" @click="show = true" v-model="dateTime" readonly></van-field>
+		<van-field clickable placeholder="请选择日期" input-align="center" :label="label" @click="show = true" v-model="dateTime" readonly>
+			<van-icon slot="right-icon" name="arrow"/>
+		</van-field>
 		<van-popup v-model="show" position="bottom" @click-overlay="clickOverlay" :close-on-click-overlay="false" get-container="body">
 			<van-datetime-picker v-model="pickerTime" :min-date="min" :max-date="max" type="date" show-toolbar @cancel="onCancel" @confirm="onConfirm">
 			</van-datetime-picker>
@@ -8,10 +10,11 @@
 	</div>
 </template>
 <script>
-	import { Popup, Field, DatetimePicker  } from 'vant';
+	import { Icon, Popup, Field, DatetimePicker  } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
+			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
 			[DatetimePicker.name]: DatetimePicker,

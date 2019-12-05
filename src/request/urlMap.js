@@ -142,6 +142,9 @@ const client = {
 		getMaterial       : `${base.client}commonMaterial`, 
 		getMaterialConfig : `${base.client}getMaterialConfig`, 
 		materialSave      : `${base.client}materialSave`, 
+	},
+	orderBooking : {
+		simplePaperBoardConfig : `${base.client}simpleConfig`, 
 	}
 };
 export { adminUrl, staff, erp, index, client };

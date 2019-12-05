@@ -11,9 +11,7 @@
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="到底了" @load="onLoad" :offset="100">
 				<van-panel v-for="(item,index) in panelData" :key="index">
 					<div slot="header">
-						<van-button plain type="primary" size="small" style="margin-left:15px;margin-top:5px;">
-							标识:{{ item.CardFlag }}
-						</van-button>
+						<van-tag plain type="success" style="margin-left:15px;margin-top:5px;">标识:{{ item.CardFlag }}</van-tag>
 					</div>
 					<div slot="default">
 						<div class="van-row van-row--flex van-row--justify-center">
@@ -55,7 +53,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Dialog, PullRefresh, Toast, List, Panel, Sticky, Tab, Tabs } from 'vant';
+	import { Button, Dialog, PullRefresh, Toast, List, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -64,6 +62,7 @@
 			[List.name]: List,
 			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
+			[Tag.name]: Tag,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 		},
@@ -143,13 +142,13 @@
 			fastBuild( cusPoNo, type ){
 				switch( type ){
 					case 's' :
-						this.$route.push({ name:'', params: { orderId: cusPoNo } })
+						this.$router.push({ name:'sBuild', params: { orderId: cusPoNo } })
 						break;
 					case 'c' :
-						this.$route.push({ name:'', params: { orderId: cusPoNo } })
+						this.$router.push({ name:'cBuild', params: { orderId: cusPoNo } })
 						break;
 					case 'x' : 
-						this.$route.push({ name:'', params: { orderId: cusPoNo } })
+						this.$router.push({ name:'xBuild', params: { orderId: cusPoNo } })
 						break;
 					default : 
 						Toast.fail('非法的订单类型');
