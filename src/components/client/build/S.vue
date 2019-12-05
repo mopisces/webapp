@@ -65,7 +65,6 @@
 						cusInfo  : []
 					}
 				},
-				value:'',
 				pageConfig : {
 					maxDate   : '',
 					maxArea   : '',
@@ -107,7 +106,19 @@
 							}
 							callback(errors);
 						}}
-					]
+					],
+					boardWidth : [
+						{ required : true, message : '请输入板宽' },
+						{ pattern  : '^[1-9][0-9]{1,2}$', message : '板宽格式错误' },
+						{ validator: (rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) > this.pageConfig.maxWidth || Number(value) < this.pageConfig.minWidth){
+								errors = '板宽范围:' + this.pageConfig.minWidth + 'mm~' + this.pageConfig.maxWidth + 'mm';
+							}
+							callback(errors);
+						}}
+					],
+					
 				},
 				validator : {}
 			}
