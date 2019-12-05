@@ -108,7 +108,7 @@
 						{ type: 'string', required: true, message: '请输入订单号'},
 					],
 					ikey1 : [
-						{ type : 'integer', regexp : '/^[1-9]+$/', required: true, message: '请扫描有效的订单号或选择有效记录修改'},
+						{ type : 'integer', pattern : '^[1-9]+$', required: true, message: '请扫描有效的订单号或选择有效记录修改'},
 					]
 				},
 				tableData:[],

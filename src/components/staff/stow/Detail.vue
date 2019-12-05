@@ -184,12 +184,12 @@
 					],
 					iDeliQty : [
 						{ required : true, message : '请输入有效的装货数' },
-						{ iDeliQty(rule, value, callback, source, options){
-							let errors = [];
+						{ validator(rule, value, callback, source, options){
+							let errors;
 							if( value <= 0 ){
-								errors.push(new Error('请输入有效的装货数'));
+								errors = '请输入有效的装货数';
 							}
-							return errors;
+							callback(errors)
 						} },
 					],
 					OrderType : [

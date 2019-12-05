@@ -135,20 +135,20 @@
 				rules:{
 					oldPass : [
 						{  require : true, message: '请填写原密码' },
-						{  type:'string' , regexp:'/^[0-9a-zA-Z]{2,12}$/' , message: '原密码不符合规则' },
+						{  type:'string' , pattern:'^[0-9a-zA-Z]{2,12}$' , message: '原密码不符合规则' },
 					],
 					newPass : [
 						{  require : true, message: '请填写新密码' },
-						{  type:'string' , regexp: '/^[0-9a-zA-Z]{6,12}$/', message: '新密码不符合规则' }
+						{  type:'string' , pattern: '^[0-9a-zA-Z]{6,12}$', message: '新密码不符合规则' }
 					],
 					confirmPass : [
 						{  require : true, message: '请填写确认密码' },
-						{  confirmPass(rule, value, callback, source, options){
-							let errors = [];
+						{  validator: (rule, value, callback, source, options) => {
+							let errors;
 							if( value !== source.newPass ){
-								errors.push(new Error('两次密码输入不一致'));
+								errors = '两次密码输入不一致';
 							}
-							return errors;
+							callback(errors);
 						}}
 					]
 				}
@@ -194,7 +194,7 @@
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
 					self.changePass( self.formData );
-				}).then(()=>{
+				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
 			},

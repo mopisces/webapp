@@ -1,35 +1,77 @@
 <template>
-	<vant-popup v-model="selectShow" position="right" :style="{ height: '100%', width: '100%' }">
-		<van-radio-group v-model="radio">
-			<van-cell-group>
-				<van-cell title="单选框 1" clickable @click="radio = '1'">
-					<van-radio slot="right-icon" name="1" />
-				</van-cell>
-			</van-cell-group>
-		</van-radio-group>
-		<vant-button type="primary" size="normal" style="width:100%;" @click="confirmClick()"> 
-			确定
-		</vant-button>
-	</vant-popup>
+	<div>
+		<van-field v-model="value" input-align="center" clickable readonly :label="fieldConfig.label" :placeholder="fieldConfig.placeholder" @click=" show = true ">
+			<van-icon slot="right-icon" name="arrow"/>
+		</van-field>
+		<van-popup v-model="show" position="top" :style="{ height: '100%' }">
+			<van-sticky :offset="46">
+				<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
+					<div class="van-nav-bar__left">
+						<span class="van-nav-bar__text">{{ fieldConfig.placeholder }}</span>
+					</div>
+					<div class="van-nav-bar__title van-ellipsis"></div>
+					<div class="van-nav-bar__right" @click=" show = false ">
+						<i class="van-icon">确认</i>
+						<i class="van-icon van-icon-success" style="font-size: 16px;"><!----></i>
+					</div>
+				</div>
+			</van-sticky>
+			<van-radio-group v-model="value">
+				<van-cell-group>
+					<van-cell clickable @click=" value = item.value " v-for=" (item,index) in radioData ">
+						<div slot="title">
+							<div>{{ item.value }}</div>
+							<div v-if=" selectType == 'cusInfo' && item.text != '' ">
+								送货地址:{{ item.text }}
+							</div>
+							<div v-if=" selectType == 'boxType' && item.text != '' ">
+								箱型名称:{{ item.text }}
+							</div>
+							<div v-if=" selectType == 'productName' && item.text != '' ">
+								套件名称:{{ item.text }}
+							</div>
+							<div v-if=" selectType == 'material' && item.text != '' ">
+								材质名称:{{ item.text }}
+							</div>
+						</div>
+						<van-radio slot="right-icon" :name="item.value" />
+						<div slot="default">
+							<div v-if=" selectType == 'material' ">
+								<van-tag mark v-if="value != item.value ">常用材质</van-tag>
+								<van-tag mark type="success" v-else>常用材质</van-tag>
+							</div>
+						</div>
+					</van-cell>
+				</van-cell-group>
+			</van-radio-group>
+		</van-popup>
+	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Popup } from 'vant';
+	import { Button, Cell, CellGroup, Icon, Popup, Field, RadioGroup, Radio, Sticky ,Tag } from 'vant';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
+			[Icon.name]: Icon,
+			[Popup.name]: Popup,
 			[Field.name]: Field,
+			[RadioGroup.name]: RadioGroup,
+			[Radio.name]: Radio,
+			[Sticky.name]: Sticky,
+			[Tag.name]: Tag,
 		},
-		props:['show'],
+		props:['selectValue','fieldConfig','radioData','selectType'],
 		data(){
 			return {
-				selectShow:this.show,
+				show  : false,
+				value : this.selectValue,
 			}
 		},
 		methods:{
 			confirmClick(){
-				this.selectShow = false;
+				this.show = false;
 			}
 		},
 		created(){
@@ -48,11 +90,11 @@
 			
 		},
 		watch:{
-			show(newV,oldV){
-				this.selectShow = newV;
+			selectValue(newV,oldV){
+				this.value = newV;
 			},
-			selectShow(newV,oldV){
-				this.$emit("update:show", newV);
+			value(newV,oldV){
+				this.$emit("update:selectValue", newV);
 			}
 		}
 	}

@@ -169,11 +169,11 @@
 						],
 						length : [
 							{ required : true, message : '请输入板长' },
-							{ type: 'integer' , regexp : '/^[1-9][0-9]{5}$/', message : '板长格式错误' }
+							{ type: 'integer' , pattern : '^[1-9][0-9]{5}$', message : '板长格式错误' }
 						],
 						width : [
 							{ required : true, message : '请输入板宽' },
-							{ type: 'integer' , regexp : '/^[1-9][0-9]{3}$/' , message : '板宽格式错误' }
+							{ type: 'integer' , pattern : '^[1-9][0-9]{3}$' , message : '板宽格式错误' }
 						],
 						scoreInfo : [
 							{ type: 'string', required : true, message : '请填写压线信息' },
@@ -190,7 +190,7 @@
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ type:'integer' , regexp : '/^[1-9][0-9]{6}$/',message : '订单格式不正确'}
+							{ type:'integer' , pattern : '^[1-9][0-9]{6}$',message : '订单格式不正确'}
 						]
 					},
 					cRules:{
@@ -205,19 +205,19 @@
 						],
 						boxL : [
 							{ required : true, message : '请填写箱长' },
-							{ type: 'integer' , regexp : '/^[1-9][0-9]{4}$/', message : '箱长格式不正确' }
+							{ type: 'integer' , pattern : '^[1-9][0-9]{4}$', message : '箱长格式不正确' }
 						],
 						boxW : [
 							{ required : true, message : '请填写箱宽' },
-							{ type : 'integer' ,regexp : '/^[1-9][0-9]{4}$/', message : '箱宽格式不正确' }
+							{ type : 'integer' ,pattern : '^[1-9][0-9]{4}$', message : '箱宽格式不正确' }
 						],
 						boxH : [
 							{ required : true, message : '请填写箱高' },
-							{ type : 'integer' , regexp : '/^[1-9][0-9]{4}$/', message: '箱高格式不正确' }
+							{ type : 'integer' , pattern : '^[1-9][0-9]{4}$', message: '箱高格式不正确' }
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ type:'integer' , regexp : '/^[1-9][0-9]{6}$/',message : '订单格式不正确'}
+							{ type:'integer' , pattern : '^[1-9][0-9]{6}$',message : '订单格式不正确'}
 						]
 					},
 					commonRules:{

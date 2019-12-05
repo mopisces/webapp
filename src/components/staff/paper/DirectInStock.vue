@@ -125,7 +125,7 @@
 				rules:{
 					strOrderId : [
 						{ required: true, message: '请输入订单号'},
-						{ type: 'string', regexp:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
+						{ type: 'string', pattern:'^[a-zA-Z0-9]{12}$', message: '订单号格式错误' } 
 					]
 				}
 			}
@@ -238,7 +238,6 @@
 			if( typeof(this.$route.query.scanRes) == 'string' ){
 				this.formData.strOrderId = this.$route.query.scanRes;
 			}
-			//Toast.success(this.$route.query.scanRes);
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

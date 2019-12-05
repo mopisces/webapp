@@ -56,11 +56,11 @@
 				rules:{
 					stockInNo : [
 						{  required: true, message: '请输入订单号'},
-						{  type: 'string', regexp:'/^[a-zA-Z0-9]{12}$/', message: '订单号格式错误' } 
+						{  type: 'string', pattern:'^[a-zA-Z0-9]{12}$', message: '订单号格式错误' } 
 					],
 					inOpTime  : [
 						{ required : true, message : '请选择入库日期' },
-						{ type: 'string' ,regexp : '/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/' ,message : '入库日期格式错误'}
+						{ type: 'string' ,pattern : '^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$' ,message : '入库日期格式错误'}
 					],
 					inWeight  : [
 						{ required : true , message : '请填写回仓重量' },
