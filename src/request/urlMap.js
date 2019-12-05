@@ -135,6 +135,8 @@ const client = {
 		optionalDate      : `${base.client}optionalDate`,
 		cusInfo           : `${base.client}cusInfo`,
 		dailyOrders       : `${base.client}dailyOrders`, 
+		commonOrders      : `${base.client}commonOrders`, 
+		cancelCommon      : `${base.client}cancelCommon`, 
 	},
 	commonMaterial : {
 		getMaterial       : `${base.client}commonMaterial`, 

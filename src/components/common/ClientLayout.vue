@@ -11,7 +11,7 @@
 			<div style="margin-bottom:50px;"></div>
 		</div>
 		<van-tabbar v-model="active">
-			<van-tabbar-item icon="home-o" to="/client/menu/index">首页</van-tabbar-item>
+			<van-tabbar-item icon="home-o" to="/client/index/menu">首页</van-tabbar-item>
 			<van-tabbar-item @click="logout">
 				退出
 				<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>

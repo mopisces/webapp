@@ -19,6 +19,15 @@ const getCusFreeMB     = r => require.ensure([], () => r(require('@/components/c
 const lists            = r => require.ensure([], () => r(require('@/components/client/usedboard/Lists')), 'lists');
 //常用订单
 const orderList        = r => require.ensure([], () => r(require('@/components/client/usedorder/Lists')), 'orderList');
+//微信订单
+const wxList           = r => require.ensure([], () => r(require('@/components/client/wxorder/Lists')), 'wxList');
+//简单纸板下单
+const sBuild           = r => require.ensure([], () => r(require('@/components/client/build/S')), 'sBuild');
+//纸箱纸板下单
+const cBuild           = r => require.ensure([], () => r(require('@/components/client/build/C')), 'cBuild');
+//纸箱下单
+const xBuild           = r => require.ensure([], () => r(require('@/components/client/build/X')), 'xBuild');
+
 const client = [
 	{
         path:'/client',
@@ -69,6 +78,27 @@ const client = [
                 path:'usedorder/lists',
                 meta: { title: '常用订单' },
                 component: orderList,
+            }
+            ,
+            {
+                path:'wxorder/lists',
+                meta: { title: '微信订单' },
+                component: wxList,
+            },
+            {
+                path:'build/s',
+                meta: { title: '简单纸板下单' },
+                component: sBuild,
+            },
+            {
+                path:'build/c',
+                meta: { title: '纸箱纸板下单' },
+                component: cBuild,
+            },
+            {
+                path:'build/x',
+                meta: { title: '纸箱下单' },
+                component: xBuild,
             }
         ]
     }

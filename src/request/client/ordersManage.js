@@ -54,6 +54,16 @@ const ordersManage = {
 			daily_booking_date : data.bookingDate
 		};
 		return post(client.ordersManage.dailyOrders,postData);
+	},
+	commonOrders( data ){
+		let postData = {
+			common_order_type : data.orderType,
+			cur_page          : data.curPage
+		};
+		return post(client.ordersManage.commonOrders, postData);
+	},
+	cancelCommon( orderId ){
+		return post(client.ordersManage.cancelCommon, { cancel_order_id : orderId });
 	}
 };
 export default ordersManage;

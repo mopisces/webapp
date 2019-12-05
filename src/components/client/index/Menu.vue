@@ -85,10 +85,10 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'简单纸板下单', iconName:'mobancaidan', url:'',state:'#0b27f1'},
-						{text:'纸箱纸板下单', iconName:'zhixiang',    url:'',state:'#0b27f1'},
-						{text:'纸箱下单',     iconName:'zhixiang1',   url:'',state:'#0b27f1'},
-						{text:'微信订单',     iconName:'shouji',      url:'',state:'#0b27f1'},
+						{text:'简单纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#eff30c'},
+						{text:'纸箱纸板下单', iconName:'zhixiang',    url:'/client/build/c',state:'#eff30c'},
+						{text:'纸箱下单',     iconName:'zhixiang1',   url:'/client/build/x',state:'#eff30c'},
+						{text:'微信订单',     iconName:'shouji',      url:'/client/wxorder/lists',state:'#eff30c'},
 						{text:'常用订单',     iconName:'dingdan1',    url:'/client/usedorder/lists',state:'#eff30c'},
 						{text:'常用材质',     iconName:'caizhi',      url:'/client/usedboard/lists',state:'#0bf147'},
 						{text:'ERP订单',      iconName:'erp',         url:'/client/order/getOrders',state:'#0bf147'},
