@@ -11,7 +11,7 @@
 			<div style="margin-bottom:50px;"></div>
 		</div>
 		<van-tabbar v-model="active">
-			<van-tabbar-item icon="home-o" :url="config.url.index">首页</van-tabbar-item>
+			<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>
 			<van-tabbar-item @click="logout">
 				退出
 				<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
@@ -64,7 +64,7 @@
 				sessionStorage.clear();
 				this.$router.push('/login/select');
 			},
-			portValuable(){
+			/*portValuable(){
 				let self = this;
 				if( sessionStorage.getItem('app_domain') !== null ){
 					let domainInfo        = JSON.parse(sessionStorage.getItem('app_domain'));
@@ -79,11 +79,11 @@
 						this.isRouterAlive = true;
 					})
 				});
-			}
+			}*/
 		},
 		created(){
 			this.config.headerTitle = this.$store.state.staff.layout.title;
-			this.portValuable();
+			//this.portValuable();
 		},
 		mounted(){
 

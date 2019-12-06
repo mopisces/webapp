@@ -65,7 +65,7 @@
 						cusInfo  : []
 					}
 				},
-				pageConfig : {
+ 				pageConfig : {
 					maxDate   : '',
 					maxArea   : '',
 					maxLength : '',
@@ -118,7 +118,7 @@
 							callback(errors);
 						}}
 					],
-					
+
 				},
 				validator : {}
 			}
