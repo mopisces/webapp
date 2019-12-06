@@ -145,6 +145,7 @@ const client = {
 	},
 	orderBooking : {
 		simplePaperBoardConfig : `${base.client}simpleConfig`, 
+		simplePaperBoardSave   : `${base.client}simpleSave`, 
 	}
 };
 export { adminUrl, staff, erp, index, client };

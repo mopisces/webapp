@@ -18,7 +18,7 @@
 			</van-sticky>
 			<van-radio-group v-model="value">
 				<van-cell-group>
-					<van-cell clickable @click=" value = item.value " v-for=" (item,index) in radioData ">
+					<van-cell clickable @click=" value = item.value " v-for=" (item,index) in radioData " :key="index">
 						<div slot="title">
 							<div>{{ item.value }}</div>
 							<div v-if=" selectType == 'cusInfo' && item.text != '' ">
