@@ -49,7 +49,7 @@
 						<van-field label="板宽(mm)" placeholder="待计算" input-align="center" v-model="calcResult.boxW" disabled></van-field>
 						<van-field label="压线" placeholder="待计算" input-align="center" v-model="calcResult.strScoreInfo" disabled></van-field>
 					</div>
-					<van-button type="primary" size="large" round @click="CalBdPriceInfo()">
+					<van-button type="primary" size="large" round @click.native="calBdPriceInfo()">
 						<span v-if="config.tabs.active == 0 ">纸板计算</span>
 						<span v-else>纸箱计算</span>
 					</van-button>
@@ -94,7 +94,7 @@
 				config:{
 					tabs:{
 						active:0,
-						title:['纸箱纸板','纸箱纸板']
+						title:['简单纸板','纸箱纸板']
 					},
 					popup:{
 						show:false
@@ -263,7 +263,6 @@
 						this.calBdQuotaInfo();
 					});
 				}else{
-					console.log(IsContinueCallCalBdQuotaInfo);
 					if( IsContinueCallCalBdQuotaInfo ){
 						this.calBdQuotaInfo();
 					}
@@ -313,29 +312,28 @@
 				this.config.popup.show = false;
 			},
 			calBdQuotaInfo(){
-				if( !this.pageConfig.calcAutoGetdOriPrice ){
-					return ;
-				}
-				let validator = new schema( this.rules.commonRules );
-				let self = this;
-				validator.validate( this.commonForm ).then(()=>{
-					self.$request.staff.calc.calBdQuotaInfo( this.commonForm ).then(res=>{
-						if( res.result[2] === false ){
-							Toast.fail('计算失败');
-							return ;
-						}
-						self.calcResult.oriPrice = res.result[0].dOriPrice;
-						Toast.success('平方报价 => ' + self.calcResult.oriPrice);
+				if( this.pageConfig.calcAutoGetdOriPrice && this.commonForm.cusName != '' && this.commonForm.texName != '' ){
+					let validator = new schema( this.rules.commonRules );
+					let self = this;
+					validator.validate( this.commonForm ).then(()=>{
+						self.$request.staff.calc.calBdQuotaInfo( this.commonForm ).then(res=>{
+							if( res.result[2] === false ){
+								Toast.fail('计算失败');
+								return ;
+							}
+							self.calcResult.oriPrice = res.result[0].dOriPrice;
+							Toast.success('平方报价 => ' + self.calcResult.oriPrice);
+						});
+					}).catch(({ errors, fields })=>{
+						Toast.fail(errors[0].message);
 					});
-				}).catch(({ errors, fields })=>{
-					Toast.fail(errors[0].message);
-				});
+				}
 			},
 			calBdPriceInfo(){
 				if( this.config.tabs.active == '0' ){
-					let validator = new schema( this.rules.sTules );
+					var validator = new schema( this.rules.sTules );
 				}else{
-					let validator = new schema( this.rules.cRules );
+					var validator = new schema( this.rules.cRules );
 				}
 				let data = {
 					strFactoryId : this.commonForm.factoryId,
@@ -375,7 +373,7 @@
 						}  
 					});
 				}).catch(({ errors, fields })=>{
-					Toast.fail(err.errors[0].message);
+					Toast.fail(errors[0].message);
 				});
 			},
 		},

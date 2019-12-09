@@ -14,9 +14,9 @@
 			<van-cell :title="item.CusShortName + '(' + item.CusId + ')' " is-link :value="item.LeftMinAmtCond + '/' + item.MinAmtCond " v-for="(item,index) in info.cell.data" :key="index" @click="cellClick(item.CusId)"/>
 		</van-cell-group>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
-			<van-field label="员工" readonly v-model="info.leftPopup.data.userName" placeholder="员工" input-align="center" slot="new-popup-1"/>
-			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="center" slot="new-popup-2"/>
-			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="center" slot="new-popup-3"/>
+			<van-field label="员工" readonly v-model="info.leftPopup.data.userName" placeholder="员工" input-align="right" slot="new-popup-1"/>
+			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="right" slot="new-popup-2"/>
+			<van-field label="查询时间" readonly v-model="info.leftPopup.data.queryTime" placeholder="查询时间" input-align="right" slot="new-popup-3"/>
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -105,7 +105,8 @@
 				},
 				cusPicker:{
 					searchData:'',
-				}
+				},
+				fieldColor : 'field-color'
 			}
 		},
 		methods:{
@@ -155,7 +156,6 @@
 				this.filterForm = JSON.parse(sessionStorage.getItem('cred/wGetCusAmt'));
 				this.config.switch.checked = true;
 			}
-			console.log(this.$store.state.staff.navList);	
 		},
 		mounted(){
 			this.getUserInfo();
@@ -176,3 +176,8 @@
 		}
 	}
 </script>
+<style>
+	.van-field__control {
+		color:#0bf147;
+	}
+</style>

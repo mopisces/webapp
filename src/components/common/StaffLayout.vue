@@ -8,7 +8,8 @@
 		</van-nav-bar>
 		<div style="margin-top:46px;" class="container">
 			<router-view v-if="isRouterAlive" />
-			<div style="margin-bottom:50px;"></div>
+			<div style="width:100%;height:50px;"></div>
+			<!-- <div style="margin-bottom:50px;"></div> -->
 		</div>
 		<van-tabbar v-model="active">
 			<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>
@@ -20,7 +21,7 @@
 	</div>
 </template>
 <script>
-	import { Cell, Icon, NavBar, Tabbar, TabbarItem } from 'vant';
+	import { Cell, Icon, Dialog, NavBar, Tabbar, TabbarItem } from 'vant';
 	export default{
 		components:{
 			[Cell.name]: Cell,
@@ -61,8 +62,15 @@
 				});
 			},
 			logout(){
-				sessionStorage.clear();
-				this.$router.push('/login/select');
+				Dialog.confirm({
+					message: '确认退出?'
+				}).then(() => {
+					sessionStorage.clear();
+					this.$router.push('/login/select');
+				}).catch(()=>{
+					Dialog.close();
+				});
+				
 			},
 			/*portValuable(){
 				let self = this;

@@ -3,8 +3,8 @@
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" :radioVal="radioVal"  v-if="config.prevNext.show"></prev-next>
 		<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in listData" :key="index" @click="listClick(item)">
 			<div class="van-cell__title">
-				<span>{{ item.PONo }}</span><br/>
-				<span>{{ item.InNo }}</span>
+				<span>{{ item.InNo }}</span><br/>
+				<span>{{ item.PONo }}</span>
 			</div>
 			<div class="van-cell__title">
 				<span>{{ item.InQty }}&nbsp;件</span><br/>
