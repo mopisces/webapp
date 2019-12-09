@@ -209,8 +209,14 @@
 		},
 		watch:{
 			tabActiveChange( newV, oldV ){
-				this.formData.userName = '';
-				this.formData.userPass = '';
+				if( newV == 0 ){
+					this.formData.userName = 'AQ';
+					this.formData.userPass = 'AQ';
+				}else{
+					this.formData.userName = 'CR';
+					this.formData.userPass = 'CR';
+				}
+				
 			},
 			usernameChange( newV, oldV ){
 				if( typeof(newV) !== 'undefined' && newV.length > 0 ){

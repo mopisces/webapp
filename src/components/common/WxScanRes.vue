@@ -47,8 +47,14 @@
 	                    needResult: 1,
 	                    scanType: ['qrCode', 'barCode'],
 	                    success: function(res){
+	                    	let scanRes;
+	                    	if( res.resultStr.indexOf(",") != -1 ){
+	                    		scanRes = res.resultStr.split(',')[1];
+	                    	}else{
+	                    		scanRes = res.resultStr;	
+	                    	}
 	                    	Toast.success(res.resultStr);
-	                    	window.location.href = 'http://test.leaper.ltd:1104' + self.path + '?scanRes=' + res.resultStr;
+	                    	window.location.href = 'http://test.leaper.ltd:1104' + self.path + '?scanRes=' + scanRes;
 	                    	
 	                    }
 	                });
