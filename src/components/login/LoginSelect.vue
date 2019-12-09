@@ -125,7 +125,8 @@
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.formData.subFactory = this.config.picker.columns[0].text + '(' + this.config.picker.columns[0].key + ')';
+						this.formData.subFactory  = this.config.picker.columns[0].text + '(' + this.config.picker.columns[0].key + ')';
+						this.formData.subFactoryId = this.config.picker.columns[0].key;
 					})
 				});
 			},

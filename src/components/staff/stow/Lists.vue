@@ -19,7 +19,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, Checkbox, Field, SwitchCell, Toast } from 'vant';
+	import { Button, Cell, Checkbox, Field, SwitchCell, Dialog, Toast } from 'vant';
 	import { VTable, VPagination } from 'vue-easytable';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
@@ -112,7 +112,12 @@
 				let self = this;	
 				this.$request.staff.stow.preparePack( data ).then(res=>{
 					if( res.result[1] === false ){
-						Toast.fail('准备失败');
+						Dialog.alert({
+							title   : res.result[0],
+							message : '准备失败'
+						}).then(() => {
+							Dialog.close();
+						});
 					}else{
 						self.table.data[data.index].CarState = 1;
 						Toast.success('准备成功');

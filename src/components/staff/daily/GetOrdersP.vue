@@ -194,6 +194,7 @@
 					self.radioData = res.result;
 					self.radioData.forEach((item,index)=>{
 						item['prevNext'] = item.OrderDate;
+						item['tag']      = 'daily';
 					});
 				}).then(()=>{
 					this.$nextTick(() => {

@@ -332,8 +332,10 @@
 			calBdPriceInfo(){
 				if( this.config.tabs.active == '0' ){
 					var validator = new schema( this.rules.sTules );
+					var postData = Object.assign({},this.commonForm,this.boardForm);
 				}else{
 					var validator = new schema( this.rules.cRules );
+					var postData = Object.assign({},this.commonForm,this.boxForm);
 				}
 				let data = {
 					strFactoryId : this.commonForm.factoryId,
@@ -354,7 +356,7 @@
                     iULen        : this.config.tabs.active == '1' ? this.boxForm.uLen        : null
 				};
 				let self  = this;
-				validator.validate( data ).then(()=>{
+				validator.validate( postData ).then(()=>{
 					self.$request.staff.calc.calBdPriceInfo( data ).then((res)=>{
 						if( res.result[2] === false ){
 							Toast.fail('计算失败');

@@ -96,8 +96,6 @@
 					self.radioData.codeData.forEach((item,index)=>{
 						item['prevNext'] = item.PaperCode;
 					});
-
-
 					self.filterForm.dataType = 1;
 					self.filterForm.searchData = self.radioData.widthData[0].PaperWidth;
 				}).then(()=>{

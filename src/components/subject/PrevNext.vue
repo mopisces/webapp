@@ -47,9 +47,9 @@
 				</div>
 			</div>
 			<div class="content" style="width:100%;margin-top:46px;">
-				<van-radio-group v-model="radio" v-if="config.popup.show">
+				<van-radio-group v-model="radio" v-if="config.popup.show" >
 					<van-cell-group>
-						<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.prevNext,index )">
+						<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.prevNext,index )" >
 							<!-- 原纸收货按日期汇总 -->
 							<div class="van-cell__title" v-if="item.RecDate">
 								<span>{{ item.RecDate }}</span><br/>
@@ -73,15 +73,15 @@
 								<span>重量:{{ item.SRWt }}</span>
 							</div>
 							<!-- 原纸采购 -->
-							<div class="van-cell__title" v-if="item.poMain === 'tags' ">
+							<div class="van-cell__title" v-if=" item.tag === 'poMain' ">
 								<span>日期:{{ item.prevNext }}</span><br/>
 							</div>
 							<!-- 每日订单按日期汇总 -->
-							<div class="van-cell__title" v-else>
+							<div class="van-cell__title" v-else-if=" item.tag === 'daily' ">
 								<span>{{ item.OrderDate }}</span><br/>
 								<span>{{ item.ICount }}笔订单</span>
 							</div>
-							<van-radio slot="right-icon" :name="item.prevNext" />
+							<van-radio slot="right-icon" :name="item.prevNext"  />
 						</div>
 					</van-cell-group>
 				</van-radio-group>
@@ -136,7 +136,6 @@
 		},
 		methods:{
 			controllerPrevNext(){
-				
 				let prev = Number(this.config.header.index) - 1;
 				let next = Number(this.config.header.index) + 1;
 				if( this.radioData[ prev ] == undefined ){

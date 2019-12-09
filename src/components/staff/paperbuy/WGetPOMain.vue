@@ -143,7 +143,7 @@
 				this.$request.staff.paperbuy.paperBuy( data ).then(res=>{
 					self.radioData = [];
 					res.result.po_date_select.forEach((item,index)=>{
-						self.radioData.push({prevNext:item,poMain:'tags'});
+						self.radioData.push({prevNext:item,tag:'poMain'});
 					});
 					self.cellList = res.result.data;
 				});
