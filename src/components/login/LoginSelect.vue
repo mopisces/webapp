@@ -68,13 +68,13 @@
 						columns:[]
 					},
 					field:{
-						show:true
+						show:false
 					}
 				},
 				formData:{
 					userType:1,
-					userName:'CR',
-					userPass:'CR',
+					userName:'mwj',
+					userPass:'123456',
 					subFactory:'',
 					subFactoryId:''
 				},
@@ -120,13 +120,17 @@
 						res.result.sub_factory.forEach((item,index)=>{
 							self.config.picker.columns.push({text:item.SShortName,key:item.SubFacId});
 						});
-					}else{
-						self.config.field.show = false;
+						self.config.field.show = true;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.formData.subFactory  = this.config.picker.columns[0].text + '(' + this.config.picker.columns[0].key + ')';
-						this.formData.subFactoryId = this.config.picker.columns[0].key;
+						if( this.config.picker.columns.length > 0 ){
+							this.formData.subFactory  = this.config.picker.columns[0].text + '(' + this.config.picker.columns[0].key + ')';
+							this.formData.subFactoryId = this.config.picker.columns[0].key;
+						}else{
+							this.formData.subFactoryId
+						}
+						
 					})
 				});
 			},

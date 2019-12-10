@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc">
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :height="config.table.height">
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -72,7 +72,8 @@
 							{field: 'stowDelivery', title: '送货单',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'table-operate',isResize:true},
 							{field: 'stowDetail', title: '明细',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'table-operate',isResize:true},
 							{field: 'stowLoading', title: '装货',width: 100, titleAlign: 'center',componentName:'table-operate',columnAlign:'center',isResize:true}
-						]
+						],
+						height : 0
 					},
 					switchCell:{
 						checked:false
@@ -110,11 +111,11 @@
 			},
 			preparePack( data ){
 				let self = this;	
-				this.$request.staff.stow.preparePack( data ).then(res=>{
-					if( res.result[1] === false ){
+				this.$request.staff.connecterp.preparePack( data ).then(res=>{
+					if( res.data.result[1] === false ){
 						Dialog.alert({
-							title   : res.result[0],
-							message : '准备失败'
+							title   : '准备失败',
+							message : res.data.result[0]
 						}).then(() => {
 							Dialog.close();
 						});
@@ -128,9 +129,15 @@
 			},
 			unPreparePack( data ){
 				let self = this;	
-				this.$request.staff.stow.preparePack( data ).then(res=>{
-					if( respon.result[1] === false ){
-						Toast.fail('取消准备失败');
+				this.$request.staff.connecterp.unPreparePack( data ).then(res=>{
+					console.log(res.data)
+					if( res.data.result[1] === false ){
+						Dialog.alert({
+							title   : '取消准备失败',
+							message : res.data.result[0]
+						}).then(() => {
+							Dialog.close();
+						});
 					}else{
 						self.table.data[data.index].CarState = 0;
 						Toast.success('取消准备成功');
@@ -192,6 +199,7 @@
 		},
 		mounted(){
 			this.getConfig();
+			this.config.table.height = window.screen.height - 126;
 		},
 		destroyed(){
 			if( this.config.switchCell.checked ){

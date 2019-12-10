@@ -20,7 +20,6 @@
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
-			[Dialog.name]: Dialog,
 			[Toast.name]: Toast,
 
 			NewTimePicker,
@@ -56,7 +55,7 @@
 				rules:{
 					stockInNo : [
 						{  required: true, message: '请输入订单号'},
-						{  type: 'string', pattern:'^[a-zA-Z0-9]{12}$', message: '订单号格式错误' } 
+						/*{  type: 'string', pattern:'^[a-zA-Z0-9]{12}$', message: '订单号格式错误' } */
 					],
 					inOpTime  : [
 						{ required : true, message : '请选择入库日期' },
@@ -89,16 +88,24 @@
 			},
 			paperGetInInfo( data ){
 				let self = this;
+				this.config.field.error = false;
+				this.autoData = {
+					paperWidth : '',
+					paperCode  : '',
+					paperWt    : '',
+					oriWt      : ''
+				};
 				this.$request.staff.paper.paperGetInInfo( data ).then(res=>{
 					if( res.errorCode == '00000' ){
-						self.autoData.paperWidth = Math.round(res.result.PaperWidth);
-						self.autoData.paperCode  = res.result.PaperCode;
-						self.autoData.paperWt    = res.result.PaperWt;
-						self.autoData.oriWt      = Math.round(res.result.OriWt);
+						self.autoData.paperWidth      = Math.round(res.result.PaperWidth);
+						self.autoData.paperCode       = res.result.PaperCode;
+						self.autoData.paperWt         = res.result.PaperWt;
+						self.autoData.oriWt           = Math.round(res.result.OriWt);
+						self.config.button.disabled   = false; 
 					}else{
 						self.config.field.placeholder = '自动查询失败';
 						self.config.field.error       = true;
-						self.config.button.disabled   = false; 
+						
 					}
 				});
 			},
@@ -125,7 +132,13 @@
 					if( res.errorCode === '00000' ){
 						Toast.success('入库成功！');
 					}else{
-						Toast.fail('入库失败！');
+						Dialog.alert({
+							title   : '入库失败!',
+							message : res.msg
+						}).then(()=>{
+							self.config.button.disabled   = true; 
+							Dialog.close();
+						});
 					}
 				});
 			}
@@ -135,7 +148,6 @@
 			if( typeof(this.$route.query.scanRes) == 'string' ){
 				this.formData.strOrderId = this.$route.query.scanRes;
 			}
-			//Toast.success(this.$route.query.scanRes);
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

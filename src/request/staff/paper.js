@@ -1,6 +1,5 @@
 import { get, post } from '../request';
 import { staff,erp } from '../urlMap';
-import axios from 'axios';
 
 const paper = {
 	staffPaperSafe( data ){
@@ -68,7 +67,7 @@ const paper = {
 	},
 	getOrdInInfo( orderId ){
 		return post(staff.paper.getOrdInInfo,{ direct_in_order_id : orderId });
-	},
+	}/*,
 	directInStock( data ){
 		let postData = {
 			iQty         : data.iQty,
@@ -82,6 +81,6 @@ const paper = {
 			strUserId    : data.strUserId
 		};
 		return post(erp.directInStock,postData);
-	}
+	}*/
 }
 export default paper;

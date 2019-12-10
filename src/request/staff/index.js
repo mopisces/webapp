@@ -11,6 +11,7 @@ import daily from './daily';
 import user from './user';
 import wx from './wx';
 import login from './login';
+import connecterp from './connecterp';
 export default {
 	calc,
 	frec,
@@ -24,5 +25,6 @@ export default {
 	daily,
 	user,
 	wx,
-	login
+	login,
+	connecterp
 }

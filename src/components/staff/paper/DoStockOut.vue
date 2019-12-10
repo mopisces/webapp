@@ -95,6 +95,13 @@
 			},
 			getOutInfo( outNo ){
 				let self = this;
+				this.config.field.error = false;
+				this.infoData = {
+					paperWidth : '',
+					paperCode  : '',
+					paperWt    : '',
+					curWt      : ''
+				};
 				this.$request.staff.paper.paperGetOutInfo( outNo ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.infoData.paperWidth = Math.round(res.result.PaperWidth);
@@ -133,7 +140,12 @@
 					if( res.errorCode === '00000' ){
 						Toast.success('出库成功！');
 					}else{
-						Toast.fail('出库失败！');
+						Dialog.alert({
+							title   : '出库失败!',
+							message : res.msg
+						}).then(()=>{
+							Dialog.close();
+						});
 					}
 				});
 			}
@@ -143,7 +155,6 @@
 			if( typeof(this.$route.query.scanRes) == 'string' ){
 				this.formData.strOrderId = this.$route.query.scanRes;
 			}
-			//Toast.success(this.$route.query.scanRes);
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

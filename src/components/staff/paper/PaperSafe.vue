@@ -17,7 +17,7 @@
 			<van-field label="生产备注" v-model="filterForm.safeSRemark" input-align="center" placeholder="精确查询"  slot="filter-field-5"></van-field>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" />
 		</popup-filter>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" :column-cell-class-name="columnCellClass">
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" :column-cell-class-name="columnCellClass" :height="config.table.height">
 		</v-table>
 	</div>
 </template>
@@ -58,6 +58,7 @@
 							{field: 'PaperName', title: '纸种名称', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'SRemark', title: '生产备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
+						height : 0
 					},
 					switch:{
 						checked:false
@@ -123,6 +124,7 @@
 		},
 		mounted(){
 			this.getTableData( this.filterForm );
+			this.config.table.height = window.screen.height - 170;
 		},
 		destroyed(){
 			if( this.config.switch.checked ){

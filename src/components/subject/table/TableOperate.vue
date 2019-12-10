@@ -33,7 +33,7 @@
 		</div>
 		<div v-if=" field === 'stockOperate' ">
 			<button class="van-button van-button--primary van-button--small"  @click="stockOperate()">
-				<span class="van-button__text">操作</span>
+				<span class="van-button__text">修改</span>
 			</button>
 		</div>
 

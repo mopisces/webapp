@@ -69,7 +69,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Icon, Popup, Field, Picker, Search, SwitchCell, Toast, Tab, Tabs} from 'vant';
+	import { Button, Cell, CellGroup, Icon, Popup, Field, Picker, Search, SwitchCell, Dialog, Toast, Tab, Tabs} from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import schema from 'async-validator';
 	export default {
@@ -169,11 +169,11 @@
 						],
 						length : [
 							{ required : true, message : '请输入板长' },
-							{ type: 'integer' , pattern : '^[1-9][0-9]{5}$', message : '板长格式错误' }
+							{ pattern : '^[1-9][0-9]{0,5}$', message : '板长格式错误' }
 						],
 						width : [
 							{ required : true, message : '请输入板宽' },
-							{ type: 'integer' , pattern : '^[1-9][0-9]{3}$' , message : '板宽格式错误' }
+							{ pattern : '^[1-9][0-9]{3}$' , message : '板宽格式错误' }
 						],
 						scoreInfo : [
 							{ type: 'string', required : true, message : '请填写压线信息' },
@@ -190,7 +190,7 @@
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ type:'integer' , pattern : '^[1-9][0-9]{6}$',message : '订单格式不正确'}
+							{ pattern : '^[1-9][0-9]{6}$',message : '订单格式不正确'}
 						]
 					},
 					cRules:{
@@ -205,19 +205,19 @@
 						],
 						boxL : [
 							{ required : true, message : '请填写箱长' },
-							{ type: 'integer' , pattern : '^[1-9][0-9]{4}$', message : '箱长格式不正确' }
+							{ pattern : '^[1-9][0-9]{4}$', message : '箱长格式不正确' }
 						],
 						boxW : [
 							{ required : true, message : '请填写箱宽' },
-							{ type : 'integer' ,pattern : '^[1-9][0-9]{4}$', message : '箱宽格式不正确' }
+							{ pattern : '^[1-9][0-9]{4}$', message : '箱宽格式不正确' }
 						],
 						boxH : [
 							{ required : true, message : '请填写箱高' },
-							{ type : 'integer' , pattern : '^[1-9][0-9]{4}$', message: '箱高格式不正确' }
+							{ pattern : '^[1-9][0-9]{4}$', message: '箱高格式不正确' }
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ type:'integer' , pattern : '^[1-9][0-9]{6}$',message : '订单格式不正确'}
+							{ pattern : '^[1-9][0-9]{6}$',message : '订单格式不正确'}
 						]
 					},
 					commonRules:{
@@ -226,7 +226,10 @@
 						],
 						texName : [
 							{ type : 'string', required : true, message : '请选择材质' }
-						]
+						],
+						/*factoryId : [
+							{ type : 'string', required : true, message : '分厂id未获取' }
+						]*/
 					}
 				}
 			}
@@ -312,18 +315,23 @@
 				this.config.popup.show = false;
 			},
 			calBdQuotaInfo(){
-				if( this.pageConfig.calcAutoGetdOriPrice && this.commonForm.cusName != '' && this.commonForm.texName != '' ){
+				if( !this.pageConfig.calcAutoGetdOriPrice && this.commonForm.cusName != '' && this.commonForm.texName != '' ){
 					let validator = new schema( this.rules.commonRules );
 					let self = this;
 					validator.validate( this.commonForm ).then(()=>{
-						self.$request.staff.calc.calBdQuotaInfo( this.commonForm ).then(res=>{
-							if( res.result[2] === false ){
-								Toast.fail('计算失败');
-								return ;
+						self.$request.staff.connecterp.calBdQuotaInfo( this.commonForm ).then(res=>{
+							if( res.data.result[2] === false ){
+								Dialog.alert({
+									title   : '计算失败',
+									message : res.data.result[1]
+								}).then(()=>{
+									Dialog.close();																																									
+								});
+								return false;
 							}
-							self.calcResult.oriPrice = res.result[0].dOriPrice;
+							self.calcResult.oriPrice = cRules.data.result[0].dOriPrice;
 							Toast.success('平方报价 => ' + self.calcResult.oriPrice);
-						});
+						});												
 					}).catch(({ errors, fields })=>{
 						Toast.fail(errors[0].message);
 					});
@@ -357,9 +365,14 @@
 				};
 				let self  = this;
 				validator.validate( postData ).then(()=>{
-					self.$request.staff.calc.calBdPriceInfo( data ).then((res)=>{
-						if( res.result[2] === false ){
-							Toast.fail('计算失败');
+					self.$request.staff.connecterp.calBdPriceInfo( data ).then((res)=>{
+						if( res.data.result[2] === false ){
+							Dialog.alert({
+								title   : '计算失败',
+								message : res.data.result[1]
+							}).then(()=>{
+								Dialog.close();
+							});
 							return ;
 						}
 						self.calcResult.salesArea   = res.result[0][0].dSalesArea;

@@ -93,7 +93,7 @@
 			getPaperInConfig(){
 				let self = this;
 				this.$request.staff.paperbuy.paperInConfig().then(res=>{
-					self.radioVal = res.result[0].RecDate;
+					self.radioVal  = res.result[0].RecDate;
 					self.radioData = res.result;
 					self.radioData.forEach((item,index)=>{
 						item['prevNext'] = item.RecDate; 

@@ -1,6 +1,5 @@
 import { get, post } from '../request';
 import { staff } from '../urlMap';
-import axios from 'axios';
 
 const paperbuy = {
 	paperInConfig(){

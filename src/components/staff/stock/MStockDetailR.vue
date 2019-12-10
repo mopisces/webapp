@@ -23,7 +23,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Icon, Popup, Field, Picker, Toast } from 'vant';
+	import { Button, Icon, Popup, Field, Picker, Dialog, Toast } from 'vant';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import { VTable, VPagination } from 'vue-easytable';
 	import schema from 'async-validator';
@@ -94,7 +94,8 @@
 								}
 							}},
 							{field: 'Remark', title: '备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
-						]
+						],
+						height : 0
 					},
 					button:{
 						change:{
@@ -108,7 +109,7 @@
 						{ type: 'string', required: true, message: '请输入订单号'},
 					],
 					ikey1 : [
-						{ type : 'integer', pattern : '^[1-9]+$', required: true, message: '请扫描有效的订单号或选择有效记录修改'},
+						{ pattern : '^[1-9]+$', required: true, message: '请扫描有效的订单号或选择有效记录修改'},
 					]
 				},
 				tableData:[],
@@ -162,7 +163,6 @@
 			},
 			onChangeClick(){
 				let self = this;
-				console.log(this.formData);
 				this.validator.validate(this.formData).then(()=>{
 					self.erpModify( self.formData  );
 				}).catch(({ errors, fields })=>{
@@ -171,9 +171,14 @@
 			},
 			erpModify( data ){
 				let self = this;
-				this.$request.staff.stock.erpModify( data ).then(res=>{
-					if( res.result[0] == false ){
-						Toast.fail('修改出错');
+				this.$request.staff.connecterp.erpModify( data ).then(res=>{
+					if( res.data.result[1] == false ){
+						Dialog.alert({
+							title   : '修改出错',
+							message : res.data.result[0]
+						}).then(()=>{
+							Dialog.close();
+						});
 					}else{
 						Toast.success('修改成功');
 					}

@@ -102,7 +102,7 @@ const staff = {
 
 const erp = {
 	delDNDetail    : `${base.erp}WebCommon/DelDNDetail`,    //扫描装货详情
-	addDNDetail    : `${base.erp}WebCommon/WebAddDNDetail`, //扫描装货详情
+	addDNDetail    : `${base.erp}WebAddDNDetail`,           //扫描装货详情
 	preparePack    : `${base.erp}WebCommon/PreparePack`,    //扫描装货列表(准备)
 	unPreparePack  : `${base.erp}WebCommon/UnPreparePack`,  //扫描装货列表(取消准备)
 	calBdQuotaInfo : `${base.erp}CalBdQuotaInfo`,           //订单试算

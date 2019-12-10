@@ -206,9 +206,15 @@
 		methods:{
 			erpAddDNDetail( data ){
 				let self = this;
-				this.$request.staff.stow.erpAddDNDetail( data ).then(res=>{
-					if( res.result[1] === false  ){
-						Toast.fail('装货出错');
+				this.$request.staff.connecterp.erpAddDNDetail( data ).then(res=>{
+					console.log(res)
+					if( res.data.result[1] === false  ){
+						Dialog.alert({
+							title   : '装货出错',
+							message : res.data.result[0]
+						}).then(()=>{
+							Dialog.close()
+						});
 					}else{
 						Toast.success('装货成功');
 						self.cancelClick();
@@ -218,8 +224,8 @@
 			},
 			erpDelDNDetail( data ){
 				let self = this;
-				this.$request.staff.stow.erpDelDNDetail( data ).then(res=>{
-					if( res.result[1] === false ){
+				this.$request.staff.connecterp.erpDelDNDetail( data ).then(res=>{
+					if( res.data.result[1] === false ){
 						Toast.fail('装货出错');
 					}else{
 						for (var i = self.table.data.length - 1; i >= 0; i--) {
@@ -228,6 +234,7 @@
 							}
 						}
 						self.table.data.splice(i,1);
+						self.cancelClick();
 					}
 				});
 			},
@@ -327,6 +334,7 @@
 				if( rowData.MatName !== '' && rowData.OrderType === 'x' ){
 					orderInfo += ' 货品名称:' + rowData.MatName;
 				}
+				this.fieldData.iDNId        = rowData.DNId;
 				this.fieldData.strOrderInfo = orderInfo;
 				this.fieldData.iDeliQty     = rowData.DeliQty;
 				this.fieldData.iFreeQty     = rowData.FreeQty;
@@ -347,8 +355,8 @@
 				this.erpDelForm.iPListNo     = rowData.PListNo;
 				this.erpDelForm.iDNId        = rowData.DNId;
 				Dialog.confirm({
-					title:'erp删除暂缺',
-					message:'确定删除订单' + rowData.OrderType +  rowData.OrderId + '?',
+					title   : 'erp删除暂缺',
+					message : '确定删除订单' + rowData.OrderType +  rowData.OrderId + '?',
 				}).then(()=>{
 					this.erpDelDNDetail( this.erpDelForm );
 				}).catch(()=>{

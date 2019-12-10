@@ -125,7 +125,13 @@
 				rules:{
 					strOrderId : [
 						{ required: true, message: '请输入订单号'},
-						{ type: 'string', pattern:'^[a-zA-Z0-9]{12}$', message: '订单号格式错误' } 
+						{ pattern:'^[0-9A-Za-z]{11,12}$', message: '订单号格式错误' } 
+					],
+					iQty : [
+						{ required: true, message:'入库数不能为空' }
+					],
+					dInDate : [
+						{ required: true, message:'请选择入库日期' }
 					]
 				}
 			}
@@ -198,11 +204,11 @@
 			},
 			directInStock( data ){
 				let self = this;
-				this.$request.staff.paper.directInStock( data ).then(res=>{
-					if( res.result[1] === false ){
+				this.$request.staff.connecterp.directInStock( data ).then(res=>{
+					if( res.data.result[1] === false ){
 						Dialog.alert({
 							title   : '入库失败',
-							message : res.result[0]
+							message : res.data.result[0]
 						});
 					}else{
 						Dialog.alert({

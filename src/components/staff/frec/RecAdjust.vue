@@ -9,7 +9,7 @@
 				</div>
 			</div>
 		</div>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" >
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -66,7 +66,8 @@
 							{field: 'ShortName', title: '科目', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Task', title: '业务员', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'ReceiptNo', title: '收据编号', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
-						]
+						],
+						height : 0
 					},
 					tabs:{
 						active:0,
@@ -196,6 +197,7 @@
 		},
 		mounted(){
 			this.recAdjustConfig();
+			this.config.table.height = window.screen.height - 126;
 		},
 		destroyed(){
 			if( this.info.switch.checked ){

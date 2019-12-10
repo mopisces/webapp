@@ -1,6 +1,5 @@
 import { get, post } from '../request';
 import { staff, erp } from '../urlMap';
-import axios from 'axios';
 
 const stock = {
 	deliveryArea(){
@@ -11,7 +10,7 @@ const stock = {
 	},
 	getStockDetail( strOrderId ){
 		return post(staff.stock.getStockDetail,{ str_order_id : strOrderId })
-	},
+	}/*,
 	erpModify( data ){
 		let postData = {
 			iOpType      : data.iOpType,
@@ -25,6 +24,6 @@ const stock = {
             strUserId    : data.strUserId,
 		};
 		return post(erp.mStockDetailR,postData);
-	}
+	}*/
 }
 export default stock;

@@ -10,7 +10,7 @@
 		</popup-filter>
    		<template>
    			<div class="container">
-   				<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500"></v-table>
+   				<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height"></v-table>
    			</div>
    		</template>
 
@@ -54,8 +54,9 @@
 		                    {field: 'MinAmtCond', title: '终止金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 		                    {field: 'LeftMinAmtCond', title: '终止金额剩余', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 		                    {field: 'CurNeedPay', title: '当前需付总额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true}
-		                ]
-					}
+		                ],
+		                height : 0
+					},
 				},
 				tableData: [],
 				filterForm:{
@@ -94,6 +95,7 @@
 		},
 		mounted(){
 			this.cusContact( this.filterForm );
+			this.config.table.height  = window.screen.height - 126;
 		},
 		destroyed(){
 			if( this.pageConfig.switchChecked ){

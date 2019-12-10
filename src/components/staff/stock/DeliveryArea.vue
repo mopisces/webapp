@@ -1,5 +1,5 @@
 <template>
-	<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" >
+	<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height">
 	</v-table>
 </template>
 <script>
@@ -18,7 +18,8 @@
 							{field: 'MaxSArea', title: '库区面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'CurSArea', title: '已用面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'LeftArea', title: '剩余面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-						]
+						],
+						height : 0
 					}
 				},
 				table:{
@@ -33,11 +34,12 @@
 				});
 			}
 		},
-		mounted(){
-			this.getTableData();
-		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','库区面积');
+		},
+		mounted(){
+			this.getTableData();
+			this.config.table.height = window.screen.height - 96;
 		},
 		computed:{
 			

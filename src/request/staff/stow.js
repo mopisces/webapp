@@ -1,6 +1,5 @@
 import { get, post } from '../request';
 import { staff, erp } from '../urlMap';
-import axios from 'axios';
 
 const stow = {
 	stowListConfig(){
@@ -32,7 +31,7 @@ const stow = {
 			str_order_id : strOrderId
 		};
 		return post(staff.stow.getStockArea,postData);
-	},
+	}/*,
 	erpDelDNDetail( data ){
 		let postData = {
 			iPListNo     : data.iPListNo,
@@ -76,6 +75,6 @@ const stow = {
 			strUserId    : data.strUserId
 		};
 		return post(erp.unPreparePack,postData);
-	}
+	}*/
 }
 export default stow;

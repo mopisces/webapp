@@ -13,7 +13,7 @@
 			</v-table>
 		</template>
 		<template v-if=" filterForm.dataType == 2 ">
-			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.codeColumns" :table-data="tableData.codeData" row-hover-color="#eee" row-click-color="#edf7ff"  odd-bg-color="#606266">
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.codeColumns" :table-data="tableData.codeData" row-hover-color="#eee" row-click-color="#edf7ff"  odd-bg-color="#606266" :height="config.table.height">
 			</v-table>
 		</template>
 	</div>
@@ -63,7 +63,8 @@
 							{field: 'iZJCount', title: '整卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
 							{field: 'RWt', title: '残卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
 							{field: 'iRCount', title: '残卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
-						]
+						],
+						height : 0
 					},
 					tabs:{
 						active:0
@@ -119,6 +120,7 @@
 		},
 		mounted(){
 			this.getPageConfig();
+			this.config.table.height = window.screen.height - 210;
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸库存');
