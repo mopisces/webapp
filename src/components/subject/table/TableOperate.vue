@@ -21,7 +21,7 @@
 				<span class="van-button__text">明细</span>
 			</button>
 		</div>
-		<div v-if=" field === 'stowLoading' ">
+		<div v-if=" field === 'stowLoading' && rowData.CarState == 0 ">
 			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="load()">
 				<span class="van-button__text">装货</span>
 			</button>

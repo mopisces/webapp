@@ -17,21 +17,28 @@
 				result: this.scanResult,
 				wxConfig:{},
 				scanValuable:true
-				//scanValuable:false
 			}
 		},
 		methods:{
 			scanQRCode(){
 				window.location.href = 'http://luodangfrp2.leaper.ltd/common/wxScan?urlType=' + this.urlType;
+			},
+			isWX(){
+				let ua = window.navigator.userAgent.toLowerCase();
+				if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+					if( sessionStorage.getItem('app_domain') !== null ){
+						let domainInfo = JSON.parse(sessionStorage.getItem('app_domain'));
+						if( domainInfo.portValuable == 1 ){
+							this.scanValuable = true;
+							return true;
+						}
+					}
+				}
+				this.scanValuable = false;
 			}
 		},
 		created(){
-			if( sessionStorage.getItem('app_domain') !== null ){
-				let domainInfo = JSON.parse(sessionStorage.getItem('app_domain'));
-				if( domainInfo.portValuable == 1 ){
-					this.scanValuable = true;
-				}
-			}
+			this.isWX();
 		},
 		mounted(){
 			

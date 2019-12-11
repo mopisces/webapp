@@ -208,15 +208,15 @@
 			
 		},
 		computed:{
-			tabActiveChange(){
+			/*tabActiveChange(){
 				return this.formData.userType;
-			},
+			},*/
 			usernameChange(){
 				return this.result.userName;
 			}
 		},
 		watch:{
-			tabActiveChange( newV, oldV ){
+			/*tabActiveChange( newV, oldV ){
 				if( newV == 0 ){
 					this.formData.userName = 'AQ';
 					this.formData.userPass = 'AQ';
@@ -224,8 +224,7 @@
 					this.formData.userName = 'CR';
 					this.formData.userPass = 'CR';
 				}
-				
-			},
+			},*/
 			usernameChange( newV, oldV ){
 				if( typeof(newV) !== 'undefined' && newV.length > 0 ){
 					this.getAuthName( {UserName:newV} );
