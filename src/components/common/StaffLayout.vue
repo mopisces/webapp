@@ -48,6 +48,7 @@
 					bounce:true,
 				},
 				active:0,
+				userName : ''
 			};
 		},
 		methods:{
@@ -65,33 +66,18 @@
 				Dialog.confirm({
 					message: '确认退出?'
 				}).then(() => {
+					this.userName = sessionStorage.getItem('jpdn-login-username');
 					sessionStorage.clear();
+					sessionStorage.setItem('jpdn-login-username',this.userName);
 					this.$router.push('/login/select');
 				}).catch(()=>{
 					Dialog.close();
 				});
 				
 			},
-			/*portValuable(){
-				let self = this;
-				if( sessionStorage.getItem('app_domain') !== null ){
-					let domainInfo        = JSON.parse(sessionStorage.getItem('app_domain'));
-					self.config.url.index = domainInfo.app_normal_domain + '/staff/index/menu';
-				}
-				this.isRouterAlive = false;
-				this.$request.staff.wx.portValuable().then(res=>{
-					sessionStorage.setItem('app_domain',JSON.stringify(res.result));
-					self.config.url.index = res.result.app_normal_domain + '/staff/index/menu';
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.isRouterAlive = true;
-					})
-				});
-			}*/
 		},
 		created(){
 			this.config.headerTitle = this.$store.state.staff.layout.title;
-			//this.portValuable();
 		},
 		mounted(){
 

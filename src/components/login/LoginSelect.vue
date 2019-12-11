@@ -73,7 +73,7 @@
 				},
 				formData:{
 					userType:1,
-					userName:'mwj',
+					userName:'',
 					userPass:'123456',
 					subFactory:'',
 					subFactoryId:''
@@ -181,6 +181,9 @@
 			},
 		},
 		created(){
+			if( sessionStorage.getItem('jpdn-login-username') !== null ){
+				this.formData.userName = sessionStorage.getItem('jpdn-login-username')
+			}
 			sessionStorage.clear();
 			this.$store.commit('staff/setHeaderTitle','用户登录');
 			this.config.style.div = 'width:100%;height:' + window.screen.height + 'px';
