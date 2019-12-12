@@ -102,14 +102,14 @@
 					}
 				},
 				formData:{
-					cusOrderId       : '',
-					materialType     : '',
-					boxType          : '',
-					boxLength        : '',
-					boxWidth         : '',
-					boxHeight        : '',
-					tonLen           : '',
-					uLen             : '',
+					cusOrderId       : '',   //客订单号
+					materialType     : '',	 //材质
+					boxType          : '',	 //箱型
+					boxLength        : '',	 //箱长
+					boxWidth         : '',	 //箱宽
+					boxHeight        : '',   //箱高
+					tonLen           : '',   //箱舌
+					uLen             : '',   //封箱调整
 					length           : '',   //板长
 					width            : '',   //板宽
 					bdMultiple       : '',   //张数
@@ -147,6 +147,9 @@
 			},
 			buildOrder(){
 				
+			},
+			saveOrder( data ){
+				console.log(data)
 			}
 		},
 		created(){

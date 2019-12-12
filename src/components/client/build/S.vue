@@ -25,12 +25,14 @@
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
+		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder"></build-sku>
 	</div>
 </template>
 <script>
 	import { Button, Icon, Popup, Field, Dialog, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
+	import BuildSku from '@/components/subject/build/BuildSku.vue';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -40,7 +42,8 @@
 			[Field.name]: Field,
 
 			NewTimePicker,
-			PopupSelect
+			PopupSelect,
+			BuildSku
 		},
 		data(){
 			return {
@@ -67,6 +70,9 @@
 					popup:{
 						timeFilter: {
 							isFinishLoad : false
+						},
+						sku: {
+							show : false
 						}
 					}
 				},
@@ -82,14 +88,14 @@
 				},
 				formData : {
 					cusOrderId       : '',    //客订单号
-					materialType     : 'A3B/A',    //材质
+					materialType     : '',    //材质
 					boardLength      : '1000',    //板长
 					boardWidth       : '100',    //板宽
-					lineBallInfo     : '无压线',    //压线名称
+					lineBallInfo     : '',    //压线名称
 					lineBallFormula  : '20+60+20',    //压线信息
 					orderQuantities  : '100',    //订单数
 					area             : '',    //下单面积
-					address          : 'CGC',    //送货地址
+					address          : '',    //送货地址
 					date             : '2019-12-13',    //送货时间
 					deliveryRemark   : '',    //送货备注
 					productionRemark : '',    //生产备注
@@ -205,7 +211,7 @@
 				}
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
-					self.saveOrder( self.formData );
+					self.config.popup.sku.show = true;
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});

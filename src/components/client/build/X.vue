@@ -3,29 +3,30 @@
 		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
 		<van-field v-model="formData.pON" input-align="center" label="PO号" placeholder="输入PO号"/>
 		<popup-select :selectValue.sync="formData.productId" :fieldConfig="config.fieldConfig.productId" :radioData="config.radioData.productId" selectType="productName"></popup-select>
-		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" type="number" right-icon="question-o" @click-right-icon="clickQuestion()" />
+		<van-field v-model="formData.orderQuantities" input-align="center" label="订单数" placeholder="输入订单数" type="number" right-icon="question-o" @click-right-icon="clickQuestion()" />
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
-		<van-sku v-model="config.popup.sku.show" :sku="sku" :goods="goods" :goods-id="goodsId" :quota="quota" :quota-used="quotaUsed" :hide-stock="sku.hide_stock" :custom-stepper-config="customStepperConfig" @buy-clicked="onBuyClicked" @add-cart="onAddCartClicked"/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
+		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="x"></build-sku>
 	</div>
 </template>
 <script>
-	import { Button, Field, Dialog, Toast, Sku } from 'vant';
+	import { Button, Field, Dialog, Toast } from 'vant';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import BuildSku from '@/components/subject/build/BuildSku.vue';
 	import schema from 'async-validator';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
 			[Toast.name]: Toast,
-			[Sku.name]: Sku,
 
 			PopupSelect,
-			NewTimePicker
+			NewTimePicker,
+			BuildSku
 		},
 		data(){
 			return {
@@ -57,7 +58,7 @@
 					cusOrderId       : '',   //客订单号
 					pON              : '',   //PO号
 					productId        : '',   //套件
-					ordQty           : '',   //订单数
+					orderQuantities  : '',   //订单数
 					address          : '',   //送货地址
 					date             : '',   //交货日期
 					deliveryRemark   : '',   //送货备注
@@ -76,7 +77,7 @@
 					productId : [
 						{ required : true, message : '请选择套件' }
 					],
-					ordQty : [
+					orderQuantities : [
 						{ required : true, message : '请填写订单数' },
 						{ validator : (rule, value, callback, source, options)=>{
 							let errors;
@@ -99,7 +100,6 @@
 			getConfig( fastOrderId ){
 				let self = this;
 				this.$request.client.orderBooking.xBuildConfig( fastOrderId ).then(res=>{
-					console.log(res.result)
 					self.formData.address = res.result.erp_id;
 					res.result.cus_info.forEach((item,index)=>{
 						self.config.radioData.address.push( { value : item.CusSubNo, text:item.SubDNAddress} );
@@ -136,6 +136,7 @@
 			},
 			saveOrder( data ){
 				let self = this;
+				console.log(data)
 				this.$request.client.orderBooking.xBuildSave( data ).then(res=>{
 					console.log(res)
 				});
