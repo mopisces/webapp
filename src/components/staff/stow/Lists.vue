@@ -130,7 +130,6 @@
 			unPreparePack( data ){
 				let self = this;	
 				this.$request.staff.connecterp.unPreparePack( data ).then(res=>{
-					console.log(res.data)
 					if( res.data.result[1] === false ){
 						Dialog.alert({
 							title   : '取消准备失败',
@@ -192,8 +191,8 @@
 			this.$store.commit('staff/setHeaderTitle','扫描装货');
 			if( sessionStorage.getItem('stow/lists') ){
 				let storageData = JSON.parse(sessionStorage.getItem('stow/lists'));
-				this.filterForm = storageData;
-				this.config.getConfig     = false;
+				this.filterForm                = storageData;
+				this.config.getConfig          = false;
 				this.config.switchCell.checked = true;
 			}
 		},

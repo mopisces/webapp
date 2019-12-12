@@ -26,6 +26,7 @@
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>
+		<cus-amt-detail :detailShow.sync="config.popup.detail.show" :detailCusId="config.popup.detail.cusId"></cus-amt-detail>
 	</div>
 </template>
 <script>
@@ -34,6 +35,7 @@
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
+	import CusAmtDetail from '@/components/subject/cred/CusAmtDetail.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -46,7 +48,8 @@
 			NewPopup,
 			CusPicker,
 			PopupFilter,
-			RadioCell
+			RadioCell,
+			CusAmtDetail
 		},
 		data(){
 			return {
@@ -62,6 +65,10 @@
 						},
 						cusPicker:{
 							show:false
+						},
+						detail:{
+							show  : false,
+							cusId : ''
 						}
 					},
 					switch:{
@@ -125,8 +132,8 @@
 				});
 			},
 			cellClick( cusId ){
-				sessionStorage.setItem('cred/wGetCusAmt/cusId',cusId);
-				this.$router.push('/staff/cred/cusAmtDetail');
+				this.config.popup.detail.cusId = cusId;
+				this.config.popup.detail.show  = true;
 			},
 			resetClick(){
 				this.filterForm = {

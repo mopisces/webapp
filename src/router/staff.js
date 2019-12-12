@@ -31,8 +31,8 @@ const paperDirectInStock     = r => require.ensure([], () => r(require('@/compon
 const paperGetSStocks        = r => require.ensure([], () => r(require('@/components/staff/paper/GetSStocks')), 'paperGetSStocks');
 //客户信用余额
 const credWGetCusAmt         = r => require.ensure([], () => r(require('@/components/staff/cred/WGetCusAmt')), 'credWGetCusAmt');
-//客户信用余额/详情
-const credCusAmtDetail       = r => require.ensure([], () => r(require('@/components/staff/cred/CusAmtDetail')), 'credCusAmtDetail');
+/*//客户信用余额/详情
+const credCusAmtDetail       = r => require.ensure([], () => r(require('@/components/staff/cred/CusAmtDetail')), 'credCusAmtDetail');*/
 //扫描装货
 const stowLists              = r => require.ensure([], () => r(require('@/components/staff/stow/Lists')), 'stowList');
 //扫描装货/详情
@@ -126,11 +126,11 @@ export const asyncStaffRouterMap = [
                 meta: { title: '客户信用余额' },
                 component: credWGetCusAmt,
             },
-            {
+            /*{
                 path:'cred/cusAmtDetail',
                 meta: { title: '客户信用余额/详情' },
                 component: credCusAmtDetail,
-            },
+            },*/
             {
                 path:'stow/lists',
                 meta: { title: '扫描装货' },

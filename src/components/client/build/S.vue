@@ -28,7 +28,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Icon, Popup, Field, Toast } from 'vant';
+	import { Button, Icon, Popup, Field, Dialog, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import schema from 'async-validator';
@@ -82,15 +82,15 @@
 				},
 				formData : {
 					cusOrderId       : '',    //客订单号
-					materialType     : '00/B',    //材质
+					materialType     : 'A3B/A',    //材质
 					boardLength      : '1000',    //板长
 					boardWidth       : '100',    //板宽
 					lineBallInfo     : '无压线',    //压线名称
 					lineBallFormula  : '20+60+20',    //压线信息
 					orderQuantities  : '100',    //订单数
 					area             : '',    //下单面积
-					address          : 'JS',    //送货地址
-					date             : '2019-12-07',    //送货时间
+					address          : 'CGC',    //送货地址
+					date             : '2019-12-13',    //送货时间
 					deliveryRemark   : '',    //送货备注
 					productionRemark : '',    //生产备注
 				},
@@ -124,7 +124,7 @@
 						}}
 					],
 					lineBallInfo : [
-						{ required : true, message : '请选择压线名称' }
+						{ required  : true, message : '请选择压线名称' },
 					],
 					lineBallFormula : [
 						{ pattern   : '^\\\d+([.]{1}[5]{1}){0,1}(\\\+\\\d+([.]{1}[5]{1}){0,1})+$', message : '压线信息错误' },
@@ -164,6 +164,14 @@
 			getConfig( fastOrderId ){
 				let self = this;
 				this.$request.client.orderBooking.sBuildConfig( fastOrderId ).then(res=>{
+					if( res.msg == '没有可用的BoardId' ){
+						Dialog.alert({
+							title   : '没有可选择的材质',
+							message : '请先选择常用材质'
+						}).then(()=>{
+							self.$router.push('/client/usedboard/lists')
+						});
+					}
 					res.result.board_select_list.forEach((item,index)=>{
 						if( item.BoardName == null ){
 							self.config.radioData.material.push({ value : item.BoardId , text: '', tag:item.IsUsedBoard });
@@ -216,7 +224,15 @@
 				let self = this;
 				this.$request.client.orderBooking.sBuildSave( data ).then(res=>{
 					if( res.errorCode == '00000' ){
-						Toast.success('下单成功')
+						Dialog.alert({
+							title : '下单成功',
+							message : '订单号:' + res.result.order_id
+						});
+						Object.keys( self.formData ).forEach((item,index)=>{
+							self.formData[item] = '';
+						});
+					}else{
+						Toast.fail('下单失败');
 					}
 				});
 			}

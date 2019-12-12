@@ -9,7 +9,7 @@ const ordersManage = {
 		let postData = {
 			erp_begin_date   : data.beginDate,
 			erp_end_date     : data.endDate,
-			erp_date_type    : date.dateType,
+			erp_date_type    : data.dateType,
 			order_id         : data.orderId,
 			border_length    : data.boardLength,
 			border_width     : data.boardWidth,

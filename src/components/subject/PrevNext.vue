@@ -49,22 +49,22 @@
 			<div class="content" style="width:100%;margin-top:46px;">
 				<van-radio-group v-model="radio" v-if="config.popup.show" >
 					<van-cell-group>
-						<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.prevNext,index )" >
+						<div role="button" tabindex="0"  class="van-cell van-cell--clickable" v-for="(item,index) in radioData" :key="index" @click="radioClick( item.prevNext,index )">
 							<!-- 原纸收货按日期汇总 -->
-							<div class="van-cell__title" v-if="item.RecDate">
+							<div :class="[{ active: isActive == index }, 'van-cell__title'] "  v-if="item.RecDate">
 								<span>{{ item.RecDate }}</span><br/>
 								<span>{{ item.InQty }}&nbsp;件</span><br/>
 								<span>{{ item.SumInWt }}&nbsp;kg</span>
 							</div>
 							<!-- 按门幅汇总 -->
-							<div class="van-cell__title" v-else-if="item.PaperWidth">
+							<div :class="[{ active: isActive == index }, 'van-cell__title'] " v-else-if="item.PaperWidth">
 								<span>门幅:{{ item.PaperWidth }}</span><br/>
 								<span>整卷卷数:{{ item.ZJCount }}</span><br/>
 								<span>残卷卷数:{{ item.CJCount }}</span><br/>
 								<span>重量:{{ item.SRWt }}</span>
 							</div>
 							<!-- 按纸类汇总 -->
-							<div class="van-cell__title" v-else-if="item.PaperCode">
+							<div :class="[{ active: isActive == index }, 'van-cell__title'] " v-else-if="item.PaperCode">
 								<span>纸类:{{ item.PaperCode }}
 									<span v-if="item.PaperName">{{ '[' + item.PaperName + ']' }}</span>
 								</span><br/>
@@ -73,11 +73,11 @@
 								<span>重量:{{ item.SRWt }}</span>
 							</div>
 							<!-- 原纸采购 -->
-							<div class="van-cell__title" v-if=" item.tag === 'poMain' ">
+							<div :class="[{ active: isActive == index }, 'van-cell__title'] " v-if=" item.tag === 'poMain' ">
 								<span>日期:{{ item.prevNext }}</span><br/>
 							</div>
 							<!-- 每日订单按日期汇总 -->
-							<div class="van-cell__title" v-else-if=" item.tag === 'daily' ">
+							<div :class="[{ active: isActive == index }, 'van-cell__title'] " v-else-if=" item.tag === 'daily' ">
 								<span>{{ item.OrderDate }}</span><br/>
 								<span>{{ item.ICount }}笔订单</span>
 							</div>
@@ -131,7 +131,8 @@
 							data:''
 						}
 					}
-				}
+				},
+				isActive : 0
 			}
 		},
 		methods:{
@@ -161,7 +162,8 @@
 				}
 			},
 			radioClick( value,index ){
-				this.radio = value;
+				this.isActive = index;
+				this.radio    = value;
 				this.config.header.index = Number( index );
 				this.controllerPrevNext();
 			},
@@ -182,6 +184,7 @@
 						this.config.header.index = this.radioData.length - 1 ;
 					}
 				}
+				this.isActive = this.config.header.index;
 				this.radio = this.radioData[ this.config.header.index ].prevNext;
 				this.controllerPrevNext();
 			},
@@ -212,3 +215,8 @@
 		}
 	}
 </script>
+<style>
+	.active{
+		color:#0bf147;
+	}
+</style>

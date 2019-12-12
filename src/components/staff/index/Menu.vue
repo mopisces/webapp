@@ -58,8 +58,6 @@
 					</van-button>
 				</div>
 			</div>
-			
-			
 		</van-popup>
 	</div>
 </template>
@@ -129,7 +127,6 @@
 					oldPass     : '',
 					newPass     : '',
 					confirmPass : '',
-
 				},
 				validator:{},
 				rules:{

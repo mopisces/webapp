@@ -41,19 +41,19 @@
 					},
 					table:{
 						columns: [
-		                    {field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-		                    {field: 'Task', title: '业务员', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'LastMBDate', title: '上次结算时间', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'LastAmt', title: '上期余额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'ConfAmtT', title: '确收金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'AdjustAmt', title: '调整金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'CusPayAmt', title: '本期收款', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'OrdNeedAmt', title: '订单未送', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'CurAmt', title: '当前欠款', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'PreAmt', title: '预警金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'MinAmtCond', title: '终止金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'LeftMinAmtCond', title: '终止金额剩余', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-		                    {field: 'CurNeedPay', title: '当前需付总额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true}
+		                    {field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true ,isFrozen: true},
+		                    {field: 'Task', title: '业务员', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'LastMBDate', title: '上次结算时间', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'LastAmt', title: '上期余额', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'ConfAmtT', title: '确收金额', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'AdjustAmt', title: '调整金额', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'CusPayAmt', title: '本期收款', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'OrdNeedAmt', title: '订单未送', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'CurAmt', title: '当前欠款', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'PreAmt', title: '预警金额', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'MinAmtCond', title: '终止金额', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'LeftMinAmtCond', title: '终止金额剩余', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+		                    {field: 'CurNeedPay', title: '当前需付总额', width: 100, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true}
 		                ],
 		                height : 0
 					},
@@ -109,3 +109,8 @@
 		}
 	}
 </script>
+<style>
+	.header-color{
+        color:#0bf147;
+	}
+</style>

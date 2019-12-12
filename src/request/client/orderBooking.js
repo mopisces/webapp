@@ -24,6 +24,26 @@ const orderBooking = {
 			simple_production_remark : data.productionRemark
 		};
 		return post(client.orderBooking.simplePaperBoardSave, postData)
+	},
+
+	//纸箱下单
+	xBuildConfig( fastOrderId ){
+		let postData = {
+			fast_order_id : fastOrderId
+		};
+		return post(client.orderBooking.boxOrderConfig, postData);
+	},
+	xBuildSave( data ){
+		let postData = {
+			cus_order_id      : data.cusOrderId,
+			external_member   : data.pNO,
+			order_quantities  : data.ordQty,
+			delivery_address  : data.address,
+			delivery_date     : data.date,
+			delivery_remark   : data.deliveryRemark,
+			production_remark : data.productionRemark
+		};
+		return post(client.orderBooking.boxOrderSave, postData);
 	}
 };
 export default orderBooking;

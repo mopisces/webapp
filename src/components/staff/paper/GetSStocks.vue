@@ -9,11 +9,11 @@
   			</van-tab>
 		</van-tabs>
 		<template v-if=" filterForm.dataType == 1 ">
-			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.widthColumns" :table-data="tableData.widthData" row-hover-color="#eee" row-click-color="#edf7ff"  odd-bg-color="#606266">
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.widthColumns" :table-data="tableData.widthData" row-hover-color="#eee" row-click-color="#edf7ff"  odd-bg-color="#aab3ac">
 			</v-table>
 		</template>
 		<template v-if=" filterForm.dataType == 2 ">
-			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.codeColumns" :table-data="tableData.codeData" row-hover-color="#eee" row-click-color="#edf7ff"  odd-bg-color="#606266" :height="config.table.height">
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.codeColumns" :table-data="tableData.codeData" row-hover-color="#eee" row-click-color="#edf7ff"  odd-bg-color="#aab3ac" :height="config.table.height">
 			</v-table>
 		</template>
 	</div>

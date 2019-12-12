@@ -89,6 +89,7 @@
 		data(){
 			return {
 				config:{
+					getConfig:true,
 					list:{
 						pullRefresh : {
 							reloading : false,
@@ -175,7 +176,7 @@
 			getConfig( isReset = false ){
 				let self = this;
 				this.$request.client.ordersManage.erpOrdersConfig().then(res=>{
-					if( isReset ){
+					if( this.config.getConfig ){
 						self.filterForm.beginDate = res.result.Wap0GetOrdersBeginDate;
 						self.filterForm.endDate   = res.result.Wap0GetOrdersEndDate;
 					}
@@ -189,7 +190,10 @@
 					if( isReset ){
 						return ;
 					}
-					this.getErpOrders( this.filterForm );
+					this.$nextTick(()=>{
+						this.getErpOrders( this.filterForm );
+					});
+					
 				});
 			},
 			getErpOrders( data ){
@@ -222,6 +226,7 @@
 				};
 				sessionStorage.removeItem('client-erp/getOrders');
 				this.config.switch.checked = false;
+				this.config.getConfig      = true;
 				this.getConfig( true );
 			},
 			filterClick(){
@@ -237,8 +242,9 @@
 			this.$store.commit('client/setHeaderTitle','ERP订单');
 			if( sessionStorage.getItem('client-erp/getOrders') !== null ){
 				let storageData = JSON.parse(sessionStorage.getItem('client-erp/getOrders'));
-				this.filterForm = storageData;
+				this.filterForm            = storageData;
 				this.config.switch.checked = true;
+				this.config.getConfig      = false;
 			}
 		},
 		mounted(){

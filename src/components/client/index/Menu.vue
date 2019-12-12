@@ -85,7 +85,7 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'简单纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#eff30c'},
+						{text:'简单纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#0bf147'},
 						{text:'纸箱纸板下单', iconName:'zhixiang',    url:'/client/build/c',state:'#eff30c'},
 						{text:'纸箱下单',     iconName:'zhixiang1',   url:'/client/build/x',state:'#eff30c'},
 						{text:'微信订单',     iconName:'shouji',      url:'/client/wxorder/lists',state:'#eff30c'},
