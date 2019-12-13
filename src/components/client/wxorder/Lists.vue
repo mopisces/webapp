@@ -13,7 +13,7 @@
 				<van-panel v-for="(item,index) in wxOrdersList" :key="index">
 					<div slot="header" style="margin-left:20px;">
 						<van-tag plain type="primary">
-							{{ cTypeChange(item.CType) }}
+							{{ cTypeName(item.CType) }}
 						</van-tag>
 						<van-tag plain type="warning" v-if=" item.IsCard === '1' ">
 							常用订单标识:{{ item.CardFlag }}
@@ -73,17 +73,22 @@
 						</div>
 					</div>
 					<div slot="footer" style="text-align:right;">
-						<van-button size="small" type="primary">详情</van-button>
+						<van-button size="small" type="primary" @click="wxDetailClick(item.CusPoNo)">详情</van-button>
 						<van-button size="small" type="danger" v-if="item.IsDel === '0' && item.Checked === '0' && ( item.IsGroup === '0' || item.UsePay === '0' || item.Paid === '0' || item.Refund === '1' ) ">删除</van-button>
 					</div>
 				</van-panel>
 				
 			</van-list>
 		</van-pull-refresh>
+		<wx-order-detail :detailShow.sync="config.popup.detailShow" :cusOrderId="detailForm.cusOrderId"></wx-order-detail>
 	</div>
 </template>
 <script>
 	import { Button,  PullRefresh, Toast, List, SwitchCell, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
+	import WxOrderDetail from '@/components/subject/client/WxOrderDetail.vue';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import { cTypeChange } from '@/util/index';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -96,6 +101,10 @@
 			[Tag.name]: Tag,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
+
+			WxOrderDetail,
+			NewTimePicker,
+			PopupFilter
 		},
 		data(){
 			return {
@@ -104,7 +113,8 @@
 						filterShow : false,
 						timePicker : {
 							isFinishLoad : false
-						}
+						},
+						detailShow : false
 					},
 					list : {
 						pullRefresh : {
@@ -125,6 +135,9 @@
 					orderType  : 'all',
 					orderState : '1',
 					curPage    : 0,
+				},
+				detailForm : {
+					cusOrderId : ''
 				},
 				wxOrdersList:[],
 			}
@@ -177,19 +190,12 @@
 					});
 				});
 			},
-			cTypeChange( $cType ){
-				switch ($cType) {
-					case 's':
-						return '简单纸板';
-					case 'c':
-						return '纸箱纸板';
-					case 'x':
-						return '纸箱';
-					case 't':
-						return '淘宝箱';
-					default : 
-						return '';
-				} 
+			cTypeName( cType ){
+				return cTypeChange( cType );
+			},
+			wxDetailClick( cusOrderId ){
+				this.detailForm.cusOrderId   = cusOrderId;
+				this.config.popup.detailShow = true;
 			}
 		},
 		created(){

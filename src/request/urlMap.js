@@ -140,6 +140,8 @@ const client = {
 
 		wechatOrdersConfig : `${base.client}wxConfig`, 
 		wechatOrders       : `${base.client}wechatOrders`,
+		wechatBaseDetail   : `${base.client}wechatBaseDetail`,
+		wechatGroupDetail  : `${base.client}wechatGroupDetail`,
 	},
 	commonMaterial : {
 		getMaterial       : `${base.client}commonMaterial`, 

@@ -1,6 +1,7 @@
 import { get, post } from '../request';
 import { client } from '../urlMap';
 import axios from 'axios';
+
 const ordersManage = {
 	erpOrdersConfig(){
 		return get(client.ordersManage.erpOrdersConfig);
@@ -81,6 +82,18 @@ const ordersManage = {
 			cur_page           : data.curPage
 		};
 		return post(client.ordersManage.wechatOrders,postData);
+	},
+	wechatBaseDetail( cusOrderId ){
+		return post(client.ordersManage.wechatBaseDetail,{ wechat_cus_order_id : cusOrderId });
+	},
+	wechatGroupDetail( cusOrderId ){
+		return post(client.ordersManage.wechatGroupDetail,{ wechat_cus_order_id : cusOrderId });
+	},
+	detailAll( cusOrderId ){
+		return axios.all([
+			ordersManage.wechatBaseDetail(cusOrderId),
+			ordersManage.wechatGroupDetail(cusOrderId)
+		]);
 	}
 };
 export default ordersManage;

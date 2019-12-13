@@ -20,3 +20,17 @@ export function dateTimeFormat( datetime, format ){
 	}
 	return format;
 };
+export function cTypeChange( cType ){
+	switch ( cType ) {
+		case 's':
+			return '简单纸板';
+		case 'c':
+			return '纸箱纸板';
+		case 'x':
+			return '纸箱';
+		case 't':
+			return '淘宝箱';
+		default : 
+			return '';
+	} 
+};
