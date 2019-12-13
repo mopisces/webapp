@@ -12,7 +12,11 @@
 			</div>
 		</van-sticky>
 		<template v-if="config.isBase">
-			<van-field v-model="orderDetail.CTypeName" label="订单类型" readonly input-align="right"></van-field>
+			<van-field label="订单类型" readonly input-align="right">
+				<div slot="input">
+					{{ cTypeName(orderDetail.CType) }}
+				</div>
+			</van-field>
 			<van-field v-model="orderDetail.CusPoNo" label="客订单号" readonly input-align="right"></van-field>
 			<van-field v-model="orderDetail.BoardId" label="材质" readonly input-align="right" v-if="orderDetail.CType === 's' || orderDetail.CType === 'c'"></van-field>
 			<van-field v-model="orderDetail.BoxName" label="箱型" readonly input-align="right" v-if="orderDetail.CType === 'c'"></van-field>
@@ -79,7 +83,11 @@
 
 					}
 				});
-			}
+			},
+			cTypeName( cType ){
+				return cTypeChange( cType );
+			},
+
 		},
 		created(){
 			
