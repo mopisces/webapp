@@ -36,6 +36,7 @@
 		<van-field :value="orderInfo.date" label="交货日期" readonly/>
 		<van-field :value="orderInfo.deliveryRemark" label="送货备注" readonly/>
 		<van-field :value="orderInfo.productionRemark" label="生产备注" readonly/>
+		<div style="width:100%;height:42px;"></div>
 		<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:0;" @click="buildOrder()">确认下单</van-button>
 	</van-popup>
 </template>

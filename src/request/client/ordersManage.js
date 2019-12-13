@@ -64,6 +64,23 @@ const ordersManage = {
 	},
 	cancelCommon( orderId ){
 		return post(client.ordersManage.cancelCommon, { cancel_order_id : orderId });
+	},
+
+	//微信订单页面参数
+	wechatOrdersConfig(){
+		return get(client.ordersManage.wechatOrdersConfig);
+	},
+	wechatOrders( data ){
+		let postData = {
+			wechat_begin_date  : data.beginDate,
+			wechat_end_date    : data.endDate,
+			wechat_date_type   : data.dateType,
+			wechat_group_buy   : data.groupBy,
+			wechat_order_type  : data.orderType,
+			wechat_order_state : data.orderState,
+			cur_page           : data.curPage
+		};
+		return post(client.ordersManage.wechatOrders,postData);
 	}
 };
 export default ordersManage;

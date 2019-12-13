@@ -36,8 +36,9 @@ const orderBooking = {
 	xBuildSave( data ){
 		let postData = {
 			cus_order_id      : data.cusOrderId,
-			external_member   : data.pNO,
-			order_quantities  : data.ordQty,
+			pon_name          : data.pNO,
+			external_member   : data.productId,
+			order_quantities  : data.orderQuantities,
 			delivery_address  : data.address,
 			delivery_date     : data.date,
 			delivery_remark   : data.deliveryRemark,

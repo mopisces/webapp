@@ -9,7 +9,7 @@
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
-		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="x"></build-sku>
+		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="x" @saveOrder="saveOrder"></build-sku>
 	</div>
 </template>
 <script>
@@ -136,9 +136,17 @@
 			},
 			saveOrder( data ){
 				let self = this;
-				console.log(data)
 				this.$request.client.orderBooking.xBuildSave( data ).then(res=>{
-					console.log(res)
+					if( res.errorCode === '00000' ){
+						Dialog.alert({
+							title   : '下单成功',
+							message : '客订单号' + res.result.order_id
+						}).then(()=>{
+							Dialog.close();
+						});
+					}else{
+						Toast.fail('下单失败');
+					}
 				});
 			}
 		},
