@@ -82,7 +82,7 @@ const orderBooking = {
 		};
 		return post(client.orderBooking.getBoxFormula, postData);
 	},
-	getClackAdjust( materialType ){
+	getClackAdjust( materialType = '001' ){
 		let postData = {
 			material_type : materialType
 		};

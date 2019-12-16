@@ -29,13 +29,13 @@
 		<van-field label="纸板规格(mm)">
 			<div class="van-row van-row--flex van-row--justify-center" slot="input">
 				<div class="van-col van-col--8" >
-					<input placeholder="板长" v-model="formData.length" style="width:100%;"/>
+					<input placeholder="板长" v-model="formData.length" style="width:100%;" disabled/>
 				</div>
 				<div class="van-col van-col--1">
 					x
 				</div>
 				<div class="van-col van-col--8" >
-					<input placeholder="板宽" v-model="formData.width" style="width:100%;"/>
+					<input placeholder="板宽" v-model="formData.width" style="width:100%;" disabled/>
 				</div>
 			</div>
 		</van-field>
@@ -49,19 +49,24 @@
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
+		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder"></build-sku>
 	</div>
 </template>
 <script>
-	import { Button, Field, Dialog } from 'vant';
+	import { Button, Field, Dialog, Toast } from 'vant';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import BuildSku from '@/components/subject/build/BuildSku.vue';
+	import schema from 'async-validator';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
+			[Toast.name]: Toast,
 
 			PopupSelect,
-			NewTimePicker
+			NewTimePicker,
+			BuildSku
 		},
 		data(){
 			return {
@@ -98,6 +103,9 @@
 					popup : {
 						timeFilter : {
 							isFinishLoad : false
+						},
+						sku : {
+							show : false
 						}
 					}
 				},
@@ -134,6 +142,74 @@
 					maxBoxW : '',
 					minArea : '',
 					maxArea : '',
+				},
+				rules:{
+					calcBdLW : {
+						boxLength : [
+							{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								if( Number(value) > this.pageConfig.maxBoxL || Number(value) < this.pageConfig.minBoxL){
+									errors = '板宽范围:' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm';
+								}
+								callback(errors);
+							} }
+						],
+						boxWidth : [
+							{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								if( Number(value) > this.pageConfig.maxBoxW || Number(value) < this.pageConfig.minBoxW){
+									errors = '板宽范围:' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm';
+								}
+								callback(errors);
+							}  }
+						],
+						boxHeight : [
+							{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								if( Number(value) > this.pageConfig.maxBoxH || Number(value) < this.pageConfig.minBoxH){
+									errors = '板宽范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm';
+								}
+								callback(errors);
+							} }
+						]
+					},
+					buildOrder:{
+						cusOrderId : [
+							{ required : true , message:'客订单号不能为空' }
+						],
+						materialType : [
+							{ required : true , message:'请选择材质' }
+						],
+						length : [
+							{ required : true , message:'请填写相关信息获取板长' }
+						],
+						width  : [
+							{ required : true , message:'请填写相关信息获取板宽' }
+						],
+						bdQty  : [
+							{ required : true , message:'请填写相关信息获取纸板数' }
+						],
+						area : [
+							{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								if( Number(value) > this.pageConfig.maxArea || Number(value) < this.pageConfig.minArea){
+									errors = '下单面积范围:' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡';
+								}
+								callback(errors);
+							} }
+						],
+						address : [
+							{ required : true , message:'请选择送货公司' }
+						],
+						date : [
+							{ required : true , message:'请填写交货日期' }
+						],
+
+					}
+				},
+				validator:{
+					calcBdLW   : {},
+					buildOrder : {}
 				}
 			}
 		},
@@ -158,7 +234,12 @@
 				});
 			},
 			buildOrder(){
-				
+				let self = this;
+				this.validator.validate(this.formData).then(()=>{
+					self.config.popup.sku.show = true;
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});
 			},
 			getConfig( fastOrderId ){
 				let self = this;
@@ -201,16 +282,26 @@
 				});
 			},
 			saveOrder( data ){
-				console.log(data)
+				let self = this;
+				this.$request.client.orderBooking.cBuildSave( data ).then(res=>{
+
+				});
 			},
 			calcBdLW(){
-
+				let self = this;
+				this.validator.calcBdLW.validate(this.formData).then(()=>{
+					
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});
 			},
 			getBoxFormula( boxType ){
-				let self = this;
-				this.$request.client.orderBooking.getBoxFormula( boxType ).then(res=>{
-					console.log(res);
-				});
+				if( this.formData.materialType ){
+					let self = this;
+					this.$request.client.orderBooking.getBoxFormula( boxType ).then(res=>{
+						console.log(res);
+					});
+				}
 			},
 			getClackAdjust( materialType ){
 				let self = this;
@@ -228,6 +319,8 @@
 			}else{
 				this.getConfig( '' );
 			}
+			this.validator.calcBdLW   = new schema(this.rules.calcBdLW);
+			this.validator.buildOrder = new schema(this.rules.buildOrder);
 		},
 		updated(){
 			
