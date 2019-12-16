@@ -87,7 +87,6 @@
 			cTypeName( cType ){
 				return cTypeChange( cType );
 			},
-
 		},
 		created(){
 			

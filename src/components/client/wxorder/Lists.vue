@@ -12,37 +12,26 @@
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
 				<van-panel v-for="(item,index) in wxOrdersList" :key="index">
 					<div slot="header" style="margin-left:20px;" v-if="item.IsGroup === '1'">
-						<!-- <div style="height:50px;width:100%;background-color:#42e221d9;display: flex;">
+						<div style="height:50px;width:100%;display: flex;" @click="headerClick">
 							<div style="display: inline-flex;line-height:50px;font-size:16px;width:75%;overflow: hidden;">
 								<div class="van-image van-image--round" style="width: 25%; height: 100%;display: inline-flex;" >
 									<img src="https://img.yzcdn.cn/vant/cat.jpeg" class="van-image__img" style="object-fit: cover;">
 								</div>
-								<span class="van-ellipsis" style="width:70%;">ssssssssssssssssssss</span>
-								<i class="van-icon van-icon-arrow" style="display: table-cell; vertical-align: middle; font-size: 16px;top: 17px;"></i>
+								<span class="van-ellipsis" style="width:70%;">
+									<span style="color: #e01835;" v-if=" item.BoardId && !item.MatNo ">
+										{{ item.BoardId }}
+									</span>
+									<span v-else-if=" !item.BoardId && item.MatNo ">
+										{{ item.MatNo }}
+									</span>
+									<span v-if="item.Title">{{ item.Title }}</span>
+								</span>
+								<i class="van-icon van-icon-arrow" style="display: table-cell; vertical-align: middle; font-size: 16px;top: 17px;color:#4bb0ff;"></i>
 							</div>
 							<div style="display: inline-flex;line-height:50px;font-size:14px;width:30%;color: #ffa500;text-align:center;">
 								超时未付款
 							</div>
-						</div> -->
-						<!-- <div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">
-								<van-cell is-link to="index">
-									<template slot="title">
-										<van-image round width="3rem" height="3rem" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-										<span style="color: #e01835;" v-if=" item.BoardId && !item.MatNo " >
-											{{ item.BoardId }}
-										</span>
-										<span v-else-if=" !item.BoardId && item.MatNo ">
-											{{ item.MatNo }}
-										</span>
-										<span v-if="item.Title">{{ item.Title }}</span>
-									</template>
-								</van-cell>
-							</div>
-							<div class="van-col van-col--4" style="font-size:14px;height:68px;">
-								<span style="position: relative;top:60%;">未付款</span>
-							</div>
-						</div> -->
+						</div>
 					</div>
 					<div slot="default">
 						<div class="van-row van-row--flex van-row--justify-center">
@@ -134,12 +123,12 @@
 				<button type="button" class="van-picker__confirm"></button>
 			</div>
 			<radio-cell :radioInfo.sync="delForm.delRemak" :radioColumns="config.radio.defaultDelRemark"></radio-cell>
-			<!-- <van-field :value="item" size="large" readonly input-align="center" v-for="(item,index) in config.popup.del.defaultDelRemark" :key=" 'field' + index " class="font-color" /> -->
 			<van-field value="其他原因" size="large" readonly input-align="center" @click="otherReason()"/>
-			<van-button color="linear-gradient(to right, #4bb0ff, #6149f6)" size="normal" style="width:100%" @click="config.popup.del.show = false">取消</van-button>
+			<van-button type="primary" size="normal" style="width:50%" @click="delConfirm()">确认</van-button>
+			<van-button type="info" size="normal" style="width:50%" @click="config.popup.del.show = false">取消</van-button>
 		</van-popup>
-		<van-dialog v-model="config.dialog.show" title="请填写删除原因">
-			<van-field v-model="delForm.delRemak" size="large" input-align="center" placeholder="请填写删除原因" ref="delReason"/>
+		<van-dialog v-model="config.dialog.show" title="请填写删除原因" @confirm="delConfirm()" @cancel="config.dialog.show = false">
+			<van-field v-model="delForm.delRemak" size="large" input-align="center" placeholder="请填写删除原因"/>
 		</van-dialog>
 	</div>
 </template>
@@ -149,6 +138,7 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
+	import schema from 'async-validator';
 	import { cTypeChange } from '@/util/index';
 	export default {
 		components:{
@@ -174,6 +164,7 @@
 		data(){
 			return {
 				config:{
+					getConfig : true,
 					popup : {
 						del : {
 							defaultDelRemark:[],
@@ -244,6 +235,15 @@
 					delRemak   : '',
 				},
 				wxOrdersList:[],
+				delRules : {
+					cusOrderId : [
+						{ required : true, message: '请选择要删除的订单' }
+					],
+					delRemak : [
+						{ required : true, message: '请选择或填写删除原因' }
+					]
+				},
+				validator : {}
 			}
 		},
 		methods:{
@@ -268,8 +268,10 @@
 			getConfig( isReset = false ){
 				let self = this;
 				this.$request.client.ordersManage.wechatOrdersConfig().then(res=>{
-					self.filterForm.beginDate = res.result.WeborderBeginDate;
-					self.filterForm.endDate   = res.result.WeborderEndDate;
+					if( this.config.getConfig ){
+						self.filterForm.beginDate = res.result.WeborderBeginDate;
+						self.filterForm.endDate   = res.result.WeborderEndDate;
+					}
 					self.pageConfig.minDate   = res.result.WeborderMinDate;
 					self.pageConfig.maxDate   = res.result.WeborderMaxDate;
 					self.config.radio.defaultDelRemark = [];
@@ -333,21 +335,46 @@
 				this.config.popup.del.show = true;
 			},
 			otherReason( cusOrderId ){
-				this.delForm.delRemak = '';
-				this.config.dialog.show = true;
+				this.delForm.delRemak      = '';
+				this.config.popup.del.show = false;
+				this.config.dialog.show    = true;
+			},
+			delConfirm(){
+				let self = this;
+				this.validator.validate(this.delForm).then(()=>{
+					self.wechatDelete( this.delForm );
+
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});
+			},
+			wechatDelete( data ){
+				this.$request.client.ordersManage.wechatDelete( data ).then(res=>{
+					if( res.errorCode === '00000' ){
+						Toast.success(res.msg);
+					}
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.popup.del.show = false;
+						this.pullOnRefresh();
+					});
+				});
+			},
+			headerClick(){
+				console.log('headerClick');
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','微信订单');
 			if( sessionStorage.getItem('client/wxOrders') !== null ){
 				let storageData = JSON.parse(sessionStorage.getItem('client/wxOrders'));
-				this.filterForm = storageData;
+				this.filterForm            = storageData;
 				this.config.getConfig      = false;
 				this.config.switch.checked = true;
 			}
 		},
 		mounted(){
-
+			this.validator = new schema(this.delRules);
 		},
 		updated(){
 			
@@ -362,11 +389,46 @@
 		computed:{
 			orderStateChange(){
 				return this.filterForm.orderState;
+			},
+			groupByChange(){
+				return this.filterForm.groupBy;
 			}
 		},
 		watch:{
 			orderStateChange( newV,oldV ){
 				this.pullOnRefresh();
+			},
+			groupByChange( newV,oldV ){
+				if( newV == 1 ){
+					this.config.radio.orderType = [
+						{title:'全部',     value:'all'},
+						{title:'简单纸板', value:'s'},
+						{title:'纸箱纸板', value:'c'},
+						{title:'淘宝箱',   value:'t'},
+					];
+					if( this.filterForm.orderType === 'x' ){
+						this.filterForm.orderType = '';
+					}
+				}else if( newV == 0 ){
+					this.config.radio.orderType = [
+						{title:'全部',     value:'all'},
+						{title:'简单纸板', value:'s'},
+						{title:'纸箱纸板', value:'c'},
+						{title:'纸箱' ,    value:'x'},
+					];
+					if( this.filterForm.orderType === 't' ){
+						this.filterForm.orderType = '';
+					}
+				}else{
+					this.config.radio.orderType = [
+						{title:'全部',     value:'all'},
+						{title:'简单纸板', value:'s'},
+						{title:'纸箱纸板', value:'c'},
+						{title:'纸箱' ,    value:'x'},
+						{title:'淘宝箱',   value:'t'},
+					];
+				}
+
 			}
 		}
 	}

@@ -45,6 +45,48 @@ const orderBooking = {
 			production_remark : data.productionRemark
 		};
 		return post(client.orderBooking.boxOrderSave, postData);
+	},
+
+	//纸箱纸板下单
+	cBuildConfig( fastOrderId ){
+		let postData = {
+			fast_order_id : fastOrderId
+		};
+		return post(client.orderBooking.boxPaperConfig, postData);
+	},
+	cBuildSave( data ){
+		let postData = {
+			cus_order_id          : data.cusOrderId,
+			material_type         : data.materialType,
+			box_type              : data.boxType,
+			box_length            : data.boxLength,
+			box_width             : data.boxWidth,
+			box_height            : data.boxHeight,
+			box_clack             : data.tonLen,
+			box_adjust            : data.uLen,
+			board_length          : data.length,
+			board_width           : data.width,
+			sheet_quantities      : data.bdMultiple,
+			order_quantities      : data.ordQty,
+			card_board_quantities : data.bdQty,
+			delivery_address      : data.address,
+			delivery_date         : data.date,
+			delivery_remark       : data.deliveryRemark,
+			production_remark     : data.productionRemark
+		};
+		return post(client.orderBooking.boxPaperSave, postData);
+	},
+	getBoxFormula( boxType ){
+		let postData = {
+			box_type : boxType
+		};
+		return post(client.orderBooking.getBoxFormula, postData);
+	},
+	getClackAdjust( materialType ){
+		let postData = {
+			material_type : materialType
+		};
+		return post(client.orderBooking.getClackAdjust, postData);
 	}
 };
 export default orderBooking;

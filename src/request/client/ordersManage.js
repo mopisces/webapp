@@ -94,6 +94,13 @@ const ordersManage = {
 			ordersManage.wechatBaseDetail(cusOrderId),
 			ordersManage.wechatGroupDetail(cusOrderId)
 		]);
+	},
+	wechatDelete( data ){
+		let postData = {
+			wechat_cus_order_id : data.cusOrderId,
+			wechat_del_remak    : data.delRemak
+		};
+		return post(client.ordersManage.wechatDelete,postData);
 	}
 };
 export default ordersManage;

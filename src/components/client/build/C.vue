@@ -24,8 +24,8 @@
 		</van-field>
 		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen"></popup-select>
 		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen"></popup-select>
-		<van-field v-model="formData.cusOrderId" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
-		<van-field v-model="formData.cusOrderId" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
+		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
+		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
 		<van-field label="纸板规格(mm)">
 			<div class="van-row van-row--flex van-row--justify-center" slot="input">
 				<div class="van-col van-col--8" >
@@ -120,10 +120,20 @@
 					date             : '',   //交货日期
 					deliveryRemark   : '',   //送货备注
 					productionRemark : '',   //生产备注
+					lengthF          : '',   //横向公式
+					widthF           : '',   //纵向公式
 				},
 				pageConfig:{
 					minDate : '',
-					maxDate : ''
+					maxDate : '',
+					minBoxH : '',
+					maxBoxH : '',
+					minBoxL : '',
+					maxBoxL : '',
+					minBoxW : '',
+					maxBoxW : '',
+					minArea : '',
+					maxArea : '',
 				}
 			}
 		},
@@ -131,13 +141,15 @@
 			clickQuestion( type ){
 				let info = '';
 				if( type == 1 ){
-					info = '箱长范围:'; 
+					info = '箱长范围:' + this.pageConfig.minBoxL + '~' + this.pageConfig.maxBoxL + '\n'; 
+					info += '箱宽范围:' + this.pageConfig.minBoxW + '~' + this.pageConfig.maxBoxW + '\n';
+					info += '箱高范围:' + this.pageConfig.minBoxH + '~' + this.pageConfig.maxBoxW;
 				}
 				if( type == 2 ){
-
+					info = '正数:几个纸板&nbsp;=>&nbsp;1个纸箱\n负数:1个纸板&nbsp;=>&nbsp;几个纸箱';
 				}
 				if( type == 3 ){
-
+					info = '下单面积范围:' + this.pageConfig.minArea + '~' + this.pageConfig.maxArea;
 				}
 				Dialog.alert({
 					message : info
@@ -148,15 +160,74 @@
 			buildOrder(){
 				
 			},
+			getConfig( fastOrderId ){
+				let self = this;
+				this.$request.client.orderBooking.cBuildConfig( fastOrderId ).then(res=>{
+					console.log(res)
+					self.pageConfig.minBoxH = res.result.config.BuildMinBoxH;
+					self.pageConfig.maxBoxH = res.result.config.BuildMaxBoxH;
+					self.pageConfig.minBoxL = res.result.config.BuildMinBoxL;
+					self.pageConfig.maxBoxL = res.result.config.BuildMaxBoxL;
+					self.pageConfig.minBoxW = res.result.config.BuildMinBoxW;
+					self.pageConfig.maxBoxW = res.result.config.BuildMaxBoxW;
+					self.pageConfig.minArea = res.result.config.BuildMinArea;
+					self.pageConfig.maxArea = res.result.config.BuildMaxArea;
+					self.pageConfig.minDate = res.result.config.BuildMinDate;
+					self.pageConfig.maxDate = res.result.config.BuildMaxDate;
+
+					res.result.board_select_list.forEach((item,index)=>{
+						if( item.BoardName == null ){
+							self.config.radioData.material.push({ value : item.BoardId , text: '', tag:item.IsUsedBoard });
+						}else{
+							self.config.radioData.material.push({ value : item.BoardId , text: item.BoardName, tag:item.IsUsedBoard });
+						}
+					});
+					res.result.cus_info.forEach((item,index)=>{
+						self.config.radioData.address.push( { value : item.CusSubNo, text:item.SubDNAddress, tag : ''} );
+					});
+					res.result.box_type_availabel.forEach((item,index)=>{
+						self.config.radioData.boxType.push( { value : item.BoxId, text:item.BoxName, lengthF:item.LengthF, widthF:item.WidthF } )
+					});
+					res.result.config.BuildTonLen.forEach((item,index)=>{
+						self.config.radioData.tonLen.push({ value: item, text: item });
+					});
+					res.result.config.BuildULen.forEach((item,index)=>{
+						self.config.radioData.uLen.push({ value: item, text: item });
+					});
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.popup.timeFilter.isFinishLoad = true;
+					})
+				});
+			},
 			saveOrder( data ){
 				console.log(data)
+			},
+			calcBdLW(){
+
+			},
+			getBoxFormula( boxType ){
+				let self = this;
+				this.$request.client.orderBooking.getBoxFormula( boxType ).then(res=>{
+					console.log(res);
+				});
+			},
+			getClackAdjust( materialType ){
+				let self = this;
+				this.$request.client.orderBooking.getClackAdjust( materialType ).then(res=>{
+					console.log(res);
+				});
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','纸箱纸板下单');
 		},
 		mounted(){
-
+			if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
+				this.getConfig( this.$route.params.orderId )
+			}else{
+				this.getConfig( '' );
+			}
 		},
 		updated(){
 			
@@ -165,10 +236,22 @@
 			
 		},
 		computed:{
-			
+			boxTypeChange(){
+				return this.formData.boxType;
+			}
 		},
 		watch:{
-
+			boxTypeChange( newV,oldV ){
+				if( newV != '' ){
+					for (var i = this.config.radioData.boxType.length - 1; i >= 0; i--) {
+						if(this.config.radioData.boxType[i].value == newV){
+							this.formData.lengthF = this.config.radioData.boxType[i].lengthF;
+							this.formData.widthF  = this.config.radioData.boxType[i].widthF;
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 </script>

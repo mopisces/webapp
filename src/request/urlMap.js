@@ -142,6 +142,7 @@ const client = {
 		wechatOrders       : `${base.client}wechatOrders`,
 		wechatBaseDetail   : `${base.client}wechatBaseDetail`,
 		wechatGroupDetail  : `${base.client}wechatGroupDetail`,
+		wechatDelete       : `${base.client}wechatDelete`,
 	},
 	commonMaterial : {
 		getMaterial       : `${base.client}commonMaterial`, 
@@ -154,6 +155,11 @@ const client = {
 
 		boxOrderConfig         : `${base.client}boxConfig`,
 		boxOrderSave           : `${base.client}boxSave`,
+
+		boxPaperConfig         : `${base.client}boxPaperConfig`,
+		boxPaperSave           : `${base.client}boxPaperSave`,
+		getBoxFormula          : `${base.client}getBoxFormula`,
+		getClackAdjust         : `${base.client}getClackAdjust`,
 	}
 };
 export { adminUrl, staff, erp, index, client };
