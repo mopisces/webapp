@@ -15,6 +15,9 @@ const loginSelect            = r => require.ensure([], () => r(require('@/compon
 const contact                = r => require.ensure([], () => r(require('@/components/client/index/Contact')), 'contact');
 //团购分类页面
 const groupIndex             = r => require.ensure([], () => r(require('@/components/group/Index')), 'groupIndex');
+//纸板爆款团购列表
+const groupBoardFlag         = r => require.ensure([], () => r(require('@/components/group/board/FlagLists')), 'groupBoardFlag');
+     
 //404
 const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
 const wxScan                 = r => require.ensure([], () => r(require('@/components/common/WxScanRes')), 'wxScan');
@@ -250,6 +253,12 @@ let routes = [
                 meta: { title: '团购分类' },
                 component: groupIndex,
             },
+            {
+                path:'board/flagLists',
+                meta: { title: '纸板爆款团购列表' },
+                component: groupBoardFlag,
+            },
+            
         ]
     },
     {

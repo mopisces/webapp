@@ -6,18 +6,22 @@
 					<div style="position:absolute;right:0;top:0;z-index:999;">
 						<van-tag mark type="danger">{{ config.grid.groupBoard.tagName }}</van-tag>
 					</div>
-					<van-image :src="config.grid.groupBoard.img"/>
+					<van-image :src="config.grid.groupBoard.img">
+						<template v-slot:error>加载失败</template>
+					</van-image>
 				</div>
 				<div slot="text" style="color:red;">
 					{{ config.grid.groupBoard.tagName }}
 				</div>
 			</van-grid-item>
-			<van-grid-item v-if=" boardGroupOpen ">
+			<van-grid-item v-if=" boardGroupOpen " to="/group/board/flagLists">
 				<div slot="icon" style="position:relative;">
 					<div style="position:absolute;right:0;top:0;z-index:999;">
 						<van-tag mark type="danger">{{ config.grid.groupBoardFlag.tagName }} ( {{ config.grid.groupBoardFlag.flag }} ) </van-tag>
 					</div>
-					<van-image :src="config.grid.groupBoardFlag.img"/>
+					<van-image :src="config.grid.groupBoardFlag.img">
+						<template v-slot:error>加载失败</template>
+					</van-image>
 				</div>
 				<div slot="text" style="color:red;">
 					{{ config.grid.groupBoardFlag.tagName }}  ( {{ config.grid.groupBoardFlag.flag }} ) 
@@ -28,7 +32,9 @@
 					<div style="position:absolute;right:0;top:0;z-index:999;">
 						<van-tag mark type="danger">{{ config.grid.groupBox.tagName }}</van-tag>
 					</div>
-					<van-image :src="config.grid.groupBox.img"/>
+					<van-image :src="config.grid.groupBox.img">
+						<template v-slot:error>加载失败</template>
+					</van-image>
 				</div>
 				<div slot="text" style="color:red;">
 					{{ config.grid.groupBox.tagName }}
@@ -39,7 +45,9 @@
 					<div style="position:absolute;right:0;top:0;z-index:999;">
 						<van-tag mark type="danger">{{ config.grid.groupBoxFlag.tagName }} ( {{ config.grid.groupBoxFlag.flag }} ) </van-tag>
 					</div>
-					<van-image :src="config.grid.groupBoxFlag.img"/>
+					<van-image :src="config.grid.groupBoxFlag.img">
+						<template v-slot:error>加载失败</template>
+					</van-image>
 				</div>
 				<div slot="text" style="color:red;">
 					{{ config.grid.groupBoxFlag.tagName }} ( {{ config.grid.groupBoxFlag.flag }} ) 
