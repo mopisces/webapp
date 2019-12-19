@@ -5,8 +5,16 @@ import client from './client';
 
 Vue.use(Router);
 //公共页面
+//团购及未登录页面布局
+const indexLayout            = r => require.ensure([], () => r(require('@/components/common/IndexLayout')), 'indexLayout');
+//注册页面
+const register               = r => require.ensure([], () => r(require('@/components/client/index/Register')), 'register');
 //登录
 const loginSelect            = r => require.ensure([], () => r(require('@/components/login/LoginSelect')), 'loginSelect');
+//联系我们
+const contact                = r => require.ensure([], () => r(require('@/components/client/index/Contact')), 'contact');
+//团购分类页面
+const groupIndex             = r => require.ensure([], () => r(require('@/components/group/Index')), 'groupIndex');
 //404
 const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
 const wxScan                 = r => require.ensure([], () => r(require('@/components/common/WxScanRes')), 'wxScan');
@@ -210,11 +218,39 @@ export const asyncStaffRouterMap = [
 ];
 
 let routes = [
-    {
+    /*{
         path:'/login/select',
         alias:'/login/select?token=:token',
         component: loginSelect,
         meta: { title: '登录选择界面' },
+    },*/
+    {
+        path : '/group',
+        component : indexLayout,
+        meta: { title: '团购及未登录' },
+        children : [
+            {
+                path:'register',
+                meta: { title: '注册页面' },
+                component: register,
+            },
+            {
+                path:'login',
+                alias:'login?token=:token',
+                meta: { title: '登录选择界面' },
+                component: loginSelect,
+            },
+            {
+                path:'contact',
+                meta: { title: '联系我们' },
+                component: contact,
+            },
+            {
+                path:'index',
+                meta: { title: '团购分类' },
+                component: groupIndex,
+            },
+        ]
     },
     {
         path : '/common/wxscan',

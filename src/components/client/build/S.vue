@@ -26,13 +26,15 @@
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder"></build-sku>
+		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
 <script>
-	import { Button, Icon, Popup, Field, Dialog, Toast } from 'vant';
+	import { Button, Icon, Popup, Field, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
+	import BuildResult from '@/components/subject/build/BuildResult.vue';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -40,10 +42,13 @@
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
+			/*[Dialog.Component.name]: Dialog.Component,*/
+			[Toast.name]: Toast,
 
 			NewTimePicker,
 			PopupSelect,
-			BuildSku
+			BuildSku,
+			BuildResult
 		},
 		data(){
 			return {
@@ -74,6 +79,11 @@
 						sku: {
 							show : false
 						}
+					},
+					result : {
+						show       : false,
+						isSuccess  : false,
+						cusOrderId :''
 					}
 				},
  				pageConfig : {
@@ -96,7 +106,7 @@
 					orderQuantities  : '100',    //订单数
 					area             : '',    //下单面积
 					address          : '',    //送货地址
-					date             : '2019-12-13',    //送货时间
+					date             : '2019-12-19',    //送货时间
 					deliveryRemark   : '',    //送货备注
 					productionRemark : '',    //生产备注
 				},
@@ -204,6 +214,7 @@
 						this.config.popup.timeFilter.isFinishLoad = true;
 					})
 				});
+
 			},
 			buildOrder(){
 				if( !this.calc() ){
@@ -230,16 +241,17 @@
 				let self = this;
 				this.$request.client.orderBooking.sBuildSave( data ).then(res=>{
 					if( res.errorCode == '00000' ){
-						Dialog.alert({
-							title : '下单成功',
-							message : '订单号:' + res.result.order_id
-						});
-						Object.keys( self.formData ).forEach((item,index)=>{
-							self.formData[item] = '';
-						});
+						self.config.result.isSuccess  = true;
+						self.config.result.cusOrderId = res.result.order_id;
 					}else{
-						Toast.fail('下单失败');
+						self.config.result.isSuccess = false;
 					}
+					self.config.result.show = true;
+				});
+			},
+			clearFormData(){
+				Object.keys( this.formData ).forEach((item,index)=>{
+					this.formData[item] = '';
 				});
 			}
 		},

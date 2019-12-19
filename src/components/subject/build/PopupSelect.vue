@@ -10,7 +10,7 @@
 						<span class="van-nav-bar__text">{{ fieldConfig.placeholder }}</span>
 					</div>
 					<div class="van-nav-bar__title van-ellipsis"></div>
-					<div class="van-nav-bar__right" @click=" show = false ">
+					<div class="van-nav-bar__right" @click=" confirmClick() ">
 						<i class="van-icon">确认</i>
 						<i class="van-icon van-icon-success" style="font-size: 16px;"><!----></i>
 					</div>
@@ -72,6 +72,15 @@
 		methods:{
 			confirmClick(){
 				this.show = false;
+				if( this.selectType == 'material' ){
+					this.$emit('materialConfirm');
+				}
+				if ( this.selectType == 'boxType' ) {
+					this.$emit('boxTypeConfirm');
+				}
+				if( this.selectType == 'uLen' || this.selectType == 'tonLen' ){
+					this.$emit('lenConfirm');
+				}
 			}
 		},
 		created(){

@@ -28,7 +28,16 @@ const cBuild           = r => require.ensure([], () => r(require('@/components/c
 //纸箱下单
 const xBuild           = r => require.ensure([], () => r(require('@/components/client/build/X')), 'xBuild');
 
+
+//支付方式
+const payWay           = r => require.ensure([], () => r(require('@/components/pay/order/Way')), 'payWay');
+
+/*//团购及未登录页面布局
+const indexLayout      = r => require.ensure([], () => r(require('@/components/common/IndexLayout')), 'indexLayout');
+//注册页面
+const register         = r => require.ensure([], () => r(require('@/components/client/index/Register')), 'register');*/
 const client = [
+    
 	{
         path:'/client',
         component: clientLayout,
@@ -102,6 +111,14 @@ const client = [
                 name: 'xBuild',
                 meta: { title: '纸箱下单' },
                 component: xBuild,
+            }
+
+            ,
+            {
+                path:'pay/way',
+                name: 'payWay',
+                meta: { title: '支付方式' },
+                component: payWay,
             }
         ]
     }

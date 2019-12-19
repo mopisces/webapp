@@ -160,6 +160,19 @@ const client = {
 		boxPaperSave           : `${base.client}boxPaperSave`,
 		getBoxFormula          : `${base.client}getBoxFormula`,
 		getClackAdjust         : `${base.client}getClackAdjust`,
+	},
+	paymentAll : {
+		paymentIndex : `${base.client}paymentIndex`, 
+	},
+	index : {
+		contactWay     : `${base.client}contactWay`, 
+		register       : `${base.client}register`, 
+		indexConfig    : `${base.client}getIndexConfig`, 
 	}
 };
-export { adminUrl, staff, erp, index, client };
+
+const pay = {
+	alipay : `${base.pay}alipay`,
+	wxpay  : `${base.pay}wxpay`,
+}
+export { adminUrl, staff, erp, index, client, pay };

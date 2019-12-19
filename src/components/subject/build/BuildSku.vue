@@ -28,7 +28,13 @@
 			<van-field :value="orderInfo.pON" label="PO号" readonly/>
 			<van-field :value="orderInfo.productId" label="套件" readonly/>
 		</template>
-		<van-field :value="orderInfo.orderQuantities" label="订单数" readonly/>
+		<template v-if=" orderType == 'c' ">
+			<van-field :value="orderInfo.bdQty" label="订单数" readonly/>
+		</template>
+		<template v-else>
+			<van-field :value="orderInfo.orderQuantities" label="订单数" readonly/>
+		</template>
+		
 		<template v-if=" orderType == 's' || orderType == 'c' ">
 			<van-field :value="orderInfo.area" label="下单面积(㎡)" readonly/>
 		</template>

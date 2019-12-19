@@ -1,10 +1,10 @@
 <template>
 	<div :style="pageInfo.bg">
-		<div style="width:100%;height:20%;position:fixed;top:5%;text-align:center;">
-			<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
-		</div>
-		<div style="width:100%;height:5%;position:fixed;top:28%;text-align:center;font-weight:500;font-size:1rem;">
+		<div style="width:100%;height:5%;position:fixed;top:50px;text-align:center;font-weight:500;font-size:1rem;">
 			{{ pageInfo.factoryName }}
+		</div>
+		<div style="width:100%;height:20%;position:fixed;top:80px;text-align:center;">
+			<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
 		</div>
 		<div style="width: 80%;height:40%;position: fixed;top: 35%;left:10%;text-align:center;">
 			<van-tabs v-model="formData.userType" animated>
@@ -20,8 +20,9 @@
 				<van-icon name="arrow" slot="right-icon"/>
 			</van-field>
 			<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
+			<van-button type="danger" size="normal" style="width:100%;margin-top:5px;" @click="registerClick()">注册</van-button>
 		</div>
-		<div class="footer" style="width: 100%;position: fixed;bottom: 1%;">
+		<!-- <div class="footer" style="width: 100%;position: fixed;bottom: 1%;">
 			<van-row type="flex" justify="center" style="text-align:center;">
 				<van-col span="18">Copyright © 2019 杭州利鹏科技有限公司.</van-col>
 			</van-row>
@@ -31,7 +32,7 @@
 			<van-row type="flex" justify="center" style="text-align:center;">
 				<van-col span="18">Contact：18768443628</van-col>
 			</van-row>
-		</div>
+		</div> -->
 		<div :style="config.style.div"></div>
 		<van-popup v-model="config.popup.show" position="bottom" :style="{ height: '50%' }">
 			<van-picker :columns="config.picker.columns" :default-index="0" show-toolbar @cancel="config.popup.show = false" @confirm="confirm" title="请选择分厂"/>
@@ -179,6 +180,9 @@
 					});
 				});
 			},
+			registerClick(){
+				this.$router.push('/group/register');
+			}
 		},
 		created(){
 			if( sessionStorage.getItem('jpdn-login-username') !== null ){
@@ -198,6 +202,7 @@
 
 		},
 		mounted(){
+			this.$store.commit('client/setHeaderTitle','登录/注册');
 			this.validator = new schema(this.rules);
 			this.getSF();
 		},

@@ -10,6 +10,7 @@
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="x" @saveOrder="saveOrder"></build-sku>
+		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
 <script>
@@ -17,6 +18,7 @@
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
+	import BuildResult from '@/components/subject/build/BuildResult.vue';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -26,7 +28,8 @@
 
 			PopupSelect,
 			NewTimePicker,
-			BuildSku
+			BuildSku,
+			BuildResult
 		},
 		data(){
 			return {
@@ -52,6 +55,11 @@
 						sku:{
 							show:false
 						}
+					},
+					result : {
+						show       : false,
+						isSuccess  : false,
+						cusOrderId : ''
 					}
 				},
 				formData:{
@@ -138,15 +146,17 @@
 				let self = this;
 				this.$request.client.orderBooking.xBuildSave( data ).then(res=>{
 					if( res.errorCode === '00000' ){
-						Dialog.alert({
-							title   : '下单成功',
-							message : '客订单号' + res.result.order_id
-						}).then(()=>{
-							Dialog.close();
-						});
+						self.config.result.isSuccess  = true;
+						self.config.result.cusOrderId = res.result.order_id;
 					}else{
-						Toast.fail('下单失败');
+						self.config.result.isSuccess = false;
 					}
+					self.config.result.show = true;
+				});
+			},
+			clearFormData(){
+				Object.keys( this.formData ).forEach((item,index)=>{
+					this.formData[item] = '';
 				});
 			}
 		},

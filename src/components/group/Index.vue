@@ -1,0 +1,126 @@
+<template>
+	<div>
+		<van-grid :column-num="2">
+			<van-grid-item v-if=" boardGroupOpen ">
+				<div slot="icon" style="position:relative;">
+					<div style="position:absolute;right:0;top:0;z-index:999;">
+						<van-tag mark type="danger">{{ config.grid.groupBoard.tagName }}</van-tag>
+					</div>
+					<van-image :src="config.grid.groupBoard.img"/>
+				</div>
+				<div slot="text" style="color:red;">
+					{{ config.grid.groupBoard.tagName }}
+				</div>
+			</van-grid-item>
+			<van-grid-item v-if=" boardGroupOpen ">
+				<div slot="icon" style="position:relative;">
+					<div style="position:absolute;right:0;top:0;z-index:999;">
+						<van-tag mark type="danger">{{ config.grid.groupBoardFlag.tagName }} ( {{ config.grid.groupBoardFlag.flag }} ) </van-tag>
+					</div>
+					<van-image :src="config.grid.groupBoardFlag.img"/>
+				</div>
+				<div slot="text" style="color:red;">
+					{{ config.grid.groupBoardFlag.tagName }}  ( {{ config.grid.groupBoardFlag.flag }} ) 
+				</div>
+			</van-grid-item>
+			<van-grid-item v-if=" boxGroupOpen ">
+				<div slot="icon" style="position:relative;">
+					<div style="position:absolute;right:0;top:0;z-index:999;">
+						<van-tag mark type="danger">{{ config.grid.groupBox.tagName }}</van-tag>
+					</div>
+					<van-image :src="config.grid.groupBox.img"/>
+				</div>
+				<div slot="text" style="color:red;">
+					{{ config.grid.groupBox.tagName }}
+				</div>
+			</van-grid-item>
+			<van-grid-item v-if=" boxGroupOpen ">
+				<div slot="icon" style="position:relative;">
+					<div style="position:absolute;right:0;top:0;z-index:999;">
+						<van-tag mark type="danger">{{ config.grid.groupBoxFlag.tagName }} ( {{ config.grid.groupBoxFlag.flag }} ) </van-tag>
+					</div>
+					<van-image :src="config.grid.groupBoxFlag.img"/>
+				</div>
+				<div slot="text" style="color:red;">
+					{{ config.grid.groupBoxFlag.tagName }} ( {{ config.grid.groupBoxFlag.flag }} ) 
+				</div>
+			</van-grid-item>
+		</van-grid>
+	</div>
+</template>
+<script>
+	import { Image, Tag, Grid, GridItem } from 'vant';
+	export default {
+		components:{
+			[Image.name]: Image,
+			[Tag.name]: Tag,
+			[Grid.name]: Grid,
+			[GridItem.name]: GridItem,
+		},
+		data(){
+			return {
+				config:{
+					grid : {
+						groupBoard : {
+							img     : '',
+							tagName : '纸板团购',
+						},
+						groupBoardFlag : {
+							img     : '',
+							tagName : '纸板团购',
+							flag    : ''
+						},
+						groupBox : {
+							img     : '',
+							tagName : '淘宝箱团购'
+						},
+						groupBoxFlag : {
+							img     : '',
+							tagName : '淘宝箱团购',
+							flag    : ''
+						}
+					},
+				},
+				boardGroupOpen : false,
+				boxGroupOpen   : false
+			}
+		},
+		methods:{
+			getIndexConfig(){
+				let self = this;
+				this.$request.client.other.getIndexConfig().then(res=>{
+					if( res.result.UseBoardGroup == '1' ){
+						self.config.grid.groupBoard.img      = require('@/assets/groupImg/' + res.result.BoardGroupPic);
+						self.config.grid.groupBoardFlag.img  = require('@/assets/groupImg/' + res.result.FlagBoardGroupPic);
+						self.config.grid.groupBoardFlag.flag = res.result.BoardFlag;
+						self.boardGroupOpen = true;
+					}
+					if( res.result.UseBoxGroup == '1' ){
+						self.config.grid.groupBox.img      = require('@/assets/groupImg/' + res.result.BoxGroupPic);
+						self.config.grid.groupBoxFlag.img  = require('@/assets/groupImg/' + res.result.FlagBoxGroupPic);
+						self.config.grid.groupBoxFlag.flag = res.result.BoxFlag;
+						self.boxGroupOpen = true;
+					}
+				});
+			}
+		},
+		created(){
+			this.$store.commit('client/setHeaderTitle','团购页面');
+		},
+		mounted(){
+			this.getIndexConfig();
+		},
+		updated(){
+			
+		},
+		destroyed(){
+			
+		},
+		computed:{
+			
+		},
+		watch:{
+
+		}
+	}
+</script>
