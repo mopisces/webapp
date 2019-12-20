@@ -1,9 +1,9 @@
 <template>
 	<div>
-		<div style="margin-top:10px;"></div>
+		<div style="margin-top:0.625rem;"></div>
 		<div class="vant-row">
 			<div class="van-col van-col--6">
-				<div class="van-tabbar-item" style="height:44px;">账号：{{ userName }}</div>
+				<div class="van-tabbar-item" style="height:2.75rem;">账号：{{ userName }}</div>
 			</div>
 			<div class="van-col van-col--8">
 				<van-button type="info"  plain hairline round @click="getChangePass()">
@@ -18,7 +18,7 @@
 				</van-button>
 			</div>
 		</div>
-		<div style="width:100%;height:50px;"></div>
+		<div style="width:100%;height:3.125rem;"></div>
 		<van-grid square :gutter="10" :column-num="3">
 			<van-grid-item v-for="(item,index) in config.gridItem" :key="index" :url="item.url" :text="item.text">
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="item.state"/>
@@ -41,7 +41,7 @@
 					修改密码
 				</div>
 			</div>
-			<div style="margin-top:46px;"></div>
+			<div style="margin-top:2.875rem;"></div>
 			<van-field v-model="formData.account" label="账号" input-align="center"  readonly />
 			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  type="password" required/>
 			<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" required/>

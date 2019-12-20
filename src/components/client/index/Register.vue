@@ -10,7 +10,7 @@
 		<van-field v-model="value" label="联系人" placeholder="请输入联系人" required input-align="center" maxlength="10" show-word-limit/>
 		<van-field v-model="value" label="联系电话" placeholder="请输入联系电话" required input-align="center"/>
 		<van-field v-model="value" label="联系传真" placeholder="请输入联系传真" input-align="center"/>
-		<van-button type="primary" style="width:100%;margin-top:20px;">注册</van-button>
+		<van-button type="primary" style="width:100%;margin-top:1.25rem;">注册</van-button>
 	</div>
 </template>
 <script>
