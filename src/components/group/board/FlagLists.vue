@@ -1,14 +1,17 @@
 <template>
 	<div>
-		<van-card tag="标签" price="2.00" desc="描述信息" title="商品标题" thumb="https://img.yzcdn.cn/vant/t-thirt.jpg" origin-price="10.00">
+		<van-card v-for="(item,index) in listData" :key=" 'card' + index " @click="detailClick( item.Id )">
+			<van-image slot="thumb" :src="item.thumb" width="90" height="90"/>
 			<div slot="title">
-				-323C/EB
+				{{ item.BoardId }}
 			</div>
 			<div slot="desc">
-				0629清仓甩卖
-				<van-count-down :time="time">
+				<span v-if="item.Title != ''">
+					{{ item.Title }}
+				</span>
+				<van-count-down :time="item.time">
 					<template v-slot="timeData">
-						<span>剩余时间:</span>
+						<span style="font-size:0.75rem;">剩余时间:</span>
 						<span class="item">{{ timeData.days }}天</span>
 						<span class="item">{{ timeData.hours }}小时</span>
 						<span class="item">{{ timeData.minutes }}分</span>
@@ -17,65 +20,57 @@
 				</van-count-down>
 			</div>
 			<div slot="price" style="font-size:1rem;">
-				¥3.00~12.00/㎡
+				¥{{ item.Price }}/㎡
 			</div>
 			<div slot="origin-price" style="font-size:0.8rem;">
-				¥30.00/㎡
+				¥{{ item.MarketPrice }}/㎡
 			</div>
 			<van-tag mark type="danger" slot="tag">爆款</van-tag>
 			<div slot="tags">
-						<!-- <van-slider active-color="#ee0a24" v-model="value" bar-height="0.125rem">
-							<div slot="button" class="custom-button">
-								{{ value }}%
-							</div>
-						</van-slider> -->
-						<div class="progress-bar">
-			                <div class="liquid" :style="'width: ' + value + '%;'"></div>
-			                <div class="descr">已抢{{ value }}%</div>
-			            </div>
-				<!-- <van-slider active-color="#ee0a24" v-model="value" bar-height="0.125rem">
-					<div slot="button" class="custom-button">
-						已抢{{ value }}%
-					</div>
-				</van-slider> -->
+				<div class="progress-bar">
+	                <div class="liquid" :style="'width: ' + item.SalePercent + '%;'"></div>
+	                <div class="descr">已抢{{ item.SalePercent }}%</div>
+	            </div>
 			</div>
 		</van-card>
 	</div>
 </template>
 <script>
-	import { Row, Col, Slider, CountDown, Tag, Card } from 'vant';
+	import { Image, CountDown, Tag, Card } from 'vant';
 	export default {
 		components:{
-			[Row.name]: Row,
-			[Col.name]: Col,
-			[Slider.name]: Slider,
+			[Image.name]: Image,
 			[CountDown.name]: CountDown,
 			[Tag.name]: Tag,
 			[Card.name]: Card,
-			/*[Image.name]: Image,
-			[Circle.name]: Circle,
-			[CountDown.name]: CountDown,
-			[Tag.name]: Tag,
-			[Grid.name]: Grid,
-			[GridItem.name]: GridItem,*/
-
 		},
 		data(){
 			return {
-				value:1.25,
-				img : require('@/assets/groupImg/FlagBoardGroupPic.jpg'),
-				time :  12 * 30 * 24 * 60 * 60 * 1000,
-				currentRate : 0
+				listData : []
 			}
 		},
 		methods:{
-
+			faddishList( isTaobao ){
+				let self = this;
+				this.$request.client.groupBuying.faddishList( isTaobao ).then(res=>{
+					res.result.forEach((item,index)=>{
+						item.time  = ( Number(item.EndTime) - Number(item.CurTime) ) * 1000;
+						if( typeof(item.Pic) == 'object' && item.Pic[0] != ''){
+							item.thumb = require('@/assets/groupImg/' + item.Pic[0]);
+						}
+					});
+					self.listData = res.result;
+				});
+			},
+			detailClick( cardId ){
+				this.$router.push({ name:'boardDetail', params:{ productId:cardId } });
+			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','纸板团购');
 		},
 		mounted(){
-
+			this.faddishList(0);
 		},
 		updated(){
 			
@@ -84,9 +79,7 @@
 			
 		},
 		computed:{
-			text() {
-				return this.currentRate.toFixed(0) + '%'
-			}
+			
 		},
 		watch:{
 
@@ -100,6 +93,7 @@
 		font-size: 0.75rem;
 		text-align: center;
 		background-color: #ee0a24;
+		margin-right: 0.3125rem;
 	}
 	.progress-bar {
         margin: 0.3125rem auto;

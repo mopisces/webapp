@@ -5,6 +5,7 @@ import commonMaterial from './commonMaterial';
 import orderBooking from './orderBooking';
 import paymentAll from './paymentAll';
 import other from './other';
+import groupBuying from './groupBuying';
 export default {
 	cred,
 	makeOffers,
@@ -12,5 +13,6 @@ export default {
 	commonMaterial,
 	orderBooking,
 	paymentAll,
-	other
+	other,
+	groupBuying
 };

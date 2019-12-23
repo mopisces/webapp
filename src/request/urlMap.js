@@ -168,6 +168,10 @@ const client = {
 		contactWay     : `${base.client}contactWay`, 
 		register       : `${base.client}register`, 
 		indexConfig    : `${base.client}getIndexConfig`, 
+	},
+	groupBuying : {
+		faddishList    : `${base.client}faddishList`, 
+		groupBuyDetail : `${base.client}groupBuyDetail`, 
 	}
 };
 

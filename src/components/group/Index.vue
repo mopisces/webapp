@@ -10,7 +10,7 @@
 						<template v-slot:error>加载失败</template>
 					</van-image>
 				</div>
-				<div slot="text" style="color:red;">
+				<div slot="text" style="color:red;font-size:0.8rem;">
 					{{ config.grid.groupBoard.tagName }}
 				</div>
 			</van-grid-item>
@@ -23,7 +23,7 @@
 						<template v-slot:error>加载失败</template>
 					</van-image>
 				</div>
-				<div slot="text" style="color:red;">
+				<div slot="text" style="color:red;font-size:0.8rem;">
 					{{ config.grid.groupBoardFlag.tagName }}  ( {{ config.grid.groupBoardFlag.flag }} ) 
 				</div>
 			</van-grid-item>
@@ -36,7 +36,7 @@
 						<template v-slot:error>加载失败</template>
 					</van-image>
 				</div>
-				<div slot="text" style="color:red;">
+				<div slot="text" style="color:red;font-size:0.8rem;">
 					{{ config.grid.groupBox.tagName }}
 				</div>
 			</van-grid-item>
@@ -49,7 +49,7 @@
 						<template v-slot:error>加载失败</template>
 					</van-image>
 				</div>
-				<div slot="text" style="color:red;">
+				<div slot="text" style="color:red;font-size:0.8rem;">
 					{{ config.grid.groupBoxFlag.tagName }} ( {{ config.grid.groupBoxFlag.flag }} ) 
 				</div>
 			</van-grid-item>
