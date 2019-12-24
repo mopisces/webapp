@@ -74,11 +74,11 @@ const groupBuying = {
 			box_height            : data.boxHeight,
 			box_clack             : data.tonLen,
 			box_adjust            : data.uLen,
-			board_length          : data.length
-			board_width           : data.width
+			board_length          : data.length,
+			board_width           : data.width,
 			sheet_quantities      : data.bdQty,
-			order_quantities      : data.ordQty
-			card_board_quantities : data.bdMultiple
+			order_quantities      : data.ordQty,
+			card_board_quantities : data.bdMultiple,
 			delivery_address      : data.address,
 			delivery_date         : data.date,
 			delivery_remark       : data.deliveryRemark,
