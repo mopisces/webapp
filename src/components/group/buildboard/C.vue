@@ -23,22 +23,22 @@
 		</van-card>
 		<van-field v-model="formData.cusOrderId" label="客订单号" input-align="center" placeholder="未填写则系统自动生成"></van-field>
 		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @boxTypeConfirm="getBoxFormula( formData.boxType )"></popup-select>
-		<van-field label="纸箱规格(mm)" right-icon="question-o">
+		<van-field label="纸箱规格(mm)" right-icon="question-o" @click-right-icon="$toast('箱长范围:' + pageConfig.minBoxL + 'mm~'+ pageConfig.maxBoxL  + 'mm\n箱宽范围:' + pageConfig.minBoxW + 'mm~' + pageConfig.maxBoxW + 'mm\n' + '箱高范围:' + pageConfig.minBoxH + 'mm~' + pageConfig.maxBoxH + 'mm'  )">
 			<div class="van-row van-row--flex van-row--justify-center" slot="input">
 				<div class="van-col van-col--7" >
-					<input placeholder="箱长(L)" v-model="formData.boxLength" style="width:100%;"/>
+					<input placeholder="箱长(L)" v-model="formData.boxLength" style="width:100%;" @blur="calcBdLW()"/>
 				</div>
 				<div class="van-col van-col--1">
 					x
 				</div>
 				<div class="van-col van-col--7">
-					<input placeholder="箱宽(W)" v-model="formData.boxWidth" style="width:100%;"/>
+					<input placeholder="箱宽(W)" v-model="formData.boxWidth" style="width:100%;" @blur="calcBdLW()"/>
 				</div>
 				<div class="van-col van-col--1">
 					x
 				</div>
 				<div class="van-col van-col--8">
-					<input placeholder="箱高(H)" v-model="formData.boxHeight" style="width:100%;"/>
+					<input placeholder="箱高(H)" v-model="formData.boxHeight" style="width:100%;" @blur="calcBdLW()"/>
 				</div>
 			</div>	
 		</van-field>
@@ -60,15 +60,15 @@
 			</div>
 		</van-field>
 		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
-		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" />
-		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/>
+		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="$toast('正数:几个纸板=>1个纸箱\n负数:1个纸板=>几个纸箱' )"/>
+		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()" ref="orderQuantitiesField"/>
 		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly/>
-		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="clickQuestion(3)" />
+		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡')" />
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
-		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单">
+		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
 			<div slot="top" style="font-size:1rem;text-align:center;" v-if="formData.isRangePrice">
 				当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/㎡</span>
 				<van-tag mark type="danger" v-if=" helpInfo.sheetQuantities == 0 && helpInfo.price == 0 ">最低价</van-tag><br/>
@@ -85,7 +85,7 @@
 	</div>
 </template>
 <script>
-	import { Image, Field, Tag, Card, SubmitBar } from 'vant';
+	import { Image, Field, Toast, CountDown, Tag, Card, SubmitBar } from 'vant';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
@@ -95,6 +95,8 @@
 		components:{
 			[Image.name]: Image,
 			[Field.name]: Field,
+			[Toast.name]: Toast,
+			[CountDown.name]: CountDown,
 			[Tag.name]: Tag,
 			[Card.name]: Card,
 			[SubmitBar.name]: SubmitBar,
@@ -157,6 +159,7 @@
 					}
 				},
 				formData : {
+					productId        : '',
 					cusOrderId       : '',
 					boxType          : '',
 					boxLength        : '',
@@ -176,14 +179,23 @@
 					date             : '',
 					deliveryRemark   : '',
 					productionRemark : '',
+					isRangePrice     : false,
+					isValidArea      : false,
 					cost             : '',
 					price            : '',
-					isRangePrice     : false,
-
+					saveCost         : '',
 				},
 				pageConfig : {
 					minDate : '',
 					maxDate : '',
+					minBoxL : '',
+					maxBoxL : '',
+					minBoxW : '',
+					maxBoxW : '',
+					minBoxH : '',
+					maxBoxH : '',
+					minArea : '',
+					maxArea : '',
 				},
 				helpInfo:{
 					sheetQuantities : '',
@@ -194,25 +206,251 @@
 			}
 		},
 		methods:{
-			getBoxFormula(){
+			getConfig( goodsId ){
+				let self = this;
+				this.$request.client.groupBuying.getCConfig( goodsId ).then(res=>{
+					self.pageConfig.minDate = res.result.page_config.BuildMinDate;
+					self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
+					self.pageConfig.minBoxL = res.result.page_config.BuildMinBoxL;
+					self.pageConfig.maxBoxL = res.result.page_config.BuildMaxBoxL;
+					self.pageConfig.minBoxW = res.result.page_config.BuildMinBoxW;
+					self.pageConfig.maxBoxW = res.result.page_config.BuildMaxBoxW;
+					self.pageConfig.minBoxH = res.result.page_config.BuildMinBoxH;
+					self.pageConfig.maxBoxH = res.result.page_config.BuildMaxBoxH;
+					self.pageConfig.minArea = res.result.product_info.BuildMin;
+					self.pageConfig.maxArea = res.result.product_info.BuildMax;
 
+					self.cardInfo.boardId      = res.result.product_info.BoardId;
+					self.cardInfo.title        = res.result.product_info.Title;
+					self.cardInfo.productPrice = res.result.product_info.Price;
+					self.cardInfo.marketPrice  = res.result.product_info.MarketPrice;
+
+					self.formData.date    = res.result.page_config.BuildDeliveryDate;
+					self.formData.address = res.result.ERPId;
+					self.formData.tonLen  = res.result.adjust_info.TonLen;
+					self.formData.uLen    = res.result.adjust_info.ULen;
+					if( res.result.product_info.Pic[0] ){
+						self.cardInfo.pic = require('@/assets/groupImg/' + res.result.product_info.Pic[0]);
+					}
+					if( res.result.product_info.BeginTime * 1000 < (new Date()).valueOf()  ){
+						self.cardInfo.countDown.time = res.result.product_info.EndTime * 1000 - (new Date()).valueOf();
+					}else{
+						self.cardInfo.countDown.time = ( res.result.product_info.EndTime - res.result.product_info.BeginTime ) * 1000;
+					}
+					res.result.page_config.BuildTonLen.forEach((item,index)=>{
+						self.config.radioData.tonLen.push({ value:item, text:''});
+					});
+					res.result.page_config.BuildULen.forEach((item,index)=>{
+						self.config.radioData.uLen.push({ value : item, text: '' })
+					});
+					res.result.box_type_available.forEach((item,index)=>{
+						self.config.radioData.boxType.push({ value : item.BoxId, text:item.BoxName, lengthF:item.LengthF, widthF:item.WidthF });
+					});
+					res.result.cus_info.forEach((item,index)=>{
+						self.config.radioData.address.push({ value : item.CusSubNo, text:item.SubDNAddress})
+					});
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.cardInfo.countDown.show = true;
+						this.config.popup.timeFilter.isFinishLoad = true;
+					})
+				});
 			},
-			calcBdLW(){
-
+			getBoxFormula( boxType ){
+				let self = this;
+				this.$request.client.groupBuying.getBoxFormula( boxType ).then(res=>{
+					self.formData.lengthF    = res.result.LengthF;
+					self.formData.widthF     = res.result.WidthF;
+					self.formData.bdMultiple = res.result.Multiple;
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.calcBdLW();
+						this.calcBdQty();
+					});
+				});
+			},
+			checkFormData(){
+				let self = this;
+				this.validator.validate(this.formData).then(()=>{
+					self.config.popup.sku.show = true;
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});
 			},
 			saveOrder( postData ){
-
+				if( !this.formData.isValidArea ){
+					Toast.fail('面积不可用');
+					return ;
+				}
+				let self = this;
+				this.$request.client.groupBuying.csGroupBooking( postData ).then(res=>{
+					
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.result.show = true;
+					});
+				});
 			},
 			clearFormData(){
-
+				Object.keys( this.formData ).forEach((item,index)=>{
+					if( item != 'productId' ){
+						this.formData[item] = '';
+					}
+					if( item == 'isRangePrice' || item == 'isValidArea' ){
+						this.formData[item] = false;
+					}
+				});
 			},
-			
+			calcBdLW(){
+				if(this.formData.boxLength && (this.formData.boxLength < this.pageConfig.minBoxL || this.formData.boxLength > this.pageConfig.maxBoxL)){
+                    this.formData.boxLength = '';
+                    Toast('箱长范围:' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm');
+                }
+                if(this.formData.boxWidth && (this.formData.boxWidth < this.pageConfig.minBoxW || this.formData.boxWidth > this.pageConfig.maxBoxW)){
+                    this.formData.boxWidth = '';
+                    Toast('箱宽范围:' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm');
+                }
+                if(this.formData.boxHeight && (this.formData.boxHeight < this.pageConfig.minBoxH || this.formData.boxHeight > this.pageConfig.maxBoxH)){
+                    this.formData.boxHeight = '';
+                    Toast('箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm');
+                }
+                var LengthF_exp = this.formData.lengthF;
+                var WidthF_exp = this.formData.widthF;
+                if(this.formData.boxLength){
+                    LengthF_exp = LengthF_exp.replace(/L/g,this.formData.boxLength);
+                    WidthF_exp  = WidthF_exp.replace(/L/g,this.formData.boxLength);
+                }
+                if(this.formData.boxWidth){
+                    LengthF_exp = LengthF_exp.replace(/W/g,this.formData.boxWidth);
+                    WidthF_exp  = WidthF_exp.replace(/W/g,this.formData.boxWidth);
+                }
+                if(this.formData.boxHeight){
+                    LengthF_exp = LengthF_exp.replace(/H/g,this.formData.boxHeight);
+                    WidthF_exp  = WidthF_exp.replace(/H/g,this.formData.boxHeight);
+                }
+                if(this.formData.tonLen){
+                    LengthF_exp = LengthF_exp.replace(/T/g,this.formData.tonLen);
+                    WidthF_exp  = WidthF_exp.replace(/T/g,this.formData.tonLen);
+                }
+                if(this.formData.uLen){
+                    LengthF_exp = LengthF_exp.replace(/U/g,this.formData.uLen);
+                    WidthF_exp  = WidthF_exp.replace(/U/g,this.formData.uLen);
+                }
+                this.formData.lengthF = LengthF_exp;
+                this.formData.widthF  = WidthF_exp;
+                if(LengthF_exp && LengthF_exp.indexOf('L') === -1 && LengthF_exp.indexOf('W') === -1 && LengthF_exp.indexOf('H') === -1 && LengthF_exp.indexOf('T') === -1 && LengthF_exp.indexOf('U') === -1){
+                    this.formData.length = Math.round(eval(LengthF_exp.replace(/<\/?.+?>/g,'')));
+                }else{
+                    this.formData.length = '';
+                }
+                if(WidthF_exp && WidthF_exp.indexOf('L') === -1 && WidthF_exp.indexOf('W') === -1 && WidthF_exp.indexOf('H') === -1 && WidthF_exp.indexOf('T') === -1 && WidthF_exp.indexOf('U') === -1){
+                    this.formData.width = Math.round(eval(WidthF_exp.replace(/<\/?.+?>/g,'')));
+                }else{
+                    this.formData.width = '';
+                }
+                this.calcAreaCost();
+			},
+			calcBdQty(){
+				if( typeof(this.formData.bdMultiple) === 'number' && this.formData.ordQty ){
+					if(this.formData.bdMultiple > 0){
+                        this.formData.bdQty = this.formData.ordQty * this.formData.bdMultiple;
+                    }else if(this.formData.bdMultiple < 0){
+                        this.formData.bdQty = this.formData.ordQty / this.formData.bdMultiple * -1;
+                    }else{
+                        this.formData.bdQty = '';
+                    }
+				}else{
+					this.formData.bdQty = '';
+				}
+				this.calcAreaCost();
+			},
+			beforeCalcAreaCost(){
+				this.formData.isRangePrice    = false;
+				this.formData.isValidArea     = false;
+				this.formData.area            = '';
+				this.formData.cost            = '';
+				this.formData.saveCost        = '',
+				this.formData.price           = '';
+				this.helpInfo.price           = 0;
+				this.helpInfo.sheetQuantities = 0;
+			},
+			calcAreaCost(){
+				this.beforeCalcAreaCost();
+				if( this.formData.ordQty && !( /(^[1-9]\d*$)/.test(this.formData.ordQty) ) ){
+					Toast.fail('订单数错误');
+					this.formData.ordQty = '';
+					this.formData.bdQty  = '';
+					return ;
+				}
+				if( this.formData.bdQty && !( /(^[1-9]\d*$)/.test(this.formData.bdQty) ) ){
+					Toast.fail('纸板数错误');
+					this.formData.ordQty = '';
+					this.formData.bdQty  = '';
+					return ;
+				}
+				if( typeof( this.formData.length ) === 'number' && typeof( this.formData.width ) === 'number' && this.formData.bdQty ){
+					let data = {
+						productId       : this.formData.productId,
+						sheetQuantities : this.formData.bdQty,
+						boardLength     : this.formData.boardLength,
+						boardWidth      : this.formData.boardWidth
+					};
+					let self = this;
+					this.$request.client.groupBuying.getAreaCost( data ).then(res=>{
+						if( res.errorCode != '00000' ){
+							self.formData.isValidArea     = false;
+							self.formData.isRangePrice    = false;
+							self.formData.ordQty          = '';
+							self.formData.bdQty           = '';
+							self.helpInfo.price           = 0;
+							self.helpInfo.sheetQuantities = 0;
+							return ;
+						}
+						self.formData.area = res.result.area_size;
+						if( res.result.valid_area == '1' ){
+							self.formData.isValidArea = true;
+							self.formData.cost        = res.result.cost;
+							self.formData.saveCost    = res.result.save_cost;
+							if( res.result.is_range_price == '1' ){
+								self.formData.isRangePrice    = true;
+								self.formData.price           = res.result.price;
+								if( res.result.help_info.length != 0 ){
+									self.helpInfo.price           = res.result.help_info.price;
+									self.helpInfo.sheetQuantities = res.result.help_info.sheet_quantities;
+								}
+							}else{
+								self.formData.isRangePrice    = false;
+								self.formData.price           = '';
+								self.helpInfo.price           = 0;
+								self.helpInfo.sheetQuantities = 0;
+							}
+						}else{
+  							Toast.fail('下单面积范围：' + self.pageConfig.minArea + '㎡~' + self.pageConfig.maxArea + '㎡');
+  							self.formData.isValidArea     = false;
+  							self.formData.orderQuantities = 0;
+  							self.formData.area            = 0
+						}
+					});
+				}
+			},
+			maxOrderQty(){
+				this.formData.orderQuantities = this.getOrdQtyByBdQty( this.helpInfo.sheetQuantities );
+				this.$refs.orderQuantitiesField.focus();
+			},
+			getOrdQtyByBdQty( bdQty ){
+				if(this.formData.bdMultiple > 0){
+                    return bdQty / this.formData.bdMultiple;
+                }else if(this.formData.bdMultiple < 0){
+                    return bdQty * this.formData.bdMultiple * -1;
+                }
+			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','纸箱纸板下单');
 		},
 		mounted(){
-
+			this.getConfig( 4 );
+			this.validator = new schema( this.rules );
 		},
 		updated(){
 			

@@ -175,6 +175,9 @@ const client = {
 		sConfig        : `${base.client}groupBoardPaperConfig`,
 		getAreaCost    : `${base.client}getAreaCost`,
 		sGroupBooking  : `${base.client}simpleGroupBooking`,
+		cConfig        : `${base.client}boardBoxGroupConfig`,
+		getBoxFormula  : `${base.client}getBoxFormula`,
+		cGroupBooking  : `${base.client}boxGroupBooking`,
 	}
 };
 

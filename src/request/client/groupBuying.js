@@ -25,10 +25,14 @@ const groupBuying = {
 	getAreaCost( data ){
 		let postData = {
 			area_cost_id     : data.productId,
-			order_quantities : data.orderQuantities,
 			board_length     : data.boardLength,
 			board_width      : data.boardWidth
 		};
+		if( data.orderQuantities ){
+			postData['order_quantities'] = data.orderQuantities
+		}else{
+			postData['sheet_quantities'] = data.sheetQuantities
+		}
 		return post(client.groupBuying.getAreaCost, postData);
 	},
 	sGroupBooking( data ){
@@ -46,6 +50,41 @@ const groupBuying = {
 			simple_production_remark : data.productionRemark
 		};
 		return post(client.groupBuying.sGroupBooking, postData);
+	},
+	getCConfig( goodsId ){
+		let postData = {
+			is_taobao        : 0,
+			booking_goods_id : goodsId			
+		};
+		return post(client.groupBuying.cConfig, postData);
+	},
+	getBoxFormula( boxType ){
+		let postData = {
+			box_type : boxType
+		};
+		return post(client.groupBuying.getBoxFormula, postData);
+	},
+	csGroupBooking( data ){
+		let postData = {
+			booking_goods_id      : data.productId,
+			cus_order_id          : data.cusOrderId,
+			box_type              : data.boxType,
+			box_length            : data.boxLength,
+			box_width			  : data.boxWidth,
+			box_height            : data.boxHeight,
+			box_clack             : data.tonLen,
+			box_adjust            : data.uLen,
+			board_length          : data.length
+			board_width           : data.width
+			sheet_quantities      : data.bdQty,
+			order_quantities      : data.ordQty
+			card_board_quantities : data.bdMultiple
+			delivery_address      : data.address,
+			delivery_date         : data.date,
+			delivery_remark       : data.deliveryRemark,
+			production_remark     : data.productionRemark
+		};
+		return post(client.groupBuying.csGroupBooking, postData);
 	}
 };
 export default groupBuying;

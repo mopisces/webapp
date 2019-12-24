@@ -318,6 +318,7 @@
 						if( res.errorCode != '00000' ){
 							self.formData.orderQuantities = '';
 							self.formData.isRangePrice    = false;
+							self.formData.isValidArea     = false;
 							self.formData.price           = 0;
 							self.helpInfo.price           = 0;
 							self.helpInfo.sheetQuantities = 0;
@@ -363,7 +364,7 @@
 					self.config.popup.sku.show = true;
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
-				});;
+				});
 			},
 			saveOrder( postData ){
 				if( !this.formData.isValidArea ){
@@ -385,7 +386,9 @@
 			},
 			clearFormData(){
 				Object.keys( this.formData ).forEach((item,index)=>{
-					this.formData[item] = '';
+					if( item != 'productId' ){
+						this.formData[item] = '';
+					}
 					if( item == 'isRangePrice' || item == 'isValidArea' ){
 						this.formData[item] = false;
 					}
