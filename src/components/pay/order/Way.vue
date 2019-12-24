@@ -6,7 +6,7 @@
 			</div>
 			<div style="margin-top: 5px; font-size: 28px; color: rgb(26, 173, 25); text-align: center;">¥{{ info.total }}</div>
 			<div style="margin-top: 10px; font-size: 15px; text-align: center;"  >
-				<van-count-down :time="time" @finish="timeFinal()">
+				<van-count-down :time="time" @finish="timeFinal()" v-if=" countDownShow ">
 					<template v-slot="timeData">
 						<span>有效剩余时间&nbsp;&nbsp;:&nbsp;&nbsp;</span>
 						<span class="item">{{ timeData.minutes }}</span>分钟
@@ -46,12 +46,14 @@
 					cusOrderId : '',
 				},
 				time:0,
+				countDownShow : false
 			}
 		},
 		methods:{
 			paymentIndex( cusOrderId ){
 				let self = this;
 				this.$request.client.paymentAll.paymentIndex( cusOrderId ).then(res=>{
+					console.log(res)
 					self.info.isOneCent = res.result.one_cent == '1' ? true : false;
 					self.info.useWechat = res.result.pay_available.UseWxPay == '1' ? true : false;
 					self.info.useAlipay = res.result.pay_available.UseAliPay == '1' ? true : false;
@@ -62,6 +64,7 @@
 					this.$nextTick(()=>{
 						let now = new Date();
 						this.time = this.info.deadTime - now.getTime();
+						this.countDownShow = true;
 					});
 				});
 			},
@@ -97,7 +100,6 @@
 			},
 			timeFinal(){
 				this.info.inTime = false;
-				console.log('a')
 				Dialog.alert({
 					message: '已超出有效时间!'
 				}).then(()=>{
@@ -131,13 +133,11 @@
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','支付方式');
-			/*if( typeof(this.$route.params.cusOrderId) == 'undefined' ){
+			if( typeof(this.$route.params.cusOrderId) == 'undefined' ){
 				this.$router.go(-1);	
 			}else{
 				this.info.cusOrderId = this.$route.params.cusOrderId;
-			}*/
-			this.info.cusOrderId = '20191219003';
-			
+			}
 		},
 		mounted(){
 			this.paymentIndex( this.info.cusOrderId );

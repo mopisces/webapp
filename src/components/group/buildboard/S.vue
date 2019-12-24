@@ -1,7 +1,10 @@
 <template>
 	<div>
 		<van-card>
-			<div slot="title">-323B/BA</div>
+			<div slot="title">
+				{{ pageConfig.boardId }}
+				<span style="color:#000;" v-if="pageConfig.title">,{{ pageConfig.title }}</span>
+			</div>
 			<van-count-down :time="config.countDown.time" slot="desc" v-if="config.countDown.show">
 				<template v-slot="timeData">
 					<span>距团购结束：</span>
@@ -133,7 +136,6 @@
 					isRangePrice    : false,   //是否是区间价格
 					isValidArea     : false,   //是否是可用面积
 					price           : '',      //订单单价
-					
 				},
 				pageConfig : {
 					minDate   : '',
@@ -146,7 +148,9 @@
 					maxArea   : 0,
 					pic       : require('@/assets/groupImg/zwtp.png'),
 					productPrice : '',
-					marketPrice  : ''
+					marketPrice  : '',
+					title        : '',
+					boardId      : ''
 				},
 				helpInfo:{
 					price           : 0,
@@ -265,6 +269,8 @@
 					}
 					self.pageConfig.productPrice = res.result.product_info.Price;
 					self.pageConfig.marketPrice  = res.result.product_info.MarketPrice;
+					self.pageConfig.title        = res.result.product_info.Title;
+					self.pageConfig.boardId      = res.result.product_info.BoardId;
 				}).then(()=>{
 					this.$nextTick(()=>{
 						self.config.countDown.show = true;
@@ -302,14 +308,21 @@
 				}
 				if( this.formData.boardLength && this.formData.boardWidth && this.formData.orderQuantities ){
 					let data = {
-						productId       : 5 ,
+						productId       : this.formData.productId,
 						orderQuantities : this.formData.orderQuantities,
 						boardLength     : this.formData.boardLength,
 						boardWidth      : this.formData.boardWidth
 					};
 					let self = this;
 					this.$request.client.groupBuying.getAreaCost( data ).then(res=>{
-						console.log(res)
+						if( res.errorCode != '00000' ){
+							self.formData.orderQuantities = '';
+							self.formData.isRangePrice    = false;
+							self.formData.price           = 0;
+							self.helpInfo.price           = 0;
+							self.helpInfo.sheetQuantities = 0;
+							return ;
+						}
 						self.formData.area = res.result.area_size;
 						if( res.result.valid_area == '1' ){
 							self.formData.isValidArea = true;
@@ -362,6 +375,7 @@
 					if( res.errorCode == '00000' ){
 						Toast.success(res.result.order_id);
 						self.config.result.cusOrderId = res.result.order_id;
+						self.config.result.isSuccess  = true;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -389,6 +403,7 @@
 			}else{
 				this.$router.go(-1);
 			}
+			console.log(this.formData.productId)
 			this.getConfig( this.formData.productId );
 			this.validator = new schema( this.rules );
 		},
@@ -414,6 +429,5 @@
 		text-align: center;
 		background-color: #ee0a24;
 		border-radius: 0.1875rem;
-		/* margin-right: 0.3125rem; */
 	}
 </style>

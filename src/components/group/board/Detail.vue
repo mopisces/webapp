@@ -95,7 +95,7 @@
 		<div class="van-cell">
 			<template v-if="!config.button.disabled">
 				<van-button type="warning" size="large" square class="van-goods-action-button van-goods-action-button--first van-goods-action-button--warning" @click="builds()">简单纸板</van-button>
-				<van-button type="danger" size="large" square class="van-goods-action-button van-goods-action-button--last van-goods-action-button--danger">纸箱纸板</van-button>
+				<van-button type="danger" size="large" square class="van-goods-action-button van-goods-action-button--last van-goods-action-button--danger" @click="buildc()">纸箱纸板</van-button>
 			</template>
 			<van-button size="large" color="#868080" v-else>团购已结束</van-button>
 		</div>
@@ -165,6 +165,12 @@
 			builds(){
 				this.$router.push({ 
 					name : 'buildGroupS', 
+					params : { productId : sessionStorage.getItem('group-product-id') } 
+				});
+			},
+			buildc(){
+				this.$router.push({ 
+					name : 'buildGroupC', 
 					params : { productId : sessionStorage.getItem('group-product-id') } 
 				});
 			}

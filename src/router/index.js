@@ -20,8 +20,9 @@ const groupBoardFlag         = r => require.ensure([], () => r(require('@/compon
 //纸板团购详情
 const groupBoardDetail       = r => require.ensure([], () => r(require('@/components/group/board/Detail')), 'groupBoardDetail');
 //简单纸板下单（需要登陆）
-const buildS                 =  r => require.ensure([], () => r(require('@/components/group/buildboard/S')), 'buildS');
-
+const buildS                 = r => require.ensure([], () => r(require('@/components/group/buildboard/S')), 'buildS');
+//纸箱纸板下单(需要登陆)
+const buildC                 = r => require.ensure([], () => r(require('@/components/group/buildboard/C')), 'buildC');
 //404
 const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
 const wxScan                 = r => require.ensure([], () => r(require('@/components/common/WxScanRes')), 'wxScan');
@@ -273,6 +274,12 @@ let routes = [
                 name: 'buildGroupS',
                 meta:{ title:'简单纸板下单' },
                 component: buildS
+            },
+            {
+                path: 'build/c',
+                name: 'buildGroupC',
+                meta:{ title:'纸箱纸板下单' },
+                component: buildC
             }
             
         ]

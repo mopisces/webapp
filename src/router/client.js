@@ -111,9 +111,7 @@ const client = [
                 name: 'xBuild',
                 meta: { title: '纸箱下单' },
                 component: xBuild,
-            }
-
-            ,
+            },
             {
                 path:'pay/way',
                 name: 'payWay',
