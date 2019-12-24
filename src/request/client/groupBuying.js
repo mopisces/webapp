@@ -14,6 +14,13 @@ const groupBuying = {
 			is_taobao       : 0
 		};
 		return post(client.groupBuying.groupBuyDetail, postData);
+	},
+	getSConfig( goodsId ){
+		let postData = {
+			is_taobao        : 0,
+			booking_goods_id : goodsId			
+		};
+		return post(client.groupBuying.sConfig, postData);
 	}
 };
 export default groupBuying;

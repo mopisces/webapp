@@ -94,7 +94,7 @@
 		</template>
 		<div class="van-cell">
 			<template v-if="!config.button.disabled">
-				<van-button type="warning" size="large" square class="van-goods-action-button van-goods-action-button--first van-goods-action-button--warning">简单纸板</van-button>
+				<van-button type="warning" size="large" square class="van-goods-action-button van-goods-action-button--first van-goods-action-button--warning" @click="builds()">简单纸板</van-button>
 				<van-button type="danger" size="large" square class="van-goods-action-button van-goods-action-button--last van-goods-action-button--danger">纸箱纸板</van-button>
 			</template>
 			<van-button size="large" color="#868080" v-else>团购已结束</van-button>
@@ -161,8 +161,8 @@
 				this.config.button.disabled = true;
 				this.config.button.text = '团购已结束';
 			},
-			orderClick(){
-
+			builds(){
+				this.$router.push('/group/build/s');
 			}
 		},
 		created(){

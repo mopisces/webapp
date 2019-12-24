@@ -172,6 +172,7 @@ const client = {
 	groupBuying : {
 		faddishList    : `${base.client}faddishList`, 
 		groupBuyDetail : `${base.client}groupBuyDetail`, 
+		sConfig        : `${base.client}groupBoardPaperConfig`, 
 	}
 };
 

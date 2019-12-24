@@ -19,6 +19,8 @@ const groupIndex             = r => require.ensure([], () => r(require('@/compon
 const groupBoardFlag         = r => require.ensure([], () => r(require('@/components/group/board/FlagLists')), 'groupBoardFlag');
 //纸板团购详情
 const groupBoardDetail       = r => require.ensure([], () => r(require('@/components/group/board/Detail')), 'groupBoardDetail');
+//简单纸板下单（需要登陆）
+const buildS                 =  r => require.ensure([], () => r(require('@/components/group/buildboard/S')), 'buildS');
 
 //404
 const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
@@ -235,13 +237,13 @@ let routes = [
         meta: { title: '团购及未登录' },
         children : [
             {
-                path:'register',
-                meta: { title: '注册页面' },
+                path : 'register',
+                meta : { title: '注册页面' },
                 component: register,
             },
             {
-                path:'login',
-                alias:'login?token=:token',
+                path : 'login',
+                alias: 'login?token=:token',
                 meta: { title: '登录选择界面' },
                 component: loginSelect,
             },
@@ -251,20 +253,26 @@ let routes = [
                 component: contact,
             },
             {
-                path:'index',
+                path: 'index',
                 meta: { title: '团购分类' },
                 component: groupIndex,
             },
             {
-                path:'board/flagLists',
+                path: 'board/flagLists',
                 meta: { title: '纸板爆款团购列表' },
                 component: groupBoardFlag,
             },
             {
-                path:'board/detail',
+                path: 'board/detail',
                 name: 'boardDetail',
                 meta:{ title:'纸板团购详情' },
                 component: groupBoardDetail
+            },
+            {
+                path: 'build/s',
+                name: 'buildS',
+                meta:{ title:'简单纸板下单' },
+                component: buildS
             }
             
         ]
