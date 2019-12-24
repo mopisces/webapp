@@ -25,7 +25,7 @@
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
-		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder"></build-sku>
+		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder" :isGroup="false"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
@@ -99,14 +99,14 @@
 				formData : {
 					cusOrderId       : '',    //客订单号
 					materialType     : '',    //材质
-					boardLength      : '1000',    //板长
-					boardWidth       : '100',    //板宽
+					boardLength      : '',    //板长
+					boardWidth       : '',    //板宽
 					lineBallInfo     : '',    //压线名称
-					lineBallFormula  : '20+60+20',    //压线信息
-					orderQuantities  : '100',    //订单数
+					lineBallFormula  : '',    //压线信息
+					orderQuantities  : '',    //订单数
 					area             : '',    //下单面积
 					address          : '',    //送货地址
-					date             : '2019-12-19',    //送货时间
+					date             : '',    //送货时间
 					deliveryRemark   : '',    //送货备注
 					productionRemark : '',    //生产备注
 				},
@@ -154,7 +154,13 @@
 					],
 					orderQuantities : [
 						{ required : true, message : '请填写订单数' },
-						{ pattern  : '^[1-9][0-9]{0,6}$', message : '订单数格式错误' },
+						{ validator : (rule, value, callback, source, options)=>{
+							let errors;
+							if( ! /^[1-9][0-9]{0,6}$/.test(value) ){
+								errors = '订单数格式错误';
+							}
+							callback(errors);
+						}}
 					],
 					area : [
 						{ required : true, message : '面积超过范围无法提交数据' },

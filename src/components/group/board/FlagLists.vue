@@ -64,6 +64,7 @@
 			},
 			detailClick( cardId ){
 				this.$router.push({ name:'boardDetail', params:{ productId:cardId } });
+				sessionStorage.setItem('group-product-id',cardId);
 			}
 		},
 		created(){

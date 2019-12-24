@@ -172,7 +172,9 @@ const client = {
 	groupBuying : {
 		faddishList    : `${base.client}faddishList`, 
 		groupBuyDetail : `${base.client}groupBuyDetail`, 
-		sConfig        : `${base.client}groupBoardPaperConfig`, 
+		sConfig        : `${base.client}groupBoardPaperConfig`,
+		getAreaCost    : `${base.client}getAreaCost`,
+		sGroupBooking  : `${base.client}simpleGroupBooking`,
 	}
 };
 

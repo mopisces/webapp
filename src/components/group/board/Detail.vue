@@ -130,6 +130,7 @@
               	buyResult  : [],
               	descInfo   : '',
               	countDownTime : 0,
+              	productId : ''
 			}
 		},
 		methods:{
@@ -159,10 +160,13 @@
 			},
 			countDownFinish(){
 				this.config.button.disabled = true;
-				this.config.button.text = '团购已结束';
+				this.config.button.text     = '团购已结束';
 			},
 			builds(){
-				this.$router.push('/group/build/s');
+				this.$router.push({ 
+					name : 'buildGroupS', 
+					params : { productId : sessionStorage.getItem('group-product-id') } 
+				});
 			}
 		},
 		created(){
@@ -171,10 +175,13 @@
 		mounted(){
 			console.log( this.$route.params.productId )
 			if( typeof(this.$route.params.productId) != 'undefined' ){
-				this.groupBuyDetail( this.$route.params.productId );
+				this.productId = this.$route.params.productId ;
+			}else if( sessionStorage.getItem('group-product-id') != null ){
+				this.productId = sessionStorage.getItem('group-product-id');
 			}else{
-				this.$router.go(-1)
+				this.$router.go(-1);
 			}
+			this.groupBuyDetail( this.productId );
 		},
 		updated(){
 			

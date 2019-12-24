@@ -49,7 +49,7 @@
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
-		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder"></build-sku>
+		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="false"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
@@ -120,12 +120,12 @@
 				formData:{
 					cusOrderId       : '',   //客订单号
 					materialType     : '',	 //材质
-					boxType          : '001',	 //箱型
-					boxLength        : '100',	 //箱长
-					boxWidth         : '800',	 //箱宽
-					boxHeight        : '100',   //箱高
-					tonLen           : '40.0',   //箱舌
-					uLen             : '4.0',   //封箱调整
+					boxType          : '',	 //箱型
+					boxLength        : '',	 //箱长
+					boxWidth         : '',	 //箱宽
+					boxHeight        : '',   //箱高
+					tonLen           : '',   //箱舌
+					uLen             : '',   //封箱调整
 					length           : '',   //板长
 					width            : '',   //板宽
 					bdMultiple       : '',   //张数

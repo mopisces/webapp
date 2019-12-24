@@ -270,7 +270,7 @@ let routes = [
             },
             {
                 path: 'build/s',
-                name: 'buildS',
+                name: 'buildGroupS',
                 meta:{ title:'简单纸板下单' },
                 component: buildS
             }
