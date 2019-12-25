@@ -68,6 +68,7 @@
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
+		<div style="height:3.5rem;width:100%;"></div>
 		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
 			<div slot="top" style="font-size:1rem;text-align:center;" v-if="formData.isRangePrice">
 				当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/㎡</span>
@@ -196,13 +197,83 @@
 					maxBoxH : '',
 					minArea : '',
 					maxArea : '',
+					lengthF : '',
+					widthF  : ''
 				},
 				helpInfo:{
 					sheetQuantities : '',
 					price           : '',
 				},
 				validator : {},
-				rules : {}
+				rules : {
+					productId : [
+						{ required : true, message : '产品信息不能为空' }
+					],
+					boxType : [
+						{ required:true, message : '请选择箱型' }
+					],
+					boxLength : [
+						{ required:true, message : '请填写箱长' },
+						{ validator: (rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) > this.pageConfig.maxBoxL || Number(value) < this.pageConfig.minBoxL){
+								errors = '箱长范围:' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm';
+							}
+							callback(errors);
+						} }
+					],
+					boxWidth : [
+						{ required:true, message : '请填写箱宽' },
+						{ validator: (rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) > this.pageConfig.maxBoxW || Number(value) < this.pageConfig.minBoxW){
+								errors = '箱宽范围:' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm';
+							}
+							callback(errors);
+						} }
+					],
+					boxHeight : [
+						{ required:true, message : '请填写箱高' },
+						{ validator: (rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) > this.pageConfig.maxBoxH || Number(value) < this.pageConfig.minBoxH){
+								errors = '箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm';
+							}
+							callback(errors);
+						} }
+					],
+					tonLen : [
+						{ required:true, message : '请选择箱舌'  }
+					],
+					uLen : [
+						{ required:true, message : '请选择封箱调整'  }
+					],
+					length : [
+						{ required:true, message : '请填写相关信息获取板长'  }
+					],
+					width : [
+						{ required:true, message : '请填写相关信息获取板宽'  }
+					],
+					bdQty : [
+						{ required:true, message : '请填写相关信息获取纸板数'  }
+					],
+					area : [
+						{ required:true, message : '请填写相关信息获取下单面积'  },
+						{ validator: (rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) > this.pageConfig.maxArea || Number(value) < this.pageConfig.minArea){
+								errors = '下单面积范围:' + this.pageConfig.minArea + 'mm~' + this.pageConfig.maxArea + 'mm';
+							}
+							callback(errors);
+						} }
+					],
+					address : [
+						{ required:true, message : '请选择送货公司'  },
+					],
+					date : [
+						{ required:true, message : '请选择送货日期'  },
+					]
+				}
 			}
 		},
 		methods:{
@@ -261,6 +332,8 @@
 				this.$request.client.groupBuying.getBoxFormula( boxType ).then(res=>{
 					self.formData.lengthF    = res.result.LengthF;
 					self.formData.widthF     = res.result.WidthF;
+					self.pageConfig.lengthF  = res.result.LengthF;
+					self.pageConfig.widthF   = res.result.WidthF;
 					self.formData.bdMultiple = res.result.Multiple;
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -283,8 +356,12 @@
 					return ;
 				}
 				let self = this;
-				this.$request.client.groupBuying.csGroupBooking( postData ).then(res=>{
-					
+				this.$request.client.groupBuying.cGroupBooking( postData ).then(res=>{
+					if( res.errorCode == '00000' ){
+						Toast.success(res.result.order_id);
+						self.config.result.cusOrderId = res.result.order_id;
+						self.config.result.isSuccess  = true;
+					}
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.result.show = true;
@@ -314,8 +391,8 @@
                     this.formData.boxHeight = '';
                     Toast('箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm');
                 }
-                var LengthF_exp = this.formData.lengthF;
-                var WidthF_exp = this.formData.widthF;
+                var LengthF_exp = this.pageConfig.lengthF;
+                var WidthF_exp  = this.pageConfig.widthF;
                 if(this.formData.boxLength){
                     LengthF_exp = LengthF_exp.replace(/L/g,this.formData.boxLength);
                     WidthF_exp  = WidthF_exp.replace(/L/g,this.formData.boxLength);
@@ -351,7 +428,7 @@
                 this.calcAreaCost();
 			},
 			calcBdQty(){
-				if( typeof(this.formData.bdMultiple) === 'number' && this.formData.ordQty ){
+				if( /^\d$/.test(this.formData.bdMultiple) && this.formData.ordQty ){
 					if(this.formData.bdMultiple > 0){
                         this.formData.bdQty = this.formData.ordQty * this.formData.bdMultiple;
                     }else if(this.formData.bdMultiple < 0){
@@ -392,8 +469,8 @@
 					let data = {
 						productId       : this.formData.productId,
 						sheetQuantities : this.formData.bdQty,
-						boardLength     : this.formData.boardLength,
-						boardWidth      : this.formData.boardWidth
+						boardLength     : this.formData.length,
+						boardWidth      : this.formData.width
 					};
 					let self = this;
 					this.$request.client.groupBuying.getAreaCost( data ).then(res=>{
@@ -450,6 +527,7 @@
 		},
 		mounted(){
 			this.getConfig( 4 );
+			this.formData.productId = 4;
 			this.validator = new schema( this.rules );
 		},
 		updated(){

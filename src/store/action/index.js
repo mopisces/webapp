@@ -1,4 +1,4 @@
-import { asyncStaffRouterMap } from '@/router/index';
+import { asyncStaffRouterMap } from '@/router/staff';
 const actions = {
 	permission : ( { commit }, authUrlArr )=>{
 		let routeArr  = deepCopy(asyncStaffRouterMap);

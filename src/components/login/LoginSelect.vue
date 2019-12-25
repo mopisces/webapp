@@ -74,8 +74,8 @@
 				},
 				formData:{
 					userType:1,
-					userName:'',
-					userPass:'123456',
+					userName:'CJX',
+					userPass:'123',
 					subFactory:'',
 					subFactoryId:''
 				},

@@ -20,7 +20,7 @@
 	</div>
 </template>
 <script>
-	import { Cell, Icon, NavBar, Tabbar, TabbarItem } from 'vant';
+	import { Cell, Icon, Dialog, NavBar, Tabbar, TabbarItem } from 'vant';
 	export default{
 		components:{
 			[Cell.name]: Cell,
@@ -47,6 +47,7 @@
 					bounce:true,
 				},
 				active:0,
+				userName:'',
 			};
 		},
 		methods:{
@@ -62,8 +63,16 @@
 				});
 			},
 			logout(){
-				sessionStorage.clear();
-				this.$router.push('/login/select');
+				Dialog.confirm({
+					message: '确认退出?'
+				}).then(() => {
+					this.userName = sessionStorage.getItem('jpdn-login-username');
+					sessionStorage.clear();
+					sessionStorage.setItem('jpdn-login-username',this.userName);
+					this.$router.push('/group/login');
+				}).catch(()=>{
+					Dialog.close();
+				});
 			}
 		},
 		created(){

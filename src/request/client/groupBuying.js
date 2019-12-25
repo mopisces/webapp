@@ -23,6 +23,7 @@ const groupBuying = {
 		return post(client.groupBuying.sConfig, postData);
 	},
 	getAreaCost( data ){
+		console.log(data);
 		let postData = {
 			area_cost_id     : data.productId,
 			board_length     : data.boardLength,
@@ -64,7 +65,7 @@ const groupBuying = {
 		};
 		return post(client.groupBuying.getBoxFormula, postData);
 	},
-	csGroupBooking( data ){
+	cGroupBooking( data ){
 		let postData = {
 			booking_goods_id      : data.productId,
 			cus_order_id          : data.cusOrderId,
@@ -84,7 +85,7 @@ const groupBuying = {
 			delivery_remark       : data.deliveryRemark,
 			production_remark     : data.productionRemark
 		};
-		return post(client.groupBuying.csGroupBooking, postData);
+		return post(client.groupBuying.cGroupBooking, postData);
 	}
 };
 export default groupBuying;

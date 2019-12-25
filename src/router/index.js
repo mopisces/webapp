@@ -84,7 +84,7 @@ const userManage             = r => require.ensure([], () => r(require('@/compon
 
 
 
-export const asyncStaffRouterMap = [
+/*export const asyncStaffRouterMap = [
     {
         path:'/staff',
         component: staffLayout,
@@ -150,11 +150,11 @@ export const asyncStaffRouterMap = [
                 meta: { title: '客户信用余额' },
                 component: credWGetCusAmt,
             },
-            /*{
+            {
                 path:'cred/cusAmtDetail',
                 meta: { title: '客户信用余额/详情' },
                 component: credCusAmtDetail,
-            },*/
+            },
             {
                 path:'stow/lists',
                 meta: { title: '扫描装货' },
@@ -223,15 +223,9 @@ export const asyncStaffRouterMap = [
             }
         ]
     }
-];
+];*/
 
 let routes = [
-    /*{
-        path:'/login/select',
-        alias:'/login/select?token=:token',
-        component: loginSelect,
-        meta: { title: '登录选择界面' },
-    },*/
     {
         path : '/group',
         component : indexLayout,

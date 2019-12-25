@@ -209,4 +209,4 @@ const staff = [
     },
 ];
 
-export
+export default staff;

@@ -69,7 +69,7 @@
 					this.userName = sessionStorage.getItem('jpdn-login-username');
 					sessionStorage.clear();
 					sessionStorage.setItem('jpdn-login-username',this.userName);
-					this.$router.push('/login/select');
+					this.$router.push('/group/login');
 				}).catch(()=>{
 					Dialog.close();
 				});

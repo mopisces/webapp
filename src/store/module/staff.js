@@ -1,4 +1,4 @@
-import { asyncStaffRouterMap } from '@/router/index';
+import { asyncStaffRouterMap } from '@/router/staff';
 const staff = {
 	namespaced: true,
 	state: {
@@ -40,6 +40,7 @@ const staff = {
 	},
 };
 function filterAsyncRouter (asyncStaffRouterMap, roles) {
+	console.log(roles)
 	const accessedRouters = asyncStaffRouterMap.filter( route => { 
 		if( typeof(roles) === 'object'){
 			for (var i = roles.length - 1; i >= 0; i--) {
