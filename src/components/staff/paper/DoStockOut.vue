@@ -5,7 +5,7 @@
 		<van-field readonly label="纸质" v-model="infoData.paperCode" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
 		<van-field readonly label="克重(g)" v-model="infoData.paperWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
 		<van-field readonly label="重量(kg)" v-model="infoData.curWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center" ></van-field>
-		<van-field label="班次" v-model="formData.stockOutOpClass" placeholder="输入班次" input-align="center"></van-field>
+		<van-field label="班次" v-model="formData.stockOutOpClass" placeholder="输入班次" input-align="center" :maxlength="2"></van-field>
 		<van-field label="机台" v-model="formData.stockOutSFlute" placeholder="输入机台" input-align="center"></van-field>
 		<van-field label="剥纸重量" v-model="formData.stockOutBzwt" type="number" input-align="center"></van-field>
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="formData.stockOutOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="出库日期">
@@ -72,10 +72,15 @@
 					stockOutOpClass : [],
 					stockOutSFlute  : [],
 					stockOutBzwt    : [
-						{ pattern: '^[0-9]{1,14}(\.[0-9]{1,2})?$' , required: true, message: '请输入剥纸重量' },
+						{ pattern: '^[0-9]{0,14}(\.[0-9]{1,2})?$' , required: true, message: '请输入剥纸重量' },
+						{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								if( value > Number( this.infoData.curWt ) ){
+									errors = '剥纸重量超过重量';
+								}
+								callback(errors);
+							} }
 					],
-					stockOutOpTime  : [],
-					/*前端数据验证规则与后台要一致*/
 				},
 				validator:{}
 			}
@@ -163,12 +168,20 @@
 		computed:{
 			outNo(){
 				return this.formData.stockOutNo;
+			},
+			classChane(){
+				return this.formData.stockOutOpClass;
 			}
 		},
 		watch:{
 			outNo( newVal,oldVal ){
 				if( newVal.length === 12 ){
 					this.getOutInfo( newVal );
+				}
+			},
+			classChane( newV,oldV ){
+				if( newV.toUpperCase() != oldV.toUpperCase() ){
+					this.formData.stockOutOpClass = newV.toUpperCase(); 
 				}
 			}
 		}

@@ -1,10 +1,15 @@
 const admin = {
+	namespaced: true,
 	state: {
 		layout:{
-			title:''
+			title:'菜单页面'
 		}
 	},
-	mutations:{},
+	mutations:{
+		setHeaderTitle( state, title ){
+			state.layout.title = title;
+		},
+	},
 	actions: {},
 };
 export default admin;

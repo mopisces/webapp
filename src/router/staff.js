@@ -46,7 +46,7 @@ const statisGetOrderSum      = r => require.ensure([], () => r(require('@/compon
 //退货统计
 const statisGetOrdReturnSum  = r => require.ensure([], () => r(require('@/components/staff/statis/GetOrdReturnSum')), 'statisGetOrdReturnSum');
 //传单统计
-const statisGetSchSum        = r => require.ensure([], () => r(require('@/components/staff/statis/GetOrdReturnSum')), 'statisGetSchSum');
+const statisGetSchSum        = r => require.ensure([], () => r(require('@/components/staff/statis/GetSchSum')), 'statisGetSchSum');
 //ERP订单
 const erpGetOrders           = r => require.ensure([], () => r(require('@/components/staff/erp/GetOrders')), 'erpGetOrders');
 //原纸收货

@@ -1,5 +1,5 @@
 const base = {
-	admin  : 'http://localhost:8001/public/v1/webappCustomer/',
+	admin  : 'http://localhost:8001/public/v1/admin/',
 	//staff  : 'http://test.leaper.ltd:1105/public/v1/staff/',
 	//client : 'http://test.leaper.ltd:1105/public/v1/client/',
 	//index  : 'http://test.leaper.ltd:1105/public/v1/index/',

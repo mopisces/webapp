@@ -1,6 +1,12 @@
 import base from './base';
-const adminUrl = {
-	login: `${base.admin}login`
+const admin = {
+	login: `${base.admin}login`,
+	user : {
+		lists : `${base.admin}adminLists`,
+		del   : `${base.admin}adminDel`,
+		add   : `${base.admin}adminAdd`,
+		edit  : `${base.admin}adminEdit`,
+	}
 };
 const staff = {
 	calc : {
@@ -185,4 +191,4 @@ const pay = {
 	alipay : `${base.pay}alipay`,
 	wxpay  : `${base.pay}wxpay`,
 }
-export { adminUrl, staff, erp, index, client, pay };
+export { admin, staff, erp, index, client, pay };

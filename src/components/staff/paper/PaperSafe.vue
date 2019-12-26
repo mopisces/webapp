@@ -4,8 +4,8 @@
 			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 			<van-tabs v-model="filterForm.safePaperState">
 				<van-tab title="全部"></van-tab>
-				<van-tab title="小于库存"></van-tab>
-				<van-tab title="大于库存"></van-tab>
+				<van-tab title="小于安全库存"></van-tab>
+				<van-tab title="大于安全库存"></van-tab>
 				<van-tab title="有库存的"></van-tab>
 			</van-tabs>
 		</van-sticky>
@@ -17,7 +17,7 @@
 			<van-field label="生产备注" v-model="filterForm.safeSRemark" input-align="center" placeholder="精确查询"  slot="filter-field-5"></van-field>
 			<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"  slot="filter-field-7" />
 		</popup-filter>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" :column-cell-class-name="columnCellClass" :height="config.table.height">
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" :column-cell-class-name="columnCellClass" :height="config.table.height" even-bg-color="#fafafa">
 		</v-table>
 	</div>
 </template>
@@ -49,13 +49,30 @@
 					},
 					table:{
 						columns:[
-							{field: 'PaperCode', title: '原纸代码', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-							{field: 'PaperWidth', title: '门幅', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-							{field: 'PCount', title: '库存件数', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'SafeCount', title: '安全库存', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'MaxCount', title: '上限库存', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'PaperType', title: '纸种类型', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'PaperName', title: '纸种名称', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'PaperCode', title: '原纸代码', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'PaperWidth', title: '门幅', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'PCount', title: '库存件数', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SafeCount', title: '安全库存', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'MaxCount', title: '上限库存', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'PaperType', title: '纸种类型', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
+								switch( rowData.PaperType ){
+									case '0':
+										return '<span>无</span>';
+										break;
+									case '1':
+										return '<span>牛皮挂面</span>';
+										break;
+									case '2':
+										return '<span>涂布白板</span>';
+										break;
+									case '3':
+										return '<span>瓦纸</span>';
+										break;
+									default : 
+										return '暂无数据';
+								}
+							} },
+							{field: 'PaperName', title: '纸种名称', width: 120, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'SRemark', title: '生产备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
 						height : 0
@@ -110,6 +127,9 @@
 				});
 			},
 			columnCellClass( rowIndex,columnName,rowData ){
+				if( this.filterForm.safePaperState == 1 ){
+					return 'less';
+				}
 				if( rowData.PCount < rowData.SafeCount ){
 					return 'less';
 				}
@@ -145,8 +165,3 @@
 		}
 	}
 </script>
-<style>
-	.less{
-		color:red;
-	}
-</style>

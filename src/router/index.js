@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from '@/store';
 import client from './client';
-
+import admin from './admin';
 Vue.use(Router);
 //公共页面
 //团购及未登录页面布局
@@ -26,7 +26,7 @@ const buildC                 = r => require.ensure([], () => r(require('@/compon
 //404
 const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
 const wxScan                 = r => require.ensure([], () => r(require('@/components/common/WxScanRes')), 'wxScan');
-//staff权限页面
+/*//staff权限页面
 //布局页面
 const staffLayout            = r => require.ensure([], () => r(require('@/components/common/StaffLayout')), 'staffLayout');
 //菜单
@@ -53,8 +53,8 @@ const paperDirectInStock     = r => require.ensure([], () => r(require('@/compon
 const paperGetSStocks        = r => require.ensure([], () => r(require('@/components/staff/paper/GetSStocks')), 'paperGetSStocks');
 //客户信用余额
 const credWGetCusAmt         = r => require.ensure([], () => r(require('@/components/staff/cred/WGetCusAmt')), 'credWGetCusAmt');
-/*//客户信用余额/详情
-const credCusAmtDetail       = r => require.ensure([], () => r(require('@/components/staff/cred/CusAmtDetail')), 'credCusAmtDetail');*/
+//客户信用余额/详情
+const credCusAmtDetail       = r => require.ensure([], () => r(require('@/components/staff/cred/CusAmtDetail')), 'credCusAmtDetail');
 //扫描装货
 const stowLists              = r => require.ensure([], () => r(require('@/components/staff/stow/Lists')), 'stowList');
 //扫描装货/详情
@@ -68,7 +68,7 @@ const statisGetOrderSum      = r => require.ensure([], () => r(require('@/compon
 //退货统计
 const statisGetOrdReturnSum  = r => require.ensure([], () => r(require('@/components/staff/statis/GetOrdReturnSum')), 'statisGetOrdReturnSum');
 //传单统计
-const statisGetSchSum        = r => require.ensure([], () => r(require('@/components/staff/statis/GetOrdReturnSum')), 'statisGetSchSum');
+const statisGetSchSum        = r => require.ensure([], () => r(require('@/components/staff/statis/GetOrderSum')), 'statisGetSchSum');
 //ERP订单
 const erpGetOrders           = r => require.ensure([], () => r(require('@/components/staff/erp/GetOrders')), 'erpGetOrders');
 //原纸收货
@@ -80,7 +80,7 @@ const dailyWGetCusOrder      = r => require.ensure([], () => r(require('@/compon
 //每日订单详细信息
 const dailyGetOrdersP        = r => require.ensure([], () => r(require('@/components/staff/daily/GetOrdersP')), 'dailyGetOrdersP');
 //用户管理
-const userManage             = r => require.ensure([], () => r(require('@/components/staff/user/Manage')), 'userManage');
+const userManage             = r => require.ensure([], () => r(require('@/components/staff/user/Manage')), 'userManage');*/
 
 
 
@@ -289,6 +289,7 @@ let routes = [
         meta : { title:'您访问的页面不存在' }
     },
     ...client,
+    ...admin
 ];
 
 

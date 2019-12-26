@@ -1,0 +1,11 @@
+.v-table-title-class{
+	color:#1a991d;
+	font-size: 0.8125rem;
+}
+.v-table-body-class{
+	font-size: 0.8125rem;
+}
+/* 小于安全库存红色标记 */
+.less{
+	color:red;
+}

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :height="config.table.height">
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :height="config.table.height" even-bg-color="#fafafa">
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -215,4 +215,9 @@
 		}
 	}
 </script>
-
+<style>
+	.v-table-title-class{
+		color:#1a991d;
+		font-size: 0.8125rem;
+	}
+</style>

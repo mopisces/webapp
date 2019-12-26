@@ -9,18 +9,18 @@
   			</van-tab>
 		</van-tabs>
 		<template v-if=" filterForm.dataType == 1 ">
-			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.widthColumns" :table-data="tableData.widthData" row-hover-color="#eee" row-click-color="#edf7ff"  odd-bg-color="#aab3ac">
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.widthColumns" :table-data="tableData.widthData" row-hover-color="#eee" row-click-color="#edf7ff"  even-bg-color="#fafafa">
 			</v-table>
 		</template>
 		<template v-if=" filterForm.dataType == 2 ">
-			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.codeColumns" :table-data="tableData.codeData" row-hover-color="#eee" row-click-color="#edf7ff"  odd-bg-color="#aab3ac" :height="config.table.height">
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.codeColumns" :table-data="tableData.codeData" row-hover-color="#eee" row-click-color="#edf7ff"  even-bg-color="#fafafa" :height="config.table.height">
 			</v-table>
 		</template>
 	</div>
 </template>
 <style>
 	.header-color{
-        color:#0bf147;
+        color:#1a991d;
 	}
 </style>
 <script>
@@ -51,18 +51,18 @@
 					},
 					table:{
 						widthColumns:[
-							{field: 'PaperCode', title: '纸类', width: 80, titleAlign: 'center', columnAlign: 'center', titleCellClassName: 'header-color',isResize:true ,isFrozen: true},
-							{field: 'ZJWt', title: '整卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
-							{field: 'iZJCount', title: '整卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
-							{field: 'RWt', title: '残卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
-							{field: 'iRCount', title: '残卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+							{field: 'PaperCode', title: '纸类', width: 80, titleAlign: 'center', columnAlign: 'center', isResize:true ,isFrozen: true},
+							{field: 'ZJWt', title: '整卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'iZJCount', title: '整卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'RWt', title: '残卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'iRCount', title: '残卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
 						codeColumns:[
-							{field: 'PaperWidth', title: '门幅', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true ,isFrozen: true},
-							{field: 'ZJWt', title: '整卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
-							{field: 'iZJCount', title: '整卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
-							{field: 'RWt', title: '残卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
-							{field: 'iRCount', title: '残卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',titleCellClassName: 'header-color',isResize:true},
+							{field: 'PaperWidth', title: '门幅', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'ZJWt', title: '整卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'iZJCount', title: '整卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'RWt', title: '残卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'iRCount', title: '残卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
 						height : 0
 					},
@@ -133,3 +133,9 @@
 		}
 	}
 </script>
+<style>
+	.v-table-title-class{
+		color:#1a991d;
+		font-size: 0.8125rem;
+	}
+</style>

@@ -31,7 +31,7 @@
 			<van-field readonly label="送货公司" v-model="fieldData.deliArea" placeholder="选择送货公司" input-align="center" @click="config.popup.deliAreaShow = true">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
-			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center"  type="textarea" autosize maxlength="50" show-word-limit>
+			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center"  type="textarea" autosize maxlength="50">
 			</van-field>
 			<div class="van-row van-row--flex van-row--justify-end" v-if=" fieldData.bModDetail ">
 				<div class="van-col van-col--8">
@@ -53,7 +53,7 @@
 		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-else>
 			明细
 		</div>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" even-bg-color="#fafafa">
 		</v-table>
 		<van-popup v-model="config.popup.deliAreaShow" position="top" :style="{ height: '100%', width:'100%' }">
 			<div class="header" style="width:100%;position:fixed;height:46px;top:0px;text-align:center;">
@@ -134,13 +134,13 @@
 					},
 					table:{
 						columns:[
-							{field: 'OrderId', title: '订单编号', width: 100, titleAlign: 'center', titleCellClassName:'table-title-class',columnAlign: 'center',isResize:true,isFrozen: true},
-							{field: 'CusSubName', title: '子公司', width: 100, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
-							{field: 'DeliQty', title: '送货数', width: 80, titleAlign: 'center', titleCellClassName:'table-title-class',columnAlign: 'center',isResize:true},
-							{field: 'StockArea', title: '库区', width: 80, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
-							{field: 'Length', title: '板长', width: 80, titleAlign: 'center', titleCellClassName:'table-title-class',columnAlign: 'center',isResize:true},
-							{field: 'Width', title: '板宽', width: 80, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
-							{field: 'BoardId', title: '材质编号', width: 100, titleAlign: 'center',titleCellClassName:'table-title-class', columnAlign: 'center',isResize:true},
+							{field: 'OrderId', title: '订单编号', width: 100, titleAlign: 'center',columnAlign: 'center',isResize:true,isFrozen: true},
+							{field: 'CusSubName', title: '子公司', width: 100, titleAlign: 'center',columnAlign: 'center',isResize:true},
+							{field: 'DeliQty', title: '送货数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'StockArea', title: '库区', width: 80, titleAlign: 'center',columnAlign: 'center',isResize:true},
+							{field: 'Length', title: '板长', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'Width', title: '板宽', width: 80, titleAlign: 'center',columnAlign: 'center',isResize:true},
+							{field: 'BoardId', title: '材质编号', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						]
 					},
 					isEdit : 0,
@@ -437,7 +437,7 @@
 					this.fieldData.orderType  = this.$route.query.orderType;
 					this.config.isEdit        = this.$route.query.isEdit;
 					if( this.config.isEdit == 1 ){
-						this.config.table.columns.push({field: 'stowDetailHandle', title: '操作', width: 150, titleAlign: 'center',titleCellClassName:'table-title-class',componentName:'table-operate', columnAlign: 'center',isResize:true})
+						this.config.table.columns.push({field: 'stowDetailHandle', title: '操作', width: 150, titleAlign: 'center',componentName:'table-operate', columnAlign: 'center',isResize:true})
 					}
 				}else{
 					this.$router.push( this.$store.state.staff.backPath );
@@ -487,11 +487,3 @@
 		}
 	}
 </script>
-<style>
-	.van-field__word-limit{
-		line-height: 1rem;
-	}
-	.table-title-class{
-		color:#0bf147;
-	}
-</style>
