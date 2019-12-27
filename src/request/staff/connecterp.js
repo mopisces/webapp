@@ -46,8 +46,9 @@ const connecterp = {
 	 * @param  {[object]} data 
 	 * @return {[promise]}     
 	 */
-	calBdPriceInfo( data ){
+	calBdPriceInfo( data,type ){
 		let postData = data;
+		console.log(data)
 		return axios.post(erp.calBdPriceInfo,QS.stringify(postData));
 	},
 	/**

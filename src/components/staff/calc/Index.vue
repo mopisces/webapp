@@ -180,11 +180,10 @@
 							{ type: 'string', required : true, message : '请填写压线信息' },
 							{ validator:(rule, value, callback, source, options)=>{
 								let errors;
-								console.log( /^\d+([.]{1}[5]{1}){0,1}(\+\d+([.]{1}[5]{1}){0,1})+$/.test(value) )
 								if( !/^\d+([.]{1}[5]{1}){0,1}(\+\d+([.]{1}[5]{1}){0,1})+$/.test(value) ){
 									errors = '压线格式不正确';
 								}
-								if( eval( value ) !== source.width ){
+								if( eval( value ) != source.width ){
 									errors = '压线和不等于板宽';
 								}
 								callback(errors);
@@ -367,7 +366,7 @@
 				};
 				let self  = this;
 				validator.validate( postData ).then(()=>{
-					self.$request.staff.connecterp.calBdPriceInfo( data ).then((res)=>{
+					self.$request.staff.connecterp.calBdPriceInfo( data, self.config.tabs.active ).then((res)=>{
 						if( res.data.result[2] === false ){
 							Dialog.alert({
 								title   : '计算失败',

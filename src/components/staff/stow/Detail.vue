@@ -6,64 +6,69 @@
 			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="pageConfig.bMStockArea" @click=" config.popup.stockAreaShow = true ">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
-			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize rows="2">
+			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize :rows="1">
 			</van-field>
 			<div class="van-row" style="text-align:left;">
 				<div class="van-col van-col--12">
-					<van-field v-model="fieldData.dOtherFee" placeholder="附加费" label="附加费" input-align="center" type="number" :maxlength="8">
-					</van-field>
+					<field-label-variable :value.sync="fieldData.dOtherFee" label="附加费" placeholder="附加费" maxlength="8" type="number"></field-label-variable>
+					<!-- <van-field v-model="fieldData.dOtherFee" placeholder="附加费" label="附加费" input-align="center" type="number" :maxlength="8">
+					</van-field> -->
 				</div>
 				<div class="van-col van-col--12">
-					<van-field v-model="fieldData.areaQty" placeholder="库存数" label="库存数" input-align="center" type="number" :maxlength="10" readonly>
-					</van-field>
+					<field-label-variable :value.sync="fieldData.areaQty" label="库存数" placeholder="库存数" maxlength="10" type="number" readonly="readonly"></field-label-variable>
+					<!-- <van-field v-model="fieldData.areaQty" placeholder="库存数" label="库存数" input-align="center" type="number" :maxlength="10" readonly>
+					</van-field> -->
 				</div>
 			</div>
 			<div class="van-row" style="text-align:left;">
 				<div class="van-col van-col--12">
-					<van-field v-model="fieldData.iDeliQty" placeholder="送货数" label="送货数" input-align="center" type="number" :maxlength="8">
-					</van-field>
+					<field-label-variable :value.sync="fieldData.iDeliQty" label="送货数" placeholder="送货数" maxlength="8" type="number"></field-label-variable>
+					<!-- <van-field v-model="fieldData.iDeliQty" placeholder="送货数" label="送货数" input-align="center" type="number" :maxlength="8">
+					</van-field> -->
 				</div>
 				<div class="van-col van-col--12">
-					<van-field v-model="fieldData.iFreeQty" placeholder="赠品数" label="赠品数" input-align="center" type="number" :maxlength="10">
-					</van-field>
+					<field-label-variable :value.sync="fieldData.iFreeQty" label="赠品数" placeholder="赠品数" maxlength="10" type="number"></field-label-variable>
+					<!-- <van-field v-model="fieldData.iFreeQty" placeholder="赠品数" label="赠品数" input-align="center" type="number" :maxlength="10">
+					</van-field> -->
 				</div>
 			</div>
 			<van-field readonly label="送货公司" v-model="fieldData.deliArea" placeholder="选择送货公司" input-align="center" @click="config.popup.deliAreaShow = true">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
-			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center"  type="textarea" autosize maxlength="50">
+			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center" type="textarea" autosize maxlength="50" :rows="1">
 			</van-field>
 			<div class="van-row van-row--flex van-row--justify-end" v-if=" fieldData.bModDetail ">
 				<div class="van-col van-col--8">
-					<van-button type="primary" style="width:90%" @click="onLoadClick()">修改</van-button>
+					<van-button type="primary" style="width:90%" size="small" @click="onLoadClick()">修改</van-button>
 				</div>
 				<div class="van-col van-col--8">
-					<van-button plain type="primary" style="width:100%" @click="cancelClick()">取消修改</van-button>
+					<van-button plain type="primary"  size="small" style="width:100%" @click="cancelClick()">取消修改</van-button>
 				</div>
 			</div>
 			<div class="van-row van-row--flex van-row--justify-end" v-else>
 				<div class="van-col van-col--8">
-					<van-button type="primary" style="width:90%" @click="onLoadClick()">装货</van-button>
+					<van-button type="primary"  size="small" style="width:90%" @click="onLoadClick()">装货</van-button>
 				</div>
 				<div class="van-col van-col--8">
-					<van-button plain type="primary" style="width:90%" @click="resetClick()">重置</van-button>
+					<van-button plain type="primary"  size="small" style="width:90%" @click="resetClick()">重置</van-button>
 				</div>
 			</div>
+			<div style="width:100%;height:0.625rem;"></div>
 		</div>
-		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-else>
+		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0rem 1rem;" v-else>
 			明细
 		</div>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" even-bg-color="#fafafa">
 		</v-table>
 		<van-popup v-model="config.popup.deliAreaShow" position="top" :style="{ height: '100%', width:'100%' }">
-			<div class="header" style="width:100%;position:fixed;height:46px;top:0px;text-align:center;">
+			<div class="header" style="width:100%;position:fixed;height:2.875rem;top:0rem;text-align:center;">
 				<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
 					<div class="van-nav-bar__title van-ellipsis">
 						请选择送货地区
 					</div>
 				</div>
 			</div>
-			<div style="width:100%;margin-top:46px;"></div>
+			<div style="width:100%;margin-top:2.875rem;"></div>
 			<van-radio-group v-model="fieldData.deliArea" v-if="config.popup.deliAreaShow">
 				<van-cell-group>
 					<div role="button" tabindex="0" class="van-cell van-cell--clickable"  v-for="(item,index) in deliveryAddress.fit" :key=" 'address' + index ">
@@ -75,17 +80,17 @@
 					</div>
 				</van-cell-group>
 			</van-radio-group>
-			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0px;" @click="config.popup.deliAreaShow = false">确定</van-button>
+			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0rem;" @click="config.popup.deliAreaShow = false">确定</van-button>
 		</van-popup>
 		<van-popup v-model="config.popup.stockAreaShow" position="top" :style="{ height: '100%', width:'100%' }">
-			<div class="header" style="width:100%;position:fixed;height:46px;top:0px;text-align:center;">
+			<div class="header" style="width:100%;position:fixed;height:2.875rem;top:0rem;text-align:center;">
 				<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
 					<div class="van-nav-bar__title van-ellipsis">
 						请选择库区
 					</div>
 				</div>
 			</div>
-			<div style="width:100%;margin-top:46px;"></div>
+			<div style="width:100%;margin-top:2.875rem;"></div>
 			<van-radio-group v-model="fieldData.strStockArea" v-if="config.popup.stockAreaShow">
 				<van-cell-group>
 					<div role="button" tabindex="0" class="van-cell van-cell--clickable"  v-for="(item,index) in strStockAreaAll" :key=" 'stock' + index ">
@@ -96,7 +101,7 @@
 					</div>
 				</van-cell-group>
 			</van-radio-group>
-			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0px;" @click="config.popup.stockAreaShow = false">确定</van-button>
+			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0rem;" @click="config.popup.stockAreaShow = false">确定</van-button>
 		</van-popup>
 	</div>
 </template>
@@ -104,6 +109,7 @@
 	import { VTable, VPagination } from 'vue-easytable';
 	import { Button, Cell, CellGroup, Popup, Icon, Field, RadioGroup, Radio } from 'vant';
 	import { Dialog, Toast  } from 'vant';
+	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import schema from 'async-validator';
 	export default {
@@ -120,6 +126,7 @@
 			[RadioGroup.name]: RadioGroup,
 			[Radio.name]: Radio,
 
+			FieldLabelVariable,
 			WxScan
 		},
 		data(){
@@ -184,7 +191,7 @@
 					],
 					iDeliQty : [
 						{ required : true, message : '请输入有效的装货数' },
-						{ validator(rule, value, callback, source, options){
+						{ validator:(rule, value, callback, source, options)=>{
 							let errors;
 							if( value <= 0 ){
 								errors = '请输入有效的装货数';
@@ -194,6 +201,9 @@
 					],
 					OrderType : [
 						{ required : true , message : '订单类型非法' }
+					],
+					dOtherFee : [
+						{ required : true , message : '请填写附加费' },
 					]
 				},
 				validator:{},
@@ -207,7 +217,6 @@
 			erpAddDNDetail( data ){
 				let self = this;
 				this.$request.staff.connecterp.erpAddDNDetail( data ).then(res=>{
-					console.log(res)
 					if( res.data.result[1] === false  ){
 						Dialog.alert({
 							title   : '装货出错',
@@ -216,7 +225,11 @@
 							Dialog.close()
 						});
 					}else{
-						Toast.success('装货成功');
+						Dialog.alert({
+							message:'装货成功'
+						}).then(()=>{
+							Dialog.close()
+						});
 						self.cancelClick();
 						self.getPDNDetail( this.filterForm );
 					}

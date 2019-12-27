@@ -5,12 +5,7 @@
 		</div>
 		<div class="van-cell__value">
 			<div class="van-field__body">
-				<template v-if=" type == 'textarea' ">
-					<textarea :placeholder="placeholder" v-model="values" :maxlength="maxlength" :type=" type " :readonly="readonly" :class="[readonly=='readonly'?'field-readonly van-field__control--center':'van-field__control van-field__control--center']"  id="textarea"></textarea>
-				</template>
-				<template v-else>
-					<input :placeholder="placeholder" v-model="values" :maxlength="maxlength" :type=" type "  :readonly="readonly" :class="[readonly=='readonly'?'field-readonly van-field__control--center':'van-field__control van-field__control--center']" />
-				</template>
+				<input :placeholder="placeholder" v-model="values" :maxlength="maxlength" :type=" type "  :readonly="readonly" :class="[readonly=='readonly'?'field-readonly van-field__control--center':'van-field__control van-field__control--center']" />
 			</div>
 		</div>
 	</div>
