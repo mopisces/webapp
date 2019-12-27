@@ -1,32 +1,34 @@
 <template>
 	<div>
 		<wx-scan :scanResult.sync="formData.strOrderId" urlType="2"></wx-scan>
-		<van-field readonly input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" >
-		</van-field>
+		<van-field input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" type="textarea" :row="1" autosize placeholder="订单信息" readonly></van-field>
+		<!-- <field-label-variable :value.sync="pageInfo.strOrderInfo" label="订单信息" placeholder="订单信息"  type="textarea" rows="4" ></field-label-variable> -->
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
-				<van-field v-model="formData.iQty" placeholder="入库数" label="入库数" input-align="center" type="number" :maxlength="3">
-				</van-field>
+				<!-- <van-field v-model="formData.iQty" placeholder="入库数" label="入库数" input-align="center" type="number" :maxlength="3">
+				</van-field> -->
+				<field-label-variable :value.sync="formData.iQty" label="入库数" placeholder="入库数" maxlength="3" ></field-label-variable>
 			</div>
 			<div class="van-col van-col--12">
-				<van-field v-model="formData.strWorkGorup" placeholder="班次" label="班次" input-align="center" :maxlength="10">
-				</van-field>
+				<op-class-field :opClass.sync="formData.strWorkGorup"></op-class-field>
 			</div>
 		</div>
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
-				<van-field readonly v-model="pageInfo.iFinishedQty" label="已入库数" input-align="center" type="number" :maxlength="3" placeholder="已入库数">
-				</van-field>
+				<field-label-variable :value.sync="pageInfo.iFinishedQty" label="已入库数" placeholder="已入库数" maxlength="3" type="number" readonly="readonly"></field-label-variable>
+				<!-- <van-field readonly v-model="pageInfo.iFinishedQty" label="已入库数" input-align="center" type="number" :maxlength="3" placeholder="已入库数">
+				</van-field> -->
 			</div>
 			<div class="van-col van-col--12">
-				<van-field readonly v-model="formData.strSchArea" label="传单库区" input-align="center" :maxlength="10" placeholder="传单库区">
-				</van-field>
+				<field-label-variable :value.sync="pageInfo.strSchArea" label="传单库区" placeholder="传单库区" maxlength="10" readonly="readonly"></field-label-variable>
+				<!-- <van-field readonly v-model="formData.strSchArea" label="传单库区" input-align="center" :maxlength="10" placeholder="传单库区">
+				</van-field> -->
 			</div>
 		</div>
 		<van-field readonly clickable label="库区" placeholder="请选择入库库区" input-align="center" @click=" config.popup.area.show = true " v-model="formData.strStockArea" v-if="pageInfo.bMStockArea"></van-field>
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.dInDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="选择入库日期"></new-time-picker>
-	   	<van-field v-model="formData.strRemark" autosize label="备注" type="textarea" maxlength="50" placeholder="请输入备注" rows="2" show-word-limit/>
-	   	<div class="van-row" style="text-align:center;margin-top:50px;" >
+	   	<van-field v-model="formData.strRemark" autosize label="备注" type="textarea" maxlength="50" placeholder="请输入备注" rows="1"/>
+	   	<div class="van-row" style="text-align:center;margin-top:1rem;" >
 			<div class="van-col van-col--12">
 				<van-button type="primary" size="normal" style="width:60%" @click="onSubmit">入库</van-button>
 			</div>
@@ -58,6 +60,8 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
+	import OpClassField from '@/components/subject/staff/OpClassField.vue';
+	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import { VTable, VPagination } from 'vue-easytable';
 	import schema from 'async-validator';
 	export default {
@@ -75,7 +79,9 @@
 
 			NewTimePicker,
 			WxScan,
-			RadioCell
+			RadioCell,
+			OpClassField,
+			FieldLabelVariable
 		},
 		data(){
 			return {
@@ -133,7 +139,8 @@
 					dInDate : [
 						{ required: true, message:'请选择入库日期' }
 					]
-				}
+				},
+				activeColor: '#f5f5f5'
 			}
 		},
 		methods:{

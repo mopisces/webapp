@@ -156,7 +156,7 @@
 					strOrderId   : '',  //订单号
 					strStockArea : '',	//库区
 					strOrderInfo : '',  //订单信息
-					dOtherFee    : '',	//附加费
+					dOtherFee    : 0,	//附加费
 					iDeliQty     : '',  //送货数
 					iFreeQty     : '',	//赠品数
 					strDNRemark  : '',	//送货备注,
@@ -375,7 +375,7 @@
 				this.fieldData.strOrderInfo = '';
 				this.fieldData.iDeliQty     = '';
 				this.fieldData.iFreeQty     = '';
-				this.fieldData.dOtherFee    = '';
+				this.fieldData.dOtherFee    = 0;
 				this.fieldData.strDNRemark  = '';
 				this.fieldData.strCusSubNo  = '';
 				this.fieldData.deliArea     = '';
@@ -403,7 +403,7 @@
                     strOrderId   : this.fieldData.strOrderId,
                     strStockArea : this.fieldData.strStockArea,
                     strDNRemark  : this.fieldData.strDNRemark,
-                    strCusSubNo  : this.fieldData.strCusSubNo,
+                    strCusSubNo  : this.fieldData.deliArea,
                     OrderType    : this.fieldData.orderType,
                     bModify      : this.fieldData.bModDetail,
                     strFactoryId : this.erpDelForm.strFactoryId,

@@ -5,8 +5,8 @@
 		<van-field readonly label="纸质" v-model="infoData.paperCode" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
 		<van-field readonly label="克重(g)" v-model="infoData.paperWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
 		<van-field readonly label="重量(kg)" v-model="infoData.curWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center" ></van-field>
-		<van-field label="班次" v-model="formData.stockOutOpClass" placeholder="输入班次" input-align="center" :maxlength="2"></van-field>
-		<van-field label="机台" v-model="formData.stockOutSFlute" placeholder="输入机台" input-align="center"></van-field>
+		<op-class-field :opClass.sync="formData.stockOutOpClass"></op-class-field>
+		<s-flute-select :sFlute.sync="formData.stockOutSFlute"></s-flute-select>
 		<van-field label="剥纸重量" v-model="formData.stockOutBzwt" type="number" input-align="center"></van-field>
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="formData.stockOutOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="出库日期">
 		</new-time-picker>
@@ -19,6 +19,8 @@
 	import { Button, Field, Dialog, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
+	import SFluteSelect from '@/components/subject/staff/SFluteSelect.vue';
+	import OpClassField from '@/components/subject/staff/OpClassField.vue';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -28,7 +30,9 @@
 			[Toast.name]: Toast ,
 
 			NewTimePicker,
-			WxScan
+			WxScan,
+			SFluteSelect,
+			OpClassField
 		},
 		data(){
 			return {
@@ -144,6 +148,14 @@
 				this.$request.staff.paper.paperOutMain( data ).then(res=>{
 					if( res.errorCode === '00000' ){
 						Toast.success('出库成功！');
+						Object.keys( self.formData ).forEach((item,index)=>{
+							if( item != 'stockOutOpClass' || item != 'stockOutSFlute' ){
+								self.formData[item] = '';
+							}
+							if( item == 'stockOutBzwt' ){
+								self.formData[item] = 0;
+							}
+						});
 					}else{
 						Dialog.alert({
 							title   : '出库失败!',
@@ -169,9 +181,6 @@
 			outNo(){
 				return this.formData.stockOutNo;
 			},
-			classChane(){
-				return this.formData.stockOutOpClass;
-			}
 		},
 		watch:{
 			outNo( newVal,oldVal ){
@@ -179,11 +188,6 @@
 					this.getOutInfo( newVal );
 				}
 			},
-			classChane( newV,oldV ){
-				if( newV.toUpperCase() != oldV.toUpperCase() ){
-					this.formData.stockOutOpClass = newV.toUpperCase(); 
-				}
-			}
 		}
 	}
 </script>

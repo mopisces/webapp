@@ -10,9 +10,16 @@
 				</div>
 			</div>
 		</van-sticky>
-		<van-cell-group>
-			<van-cell :title="item.CusShortName + '(' + item.CusId + ')' " is-link :value="item.LeftMinAmtCond + '/' + item.MinAmtCond " v-for="(item,index) in info.cell.data" :key="index" @click="cellClick(item.CusId)"/>
-		</van-cell-group>
+		<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in info.cell.data" :key="index" @click="cellClick(item.CusId)">
+			<div class="van-cell__title">
+				<span>{{ item.CusShortName }}</span><br/>
+				<span>{{ item.CusId }}</span>
+			</div>
+			<div class="van-cell__title" style="margin-left:1rem;">
+				<span>{{ item.LeftMinAmtCond }}/{{ item.MinAmtCond }}</span>
+			</div>
+			<van-icon name="arrow" color="#ddd" size="24" style="margin-top:9px"/>
+		</div>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
 			<van-field label="员工" readonly v-model="info.leftPopup.data.userName" placeholder="员工" input-align="right" slot="new-popup-1"/>
 			<van-field label="欠款合计" readonly v-model="info.leftPopup.data.realAmt" placeholder="欠款合计" input-align="right" slot="new-popup-2"/>
@@ -30,7 +37,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Field, SwitchCell, Sticky } from 'vant';
+	import { Button, Icon, Field, SwitchCell, Sticky } from 'vant';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
@@ -39,8 +46,7 @@
 	export default {
 		components:{
 			[Button.name]: Button,
-			[Cell.name]: Cell,
-			[CellGroup.name]: CellGroup,
+			[Icon.name]: Icon,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
 			[Sticky.name]: Sticky,

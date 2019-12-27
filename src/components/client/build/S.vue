@@ -205,6 +205,9 @@
 						self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
 					});
 					res.result.cus_info.forEach((item,index)=>{
+						if( item.DefAddress == 1 ){
+							self.formData.address = item.CusSubNo;
+						}
 						self.config.radioData.cusInfo.push( { value : item.CusSubNo, text:item.SubDNAddress, tag : ''} );
 					});
 					self.pageConfig.maxDate   = res.result.page_config.BuildMaxDate;

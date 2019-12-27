@@ -1,7 +1,32 @@
 import { erp } from '../urlMap';
 import axios from 'axios';
 import QS from 'qs';
+import { Dialog, Toast } from 'vant';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+axios.interceptors.request.use(
+	config => {
+		Toast.loading({
+			mask: true,
+			message: '加载中...',
+			loadingType: 'spinner'
+		});
+		return config;
+	},
+	error => {
+		Toast.clear();
+		Promise.error(error);
+	}
+);
+axios.interceptors.response.use(
+	response =>{
+		Toast.clear();
+		return Promise.resolve(response);
+	},
+	error =>{
+		Toast.clear();
+		return Promise.reject(error);
+	}
+);
 const connecterp = {
 	/**
 	 * [calBdQuotaInfo 订单试算]

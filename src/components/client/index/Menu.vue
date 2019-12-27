@@ -79,24 +79,24 @@
 			[GridItem.name]: GridItem,
 		},
 		/*
-		state: #0bf147 -> 已完成, #eff30c -> 正在开发 , #0b27f1 -> 未开发 
+		state: #1a991d -> 已完成, #eff30c -> 正在开发 , #0b27f1 -> 未开发 
 		 */
 		data(){	
 			return {
 				config:{
 					gridItem:[
-						{text:'简单纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#0bf147'},
-						{text:'纸箱纸板下单', iconName:'zhixiang',    url:'/client/build/c',state:'#0bf147'},
-						{text:'纸箱下单',     iconName:'zhixiang1',   url:'/client/build/x',state:'#0bf147'},
+						{text:'简单纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#1a991d'},
+						{text:'纸箱纸板下单', iconName:'zhixiang',    url:'/client/build/c',state:'#1a991d'},
+						{text:'纸箱下单',     iconName:'zhixiang1',   url:'/client/build/x',state:'#1a991d'},
 						{text:'微信订单',     iconName:'shouji',      url:'/client/wxorder/lists',state:'#eff30c'},
 						{text:'常用订单',     iconName:'dingdan1',    url:'/client/usedorder/lists',state:'#eff30c'},
-						{text:'常用材质',     iconName:'caizhi',      url:'/client/usedboard/lists',state:'#0bf147'},
-						{text:'ERP订单',      iconName:'erp',         url:'/client/order/getOrders',state:'#0bf147'},
-						{text:'每日订单',     iconName:'meiri',       url:'/client/order/getOrdersP',state:'#0bf147'},
-						{text:'对账单',       iconName:'duizhang',    url:'/client/order/getCusFreeMB',state:'#0bf147'},
-						{text:'报价价格',     iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus',state:'#0bf147'},
-						{text:'报价规则',     iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus',state:'#0bf147'},
-						{text:'信用余额',     iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt',state:'#0bf147'},
+						{text:'常用材质',     iconName:'caizhi',      url:'/client/usedboard/lists',state:'#1a991d'},
+						{text:'ERP订单',      iconName:'erp',         url:'/client/order/getOrders',state:'#1a991d'},
+						{text:'每日订单',     iconName:'meiri',       url:'/client/order/getOrdersP',state:'#1a991d'},
+						{text:'对账单',       iconName:'duizhang',    url:'/client/order/getCusFreeMB',state:'#1a991d'},
+						{text:'报价价格',     iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus',state:'#1a991d'},
+						{text:'报价规则',     iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus',state:'#1a991d'},
+						{text:'信用余额',     iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt',state:'#1a991d'},
 					],
 					authGrid:[],
 					domian:{
@@ -217,7 +217,7 @@
 			
 		},
 		created(){
-			this.$store.commit('staff/setHeaderTitle','菜单页面');
+			this.$store.commit('client/setHeaderTitle','菜单页面');
 		},
 		mounted(){
 			this.userName = sessionStorage.getItem('jpdn-login-username');

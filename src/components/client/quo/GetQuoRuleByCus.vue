@@ -27,12 +27,13 @@
 					},
 					table:{
 						columns:[
-							{field: 'Flutes', title: '坑型', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-							{field: 'LayerCount', title: '层数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'Flutes', title: '坑型', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'LayerCount', title: '层数', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'DisType', title: '折扣方式', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'ValueType', title: '增减类型', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'ValueEnd', title: '起始值', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'Value', title: '增减', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'ValueType', title: '增减类型', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'ValueBegin', title: '起始值', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'ValueEnd', title: '终止值', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'Value', title: '增减', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						]
 					}
 				},

@@ -4,7 +4,7 @@
 			<van-tab :title="item" v-for="(item,index) in config.tabs.title" :key="index">
 				<van-cell-group>
 					<cus-picker :cusName.sync="commonForm.cusName" ></cus-picker>
-					<van-field readonly clickable label="材质" :value="commonForm.texName"  placeholder="选择材质" @click="texPicker()" required input-align="center">
+					<van-field readonly clickable label="材质" :value="commonForm.texName"  placeholder="选择材质" @click="texPicker()" required input-align="center" style="border-top:1px black solid;">
 						<van-icon name="arrow" slot="right-icon"/>
 					</van-field>
 					<van-switch-cell v-model="commonForm.bAddTrim" title="加修边" />
@@ -40,7 +40,7 @@
 					<van-field v-else v-model="boxForm.ordQty" placeholder="输入纸箱订单数" label="订单数" input-align="center" />
 					<van-field label="销售面积(㎡)" placeholder="待计算" input-align="center" v-model="calcResult.saleArea" disabled></van-field>
 					<van-field label="折扣" placeholder="待计算" input-align="center" v-model="calcResult.disRate" disabled></van-field>
-					<van-field label="平方报价(元/㎡)" placeholder="待计算" input-align="center" v-model="calcResult.oriPrice" disabled></van-field>
+					<van-field label="平方报价(元/㎡)" placeholder="待计算" input-align="center" v-model="calcResult.oriPrice" disabled label-class="field-label-width"></van-field>
 					<van-field label="片价(元/片)" placeholder="待计算" input-align="center" v-model="calcResult.unitPrice" disabled></van-field>
 					<van-field label="平方价(元/㎡)" placeholder="待计算" input-align="center" v-model="calcResult.squarePrice" disabled></van-field>
 					<van-field label="金额(元)" placeholder="待计算" input-align="center" v-model="calcResult.amt" disabled></van-field>
@@ -49,7 +49,8 @@
 						<van-field label="板宽(mm)" placeholder="待计算" input-align="center" v-model="calcResult.boxW" disabled></van-field>
 						<van-field label="压线" placeholder="待计算" input-align="center" v-model="calcResult.strScoreInfo" disabled></van-field>
 					</div>
-					<van-button type="primary" size="large" round @click.native="calBdPriceInfo()">
+					<div style="width:100%;height:3.125rem;"></div>
+					<van-button type="primary" size="large" round @click.native="calBdPriceInfo()" style="position:fixed;bottom:3.125rem;">
 						<span v-if="config.tabs.active == 0 ">纸板计算</span>
 						<span v-else>纸箱计算</span>
 					</van-button>
@@ -177,20 +178,21 @@
 						],
 						scoreInfo : [
 							{ type: 'string', required : true, message : '请填写压线信息' },
-							{ scoreInfo(rule, value, callback, source, options){
-								let errors = [];
-								if( !/^\\\d+([.]{1}[5]{1}){0,1}(\\\+\\\d+([.]{1}[5]{1}){0,1})+$/.test(value) ){
-									errors.push(new Error('压线格式不正确'));
+							{ validator:(rule, value, callback, source, options)=>{
+								let errors;
+								console.log( /^\d+([.]{1}[5]{1}){0,1}(\+\d+([.]{1}[5]{1}){0,1})+$/.test(value) )
+								if( !/^\d+([.]{1}[5]{1}){0,1}(\+\d+([.]{1}[5]{1}){0,1})+$/.test(value) ){
+									errors = '压线格式不正确';
 								}
 								if( eval( value ) !== source.width ){
-									errors.push(new Error('压线和不等于板宽'));
+									errors = '压线和不等于板宽';
 								}
-								return errors;
+								callback(errors);
 							}}
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ pattern : '^[1-9][0-9]{6}$',message : '订单格式不正确'}
+							{ pattern : '^[1-9][0-9]{6}$',message : '订单数格式不正确'}
 						]
 					},
 					cRules:{
@@ -252,7 +254,7 @@
 				});
 			},
 			getTonLenAndULen( IsContinueCallCalBdQuotaInfo = false ){
-				if( this.pageConfig.calcAutoGetTonLenAndULen && this.config.tabs.active == 1 && this.commonForm.cusName.length != 0 && this.commonForm.texName.length != 0 ){
+				if( this.pageConfig.calcAutoGetTonLenAndULen && this.config.tabs.active == 1 && this.commonForm.cusName && this.commonForm.texName ){
 					let data = {
 						cusName : this.commonForm.cusName,
 						texName : this.commonForm.texName
@@ -315,7 +317,7 @@
 				this.config.popup.show = false;
 			},
 			calBdQuotaInfo(){
-				if( !this.pageConfig.calcAutoGetdOriPrice && this.commonForm.cusName != '' && this.commonForm.texName != '' ){
+				if( this.pageConfig.calcAutoGetdOriPrice && this.commonForm.cusName != '' && this.commonForm.texName != '' ){
 					let validator = new schema( this.rules.commonRules );
 					let self = this;
 					validator.validate( this.commonForm ).then(()=>{

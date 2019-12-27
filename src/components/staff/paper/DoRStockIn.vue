@@ -44,7 +44,7 @@
 				formData:{
 					stockInNo : '',
 					inOpTime  : '',
-					inWeight  : ''
+					inWeight  : 0
 				},
 				autoData:{
 					paperWidth : '',
@@ -63,7 +63,13 @@
 					],
 					inWeight  : [
 						{ required : true , message : '请填写回仓重量' },
-						
+						{ validator: (rule, value, callback, source, options)=>{
+							let errors;
+							if( value > Number( this.autoData.oriWt ) ){
+								errors = '回仓重量超过重量';
+							}
+							callback(errors);
+						} }
 					]
 				},
 				pageConfig:{

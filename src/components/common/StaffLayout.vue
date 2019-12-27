@@ -77,6 +77,7 @@
 			},
 		},
 		created(){
+			this.$store.commit('client/setHeaderTitle','首页');
 			this.config.headerTitle = this.$store.state.staff.layout.title;
 		},
 		mounted(){

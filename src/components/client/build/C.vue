@@ -273,6 +273,9 @@
 						}
 					});
 					res.result.cus_info.forEach((item,index)=>{
+						if( item.DefAddress == 1 ){
+							self.formData.address = item.CusSubNo;
+						}
 						self.config.radioData.address.push( { value : item.CusSubNo, text:item.SubDNAddress, tag : ''} );
 					});
 					res.result.box_type_availabel.forEach((item,index)=>{
