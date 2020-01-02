@@ -14,9 +14,7 @@
 					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if="item.IsGroup === '1'">
 						<div style="height:3.125rem;width:100%;display: flex;" @click="headerClick">
 							<div style="display: inline-flex;line-height:3.125rem;width:75%;overflow: hidden;">
-								<div class="van-image van-image--round" style="width: 25%; height: 100%;display: inline-flex;" >
-									<img :src="item.pic" style="object-fit: cover;">
-								</div>
+								<van-image :src="item.pic" round style="width: 25%; height: 100%;display: inline-flex;" />
 								<span class="van-ellipsis" style="width:70%;">
 									<span style="color: #e01835;font-size:0.8125rem;" v-if=" item.BoardId && !item.MatNo ">
 										{{ item.BoardId }}
@@ -123,7 +121,6 @@
 						</van-button>
 					</div>
 				</van-panel>
-				
 			</van-list>
 		</van-pull-refresh>
 		<float-nav></float-nav>
@@ -155,7 +152,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Popup, Field, Dialog, PullRefresh, Toast, List, SwitchCell, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
+	import { Button, Image, Popup, Field, Dialog, PullRefresh, Toast, List, SwitchCell, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
 	import WxOrderDetail from '@/components/subject/client/WxOrderDetail.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
@@ -166,6 +163,7 @@
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Image.name]: Image,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
 			[Dialog.Component.name]: Dialog.Component,

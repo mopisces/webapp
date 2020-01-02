@@ -11,7 +11,30 @@
 				</div>
 			</div>
 		</van-sticky>
-		<template v-if="config.isBase">
+		<template v-if=" isGroup ">
+			<van-card>
+				<div slot="title">
+					<span style="color: #e01835;" v-if=" groupInfo.BoardId && !groupInfo.MatNo ">{{ groupInfo.BoardId }}</span>
+					<span style="color: #e01835;" v-if=" !groupInfo.BoardId && groupInfo.MatNo ">{{ groupInfo.MatNo }}</span>
+					<span v-if=" groupInfo.Title ">,{{ groupInfo.Title }}</span>
+				</div>
+				<van-image :src="groupInfo.pic" slot="thumb" round width="90" height="90"/>
+				<div slot="desc"  v-if=" groupInfo.BoardId && !groupInfo.MatNo ">
+					下单价格：
+					<span style="color: #e01835;">¥{{ groupInfo.Price }}/
+						<span v-if=" groupInfo.BoardId && !groupInfo.MatNo ">㎡</span>
+						<span v-if=" !groupInfo.BoardId && groupInfo.MatNo ">个</span>
+					</span>
+					<span style="color: #999;text-decoration: line-through;">¥{{ groupInfo.MarketPrice }}/
+						<span v-if=" groupInfo.BoardId && !groupInfo.MatNo ">㎡</span>
+						<span v-if=" !groupInfo.BoardId && groupInfo.MatNo ">个</span>
+					</span><br/>
+					下单金额：<span style="color: #e01835;">¥{{ groupInfo.Cost }}</span><br/>
+					节省金额：<span style="color: #e01835;">¥{{ groupInfo.SaveCost }}</span>
+				</div>
+			</van-card>
+		</template>
+		<template>
 			<van-field label="订单类型" readonly input-align="right">
 				<div slot="input">
 					{{ cTypeName(orderDetail.CType) }}
@@ -53,34 +76,40 @@
 	</van-popup>
 </template>
 <script>
-	import { Button, Popup, Field, Sticky } from 'vant';
+	import { Button, Image, Popup, Field, Sticky, Card } from 'vant';
 	import { cTypeChange } from '@/util/index';
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Image.name]: Image,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
 			[Sticky.name]: Sticky,
+			[Card.name]: Card,
 		},
 		props:['detailShow','cusOrderId'],
 		data(){
 			return {
-				config : {
-					isBase : true
-				},
 				show        : this.detailShow,
 				orderDetail : {},
+				groupInfo   : {},
+				isGroup     : false
 			}
 		},
 		methods:{
 			detailAll( cusOrderId ){
 				let self = this;
 				this.$request.client.ordersManage.detailAll( cusOrderId ).then((acct, perms)=>{
-					if( acct[0].result != null ){
+					console.log(acct);
+					if( acct[0].errorCode == '00000' ){
 						self.orderDetail   = acct[0].result;
-						self.config.isBase = true;
-					}else if( acct[0].result != null ){
-
+					}
+					if( acct[1].errorCode == '00000' ){
+						self.groupInfo        = acct[1].result;
+						self.groupInfo['pic'] = require('@/assets/groupImg/' + acct[1].result.FirstPic);
+						self.isGroup          = true;
+					}else{
+						self.isGroup = false;
 					}
 				});
 			},
