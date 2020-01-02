@@ -14,7 +14,7 @@
 				</van-pull-refresh>
 			</van-cell-group>
 		</van-checkbox-group>
-		<div style="width:100%;height:46px;bottom:46px;position:fixed;">
+		<div style="width:100%;height:2.875rem;bottom:2.875rem;position:fixed;">
 			<div class="van-col van-col--16">
 				<van-switch-cell v-model="filterForm.showChecked" title="只显示已选择" />
 			</div>

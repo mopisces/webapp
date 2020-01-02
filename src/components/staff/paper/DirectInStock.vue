@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<wx-scan :scanResult.sync="formData.strOrderId" urlType="2"></wx-scan>
-		<van-field input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" type="textarea" :row="1" autosize placeholder="订单信息" readonly></van-field>
+		<van-field input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" type="textarea" :rows="1" autosize placeholder="订单信息" readonly></van-field>
 		<!-- <field-label-variable :value.sync="pageInfo.strOrderInfo" label="订单信息" placeholder="订单信息"  type="textarea" rows="4" ></field-label-variable> -->
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
@@ -30,10 +30,10 @@
 	   	<van-field v-model="formData.strRemark" autosize label="备注" type="textarea" maxlength="50" placeholder="请输入备注" rows="1"/>
 	   	<div class="van-row" style="text-align:center;margin-top:1rem;" >
 			<div class="van-col van-col--12">
-				<van-button type="primary" size="normal" style="width:60%" @click="onSubmit">入库</van-button>
+				<van-button type="primary" size="small" style="width:60%" @click="onSubmit">入库</van-button>
 			</div>
 			<div class="van-col van-col--12">
-				<van-button type="primary" size="normal" style="width:60%" @click="resetClick">重置</van-button>
+				<van-button type="primary" size="small" style="width:60%" @click="resetClick">重置</van-button>
 			</div>
 		</div>
 		<van-popup v-model="config.popup.area.show" position="bottom" :style="{ height: '100%' }">

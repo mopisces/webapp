@@ -1,9 +1,9 @@
 <template>
-	<div>
+	<div style="background-color:#f1f1f1;">
 		<div style="width:100%;height:0.625rem;"></div>
 		<div class="vant-row">
 			<div class="van-col van-col--6">
-				<div class="van-tabbar-item" style="height:44px;">账号：{{ userName }}</div>
+				<div class="van-tabbar-item" style="height:2.75rem;">账号：{{ userName }}</div>
 			</div>
 			<div class="van-col van-col--8">
 				<van-button type="info"  plain hairline round @click="getChangePass()">
@@ -172,7 +172,7 @@
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = 'http://test.leaper.ltd:1104/login/select?token=' + res.result;
+					self.loginUrl = 'http://test.leaper.ltd:1104/group/login?token=' + res.result;
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{

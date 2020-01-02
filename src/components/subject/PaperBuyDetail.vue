@@ -9,7 +9,7 @@
 		<van-field label="采购日期" v-model="detailItem.Date" readonly input-align="center"></van-field>
 		<van-field label="采购单号" v-model="detailItem.PONo" readonly input-align="center"></van-field>
 		<van-field label="供应商" v-model="detailItem.ShortName" readonly input-align="center"></van-field>
-		<div class="van-row van-row--flex van-row--justify-center" style="text-align:center;color:#0bf147;font-size:15px;padding:12px 15px;">
+		<div class="van-row van-row--flex van-row--justify-center" style="text-align:center;color:#0bf147;font-size:0.9375rem;padding:0.75rem 0.9375rem;">
 			<div class="van-col van-col--3">纸类</div>
 			<div class="van-col van-col--4">门幅</div>
 			<div class="van-col van-col--3">克重</div>
@@ -18,7 +18,7 @@
 			<div class="van-col van-col--5">收货/采购</div>
 		</div>
 		<div v-if="tableShow">
-			<div class="van-row van-row--flex van-row--justify-center" style="text-align:center;font-size:15px;padding:12px 15px;" v-for="(item,index) in tableList" :key="index">
+			<div class="van-row van-row--flex van-row--justify-center" style="text-align:center;font-size:0.9375rem;padding:0.75rem 0.9375rem;" v-for="(item,index) in tableList" :key="index">
 				<div class="van-col van-col--3">{{ item.PaperCode }}</div>
 				<div class="van-col van-col--4">{{ item.PaperWidth }}</div>
 				<div class="van-col van-col--3">{{ item.ActWeight }}</div>
@@ -27,7 +27,7 @@
 				<div class="van-col van-col--5">{{ item.InQty }}/{{ item.Qty }}</div>
 			</div>
 		</div>
-		<div class="van-row van-row--flex van-row--justify-center" style="text-align:center;font-size:15px;padding:12px 15px;">
+		<div class="van-row van-row--flex van-row--justify-center" style="text-align:center;font-size:0.9375rem;padding:0.75rem 0.9375rem;">
 			<div class="van-col van-col--3"></div>
 			<div class="van-col van-col--4">合计</div>
 			<div class="van-col van-col--3"></div>

@@ -26,19 +26,24 @@
 		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @lenConfirm="calcBdLW()"></popup-select>
 		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
 		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
-		<van-field label="纸板规格(mm)">
-			<div class="van-row van-row--flex van-row--justify-center" slot="input">
-				<div class="van-col van-col--8" >
-					<input placeholder="板长" v-model="formData.length" style="width:100%;" disabled/>
-				</div>
-				<div class="van-col van-col--1">
-					x
-				</div>
-				<div class="van-col van-col--8" >
-					<input placeholder="板宽" v-model="formData.width" style="width:100%;" disabled/>
+		<div class="van-cell van-field">
+			<div class="van-cell__title" style="width:5.625rem;">
+				<span>纸板规格(mm)</span>
+			</div>
+			<div class="van-cell__value">
+				<div class="van-field__body">
+					<div class="van-col van-col--12" >
+						<input placeholder="板长" v-model="formData.length" style="width:100%;" disabled/>
+					</div>
+					<div class="van-col van-col--1">
+						x
+					</div>
+					<div class="van-col van-col--11" >
+						<input placeholder="板宽" v-model="formData.width" style="width:100%;" disabled/>
+					</div>
 				</div>
 			</div>
-		</van-field>
+		</div>
 		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
 		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="clickQuestion(2)"/>
 		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/>
@@ -46,9 +51,10 @@
 		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="clickQuestion(3)" />
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
-		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
-		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
+		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
+		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
+		<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()">下单</van-button>
+		<div style="width:100%;height:3.125rem;"></div>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="false"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
@@ -235,7 +241,7 @@
 					info = '正数:几个纸板&nbsp;=>&nbsp;1个纸箱\n负数:1个纸板&nbsp;=>&nbsp;几个纸箱';
 				}
 				if( type == 3 ){
-					info = '下单面积范围:' + this.pageConfig.minArea + '~' + this.pageConfig.maxArea;
+					info = '下单面积范围:' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡';
 				}
 				Dialog.alert({
 					message : info
@@ -264,7 +270,7 @@
 					self.pageConfig.maxArea = res.result.config.BuildMaxArea;
 					self.pageConfig.minDate = res.result.config.BuildMinDate;
 					self.pageConfig.maxDate = res.result.config.BuildMaxDate;
-
+					self.formData.date      = res.result.config.BuildDeliveryDate;
 					res.result.board_select_list.forEach((item,index)=>{
 						if( item.BoardName == null ){
 							self.config.radioData.material.push({ value : item.BoardId , text: '', tag:item.IsUsedBoard });
@@ -395,6 +401,7 @@
 						self.formData.bdMultiple    = Number(res.result.Multiple);
 					}).then(()=>{
 						this.$nextTick(()=>{
+							console.log('getBoxFormula')
 							this.calcBdLW();
 						})
 					});

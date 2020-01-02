@@ -11,25 +11,17 @@
 			<div class="van-row" style="text-align:left;">
 				<div class="van-col van-col--12">
 					<field-label-variable :value.sync="fieldData.dOtherFee" label="附加费" placeholder="附加费" maxlength="8" type="number"></field-label-variable>
-					<!-- <van-field v-model="fieldData.dOtherFee" placeholder="附加费" label="附加费" input-align="center" type="number" :maxlength="8">
-					</van-field> -->
 				</div>
 				<div class="van-col van-col--12">
 					<field-label-variable :value.sync="fieldData.areaQty" label="库存数" placeholder="库存数" maxlength="10" type="number" readonly="readonly"></field-label-variable>
-					<!-- <van-field v-model="fieldData.areaQty" placeholder="库存数" label="库存数" input-align="center" type="number" :maxlength="10" readonly>
-					</van-field> -->
 				</div>
 			</div>
 			<div class="van-row" style="text-align:left;">
 				<div class="van-col van-col--12">
-					<field-label-variable :value.sync="fieldData.iDeliQty" label="送货数" placeholder="送货数" maxlength="8" type="number"></field-label-variable>
-					<!-- <van-field v-model="fieldData.iDeliQty" placeholder="送货数" label="送货数" input-align="center" type="number" :maxlength="8">
-					</van-field> -->
+					<field-label-variable :value.sync="fieldData.iDeliQty" label="送货数" placeholder="送货数" maxlength="8" type="number" ref="iDeliQtyInput"></field-label-variable>
 				</div>
 				<div class="van-col van-col--12">
 					<field-label-variable :value.sync="fieldData.iFreeQty" label="赠品数" placeholder="赠品数" maxlength="10" type="number"></field-label-variable>
-					<!-- <van-field v-model="fieldData.iFreeQty" placeholder="赠品数" label="赠品数" input-align="center" type="number" :maxlength="10">
-					</van-field> -->
 				</div>
 			</div>
 			<van-field readonly label="送货公司" v-model="fieldData.deliArea" placeholder="选择送货公司" input-align="center" @click="config.popup.deliAreaShow = true">
@@ -254,11 +246,14 @@
 			getStockArea( strOrderId ){
 				let self = this;
 				this.$request.staff.stow.getStockArea( strOrderId ).then(res=>{
+					if( res.result.length <= 0 ){
+						return ;
+					}
 					res.result.forEach((item,index)=>{
 						self.strStockAreaAll.push(item);
 					});
 				}).then(()=>{
-					if( this.fieldData.strStockArea != '' ){
+					if( this.fieldData.strStockArea == '' || this.strStockAreaAll.length <= 0){
 						return ;
 					}
 					this.$nextTick(()=>{
@@ -305,7 +300,7 @@
 						self.fieldData.strOrderInfo += ' 客户备注:' + res.result.DNHint;
 					}
 					if( res.result.MatName !== '' && res.result.OrderType === 'x' ){
-						self.fieldData.strOrderInfo += ' 货品名称:' + res.result.MatName
+						self.fieldData.strOrderInfo += ' 货品名称:' + res.result.MatName;
 					}
 					self.fieldData.iFreeQty    = 0;
 					self.fieldData.strDNRemark = res.result.DNRemark;
@@ -317,6 +312,7 @@
 							self.deliveryAddress.fit.push(this.deliveryAddress.all[i]);
 						}
 					}
+					self.$refs.iDeliQtyInput.focus()
 					if( self.pageConfig.bPackAddODefSQ ){
 						self.fieldData.iDeliQty = self.fieldData.areaQty;
 					}else{
@@ -377,12 +373,12 @@
 				});
 			},
 			cancelClick(){
-
 				this.fieldData.bModDetail      = false;
 				this.config.popup.deliAreaShow = false;
 				this.resetClick();
 			},
 			resetClick(){
+				this.fieldData.strStockArea = '';
 				this.fieldData.areaQty      = '';
 				this.fieldData.strOrderId   = '';
 				this.fieldData.strOrderInfo = '';

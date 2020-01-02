@@ -1,11 +1,11 @@
 <template>
 	<div class="van-cell van-field">
-		<div :class="[ type== 'textarea' ? 'van-cell__title van-field__label':'van-cell__title' ]" >
+		<div class="van-cell__title" >
 			<span>{{ label }}</span>
 		</div>
 		<div class="van-cell__value">
 			<div class="van-field__body">
-				<input :placeholder="placeholder" v-model="values" :maxlength="maxlength" :type=" type "  :readonly="readonly" :class="[readonly=='readonly'?'field-readonly van-field__control--center':'van-field__control van-field__control--center']" />
+				<input :placeholder="placeholder" v-model="values" :maxlength="maxlength" :type=" type "  :readonly="readonly" :class="[readonly=='readonly'?'field-readonly van-field__control--center':'van-field__control van-field__control--center']" ref="variableInput"/>
 			</div>
 		</div>
 	</div>
@@ -24,7 +24,11 @@
 			}
 		},
 		methods:{
-			
+			focus(){
+				if (this.$refs.variableInput) {
+        			this.$refs.variableInput.focus();
+      			}
+			}
 		},
 		created(){
 			

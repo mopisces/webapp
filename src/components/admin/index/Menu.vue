@@ -25,12 +25,12 @@
 						<van-cell title="首页图片" is-link />
 					</template>
 					<template v-if=" config.sideBar.active == 2 ">
-						<van-cell title="联系方式列表" is-link />
+						<van-cell title="联系方式列表" is-link to="/admin/contact/list" />
 						<van-cell title="添加联系方式" is-link />
 					</template>
 					<template v-if=" config.sideBar.active == 3 ">
 						<van-cell title="用户列表" is-link to="/admin/user/lists"/>
-						<van-cell title="添加用户" is-link />
+						<van-cell title="添加用户" is-link to="/admin/user/add"/>
 					</template>
 					<template v-if=" config.sideBar.active == 4 ">
 						<van-cell title="纸板列表" is-link />

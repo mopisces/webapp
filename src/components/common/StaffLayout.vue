@@ -6,11 +6,13 @@
 				<van-icon class-prefix="iconfont" name="refresh" size="18" class="van-icon van-icon-arrow-right"/>
 			</div>
 		</van-nav-bar>
-		<div style="margin-top:46px;" class="container">
+		<div style="width:100%;height:2.875rem;"></div>
+		<div class="container">
 			<router-view v-if="isRouterAlive" />
-			<div style="width:100%;height:50px;"></div>
+			<!-- <div style="width:100%;height:50px;"></div> -->
 			<!-- <div style="margin-bottom:50px;"></div> -->
 		</div>
+		<div style="height:3.125rem;width:100%;"></div> 
 		<van-tabbar v-model="active">
 			<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>
 			<van-tabbar-item @click="logout">

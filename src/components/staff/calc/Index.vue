@@ -4,7 +4,7 @@
 			<van-tab :title="item" v-for="(item,index) in config.tabs.title" :key="index">
 				<van-cell-group>
 					<cus-picker :cusName.sync="commonForm.cusName" ></cus-picker>
-					<van-field readonly clickable label="材质" :value="commonForm.texName"  placeholder="选择材质" @click="texPicker()" required input-align="center" style="border-top:1px black solid;">
+					<van-field readonly clickable label="材质" :value="commonForm.texName"  placeholder="选择材质" @click="texPicker()" required input-align="center" style="border-top:1px #f9fafb solid;">
 						<van-icon name="arrow" slot="right-icon"/>
 					</van-field>
 					<van-switch-cell v-model="commonForm.bAddTrim" title="加修边" />
@@ -38,19 +38,20 @@
 					</template>
 					<van-field v-if="config.tabs.active == 0" v-model="boardForm.ordQty" placeholder="输入纸板订单数" label="订单数" input-align="center"/>
 					<van-field v-else v-model="boxForm.ordQty" placeholder="输入纸箱订单数" label="订单数" input-align="center" />
-					<van-field label="销售面积(㎡)" placeholder="待计算" input-align="center" v-model="calcResult.saleArea" disabled></van-field>
-					<van-field label="折扣" placeholder="待计算" input-align="center" v-model="calcResult.disRate" disabled></van-field>
-					<van-field label="平方报价(元/㎡)" placeholder="待计算" input-align="center" v-model="calcResult.oriPrice" disabled label-class="field-label-width"></van-field>
-					<van-field label="片价(元/片)" placeholder="待计算" input-align="center" v-model="calcResult.unitPrice" disabled></van-field>
-					<van-field label="平方价(元/㎡)" placeholder="待计算" input-align="center" v-model="calcResult.squarePrice" disabled></van-field>
-					<van-field label="金额(元)" placeholder="待计算" input-align="center" v-model="calcResult.amt" disabled></van-field>
+
+					<field-label-variable :value.sync="calcResult.salesArea" label="销售面积(㎡)" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
+					<field-label-variable :value.sync="calcResult.disRate" label="折扣" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
+					<field-label-variable :value.sync="calcResult.oriPrice" label="平方报价(元/㎡)" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
+					<field-label-variable :value.sync="calcResult.unitPrice" label="片价(元/片)" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
+					<field-label-variable :value.sync="calcResult.squarePrice" label="平方价(元/㎡)" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
+					<field-label-variable :value.sync="calcResult.amt" label="金额(元)" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
 					<div v-if=" config.tabs.active == 1 ">
-						<van-field label="板长(mm)" placeholder="待计算" input-align="center" v-model="calcResult.boxL" disabled></van-field>
-						<van-field label="板宽(mm)" placeholder="待计算" input-align="center" v-model="calcResult.boxW" disabled></van-field>
-						<van-field label="压线" placeholder="待计算" input-align="center" v-model="calcResult.strScoreInfo" disabled></van-field>
+						<field-label-variable :value.sync="calcResult.boxL" label="板长(mm)" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
+						<field-label-variable :value.sync="calcResult.boxW" label="板宽(mm)" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
+						<field-label-variable :value.sync="calcResult.strScoreInfo" label="压线" placeholder="待计算" readonly="readonly"></field-label-variable>
 					</div>
 					<div style="width:100%;height:3.125rem;"></div>
-					<van-button type="primary" size="large" round @click.native="calBdPriceInfo()" style="position:fixed;bottom:3.125rem;">
+					<van-button type="primary" size="large" round @click.native="calBdPriceInfo()" style="position:fixed;bottom:3.125rem;" :disabled="config.button.disabled">
 						<span v-if="config.tabs.active == 0 ">纸板计算</span>
 						<span v-else>纸箱计算</span>
 					</van-button>
@@ -72,6 +73,7 @@
 <script>
 	import { Button, Cell, CellGroup, Icon, Popup, Field, Picker, Search, SwitchCell, Dialog, Toast, Tab, Tabs} from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
+	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -88,7 +90,8 @@
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 
-			CusPicker
+			CusPicker,
+			FieldLabelVariable
 		},
 		data(){
 			return {
@@ -107,6 +110,9 @@
 						cusName : '',
 						texName : '',
 						boxId   : ''
+					},
+					button:{
+						disabled:true
 					}
 				},
 				info:{
@@ -161,20 +167,14 @@
 					calcAutoGetTrimAndAreaByCus : false,
 				},
 				rules:{
-					sTules:{
-						cusName : [
-							{ type : 'string', required : true, message : '请选择客户' }
-						],
-						texName : [
-							{ type : 'string', required : true, message : '请选择材质' }
-						],
+					sRules:{
 						length : [
 							{ required : true, message : '请输入板长' },
 							{ pattern : '^[1-9][0-9]{0,5}$', message : '板长格式错误' }
 						],
 						width : [
 							{ required : true, message : '请输入板宽' },
-							{ pattern : '^[1-9][0-9]{3}$' , message : '板宽格式错误' }
+							{ pattern : '^[1-9][0-9]{0,3}$' , message : '板宽格式错误' }
 						],
 						scoreInfo : [
 							{ type: 'string', required : true, message : '请填写压线信息' },
@@ -191,34 +191,28 @@
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ pattern : '^[1-9][0-9]{6}$',message : '订单数格式不正确'}
+							{ pattern : '^[1-9][0-9]{0,6}$',message : '订单数格式不正确'}
 						]
 					},
 					cRules:{
-						cusName : [
-							{ type : 'string', required : true, message : '请选择客户' }
-						],
-						texName : [
-							{ type : 'string', required : true, message : '请选择材质' }
-						],
 						boxId : [
 							{ type : 'string', required : true, message : '请选择箱型'  },
 						],
 						boxL : [
 							{ required : true, message : '请填写箱长' },
-							{ pattern : '^[1-9][0-9]{4}$', message : '箱长格式不正确' }
+							{ pattern : '^[1-9][0-9]{0,4}$', message : '箱长格式不正确' }
 						],
 						boxW : [
 							{ required : true, message : '请填写箱宽' },
-							{ pattern : '^[1-9][0-9]{4}$', message : '箱宽格式不正确' }
+							{ pattern : '^[1-9][0-9]{0,4}$', message : '箱宽格式不正确' }
 						],
 						boxH : [
 							{ required : true, message : '请填写箱高' },
-							{ pattern : '^[1-9][0-9]{4}$', message: '箱高格式不正确' }
+							{ pattern : '^[1-9][0-9]{0,4}$', message: '箱高格式不正确' }
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ pattern : '^[1-9][0-9]{6}$',message : '订单格式不正确'}
+							{ pattern : '^[1-9][0-9]{0,6}$',message : '订单格式不正确'}
 						]
 					},
 					commonRules:{
@@ -228,6 +222,24 @@
 						texName : [
 							{ type : 'string', required : true, message : '请选择材质' }
 						],
+						bAddTrim : [
+							{ validator:(rule, value, callback, source, options)=>{
+								let errors;
+								if( value == true && this.commonForm.bAddArea == true ){
+									errors = '加修边和加面积不能同时选择';
+								}
+								callback(errors);
+							} }
+						],
+						bAddArea : [
+							{ validator:(rule, value, callback, source, options)=>{
+								let errors;
+								if( this.commonForm.bAddTrim == true && value == true ){
+									errors = '加修边和加面积不能同时选择';
+								}
+								callback(errors);
+							} }
+						]
 						/*factoryId : [
 							{ type : 'string', required : true, message : '分厂id未获取' }
 						]*/
@@ -328,10 +340,13 @@
 								}).then(()=>{
 									Dialog.close();												
 								});
+								self.config.button.disabled = true;
 								return false;
 							}
-							self.calcResult.oriPrice = cRules.data.result[0].dOriPrice;
+							let erpResult = JSON.parse( res.data.result[0] );
+							self.calcResult.oriPrice = erpResult[0].dOriPrice;
 							Toast.success('平方报价 => ' + self.calcResult.oriPrice);
+							self.config.button.disabled = false;
 						});												
 					}).catch(({ errors, fields })=>{
 						Toast.fail(errors[0].message);
@@ -340,11 +355,13 @@
 			},
 			calBdPriceInfo(){
 				if( this.config.tabs.active == '0' ){
-					var validator = new schema( this.rules.sTules );
+					var mixSRules = Object.assign({},this.rules.commonRules,this.rules.sRules);
+					var validator = new schema( mixSRules );
 					var postData = Object.assign({},this.commonForm,this.boardForm);
 				}else{
-					var validator = new schema( this.rules.cRules );
-					var postData = Object.assign({},this.commonForm,this.boxForm);
+					var mixCRules = Object.assign({},this.rules.commonRules,this.rules.cRules);
+					var validator = new schema( mixCRules );
+					var postData  = Object.assign({},this.commonForm,this.boxForm);
 				}
 				let data = {
 					strFactoryId : this.commonForm.factoryId,
@@ -376,22 +393,33 @@
 							});
 							return ;
 						}
-						self.calcResult.salesArea   = res.result[0][0].dSalesArea;
-						self.calcResult.disRate     = res.result[0][0].dDisRate;
-						self.calcResult.oriPrice    = res.result[0][0].dOriPrice;
-						self.calcResult.unitPrice   = res.result[0][0].dUnitPrice;
-						self.calcResult.squarePrice = res.result[0][0].dSquarePrice;
-						self.calcResult.amt         = res.result[0][0].dAmt
+						let erpResult = JSON.parse( res.data.result[0] )[0];
+						self.calcResult.salesArea   = erpResult.dSalesArea;
+						self.calcResult.disRate     = erpResult.dDisRate;
+						self.calcResult.oriPrice    = erpResult.dOriPrice;
+						self.calcResult.unitPrice   = erpResult.dUnitPrice;
+						self.calcResult.squarePrice = erpResult.dSquarePrice;
+						self.calcResult.amt         = erpResult.dAmt
 						if( self.config.tabs.active == 1 ){
-							self.calcResult.boxL         = res.result[0][0].iLength;
-							self.calcResult.boxW         = res.result[0][0].iWidth;
-							self.calcResult.strScoreInfo = res.result[0][0].strScoreInfo;
-						}  
+							self.calcResult.boxL         = erpResult.iLength;
+							self.calcResult.boxW         = erpResult.iWidth;
+							self.calcResult.strScoreInfo = erpResult.strScoreInfo;
+						} 
+						Dialog.alert({
+							message : '计算结果已更新'
+						}).then(()=>{
+							Dialog.close();
+						});
 					});
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
 			},
+			clearCalcRes(){
+				Object.keys( this.calcResult ).forEach((item,index)=>{
+					this.calcResult[item] = '';
+				});
+			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','订单试算');
@@ -414,6 +442,12 @@
 			},
 			texNameChange(){
 				return this.commonForm.texName;
+			},
+			bAddTrimChange(){
+				return this.commonForm.bAddTrim;
+			},
+			bAddAreaChange(){
+				return this.commonForm.bAddArea;
 			}
 		},
 		watch:{
@@ -430,9 +464,38 @@
 			},
 			tabsActiveChange( newV, oldV ){
 				this.getTonLenAndULen(false);
+				this.clearCalcRes();
 			},
 			texNameChange( newV, oldV ){
 				this.getTonLenAndULen(true);
+			},
+			commonForm:{
+				handler(newV, oldV) {
+					this.clearCalcRes();
+				},
+				deep: true
+			},
+			boardForm :{
+				handler(newV, oldV) {
+					this.clearCalcRes();
+				},
+				deep: true
+			},
+			boxForm : {
+				handler(newV, oldV) {
+					this.clearCalcRes();
+				},
+				deep: true
+			},
+			bAddTrimChange(newV, oldV){
+				if( newV == true ){
+					this.commonForm.bAddArea = false;
+				}
+			},
+			bAddAreaChange(newV, oldV){
+				if( newV == true ){
+					this.commonForm.bAddTrim = false;
+				}
 			}
 		}
 	}

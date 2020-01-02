@@ -48,8 +48,8 @@ const connecterp = {
 	 */
 	calBdPriceInfo( data,type ){
 		let postData = data;
-		console.log(data)
-		return axios.post(erp.calBdPriceInfo,QS.stringify(postData));
+		let postfix  = type == '0' ? 's' : 'c'; 
+		return axios.post( erp.calBdPriceInfo + '/' + postfix ,QS.stringify(postData));
 	},
 	/**
 	 * [erpDelDNDetail 库存修改删除库]

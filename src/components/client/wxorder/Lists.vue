@@ -10,26 +10,37 @@
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<van-panel v-for="(item,index) in wxOrdersList" :key="index">
-					<div slot="header" style="margin-left:20px;" v-if="item.IsGroup === '1'">
-						<div style="height:50px;width:100%;display: flex;" @click="headerClick">
-							<div style="display: inline-flex;line-height:50px;font-size:16px;width:75%;overflow: hidden;">
+				<van-panel v-for="(item,index) in wxOrdersList" :key="index" style="font-size:0.8125rem;">
+					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if="item.IsGroup === '1'">
+						<div style="height:3.125rem;width:100%;display: flex;" @click="headerClick">
+							<div style="display: inline-flex;line-height:3.125rem;width:75%;overflow: hidden;">
 								<div class="van-image van-image--round" style="width: 25%; height: 100%;display: inline-flex;" >
-									<img src="https://img.yzcdn.cn/vant/cat.jpeg" class="van-image__img" style="object-fit: cover;">
+									<img :src="item.pic" style="object-fit: cover;">
 								</div>
 								<span class="van-ellipsis" style="width:70%;">
-									<span style="color: #e01835;" v-if=" item.BoardId && !item.MatNo ">
+									<span style="color: #e01835;font-size:0.8125rem;" v-if=" item.BoardId && !item.MatNo ">
 										{{ item.BoardId }}
 									</span>
 									<span v-else-if=" !item.BoardId && item.MatNo ">
 										{{ item.MatNo }}
 									</span>
-									<span v-if="item.Title">{{ item.Title }}</span>
+									<span v-if=" item.Title ">{{ item.Title }}</span>
 								</span>
-								<i class="van-icon van-icon-arrow" style="display: table-cell; vertical-align: middle; font-size: 16px;top: 17px;color:#4bb0ff;"></i>
+								<i class="van-icon van-icon-arrow" style="display: table-cell; vertical-align: middle; font-size: 1rem;top: 17px;color:#4bb0ff;"></i>
 							</div>
-							<div style="display: inline-flex;line-height:50px;font-size:14px;width:30%;color: #ffa500;text-align:center;">
-								超时未付款
+							<div style="display: inline-flex;line-height:3.125rem;font-size:0.875rem;width:30%;color: #ffa500;text-align:center;">
+								<span v-if=" item.UsePay === '1' && item.Paid === '0' ">
+									超时<span>未付款</span>
+								</span>
+								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " style="color: #1a991d;">
+									已付款
+								</span>
+								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' " style="color: #ff0000;">
+									申请退款中
+								</span>
+								<span v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' " style="color: #666;">
+									已退款
+								</span>
 							</div>
 						</div>
 					</div>
@@ -37,13 +48,13 @@
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--2"></div>
 							<div class="van-col van-col--22">
-								<van-tag plain type="primary">
+								<van-tag plain type="primary" style="font-size:0.75rem;">
 									{{ cTypeName(item.CType) }}
 								</van-tag>
-								<van-tag plain type="warning" v-if=" item.IsCard === '1' ">
+								<van-tag plain type="warning" v-if=" item.IsCard === '1' " style="font-size:0.75rem;">
 									常用订单标识:{{ item.CardFlag }}
 								</van-tag>
-								<van-tag plain type="danger" v-if=" item.IsDel === '1' ">
+								<van-tag plain type="danger" v-if=" item.IsDel === '1' " style="font-size:0.75rem;">
 									删除原因:{{ item.DelRemark }}
 								</van-tag>
 							</div>
@@ -81,11 +92,8 @@
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">订单数:{{ item.OrdQty }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center" v-if="item.CType === 's' || item.CType === 'c'">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">下单面积(㎡):{{ item.Area }}</div>
+							<div class="van-col van-col--11">订单数:{{ item.OrdQty }}</div>
+							<div class="van-col van-col--11"  v-if="item.CType === 's' || item.CType === 'c'">下单面积(㎡):{{ item.Area }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--2"></div>
@@ -105,6 +113,7 @@
 				
 			</van-list>
 		</van-pull-refresh>
+		<float-nav></float-nav>
 		<wx-order-detail :detailShow.sync="config.popup.detailShow" :cusOrderId="detailForm.cusOrderId" v-if="config.popup.detailShow"></wx-order-detail>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -138,6 +147,7 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
+	import FloatNav from '@/components/subject/client/FloatNav.vue';
 	import schema from 'async-validator';
 	import { cTypeChange } from '@/util/index';
 	export default {
@@ -159,7 +169,8 @@
 			WxOrderDetail,
 			NewTimePicker,
 			PopupFilter,
-			RadioCell
+			RadioCell,
+			FloatNav
 		},
 		data(){
 			return {
@@ -299,6 +310,7 @@
 					}
 					self.config.list.pushLoading.loading = false;
 					res.result.order_data.forEach((item,index)=>{
+						item['pic'] = require('@/assets/groupImg/' + item.FirstPic);
 						self.wxOrdersList.push(item);
 					});
 				});

@@ -27,6 +27,13 @@ const user={
 			edit_admin_pass : data.userPass
 		};
 		return post(admin.user.edit, postData);
+	},
+	addUser( data ){
+		let postData = {
+			add_admin_name : data.userName,
+			add_admin_pass : data.userPass
+		};
+		return post(admin.user.add, postData);
 	}
 };
 export default user;

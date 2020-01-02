@@ -22,15 +22,16 @@
 		</van-field>
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.cusInfo" :radioData="config.radioData.cusInfo" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
-		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
-		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
+		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
+		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
+		<div style="width:100%;height:3.125rem;"></div>
+		<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()">下单</van-button>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder" :isGroup="false"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
 <script>
-	import { Button, Icon, Popup, Field, Toast } from 'vant';
+	import { Button, Icon, Popup, Field, Dialog, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
@@ -119,7 +120,6 @@
 					],
 					boardLength : [
 						{ required : true, message : '请输入板长' },
-						{ pattern  : '^[1-9][0-9]{1,5}$', message : '板长格式错误' },
 						{ validator: (rule, value, callback, source, options)=>{
 							let errors;
 							if( Number(value) > this.pageConfig.maxLength || Number(value) < this.pageConfig.minLength){
@@ -130,7 +130,6 @@
 					],
 					boardWidth : [
 						{ required : true, message : '请输入板宽' },
-						{ pattern  : '^[1-9][0-9]{1,2}$', message : '板宽格式错误' },
 						{ validator: (rule, value, callback, source, options)=>{
 							let errors;
 							if( Number(value) > this.pageConfig.maxWidth || Number(value) < this.pageConfig.minWidth){
@@ -204,12 +203,15 @@
 					res.result.line_ball_config.forEach((item,index)=>{
 						self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
 					});
+					self.formData.lineBallInfo = self.config.radioData.lineBall[0].value;
 					res.result.cus_info.forEach((item,index)=>{
 						if( item.DefAddress == 1 ){
 							self.formData.address = item.CusSubNo;
 						}
 						self.config.radioData.cusInfo.push( { value : item.CusSubNo, text:item.SubDNAddress, tag : ''} );
 					});
+					self.formData.date = res.result.page_config.BuildDeliveryDate
+
 					self.pageConfig.maxDate   = res.result.page_config.BuildMaxDate;
 					self.pageConfig.minDate   = res.result.page_config.BuildMinDate;
 					self.pageConfig.maxArea   = res.result.page_config.BuildMaxArea;
@@ -252,10 +254,10 @@
 					if( res.errorCode == '00000' ){
 						self.config.result.isSuccess  = true;
 						self.config.result.cusOrderId = res.result.order_id;
+						self.config.result.show = true;
 					}else{
 						self.config.result.isSuccess = false;
 					}
-					self.config.result.show = true;
 				});
 			},
 			clearFormData(){

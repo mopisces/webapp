@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-tabs v-model="filterForm.dataType">
+		<van-tabs v-model="filterForm.dataType" sticky>
 			<van-tab title="按门幅汇总" name="1">
 				<prev-next @radioConfirm="radioConfirm" :radioData="radioData.widthData"  v-if="config.prevNext.show"></prev-next>
 			</van-tab>
@@ -18,11 +18,6 @@
 		</template>
 	</div>
 </template>
-<style>
-	.header-color{
-        color:#1a991d;
-	}
-</style>
 <script>
 	import { Button, Tab, Tabs } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
