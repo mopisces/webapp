@@ -30,7 +30,7 @@
 							</div>
 							<div style="display: inline-flex;line-height:3.125rem;font-size:0.875rem;width:30%;color: #ffa500;text-align:center;">
 								<span v-if=" item.UsePay === '1' && item.Paid === '0' ">
-									超时<span>未付款</span>
+									<span v-if=" item.IsOverTime ">超时</span>未付款
 								</span>
 								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " style="color: #1a991d;">
 									已付款
@@ -106,8 +106,21 @@
 						</div>
 					</div>
 					<div slot="footer" style="text-align:right;">
-						<van-button size="small" type="primary" @click="wxDetailClick(item.CusPoNo)">详情</van-button>
-						<van-button size="small" type="danger" v-if="item.IsDel === '0' && item.Checked === '0' && ( item.IsGroup === '0' || item.UsePay === '0' || item.Paid === '0' || item.Refund === '1' ) " @click="delClick(item.CusPoNo)">删除</van-button>
+						<van-button size="small" type="primary" @click="wxDetailClick(item.CusPoNo)">
+							详情
+						</van-button>
+						<van-button size="small" type="danger" v-if="item.IsDel === '0' && item.Checked === '0' && ( item.IsGroup === '0' || item.UsePay === '0' || item.Paid === '0' || item.Refund === '1' ) " @click="delClick(item.CusPoNo)">
+							删除
+						</van-button>
+						<van-button size="small" type="warning" v-if="item.Checked === '1' && item.IsCard === '0' && item.CType !== 't'">
+							设为常用
+						</van-button>
+						<van-button size="small" plain type="primary" v-if=" item.Checked === '1' && item.IsCard === '1' ">
+							快速下单
+						</van-button>
+						<van-button size="small" plain type="danger" v-if=" item.Checked === '1' && item.IsCard === '1' && item.CType !== 't' ">
+							取消常用
+						</van-button>
 					</div>
 				</van-panel>
 				
