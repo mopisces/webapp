@@ -13,12 +13,13 @@
 			<div :style="'height:100%;float:left;width:' + config.style.menuNavWidth + 'rem;'  ">
 				<van-cell-group>
 					<template v-if=" config.sideBar.active == 0 ">
-						<van-cell title="公共" is-link />
-						<van-cell title="内部" is-link />
+						<van-cell title="公共" is-link to="/admin/config/common" />
+						<van-cell title="内部" is-link to="/admin/config/client" />
 						<van-cell title="外部" is-link />
 						<van-cell title="下单" is-link />
 						<van-cell title="团购" is-link />
-						<van-cell title="支付宝支付" is-link />
+						<van-cell title="微信支付"  is-link to="/admin/config/wechatpay"/>
+						<van-cell title="支付宝支付" is-link to="/admin/config/alipay"/>
 					</template>
 					<template v-if=" config.sideBar.active == 1 ">
 						<van-cell title="厂商logo" is-link />
@@ -26,9 +27,9 @@
 					</template>
 					<template v-if=" config.sideBar.active == 2 ">
 						<van-cell title="联系方式列表" is-link to="/admin/contact/list" />
-						<van-cell title="添加联系方式" is-link />
+						<van-cell title="添加联系方式" is-link to="/admin/contact/add"/>
 					</template>
-					<template v-if=" config.sideBar.active == 3 ">
+					<template v-if=" config.sideBar.active == 3 "> 
 						<van-cell title="用户列表" is-link to="/admin/user/lists"/>
 						<van-cell title="添加用户" is-link to="/admin/user/add"/>
 					</template>

@@ -101,6 +101,16 @@ const ordersManage = {
 			wechat_del_remak    : data.delRemak
 		};
 		return post(client.ordersManage.wechatDelete,postData);
+	},
+	wechatSetCommon( data ){
+		let postData = {
+			wechat_card_flag    : data.cardFlag,
+			wechat_cus_order_id : data.orderId
+		};
+		return post(client.ordersManage.wechatSetCommon,postData);
+	},
+	wechatCancel( orderId ){
+		return post(client.ordersManage.wechatCancel,{ cancel_order_id:orderId } );
 	}
 };
 export default ordersManage;

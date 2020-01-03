@@ -85,7 +85,8 @@
 						show       : false,
 						isSuccess  : false,
 						cusOrderId :''
-					}
+					},
+					isFastBuild : false
 				},
  				pageConfig : {
 					maxDate   : '',
@@ -220,6 +221,16 @@
 					self.pageConfig.minLength = res.result.page_config.BuildMinLength;
 					self.pageConfig.maxWidth  = res.result.page_config.BuildMaxWidth;
 					self.pageConfig.minWidth  = res.result.page_config.BuildMinWidth;
+
+					if( self.config.isFastBuild ){
+						self.formData.materialType    = res.result.fast_order_booking.BoardId;
+						self.formData.boardLength     = res.result.fast_order_booking.Length;
+						self.formData.boardWidth      = res.result.fast_order_booking.Width;
+						self.formData.lineBallFormula = res.result.fast_order_booking.ScoreInfo;
+						self.formData.address         = res.result.fast_order_booking.CusSubNo;
+						self.formData.deliveryRemark  = res.result.fast_order_booking.DNRemark;
+						self.formData.productionRemark= res.result.fast_order_booking.ProRemark;
+					}
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timeFilter.isFinishLoad = true;
@@ -264,6 +275,10 @@
 				Object.keys( this.formData ).forEach((item,index)=>{
 					this.formData[item] = '';
 				});
+			},
+			fastBuild( orderId ){
+				this.getConfig( orderId );
+				this.config.isFastBuild = true;
 			}
 		},
 		created(){
@@ -271,7 +286,7 @@
 		},
 		mounted(){
 			if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
-				this.getConfig( this.$route.params.orderId )
+				this.fastBuild( this.$route.params.orderId );
 			}else{
 				this.getConfig( '' );
 			}

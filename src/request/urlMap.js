@@ -6,6 +6,18 @@ const admin = {
 		del   : `${base.admin}adminDel`,
 		add   : `${base.admin}adminAdd`,
 		edit  : `${base.admin}adminEdit`,
+	},
+	contact : {
+		lists      : `${base.admin}adminContactList`,
+		del        : `${base.admin}adminContactDel`,
+		add        : `${base.admin}adminContactAddMain`,
+		addConfig  : `${base.admin}adminContactAddConfig`,
+		edit       : `${base.admin}adminContactEditSave`,
+		editConfig : `${base.admin}adminContactEditConfig`,
+	},
+	config : {
+		getConfig  : `${base.admin}adminConfig`,
+		saveConfig : `${base.admin}adminSaveConfig`,
 	}
 };
 const staff = {
@@ -149,6 +161,8 @@ const client = {
 		wechatBaseDetail   : `${base.client}wechatBaseDetail`,
 		wechatGroupDetail  : `${base.client}wechatGroupDetail`,
 		wechatDelete       : `${base.client}wechatDelete`,
+		wechatSetCommon    : `${base.client}wechatCommon`,
+		wechatCancel       : `${base.client}cancelCommon`,
 	},
 	commonMaterial : {
 		getMaterial       : `${base.client}commonMaterial`, 

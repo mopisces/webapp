@@ -110,14 +110,14 @@
 						<van-button size="small" type="danger" v-if="item.IsDel === '0' && item.Checked === '0' && ( item.IsGroup === '0' || item.UsePay === '0' || item.Paid === '0' || item.Refund === '1' ) " @click="delClick(item.CusPoNo)">
 							删除
 						</van-button>
-						<van-button size="small" type="warning" v-if="item.Checked === '1' && item.IsCard === '0' && item.CType !== 't'">
+						<van-button size="small" type="warning" v-if=" item.Checked === '1' && item.IsCard === '0' && item.CType !== 't' " @click="setCommon( item.CusPoNo )">
 							设为常用
 						</van-button>
-						<van-button size="small" plain type="primary" v-if=" item.Checked === '1' && item.IsCard === '1' ">
-							快速下单
-						</van-button>
-						<van-button size="small" plain type="danger" v-if=" item.Checked === '1' && item.IsCard === '1' && item.CType !== 't' ">
+						<van-button size="small" plain type="danger" v-if=" item.Checked === '1' && item.IsCard === '1' && item.CType !== 't' " @click="cancelCommon( item.CusPoNo )">
 							取消常用
+						</van-button>
+						<van-button size="small" plain type="primary" v-if=" item.Checked === '1' && item.IsCard === '1' " @click=" buildOrder( item ) ">
+							快速下单
 						</van-button>
 					</div>
 				</van-panel>
@@ -146,8 +146,11 @@
 			<van-button type="primary" size="normal" style="width:50%" @click="delConfirm()">确认</van-button>
 			<van-button type="info" size="normal" style="width:50%" @click="config.popup.del.show = false">取消</van-button>
 		</van-popup>
-		<van-dialog v-model="config.dialog.show" title="请填写删除原因" @confirm="delConfirm()" @cancel="config.dialog.show = false">
+		<van-dialog v-model="config.dialog.show" title="请填写删除原因" @confirm="delConfirm()" @cancel="config.dialog.show = false" show-cancel-button>
 			<van-field v-model="delForm.delRemak" size="large" input-align="center" placeholder="请填写删除原因"/>
+		</van-dialog>
+		<van-dialog v-model="config.setCommon.show" title="请为这个常用订单添加标识" @confirm="setCommonConfirm()" @cancel="config.setCommon.show = false" show-cancel-button>
+			<van-field v-model="setCommonForm.cardFlag" size="large" input-align="center" placeholder="请填写标识"/>
 		</van-dialog>
 	</div>
 </template>
@@ -234,6 +237,9 @@
 					},
 					dialog : {
 						show : false
+					},
+					setCommon : {
+						show : false
 					}
 				},
 				filterForm:{
@@ -265,7 +271,11 @@
 						{ required : true, message: '请选择或填写删除原因' }
 					]
 				},
-				validator : {}
+				validator : {},
+				setCommonForm : {
+					orderId  : '',
+					cardFlag : '' 
+				}
 			}
 		},
 		methods:{
@@ -366,7 +376,6 @@
 				let self = this;
 				this.validator.validate(this.delForm).then(()=>{
 					self.wechatDelete( this.delForm );
-
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
@@ -385,6 +394,68 @@
 			},
 			headerClick(){
 				console.log('headerClick');
+			},
+			setCommon( orderId ){
+				this.setCommonForm.orderId = orderId;
+				this.config.setCommon.show = true;
+			},
+			setCommonConfirm(){
+				let self = this;
+				this.$request.client.ordersManage.wechatSetCommon( this.setCommonForm ).then(res=>{
+					if( res.errorCode == '00000' ){
+						Toast.success('设置成功');
+						self.pullOnRefresh();
+					}else{
+						Toast.fail('设置失败');
+					}
+				});
+			},
+			cancelCommon( orderId ){
+				let self = this;
+				Dialog.confirm({
+					message: '确认取消?'
+				}).then(()=>{
+					self.$request.client.ordersManage.wechatCancel( orderId ).then(res=>{
+						if( res.errorCode == '00000' ){
+							Toast.success('取消成功');
+							self.pullOnRefresh();
+						}else{
+							Toast.fail('取消失败');
+						}
+					});
+				}).catch(()=>{
+					Dialog.close();
+				});
+			},
+			buildOrder( item ){
+				switch( item.CType ){
+					case 's':
+						this.$router.push({
+							name:'sBuild',
+							params : {
+								orderId : item.CusPoNo
+							}
+						});
+						break;
+					case 'c':
+						this.$router.push({
+							name:'cBuild',
+							params : {
+								orderId : item.CusPoNo
+							}
+						});
+						break;
+					case 'x':
+						this.$router.push({
+							name:'xBuild',
+							params : {
+								orderId : item.CusPoNo
+							}
+						});
+						break;
+					default :
+						return false;
+				}
 			}
 		},
 		created(){
@@ -415,6 +486,9 @@
 			},
 			groupByChange(){
 				return this.filterForm.groupBy;
+			},
+			setCommonShow(){
+				return this.config.setCommon.show;
 			}
 		},
 		watch:{
@@ -452,6 +526,11 @@
 					];
 				}
 
+			},
+			setCommonShow( newV,oldV ){
+				if( newV == false ){
+					this.setCommonForm.cardFlag = '';
+				}
 			}
 		}
 	}

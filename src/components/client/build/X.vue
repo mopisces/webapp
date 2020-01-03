@@ -60,7 +60,8 @@
 						show       : false,
 						isSuccess  : false,
 						cusOrderId : ''
-					}
+					},
+					isFastBuild : false
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -123,6 +124,15 @@
 
 					self.pageConfig.minQty  = res.result.page_config.BuildMinOrdQty;
 					self.pageConfig.maxQty  = res.result.page_config.BuildMaxOrdQty;
+
+					if( this.config.isFastBuild ){
+						self.formData.pON       = res.result.fast_order_booking.PON;
+						self.formData.productId = res.result.fast_order_booking.ProductId;
+						self.formData.address   = res.result.fast_order_booking.CusSubNo;
+						self.formData.deliveryRemark   = res.result.fast_order_booking.DNRemark;
+						self.formData.productionRemark = res.result.fast_order_booking.ProRemark; 
+					}
+
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timeFilter.isFinishLoad = true;
@@ -160,6 +170,10 @@
 				Object.keys( this.formData ).forEach((item,index)=>{
 					this.formData[item] = '';
 				});
+			},
+			fastBuild( orderId ){
+				this.getConfig( orderId );
+				this.config.isFastBuild = true;
 			}
 		},
 		created(){
@@ -167,7 +181,7 @@
 		},
 		mounted(){
 			if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
-				this.getConfig( this.$route.params.orderId )
+				this.fastBuild( this.$route.params.orderId );
 			}else{
 				this.getConfig( '' );
 			}

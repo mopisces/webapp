@@ -9,9 +9,9 @@
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="到底了" @load="onLoad" :offset="100">
-				<van-panel v-for="(item,index) in panelData" :key="index">
+				<van-panel v-for="(item,index) in panelData" :key="index" style="font-size:0.8125rem;">
 					<div slot="header">
-						<van-tag plain type="success" style="margin-left:15px;margin-top:5px;">标识:{{ item.CardFlag }}</van-tag>
+						<van-tag plain type="success" style="margin-left:1rem;margin-top:0.3125‬rem;font-size:0.75rem;">标识:{{ item.CardFlag }}</van-tag>
 					</div>
 					<div slot="default">
 						<div class="van-row van-row--flex van-row--justify-center">

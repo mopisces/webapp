@@ -49,7 +49,8 @@
 		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/>
 		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly/>
 		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="clickQuestion(3)" />
-		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
+		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo">
+		</popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
@@ -121,7 +122,8 @@
 						show       : false,
 						isSuccess  : false,
 						cusOrderId : ''
-					}
+					},
+					isFastBuild : false
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -293,10 +295,27 @@
 					res.result.config.BuildULen.forEach((item,index)=>{
 						self.config.radioData.uLen.push({ value: item, text: item });
 					});
+
+					if( self.config.isFastBuild ){
+						self.formData.materialType = res.result.fast_order_booking.BoardId;
+						self.formData.boxType      = res.result.fast_order_booking.BoxId;
+						self.formData.boxLength    = res.result.fast_order_booking.BoxL;
+						self.formData.boxWidth     = res.result.fast_order_booking.BoxW;
+						self.formData.boxHeight    = res.result.fast_order_booking.BoxH;
+						self.formData.tonLen       = res.result.fast_order_booking.TonLen;
+						self.formData.uLen         = res.result.fast_order_booking.ULen;
+						self.formData.bdMultiple   = res.result.fast_order_booking.BdMultiple;
+						self.formData.address      = res.result.fast_order_booking.CusSubNo;
+						self.formData.deliveryRemark   = res.result.fast_order_booking.DNRemark;
+						self.formData.productionRemark = res.result.fast_order_booking.ProRemark;
+					}
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timeFilter.isFinishLoad = true;
-					})
+						if( self.config.isFastBuild ){
+							this.getBoxFormula( this.formData.boxType );
+						}
+					});
 				});
 			},
 			saveOrder( data ){
@@ -451,6 +470,10 @@
 				});
 				this.pageConfig.lengthFCalc = '';
 				this.pageConfig.widthFCalc  = '';
+			},
+			fastBuild( orderId ){
+				this.config.isFastBuild = true;
+				this.getConfig( orderId );
 			}
 		},
 		created(){
@@ -458,7 +481,7 @@
 		},
 		mounted(){
 			if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
-				this.getConfig( this.$route.params.orderId )
+				this.fastBuild( this.$route.params.orderId ); 
 			}else{
 				this.getConfig( '' );
 			}
