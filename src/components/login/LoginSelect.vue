@@ -115,6 +115,7 @@
 			getSF(){
 				let self = this;
 				this.$request.staff.login.getSF().then(res=>{
+					console.log(res);
 					self.pageInfo.factoryId   = res.result.factory_info.FactoryId;
 					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
 					if( res.result.sub_factory.length !== 0 ){

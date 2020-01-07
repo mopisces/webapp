@@ -65,7 +65,9 @@
 					}).then(()=>{
 						Dialog.close();
 					});
-				});
+				}).then(()=>{
+					this.getConfig();
+				});;
 			}
 		},
 		created(){

@@ -8,6 +8,7 @@
 					<van-sidebar-item title="联系方式管理" />
 					<van-sidebar-item title="后台用户管理" />
 					<van-sidebar-item title="团购纸板管理" />
+					<van-sidebar-item title="团购淘宝箱管理" />
 				</van-sidebar>
 			</div>
 			<div :style="'height:100%;float:left;width:' + config.style.menuNavWidth + 'rem;'  ">
@@ -15,14 +16,14 @@
 					<template v-if=" config.sideBar.active == 0 ">
 						<van-cell title="公共" is-link to="/admin/config/common" />
 						<van-cell title="内部" is-link to="/admin/config/client" />
-						<van-cell title="外部" is-link />
-						<van-cell title="下单" is-link />
-						<van-cell title="团购" is-link />
+						<van-cell title="外部" is-link to="/admin/config/staff"  />
+						<van-cell title="下单" is-link to="/admin/config/build"  />
+						<van-cell title="团购" is-link to="/admin/config/group"  />
 						<van-cell title="微信支付"   is-link to="/admin/config/wechatpay" />
 						<van-cell title="支付宝支付" is-link to="/admin/config/alipay"    />
 					</template>
 					<template v-if=" config.sideBar.active == 1 ">
-						<van-cell title="厂商logo" is-link />
+						<van-cell title="厂商logo" is-link to="/admin/img/logo" />
 						<van-cell title="首页图片" is-link />
 					</template>
 					<template v-if=" config.sideBar.active == 2 ">
@@ -34,10 +35,16 @@
 						<van-cell title="添加用户" is-link to="/admin/user/add"   />
 					</template>
 					<template v-if=" config.sideBar.active == 4 ">
-						<van-cell title="纸板列表" is-link />
+						<van-cell title="纸板列表" is-link to="/admin/board/lists" />
 						<van-cell title="添加纸板" is-link />
 						<van-cell title="纸板默认图片" is-link />
 						<van-cell title="已删除纸板列表" is-link />
+					</template>
+					<template v-if=" config.sideBar.active == 5 ">
+						<van-cell title="淘宝箱列表" is-link />
+						<van-cell title="添加淘宝箱" is-link />
+						<van-cell title="淘宝箱默认图片" is-link />
+						<van-cell title="已删除淘宝箱列表" is-link />
 					</template>
 				</van-cell-group>
 			</div>

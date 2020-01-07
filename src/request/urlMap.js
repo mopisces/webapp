@@ -18,6 +18,10 @@ const admin = {
 	config : {
 		getConfig  : `${base.admin}adminConfig`,
 		saveConfig : `${base.admin}adminSaveConfig`,
+	},
+	board : {
+		getConfig : `${base.admin}adminBoardLists`,
+		getList   : `${base.admin}adminBoardLists`,
 	}
 };
 const staff = {

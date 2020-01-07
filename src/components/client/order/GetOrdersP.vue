@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-sticky :offset-top="46">
+		<van-sticky :offset-top="47">
 			<div class="van-row">
 				<div class="van-col van-col--12">
 					<van-button plain hairline type="info" style="width:100%" @click="config.popup.leftPopup.show = true">客户信息信息</van-button>
@@ -12,10 +12,7 @@
 		</van-sticky>
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" v-if="config.prevNext.show"></prev-next>
 		<template v-if="config.field.show">
-			<van-field v-for="(item,index) in fieldData" :key="index" :value="item.OrdQty" readonly :label="item.guige" input-align="center" @click="fieldClick(index)">
-				<div slot="right-icon" style="color:#0bf147">{{ item.sstate }}</div>
-				<van-icon name="arrow" slot="button"/>
-			</van-field>
+			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="fieldData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa" @on-custom-comp="fieldClick"></v-table>
 		</template>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" title="客户信息" position="left" :isClose="true">
 			<div slot="new-popup-1">
@@ -48,12 +45,12 @@
 				<van-steps :active="config.step.active" v-if="config.step.show" direction="vertical">
 					<van-step v-for="(item,index) in config.step.status" :key="index">{{item.title}}</van-step>
 				</van-steps>
-				<van-field v-model="rightPopupData.InTime" input-align="center" label="完工时间" readonly/>
-				<van-field v-model="rightPopupData.TimeToGo" input-align="center" label="送货时间" readonly/>
-				<van-field v-model="rightPopupData.ConfQty" input-align="center" label="回签数量" readonly/>
-				<van-field v-model="rightPopupData.CarPName" input-align="center" label="送货司机" readonly/>
-				<van-field v-model="rightPopupData.Phone" input-align="center" label="电话" readonly/>
-				<van-field v-model="rightPopupData.CarNo" input-align="center" label="送货车号" readonly/>
+				<van-field v-model="rightPopupData.InTime" input-align="center" label="完工时间" readonly v-if="rightPopupData.InTime" />
+				<van-field v-model="rightPopupData.TimeToGo" input-align="center" label="送货时间" readonly v-if="rightPopupData.TimeToGo" />
+				<van-field v-model="rightPopupData.ConfQty" input-align="center" label="回签数量" readonly v-if="rightPopupData.ConfQty" />
+				<van-field v-model="rightPopupData.CarPName" input-align="center" label="送货司机" readonly v-if="rightPopupData.CarPName" />
+				<van-field v-model="rightPopupData.Phone" input-align="center" label="电话" readonly v-if="rightPopupData.Phone" />
+				<van-field v-model="rightPopupData.CarNo" input-align="center" label="送货车号" readonly v-if="rightPopupData.CarNo" />
 			</div>
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
@@ -74,6 +71,7 @@
 </template>
 <script>
 	import { Button, Icon, Field, SwitchCell, Step, Steps, Sticky } from 'vant';
+	import { VTable, VPagination } from 'vue-easytable';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -89,6 +87,9 @@
 			[Steps.name]: Steps,
 			[Sticky.name]: Sticky,
 
+			[VTable.name]: VTable,
+			[VPagination.name]: VPagination,
+
 			PrevNext,
 			NewPopup,
 			RadioCell,
@@ -98,6 +99,22 @@
 		data(){
 			return {
 				config:{
+					table:{
+						columns : [
+							{field: 'guige', title: '规格', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'OrdQty', title: '订单数量', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'OrdAmt', title: '金额', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
+								if( rowData.sstate == '未审核' ){
+									return '<span style="color:#ddd;">' + rowData.OrdAmt + '</span>';
+								}else{
+									return rowData.OrdAmt;
+								}
+							}},
+							{field: 'sstate', title: '订单状态', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true },
+							{field: 'dailyDetail', title: '详情',width: 100, titleAlign: 'center',componentName:'table-operate',columnAlign:'center',isResize:true}
+						],
+						height : 0
+					},
 					popup:{
 						leftPopup:{
 							show : false,
@@ -209,8 +226,8 @@
 					});
 				});
 			},
-			fieldClick( index ){
-				this.rightPopupData   = this.fieldData[ index ];
+			fieldClick( params ){
+				this.rightPopupData   = this.fieldData[ params.index ];
 				this.config.step.show = false;
 				this.config.popup.rightPopup.show = true;
 			},
@@ -255,6 +272,7 @@
 		},
 		mounted(){
 			this.getConfig();
+			this.config.table.height  = window.screen.height - 225;
 		},
 		updated(){
 			

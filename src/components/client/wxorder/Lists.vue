@@ -330,8 +330,12 @@
 						self.config.list.pushLoading.finished = true;
 					}
 					self.config.list.pushLoading.loading = false;
+					//console.log(res.result.order_data);return;
 					res.result.order_data.forEach((item,index)=>{
-						item['pic'] = require('@/assets/groupImg/' + item.FirstPic);
+						//console.log(item)
+						if( item['FirstPic'] != null ){
+							item['pic'] = require('@/assets/groupImg/' + item.FirstPic);
+						}
 						self.wxOrdersList.push(item);
 					});
 				});

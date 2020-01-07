@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-search placeholder="请输入材质编号" v-model="filterValue" @input="filterData()"/>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData.filter" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData.filter" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" >
 		</v-table>
 	</div>
 </template>
@@ -23,7 +23,8 @@
 							{field: 'BoardId', title: '材质编号', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'BoardName', title: '材质名称', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'UnitPrice', title: '平方价', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-						]
+						],
+						height : 0
 					}
 				},
 				filterValue : '',
@@ -62,6 +63,7 @@
 		},
 		mounted(){
 			this.makeOffersPrice();
+			this.config.table.height  = window.screen.height - 150;
 		},
 		updated(){
 			

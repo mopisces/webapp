@@ -36,7 +36,12 @@
 				<span class="van-button__text">修改</span>
 			</button>
 		</div>
-
+		<div v-if=" field === 'dailyDetail' ">
+			<button class="van-button van-button--primary van-button--small"  @click="dailyDetail()">
+				<span class="van-button__text">详情</span>
+			</button>
+		</div>
+	
 	</div>
 </template>
 <script>
@@ -128,6 +133,9 @@
 						this.$emit('on-custom-comp',params);
 					})
 				});
+			},
+			dailyDetail(){
+				this.$emit('on-custom-comp',{index:this.index});
 			}
 		},
 		created(){

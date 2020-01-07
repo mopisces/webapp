@@ -20,8 +20,18 @@ const wechatInfo  = r => require.ensure([], () => r(require('@/components/admin/
 const commonInfo  = r => require.ensure([], () => r(require('@/components/admin/config/Common')), 'commonInfo');
 //内部用户参数
 const clientInfo  = r => require.ensure([], () => r(require('@/components/admin/config/Client')), 'clientInfo');
+//外部用户参数
+const staffInfo   = r => require.ensure([], () => r(require('@/components/admin/config/Staff')), 'staffInfo');
+//下单参数
+const buildInfo   = r => require.ensure([], () => r(require('@/components/admin/config/Build')), 'buildInfo');
+//团购参数
+const groupInfo   = r => require.ensure([], () => r(require('@/components/admin/config/Group')), 'groupInfo');
+//厂商logo
+const logoInfo    = r => require.ensure([], () => r(require('@/components/admin/img/Logo')), 'logoInfo');
 
 
+//纸板列表
+const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
 
 const admin = [
 	{
@@ -79,6 +89,31 @@ const admin = [
                 path:'config/client',
                 meta: { title: '内部参数信息' },
                 component: clientInfo,
+            },
+            {
+                path:'config/staff',
+                meta: { title: '外部参数信息' },
+                component: staffInfo,
+            },
+            {
+                path:'config/build',
+                meta: { title: '下单参数信息' },
+                component: buildInfo,
+            },
+            {
+                path:'config/group',
+                meta: { title: '团购参数信息' },
+                component: groupInfo,
+            },
+            {
+                path:'img/logo',
+                meta: { title: '厂商logo' },
+                component: logoInfo,
+            },
+            {
+                path:'board/lists',
+                meta: { title: '纸板列表' },
+                component: boardLists,
             }
         ]
 	}

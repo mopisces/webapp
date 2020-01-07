@@ -48,7 +48,6 @@
 					if( (Number(res.result.UseBoardGroup) || Number(res.result.UseBoxGroup)) && Number(res.result.UseWxPay) ){
 						this.show = true;
 					}else{
-
 						Dialog.alert({
 							title   : '支付参数信息',
 							message : '暂无修改微信支付信息权限'
@@ -73,7 +72,9 @@
 					}).then(()=>{
 						Dialog.close();
 					});
-				});
+				}).then(()=>{
+					this.getConfig();
+				});;
 			}
 		},
 		created(){

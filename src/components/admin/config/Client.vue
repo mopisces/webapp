@@ -332,13 +332,12 @@
 	</div>
 </template>
 <script>
-	import { Button, Row, Col, Field, SwitchCell, Dialog, Collapse, CollapseItem } from 'vant';
+	import { Button, Row, Col, SwitchCell, Dialog, Collapse, CollapseItem } from 'vant';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Row.name]: Row,
 			[Col.name]: Col,
-			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
 			[Collapse.name]: Collapse,
 			[CollapseItem.name]: CollapseItem,
@@ -481,7 +480,9 @@
 					}).then(()=>{
 						Dialog.close();
 					});
-				});
+				}).then(()=>{
+					this.getConfig();
+				});;
 			}
 		},
 		created(){

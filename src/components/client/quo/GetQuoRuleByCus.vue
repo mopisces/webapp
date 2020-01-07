@@ -4,7 +4,7 @@
 			<van-tab title="公共规则" name="1"></van-tab>
 			<van-tab title="特别规则" name="0"></van-tab>
 		</van-tabs>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" >
 		</v-table>
 	</div>
 </template>
@@ -34,7 +34,8 @@
 							{field: 'ValueBegin', title: '起始值', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'ValueEnd', title: '终止值', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Value', title: '增减', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
-						]
+						],
+						height:0
 					}
 				},
 				tableData : []
@@ -53,6 +54,7 @@
 		},
 		mounted(){
 			this.makeOffersRule(this.config.tabs.active);
+			this.config.table.height  = window.screen.height - 140;
 		},
 		updated(){
 			
