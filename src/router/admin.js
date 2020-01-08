@@ -1,5 +1,6 @@
 //布局页面
 const adminLayout = r => require.ensure([], () => r(require('@/components/admin/AdminLayout')), 'adminLayout');
+const newLayout   = r => require.ensure([], () => r(require('@/components/admin/NewLayout')), 'newLayout');
 //菜单页面
 const menu        = r => require.ensure([], () => r(require('@/components/admin/index/Menu')), 'menu');
 //用户列表
@@ -31,7 +32,9 @@ const logoInfo    = r => require.ensure([], () => r(require('@/components/admin/
 
 
 //纸板列表
+//const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
 const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
+//
 
 const admin = [
 	{
@@ -110,13 +113,25 @@ const admin = [
                 meta: { title: '厂商logo' },
                 component: logoInfo,
             },
+            /*{
+                path:'board/lists',
+                meta: { title: '纸板列表' },
+                component: boardLists,
+            }*/
+        ]
+	},
+    {
+        path : '/new',
+        component: newLayout,
+        meta: { title: '后台管理人员使用' },
+        children:[
             {
                 path:'board/lists',
                 meta: { title: '纸板列表' },
                 component: boardLists,
             }
         ]
-	}
+    }
 ]; 
 
 export default admin;
