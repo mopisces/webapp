@@ -1,8 +1,8 @@
 <template>
-	<el-row class="tac">
-		<el-col :span="4">
-			<el-menu default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" style="height:100%;">
-				<el-menu-item index="1">
+	<el-container :style="'height: ' + config.height + 'px; border: 1px solid #eee'">
+	  	<el-aside width="200px" style="background-color: #f0f0f0">
+	    	<el-menu :default-active="config.activeIndex" :router="true">
+	    		<el-menu-item index="/new/config/lists">
 					<i class="el-icon-menu"></i>
 					<span slot="title">项目配置</span>
 				</el-menu-item>
@@ -54,23 +54,60 @@
 						<el-menu-item index="6-4">已删除淘宝箱列表</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>
-			</el-menu>
-		</el-col>
-	</el-row>
+	    	</el-menu>
+	  	</el-aside>
+	  	<el-container>
+	    	<el-header style="text-align: right; font-size: 1rem;line-height:3.25rem;">
+	      		<div style="float:left;">
+					利鹏后台管理系统
+				</div>
+				<div style="float:right;margin-right: 1rem;">
+					<el-dropdown>
+						<i class="el-icon-setting" style="margin-right: 1rem"></i>
+						<el-dropdown-menu slot="dropdown">
+							<el-dropdown-item>查看</el-dropdown-item>
+							<el-dropdown-item>新增</el-dropdown-item>
+							<el-dropdown-item>删除</el-dropdown-item>
+						</el-dropdown-menu>
+						<span>王小虎</span>
+					</el-dropdown>
+				</div>
+				<div style="clear:both;"></div>
+	    	</el-header>
+	    	<el-main style="margin: 0;height: 100%;">
+				<router-view></router-view>
+	    	</el-main>
+		</el-container>
+	</el-container>
 </template>
+<style>
+	.el-header {
+		background-color: #f0f0f0;
+		color: #333;
+		line-height: 60px;
+	}
+
+	.el-aside {
+		color: #333;
+	}
+</style>
+
 <script>
 	export default {
 		data(){
 			return {
-				activeIndex2:'2'
+				config:{
+					height:'',
+					fullscreen : false,
+					activeIndex : '/new/config/lists'
+				}
 			}
 		},
 		methods:{
-			handleOpen(){},
-			handleClose(){},
+			
 		},
 		created(){
-
+			this.config.height = window.innerHeight;
 		},
 		mounted(){
 
@@ -87,10 +124,5 @@
 		watch:{
 
 		}
-	}
+	};
 </script>
-<style>
-	.el-menu-vertical-demo:not(.el-menu--collapse){
-		height: 100%;
-	}
-</style>

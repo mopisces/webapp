@@ -34,7 +34,8 @@ const logoInfo    = r => require.ensure([], () => r(require('@/components/admin/
 //纸板列表
 //const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
 const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
-//
+//项目配置
+const configInfo  = r => require.ensure([], () => r(require('@/components/admin/config/Config')), 'configInfo');
 
 const admin = [
 	{
@@ -125,6 +126,11 @@ const admin = [
         component: newLayout,
         meta: { title: '后台管理人员使用' },
         children:[
+            {
+                path:'config/lists',
+                meta: { title: '项目配置列表' },
+                component: configInfo,
+            },
             {
                 path:'board/lists',
                 meta: { title: '纸板列表' },
