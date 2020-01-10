@@ -1,38 +1,32 @@
 <template>
 	<div>
-		<el-tabs v-model="config.tabPane.activeName" type="card" @tab-click="handleClick">
-			<el-tab-pane label="公共" name="common">
-				
-			</el-tab-pane>
-			<el-tab-pane label="内部" name="client">内部</el-tab-pane>
-			<el-tab-pane label="外部" name="staff">外部</el-tab-pane>
-			<el-tab-pane label="下单" name="build">下单</el-tab-pane>
-			<el-tab-pane label="团购" name="group">团购</el-tab-pane>
-			<el-tab-pane label="微信支付" name="wechat">微信支付</el-tab-pane>
-			<el-tab-pane label="支付宝支付" name="ali">支付宝支付</el-tab-pane>
-		</el-tabs>
+		<el-table :data="tableData" style="width: 100%">
+			<el-table-column prop="Id" label="ID" width="180">
+			</el-table-column>
+		</el-table>
+		<el-pagination background layout="prev, pager, next" :total="1000">
+			
+		</el-pagination>
 	</div>
 </template>
 <script>
 	export default {
 		data(){
 			return {
-				config : {
-					tabPane:{
-						activeName : 'common'
-					}
+				filterForm : {
+					orderType  : 1,
+					orderState : 0,
+					isFlag     : 0,
+					curPage    : 1,
 				},
-				
+				tableData:[]
 			}
 		},
 		methods:{
-			handleClick(){
-				console.log(1);
-			},
 			getList(){
 				let self = this;
 				this.$request.admin.board.getList( this.filterForm ).then(res=>{
-					self.tableData = res.result
+					self.tableData = res.result;
 				});
 			}
 		},
@@ -40,7 +34,7 @@
 			
 		},
 		mounted(){
-
+			this.getList();
 		},
 		updated(){
 			

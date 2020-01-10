@@ -72,7 +72,7 @@
 				</table>
 			</el-tab-pane>
 			<el-tab-pane label="内部" name="client">
-				<table style="width:100%;background-color:#f1f1f1;">
+				<table style="width:100%;">
 					<tbody>
 						<tr>
 							<td style="width:150px;">用户权限</td>
