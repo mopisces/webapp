@@ -20,8 +20,12 @@ const admin = {
 		saveConfig : `${base.admin}adminSaveConfig`,
 	},
 	board : {
-		getConfig : `${base.admin}adminBoardLists`,
-		getList   : `${base.admin}adminBoardLists`,
+		getList       : `${base.admin}adminBoardLists`,
+		del           : `${base.admin}adminBoardDel`,
+		changeFlag    : `${base.admin}adminBoardFlag`,
+		saveDescr     : `${base.admin}adminBoardDescr`,
+		boardIdSelect : `${base.admin}adminBoardCode`,
+		editConfig    : `${base.admin}adminBoardEdit`,
 	}
 };
 const staff = {

@@ -382,6 +382,28 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">每日订单是否显示金额</td>
+							<td>
+								<el-checkbox v-model="form.WGetCusOrderShowAmt" label="是否使用" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">下单时间段</td>
+							<td>
+								时间段1&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.BuildInTime1"></el-input>
+								<p class="info">
+									用-隔开
+								</p>
+								<div style="width:100%;height:10px;"></div>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.BuildInTime2"></el-input>
+								<p class="info">
+									用-隔开
+								</p>
+							</td>
+						</tr>
+						<tr>
 							<td>
 								<el-button type="primary" @click="saveConfig()">保存</el-button>
 							</td>

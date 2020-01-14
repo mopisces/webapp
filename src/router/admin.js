@@ -34,9 +34,12 @@ const logoInfo    = r => require.ensure([], () => r(require('@/components/admin/
 //纸板列表
 //const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
 const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
+//纸板产品描述
+const boardDescr  = r => require.ensure([], () => r(require('@/components/admin/board/Descr')), 'boardDescr');
+//纸板产品基本信息
+const boardEdit   = r => require.ensure([], () => r(require('@/components/admin/board/Edit')), 'boardEdit');
 //项目配置
 const configInfo  = r => require.ensure([], () => r(require('@/components/admin/config/Config')), 'configInfo');
-
 const admin = [
 	{
 		path : '/admin',
@@ -135,6 +138,18 @@ const admin = [
                 path:'board/lists',
                 meta: { title: '纸板列表' },
                 component: boardLists,
+            },
+            {
+                path:'board/descr',
+                meta: { title: '产品描述' },
+                name : 'descr',
+                component: boardDescr,
+            },
+            {
+                path:'board/edit',
+                meta: { title: '产品基本信息' },
+                name : 'boardEdit',
+                component: boardEdit,
             }
         ]
     }
