@@ -62,7 +62,6 @@
 						{ type: 'string' ,pattern : '^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$' ,message : '入库日期格式错误'}
 					],
 					inWeight  : [
-						{ required : true , message : '请填写回仓重量' },
 						{ validator: (rule, value, callback, source, options)=>{
 							let errors;
 							if( value > Number( this.autoData.oriWt ) ){
@@ -136,7 +135,12 @@
 				let self = this;
 				this.$request.staff.paper.paperDoRStockIn( data ).then(res=>{
 					if( res.errorCode === '00000' ){
-						Toast.success('入库成功！');
+						Dialog.alert({
+							message   : '入库成功!',
+						}).then(()=>{
+							Dialog.close();
+						});
+						this.clearData();
 					}else{
 						Dialog.alert({
 							title   : '入库失败!',
@@ -147,6 +151,18 @@
 						});
 					}
 				});
+			},
+			clearData(){
+				Object.keys( this.autoData ).forEach((item,index)=>{
+					this.autoData[item] = '';
+				});
+				Object.keys( this.formData ).forEach((item,index)=>{
+					this.formData[item] = '';
+					if( item == 'inWeight' ){
+						this.formData[item] = 0;
+					}
+				});
+				this.getPageConfig();
 			}
 		},
 		created(){

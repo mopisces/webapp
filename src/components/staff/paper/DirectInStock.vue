@@ -2,11 +2,8 @@
 	<div>
 		<wx-scan :scanResult.sync="formData.strOrderId" urlType="2"></wx-scan>
 		<van-field input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" type="textarea" :rows="1" autosize placeholder="订单信息" readonly></van-field>
-		<!-- <field-label-variable :value.sync="pageInfo.strOrderInfo" label="订单信息" placeholder="订单信息"  type="textarea" rows="4" ></field-label-variable> -->
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
-				<!-- <van-field v-model="formData.iQty" placeholder="入库数" label="入库数" input-align="center" type="number" :maxlength="3">
-				</van-field> -->
 				<field-label-variable :value.sync="formData.iQty" label="入库数" placeholder="入库数" maxlength="3" ></field-label-variable>
 			</div>
 			<div class="van-col van-col--12">
@@ -16,13 +13,9 @@
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
 				<field-label-variable :value.sync="pageInfo.iFinishedQty" label="已入库数" placeholder="已入库数" maxlength="3" type="number" readonly="readonly"></field-label-variable>
-				<!-- <van-field readonly v-model="pageInfo.iFinishedQty" label="已入库数" input-align="center" type="number" :maxlength="3" placeholder="已入库数">
-				</van-field> -->
 			</div>
 			<div class="van-col van-col--12">
-				<field-label-variable :value.sync="pageInfo.strSchArea" label="传单库区" placeholder="传单库区" maxlength="10" readonly="readonly"></field-label-variable>
-				<!-- <van-field readonly v-model="formData.strSchArea" label="传单库区" input-align="center" :maxlength="10" placeholder="传单库区">
-				</van-field> -->
+				<field-label-variable :value.sync="formData.strSchArea" label="传单库区" placeholder="传单库区" maxlength="10" readonly="readonly"></field-label-variable>
 			</div>
 		</div>
 		<van-field readonly clickable label="库区" placeholder="请选择入库库区" input-align="center" @click=" config.popup.area.show = true " v-model="formData.strStockArea" v-if="pageInfo.bMStockArea"></van-field>
@@ -36,7 +29,7 @@
 				<van-button type="primary" size="small" style="width:60%" @click="resetClick">重置</van-button>
 			</div>
 		</div>
-		<van-popup v-model="config.popup.area.show" position="bottom" :style="{ height: '100%' }">
+		<van-popup v-model="config.popup.area.show" position="bottom" :style="{ height: '50%' }">
 			<van-sticky>
 				<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
 					<div class="van-nav-bar__left">
@@ -51,7 +44,7 @@
 			<radio-cell :radioInfo.sync="formData.strStockArea" :radioColumns="pageInfo.stockAreaOpt" title=""></radio-cell>
 		</van-popup>
 		<template v-if="pageInfo.bSAreaControl">
-			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500"></v-table>
+			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" @on-custom-comp="customCompFunc"></v-table>
 		</template>
 	</div>
 </template>
@@ -97,10 +90,10 @@
 					},
 					table:{
 						columns:[
-							{field: 'directInStock', title: '操作',width: 100, titleAlign: 'center',componentName:'table-operate',columnAlign:'center',isResize:true},
-							{field: 'StockArea', title: '传单库区', titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'LeftQty', title: '未装订单数', titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'LeftSArea', title: '未装折五面积', titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'directInStock', title: '操作',width: 70, titleAlign: 'center',componentName:'table-operate',columnAlign:'center',isResize:true},
+							{field: 'StockArea', title: '传单库区', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'LeftQty', title: '未装订单数',width: 80,  titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'LeftSArea', title: '未装折五面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						]
 					}
 				},
@@ -158,25 +151,35 @@
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timePicker.isFinishLoad = true;
-					})
+					});
+					this.getUserInfo();
 				});
 			},
 			getLastSchArea( orderId ){
 				let self = this;
 				this.$request.staff.paper.getLastSchArea( orderId ).then(res=>{
-					
+					if(res.errorCode == '00000'){
+						if( res.result.length == 0 ){
+							self.formData.strStockArea = '';
+						}else{
+							self.formData.strStockArea = res.result[0].StockArea;
+						}
+					}
 				});
 			},
 			getOrdSchArea( orderId ){
 				let self = this;
 				this.$request.staff.paper.getOrdSchArea( orderId ).then(res=>{
-					self.tableData = res.result;
+					self.tableData = res.result[0];
 					if( res.result.length === 0 ){
 						self.formData.strSchArea = '';
 					}else if( res.result.length === 1 ){
 						self.formData.strSchArea = res.result[0].StockArea
 					}else{
-
+						/*Dialog.alert({
+							title   : '该订单有多条传单记录',
+							message : '请选择明细'
+						});*/
 					}
 				});
 			},
@@ -193,21 +196,10 @@
 			onSubmit(){
 				let self = this;
 				this.validator.validate( this.formData ).then(()=>{
-					self.getUserInfo();
+					self.directInStock( self.formData );
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});				
-			},
-			getUserInfo(){
-				let self = this;
-				this.$request.staff.user.getUserInfo().then(res=>{
-					self.formData.strFactoryId = res.result.factory_id;
-					self.formData.strUserId    = res.result.erp_id;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.directInStock( this.formData );
-					})
-				});
 			},
 			directInStock( data ){
 				let self = this;
@@ -244,7 +236,14 @@
 				if( params.type == 'operate' ){
 					this.formData.strSchArea = params.rowData.StockArea;
 				}
-			}
+			},
+			getUserInfo(){
+				let self = this;
+				this.$request.staff.user.getUserInfo().then(res=>{
+					self.formData.strFactoryId = res.result.factory_id;
+					self.formData.strUserId    = res.result.erp_id 
+				});
+			},
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','直接入库');

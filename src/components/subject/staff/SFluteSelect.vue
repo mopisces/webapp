@@ -23,7 +23,6 @@
 			return {
 				popupShow:false,
 				columns : [
-					{ text:'空', value:'' },
 					{ text:1,    value:1 },
 					{ text:2,    value:2 },
 					{ text:3,    value:3 },
@@ -46,7 +45,7 @@
 			},
 			valueConfirm( value, index ){
 				this.defaultIndex = index;
-				this.sFlutes      = value.text;
+				this.sFlutes      = value.value;
 				this.popupShow    = false;
 			}
 		},

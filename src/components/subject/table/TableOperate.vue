@@ -27,7 +27,7 @@
 			</button>
 		</div>
 		<div v-if=" field === 'directInStock' ">
-			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="operate()">
+			<button class="van-button van-button--danger van-button--small van-button--round"  @click="operate()">
 				<span class="van-button__text">操作</span>
 			</button>
 		</div>

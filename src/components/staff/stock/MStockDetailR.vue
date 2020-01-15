@@ -17,7 +17,7 @@
 		</div>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :height="config.table.height">
 		</v-table>
-		<van-popup v-model="config.popup.show" position="top" :style="{ height: '100%' }">
+		<van-popup v-model="config.popup.show" position="bottom">
 			<van-picker show-toolbar title="请选择库区" :columns="pageConfig.stockAreaOpt" @cancel=" config.popup.show = false " @confirm="stockAreaConfirm" :default-index="pageConfig.defaultIndex"/>
 		</van-popup>
 	</div>

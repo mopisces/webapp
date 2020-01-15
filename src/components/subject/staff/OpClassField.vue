@@ -9,7 +9,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- <van-field label="班次" v-model="value" placeholder="输入班次" input-align="center" :maxlength="2"></van-field> -->
 </template>
 <script>
 	import { Field } from 'vant';

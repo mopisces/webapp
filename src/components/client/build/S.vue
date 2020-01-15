@@ -114,7 +114,7 @@
 				},
 				rules : {
 					cusOrderId : [
-						{ pattern : '[0-9a-zA-Z]{12}' , message : '客订单号格式错误' }
+						{ pattern : '[0-9a-zA-Z]{1,56}' , message : '客订单号格式错误' }
 					],
 					materialType : [
 						{ required : true, message : '请选择材质' }
@@ -146,7 +146,7 @@
 						{ pattern   : '^\\\d+([.]{1}[5]{1}){0,1}(\\\+\\\d+([.]{1}[5]{1}){0,1})+$', message : '压线信息错误' },
 						{ validator : (rule, value, callback, source, options)=>{
 							let errors;
-							if( Number( this.formData.boardWidth ) !=  eval(value) ){
+							if( this.formData.lineBallInfo != '无压线' &&  Number( this.formData.boardWidth ) !=  eval(value) ){
 								errors = '压线和不等于板宽';
 							}
 							callback(errors);
@@ -186,7 +186,7 @@
 			getConfig( fastOrderId ){
 				let self = this;
 				this.$request.client.orderBooking.sBuildConfig( fastOrderId ).then(res=>{
-					if( res.msg == '没有可用的BoardId' ){
+					if( res.result.board_select_list.length == 0 ){
 						Dialog.alert({
 							title   : '没有可选择的材质',
 							message : '请先选择常用材质'
@@ -194,6 +194,7 @@
 							self.$router.push('/client/usedboard/lists')
 						});
 					}
+					self.config.radioData.material = [];
 					res.result.board_select_list.forEach((item,index)=>{
 						if( item.BoardName == null ){
 							self.config.radioData.material.push({ value : item.BoardId , text: '', tag:item.IsUsedBoard });
@@ -275,6 +276,7 @@
 				Object.keys( this.formData ).forEach((item,index)=>{
 					this.formData[item] = '';
 				});
+				this.getConfig();
 			},
 			fastBuild( orderId ){
 				this.getConfig( orderId );

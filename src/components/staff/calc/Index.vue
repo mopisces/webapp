@@ -177,13 +177,12 @@
 							{ pattern : '^[1-9][0-9]{0,3}$' , message : '板宽格式错误' }
 						],
 						scoreInfo : [
-							{ type: 'string', required : true, message : '请填写压线信息' },
 							{ validator:(rule, value, callback, source, options)=>{
 								let errors;
-								if( !/^\d+([.]{1}[5]{1}){0,1}(\+\d+([.]{1}[5]{1}){0,1})+$/.test(value) ){
+								if( value != '' && !/^\d+([.]{1}[5]{1}){0,1}(\+\d+([.]{1}[5]{1}){0,1})+$/.test(value) ){
 									errors = '压线格式不正确';
 								}
-								if( eval( value ) != source.width ){
+								if( value != '' && eval( value ) != source.width ){
 									errors = '压线和不等于板宽';
 								}
 								callback(errors);
@@ -191,7 +190,7 @@
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ pattern : '^[1-9][0-9]{0,6}$',message : '订单数格式不正确'}
+							{ pattern : '^[1-9][0-9]{0,6}$',message : '请填写正确的订单数'},
 						]
 					},
 					cRules:{
@@ -212,7 +211,7 @@
 						],
 						ordQty : [
 							{ required : true, message : '请填写订单数' },
-							{ pattern : '^[1-9][0-9]{0,6}$',message : '订单格式不正确'}
+							{ pattern : '^[1-9][0-9]{0,6}$',message : '请填写正确的订单数'},
 						]
 					},
 					commonRules:{

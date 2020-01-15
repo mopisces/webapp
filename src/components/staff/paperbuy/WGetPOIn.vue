@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" :radioVal="radioVal"  v-if="config.prevNext.show"></prev-next>
-		<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in listData" :key="index" @click="listClick(item)">
+		<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in listData" :key="index" @click="listClick(item)" style="font-size:15px;">
 			<div class="van-cell__title">
 				<span>{{ item.InNo }}</span><br/>
 				<span>{{ item.PONo }}</span>
@@ -28,21 +28,8 @@
 				<van-field center  input-align="center" label="收货日期" v-model="detailData.fieldData.RecDate"></van-field>
 				<van-field center  input-align="center" label="收货单号" v-model="detailData.fieldData.InNo"></van-field>
 				<van-field center  input-align="center" label="供应商" v-model="detailData.fieldData.ShortName"></van-field>
-				<div class="van-row" style="text-align:center; height:48px;">
-					<div class="van-col van-col--4">纸类</div>
-					<div class="van-col van-col--5">门幅</div>
-					<div class="van-col van-col--5">克重</div>
-					<div class="van-col van-col--5">收货重量(kg)</div>
-					<div class="van-col van-col--5">单价</div>
-				</div>
-				<div class="van-row" style="text-align:center; height:48px;" v-for="(item,index) in detailData.tableData " :key="index">
-					<div class="van-col van-col--4">{{ item.PaperCode }}</div>
-					<div class="van-col van-col--5">{{ item.PaperWidth }}</div>
-					<div class="van-col van-col--5">{{ item.PaperWt }}</div>
-					<div class="van-col van-col--5">{{ item.InWt }}</div>
-					<div class="van-col van-col--5">{{ item.dPrice }}</div>
-				</div>
-				<div style="margin-bottom:46px;"></div>
+				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="detailData.tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" >
+				</v-table>
 			</div>	
 			<div class="footer" style="width:100%;position:fixed;height:46px;bottom:0px;">
 				<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0;" @click="config.popup.show = false">关闭</van-button>
@@ -54,12 +41,17 @@
 <script>
 	import { Button, Icon, Popup, Field } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
+	import { VTable, VPagination } from 'vue-easytable';
+
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
+
+			[VTable.name]: VTable,
+			[VPagination.name]: VPagination,
 
 			PrevNext
 		},
@@ -78,6 +70,16 @@
 					},
 					popup:{
 						show:false
+					},
+					table : {
+						height : 0,
+						columns : [
+							{field: 'PaperCode', title: '纸类', width: 40, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true}, 
+							{field: 'PaperWidth', title: '门幅', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
+							{field: 'PaperWt', title: '克重', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
+							{field: 'InWt', title: '收货重量(kg)', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
+							{field: 'dPrice', title: '单价', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
+						]
 					}
 				},
 				filterMain:{
@@ -128,6 +130,7 @@
 		},
 		mounted(){
 			this.$store.commit('staff/setHeaderTitle','原纸收货');
+			this.config.table.height = window.screen.height - 126;
 		},
 		computed:{
 			

@@ -76,7 +76,6 @@
 					stockOutOpClass : [],
 					stockOutSFlute  : [],
 					stockOutBzwt    : [
-						{ pattern: '^[0-9]{0,14}(\.[0-9]{1,2})?$' , required: true, message: '请输入剥纸重量' },
 						{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( value > Number( this.infoData.curWt ) ){
@@ -147,15 +146,12 @@
 				let self = this;
 				this.$request.staff.paper.paperOutMain( data ).then(res=>{
 					if( res.errorCode === '00000' ){
-						Toast.success('出库成功！');
-						Object.keys( self.formData ).forEach((item,index)=>{
-							if( item != 'stockOutOpClass' || item != 'stockOutSFlute' ){
-								self.formData[item] = '';
-							}
-							if( item == 'stockOutBzwt' ){
-								self.formData[item] = 0;
-							}
+						Dialog.alert({
+							message : '出库成功!',
+						}).then(()=>{
+							Dialog.close();
 						});
+						self.doSuccess();
 					}else{
 						Dialog.alert({
 							title   : '出库失败!',
@@ -165,6 +161,20 @@
 						});
 					}
 				});
+			},
+			doSuccess(){
+				Object.keys( this.formData ).forEach((item,index)=>{
+					if( item != 'stockOutOpClass' || item != 'stockOutSFlute' ){
+						this.formData[item] = '';
+					}
+					if( item == 'stockOutBzwt' ){
+						this.formData[item] = 0;
+					}
+				});
+				Object.keys( this.infoData ).forEach((item,index)=>{
+					this.infoData[item] = '';
+				});
+				this.getPageConfig();
 			}
 		},
 		created(){

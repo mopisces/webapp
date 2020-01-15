@@ -34,9 +34,10 @@ const orderBooking = {
 		return post(client.orderBooking.boxOrderConfig, postData);
 	},
 	xBuildSave( data ){
+		console.log( data );
 		let postData = {
 			cus_order_id      : data.cusOrderId,
-			pon_name          : data.pNO,
+			pon_name          : data.pON,
 			external_member   : data.productId,
 			order_quantities  : data.orderQuantities,
 			delivery_address  : data.address,

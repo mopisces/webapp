@@ -197,7 +197,7 @@
 		},
 		mounted(){
 			this.recAdjustConfig();
-			this.config.table.height = window.screen.height - 126;
+			this.config.table.height = window.screen.height - 220;
 		},
 		destroyed(){
 			if( this.info.switch.checked ){

@@ -81,7 +81,7 @@
 				},
 				rules : {
 					cusOrderId : [
-						{ pattern : '[0-9a-zA-Z]{12}' , message : '客订单号格式错误' }
+						{ pattern : '[0-9a-zA-Z]{1,56}' , message : '客订单号格式错误' }
 					],
 					productId : [
 						{ required : true, message : '请选择套件' }
@@ -147,9 +147,9 @@
 				});
 			},
 			buildOrder(){
-				this.config.popup.sku.show = true ; return;
+				let self = this;
 				this.validator.validate( this.formData ).then(()=>{
-					self.saveOrder( self.formData );
+					self.config.popup.sku.show = true ;
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
@@ -170,6 +170,7 @@
 				Object.keys( this.formData ).forEach((item,index)=>{
 					this.formData[item] = '';
 				});
+				this.getConfig('');
 			},
 			fastBuild( orderId ){
 				this.getConfig( orderId );

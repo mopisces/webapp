@@ -222,7 +222,26 @@
 						date : [
 							{ required : true , message:'请填写交货日期' }
 						],
-
+						tonLen : [
+							{ required : true , message:'请选择箱舌' },
+							{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								if( !this.inArray( 'tonLen', value ) ){
+									errors = '非法箱舌';
+								}
+								callback(errors);
+							}}
+						],
+						uLen :  [
+							{ required : true , message:'请选择封箱调整' },
+							{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								if( !this.inArray( 'uLen', value ) ){
+									errors = '非法封箱调整';
+								}
+								callback(errors);
+							}}
+						]
 					}
 				},
 				validator:{
@@ -470,10 +489,31 @@
 				});
 				this.pageConfig.lengthFCalc = '';
 				this.pageConfig.widthFCalc  = '';
+				this.getConfig( '' );
 			},
 			fastBuild( orderId ){
 				this.config.isFastBuild = true;
 				this.getConfig( orderId );
+			},
+			inArray( type, neddle ){
+				if( type == 'tonLen' ){
+					for (var i = this.config.radioData.tonLen.length - 1; i >= 0; i--) {
+						if( this.config.radioData.tonLen[i].value == neddle ){
+							return true;
+							break;
+						}
+					}
+					return false;
+				}
+				if( type == 'uLen' ){
+					for (var i = this.config.radioData.uLen.length - 1; i >= 0; i--) {
+						if( this.config.radioData.uLen[i].value == neddle ){
+							return true;
+							break;
+						}
+					}
+					return false;
+				}
 			}
 		},
 		created(){

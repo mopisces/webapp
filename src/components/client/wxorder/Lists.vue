@@ -90,7 +90,8 @@
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--11">订单数:{{ item.OrdQty }}</div>
+							<div class="van-col van-col--11" v-if="item.CType === 's' || item.CType === 'c'" >订单数:{{ item.OrdQty }}</div>
+							<div class="van-col van-col--22" v-else>订单数:{{ item.OrdQty }}</div>
 							<div class="van-col van-col--11"  v-if="item.CType === 's' || item.CType === 'c'">下单面积(㎡):{{ item.Area }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">

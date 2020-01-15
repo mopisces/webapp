@@ -245,6 +245,7 @@
 			},
 			getStockArea( strOrderId ){
 				let self = this;
+				self.strStockAreaAll = [];
 				this.$request.staff.stow.getStockArea( strOrderId ).then(res=>{
 					if( res.result.length <= 0 ){
 						return ;
@@ -364,7 +365,7 @@
 				this.erpDelForm.iPListNo     = rowData.PListNo;
 				this.erpDelForm.iDNId        = rowData.DNId;
 				Dialog.confirm({
-					title   : 'erp删除暂缺',
+					title   : 'erp删除提示',
 					message : '确定删除订单' + rowData.OrderType +  rowData.OrderId + '?',
 				}).then(()=>{
 					this.erpDelDNDetail( this.erpDelForm );
