@@ -174,7 +174,7 @@
 				Object.keys( this.infoData ).forEach((item,index)=>{
 					this.infoData[item] = '';
 				});
-				this.getPageConfig();
+				/*this.getPageConfig();*/
 			}
 		},
 		created(){

@@ -73,11 +73,11 @@
 					}
 				},
 				formData:{
-					userType:1,
-					userName:'CJX',
-					userPass:'123',
-					subFactory:'',
-					subFactoryId:''
+					userType     : 1,
+					userName     : '',
+					userPass     : '',
+					subFactory   : '',
+					subFactoryId : ''
 				},
 				pageInfo:{
 					factoryId:'',

@@ -193,7 +193,13 @@
 					},
 					buildOrder:{
 						cusOrderId : [
-							{ pattern  : '^[0-9a-zA-Z]{0,56}$', message : '客订单号格式错误' }
+							{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								if( value != '' && (value.length > 56 || value.length <= 0) ){
+									errors = '客订单号长度超过长度';
+								}
+								callback(errors);
+							} }
 						],
 						materialType : [
 							{ required : true , message:'请选择材质' }
@@ -208,8 +214,6 @@
 							{ required : true , message:'请填写订单数' },
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
-								console.log( value );
-								console.log( value == 0 )
 								if( value == 0 ){
 									errors = '请填写订单数';
 								}

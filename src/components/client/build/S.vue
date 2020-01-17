@@ -114,7 +114,13 @@
 				},
 				rules : {
 					cusOrderId : [
-						{ pattern : '[0-9a-zA-Z]{1,56}' , message : '客订单号格式错误' }
+						{ validator: (rule, value, callback, source, options)=>{
+							let errors;
+							if( value != '' && (value.length > 56 || value.length <= 0) ){
+								errors = '客订单号长度超过长度';
+							}
+							callback(errors);
+						} }
 					],
 					materialType : [
 						{ required : true, message : '请选择材质' }
