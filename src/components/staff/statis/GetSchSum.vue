@@ -7,23 +7,39 @@
 		</van-sticky>
 		<high-chart v-if=" config.chart.show " :options=" config.chart "></high-chart>
 		<div v-else>
-			<van-panel v-for="(item,index) in panelList" :key="index">
+			<van-panel v-for="(item,index) in panelList" :key="index" style="font-size:0.8125rem;">
 				<div slot="default">
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">生产线:{{ item.LineId }}</div>
-						<div class="van-col van-col--10">门幅:{{ item.SPaperWidth }}</div>
+						<div class="van-col van-col--10">生产线:
+							<span style="color:#1da02b;">{{ item.LineId }}</span>
+						</div>
+						<div class="van-col van-col--12">门幅:
+							<span style="color:#1da02b;">{{ item.SPaperWidth }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">坑型:{{ item.Flutes }}</div>
-						<div class="van-col van-col--10">总订单面积:{{ item.sumOrdArea }}</div>
+						<div class="van-col van-col--10">坑型:
+							<span style="color:#1da02b;">{{ item.Flutes }}</span>
+						</div>
+						<div class="van-col van-col--12">总订单面积:
+							<span style="color:#1da02b;">{{ item.sumOrdArea }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">总长度:{{ item.sumLength }}</div>
-						<div class="van-col van-col--10">平均修边:{{ item.AvgTrim }}</div>
+						<div class="van-col van-col--10">总长度:
+							<span style="color:#1da02b;">{{ item.sumLength }}</span>
+						</div>
+						<div class="van-col van-col--12">平均修边:
+							<span style="color:#1da02b;">{{ item.AvgTrim }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">平均门幅:{{ item.AvgPW }}</div>
-						<div class="van-col van-col--10">总款数:{{ item.sumCount }}</div>
+						<div class="van-col van-col--10">平均门幅:
+							<span style="color:#1da02b;">{{ item.AvgPW }}</span>
+						</div>
+						<div class="van-col van-col--12">总款数:
+							<span style="color:#1da02b;">{{ item.sumCount }}</span>
+						</div>
 					</div>
 				</div>
 			</van-panel>

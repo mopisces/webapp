@@ -193,7 +193,7 @@
 					},
 					buildOrder:{
 						cusOrderId : [
-							{ pattern  : '^[0-9a-zA-Z]{12}$', message : '客订单号格式错误' }
+							{ pattern  : '^[0-9a-zA-Z]{0,56}$', message : '客订单号格式错误' }
 						],
 						materialType : [
 							{ required : true , message:'请选择材质' }
@@ -203,6 +203,18 @@
 						],
 						width  : [
 							{ required : true , message:'请填写相关信息获取板宽' }
+						],
+						ordQty : [
+							{ required : true , message:'请填写订单数' },
+							{ validator: (rule, value, callback, source, options)=>{
+								let errors;
+								console.log( value );
+								console.log( value == 0 )
+								if( value == 0 ){
+									errors = '请填写订单数';
+								}
+								callback(errors);
+							}}
 						],
 						bdQty  : [
 							{ required : true , message:'请填写相关信息获取纸板数' }
@@ -439,7 +451,6 @@
 						self.formData.bdMultiple    = Number(res.result.Multiple);
 					}).then(()=>{
 						this.$nextTick(()=>{
-							console.log('getBoxFormula')
 							this.calcBdLW();
 						})
 					});

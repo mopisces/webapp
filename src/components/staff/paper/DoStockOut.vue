@@ -56,11 +56,11 @@
 					minDate:''
 				},
 				formData:{
-					stockOutNo      : '',
-					stockOutOpClass : '',
-					stockOutOpTime  : '',
-					stockOutSFlute  : '',
-					stockOutBzwt    : 0
+					stockOutNo      : '',  //编号
+					stockOutOpClass : '',  //班次
+					stockOutOpTime  : '',  //出库日期
+					stockOutSFlute  : '',  //机台
+					stockOutBzwt    : 0    //剥纸重量
 				},
 				infoData:{
 					paperWidth : '',
@@ -164,11 +164,11 @@
 			},
 			doSuccess(){
 				Object.keys( this.formData ).forEach((item,index)=>{
-					if( item != 'stockOutOpClass' || item != 'stockOutSFlute' ){
-						this.formData[item] = '';
-					}
 					if( item == 'stockOutBzwt' ){
 						this.formData[item] = 0;
+					}
+					if( item == 'stockOutNo' ){
+						this.formData[item] = '';
 					}
 				});
 				Object.keys( this.infoData ).forEach((item,index)=>{

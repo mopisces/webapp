@@ -53,7 +53,6 @@
 			paymentIndex( cusOrderId ){
 				let self = this;
 				this.$request.client.paymentAll.paymentIndex( cusOrderId ).then(res=>{
-					console.log(res)
 					self.info.isOneCent = res.result.one_cent == '1' ? true : false;
 					self.info.useWechat = res.result.pay_available.UseWxPay == '1' ? true : false;
 					self.info.useAlipay = res.result.pay_available.UseAliPay == '1' ? true : false;
@@ -134,13 +133,21 @@
 		created(){
 			this.$store.commit('client/setHeaderTitle','支付方式');
 			if( typeof(this.$route.params.cusOrderId) == 'undefined' ){
+				this.info.cusOrderId = '';
 				this.$router.go(-1);	
+				return ;
 			}else{
-				this.info.cusOrderId = this.$route.params.cusOrderId;
+				if( Array.isArray(this.$route.params.cusOrderId) ){
+					this.info.cusOrderId = this.$route.params.cusOrderId.join(',');
+				}else{
+					this.info.cusOrderId = this.$route.params.cusOrderId;
+				}
 			}
 		},
 		mounted(){
-			this.paymentIndex( this.info.cusOrderId );
+			if( this.info.cusOrderId != '' ){
+				this.paymentIndex( this.info.cusOrderId );
+			}
 		},
 		updated(){
 			

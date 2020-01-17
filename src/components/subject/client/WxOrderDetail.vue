@@ -97,7 +97,7 @@
 			}
 		},
 		methods:{
-			detailAll( cusOrderId ){
+			/*detailAll( cusOrderId ){
 				let self = this;
 				this.$request.client.ordersManage.detailAll( cusOrderId ).then((acct, perms)=>{
 					if( acct[0].errorCode == '00000' ){
@@ -111,16 +111,38 @@
 						self.isGroup = false;
 					}
 				});
-			},
+			},*/
 			cTypeName( cType ){
 				return cTypeChange( cType );
 			},
+			wechatBaseDetail( cusOrderId ){
+				let self = this;
+				this.$request.client.ordersManage.wechatBaseDetail( cusOrderId ).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.orderDetail = res.result;
+					}
+				}).then(()=>{
+					if( this.orderDetail.IsGroup == '1' ){
+						this.wechatGroupDetail( cusOrderId );
+					}
+				});
+			},
+			wechatGroupDetail( cusOrderId ){
+				let self = this;
+				this.$request.client.ordersManage.wechatGroupDetail( cusOrderId ).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.groupInfo        = res.result;
+						self.groupInfo['pic'] = require('@/assets/groupImg/' + acct[1].result.FirstPic);
+						self.isGroup          = true;
+					}
+				});
+			}
 		},
 		created(){
 			
 		},
 		mounted(){
-			this.detailAll( this.cusOrderId );
+			this.wechatBaseDetail( this.cusOrderId );
 		},
 		updated(){
 			

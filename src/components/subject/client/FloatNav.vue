@@ -20,35 +20,35 @@
 			<div style="width:100%;height:2.875rem;"></div>
 			<van-checkbox-group v-model="result" ref="listCheckBox">
 				<van-cell-group>
-					<van-cell clickable>
+					<van-cell :clickable=" item.isover " v-for="(item,index) in listData" :key="index"> 
 						<div slot="title" class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--6">
-								<van-image src="https://img.yzcdn.cn/vant/cat.jpeg" round width="40" height="40"/>
+								<van-image :src="item.pic" round width="40" height="40"/>
 							</div>
-							<div class="van-col van-col--12 floating-nav__tag">
-								<img style="vertical-align:middle;height:100%" v-if="false">
-								<span style="color: rgb(224, 24, 53);">-323C/EB</span>
-								<span>,0629清仓甩卖</span>
+							<div class="van-col van-col--12">
+								<span style="color: rgb(224, 24, 53);">{{ item.boardId || item.matNo }}</span>
+								<span>,{{ item.title }}</span>
+								<van-tag mark v-if=" item.isover ">已过期</van-tag>
 							</div>
-							<div class="van-col van-col--6" style="text-align:right;margin-top:0.75rem;color:#999;">
-								¥556.70
+							<div class="van-col van-col--6" style="margin-top:0.75rem;color:#999;">
+								¥{{ item.cost }}
 							</div>
 						</div>
-						<van-checkbox name="a" slot="right-icon"/>
+						<van-checkbox :name=" item.cusPoNo " slot="right-icon" :disabled=" item.isover "/>
 					</van-cell>
 				</van-cell-group>
 			</van-checkbox-group>
 			<div style="width:100%;height:2.875rem;"></div>
-			<div style="width:100%;bottom:0;position:fixed;">
-				<van-submit-bar :price="config.submitBar.price" button-text="批量付款" @submit="onSubmit">
-					<van-checkbox v-model=" config.checkBox.selectAll ">全选</van-checkbox>
-				</van-submit-bar>
-			</div>
+			<van-submit-bar :price="config.submitBar.price" button-text="批量付款" @submit="onSubmit" style="padding:0 0 0 1rem;">
+				<van-checkbox v-model=" config.checkBox.selectAll " :disabled="config.checkBox.disabled" @click="selectAll()">
+					全选
+				</van-checkbox>
+			</van-submit-bar>
 		</van-popup>
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Icon, Image, Popup, Checkbox, CheckboxGroup, NavBar, SubmitBar } from 'vant';
+	import { Button, Cell, CellGroup, Icon, Image, Popup, Checkbox, CheckboxGroup, Toast, Tag, NavBar, SubmitBar } from 'vant';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -59,10 +59,12 @@
 			[Popup.name]: Popup,
 			[Checkbox.name]: Checkbox,
 			[CheckboxGroup.name]: CheckboxGroup,
+			[Toast.name]: Toast,
+			[Tag.name]: Tag,
 			[NavBar.name]: NavBar,
 			[SubmitBar.name]: SubmitBar,
 		},
-		props:['listData'],
+		props:['listData','selectNum'],
 		data(){
 			return {
 				config:{
@@ -70,26 +72,44 @@
 						show:false
 					},
 					submitBar:{
-						price:3000
+						price:0
 					},
 					checkBox:{
-						selectAll : false
+						selectAll : false,
+						disabled  : false
 					}
 				},
-				result: ['b'],
-				checked:true
+				result : [],
 			}
 		},
 		methods:{
 			onSubmit(){
-
+				if( this.result.length == 0 ){
+					Toast.fail('请选择要付款的订单');
+					return ;
+				}
+				this.$router.push({ name : 'payWay' , params : { 
+					cusOrderId : this.result
+				} });
+			},
+			selectAll(){
+				this.result = [];
+				if( !this.config.checkBox.selectAll ){
+					this.listData.forEach((item,index)=>{
+						if( !item.isover ){
+							this.result.push(item.cusPoNo);
+						}
+					});
+				}
 			}
 		},
 		created(){
 			
 		},
 		mounted(){
-
+			if( this.selectNum <= 0 ){
+				this.config.disabled = true;
+			}
 		},
 		updated(){
 			
@@ -98,10 +118,28 @@
 			
 		},
 		computed:{
-			
+			resultChange(){
+				return this.result;
+			}
 		},
 		watch:{
-
+			resultChange( newV,oldV ){
+				console.log(newV.length);
+				console.log(this.selectNum)
+				if( newV.length != this.selectNum ){
+					this.config.checkBox.selectAll = false;
+				}else{
+					this.config.checkBox.selectAll = true;
+				}
+				this.config.submitBar.price = 0;
+				newV.forEach((item,index)=>{
+					this.listData.forEach((col,indexCol)=>{
+						if( item == col.cusPoNo && col.isover == false ){
+							this.config.submitBar.price += Number(col.cost) * 100;
+						}
+					});
+				});
+			}
 		}
 	}
 </script>
@@ -154,18 +192,5 @@
 	    bottom:4rem;
 	    left:0.625rem;
 	    text-align: center;
-	}
-	.floating-nav__tag::before {
-		content: '已超时';
-        padding: 0 0.1875rem;
-        font-size: 0.875rem;
-        color: grey;
-        border: 0.0625rem solid grey;
-        border-radius: 0.3125rem;
-        transform: translateY(-50%) rotate(-25deg);
-        position: absolute;
-        top: 50%;
-        right: 40%;
-        z-index: 1;
 	}
 </style>

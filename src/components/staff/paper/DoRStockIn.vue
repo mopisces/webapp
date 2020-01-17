@@ -157,12 +157,13 @@
 					this.autoData[item] = '';
 				});
 				Object.keys( this.formData ).forEach((item,index)=>{
-					this.formData[item] = '';
 					if( item == 'inWeight' ){
 						this.formData[item] = 0;
 					}
+					if( item == 'stockInNo' ){
+						this.formData[item] = '';
+					}
 				});
-				this.getPageConfig();
 			}
 		},
 		created(){

@@ -254,7 +254,7 @@
 						self.strStockAreaAll.push(item);
 					});
 				}).then(()=>{
-					if( this.fieldData.strStockArea == '' || this.strStockAreaAll.length <= 0){
+					if( this.strStockAreaAll.length <= 0){
 						return ;
 					}
 					this.$nextTick(()=>{

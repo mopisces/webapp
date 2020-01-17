@@ -124,7 +124,7 @@
 				</van-panel>
 			</van-list>
 		</van-pull-refresh>
-		<float-nav></float-nav>
+		<float-nav v-if=" config.floatNav.show && config.floatNav.isFinish" :listData=" config.floatNav.listData " :selectNum=" config.floatNav.selectNum "></float-nav>
 		<wx-order-detail :detailShow.sync="config.popup.detailShow" :cusOrderId="detailForm.cusOrderId" v-if="config.popup.detailShow"></wx-order-detail>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -241,6 +241,13 @@
 					},
 					setCommon : {
 						show : false
+					},
+					floatNav : {
+						show     : false,
+						isFinish : false,
+						listData : [],
+						now      : new Date(),
+						selectNum  : 0
 					}
 				},
 				filterForm:{
@@ -311,6 +318,10 @@
 					res.result.WeborderDefaultDelRemark.split(',').forEach((item,index)=>{
 						self.config.radio.defaultDelRemark.push({title:item,value:item});
 					});
+					if( res.result.UseWxPay == '1' || res.result.UseAliPay == '1' ){
+						self.config.floatNav.show = true;
+					}
+					console.log(self.config.floatNav.show)
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timePicker.isFinishLoad = true;
@@ -331,14 +342,30 @@
 						self.config.list.pushLoading.finished = true;
 					}
 					self.config.list.pushLoading.loading = false;
-					//console.log(res.result.order_data);return;
 					res.result.order_data.forEach((item,index)=>{
-						//console.log(item)
 						if( item['FirstPic'] != null ){
 							item['pic'] = require('@/assets/groupImg/' + item.FirstPic);
 						}
 						self.wxOrdersList.push(item);
 					});
+					if( res.result.unchecked_order_data.length != 0 ){
+						res.result.unchecked_order_data.forEach((item,index)=>{
+							self.config.floatNav.listData.push({
+								boardId : item.BoardId,
+								matNo   : item.MatNo,
+								title   : item.Title,
+								cost    : item.Cost,
+								id      : item.Id,
+								pic     : item.FirstPic == null ? '' : require('@/assets/groupImg/' + item.FirstPic),
+								isover  : item.PayDeadlineTime*1000 > self.config.floatNav.now ? false : true,
+								cusPoNo : item.CusPoNo
+							});
+							if( item.PayDeadlineTime*1000 > self.config.floatNav.now ){
+								self.config.floatNav.selectNum++;
+							}
+						});
+						self.config.floatNav.isFinish = true;
+					}
 				});
 			},
 			cTypeName( cType ){

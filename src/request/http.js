@@ -45,7 +45,6 @@ httpServer.interceptors.response.use(
 	},
 	error =>{
 		Toast.clear();
-		console.log(error)
 		if( error ){
 			errorHandle.mainHandle(error.data.errorCode,error.data.msg);
 			return Promise.reject(error);

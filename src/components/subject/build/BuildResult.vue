@@ -46,7 +46,7 @@
 				this.$emit('clearFormData');
 			},
 			goPay(){
-				this.$router.push({ name : 'payWay' , params : { cusOrderId : this.cusOrderId } })
+				this.$router.push({ name : 'payWay' , params : { cusOrderId : this.cusOrderId } });
 			}
 		},
 		created(){
