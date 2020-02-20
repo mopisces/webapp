@@ -26,6 +26,14 @@ const admin = {
 		saveDescr     : `${base.admin}adminBoardDescr`,
 		boardIdSelect : `${base.admin}adminBoardCode`,
 		editConfig    : `${base.admin}adminBoardEdit`,
+		editSave      : `${base.admin}adminBoardEsave`,
+		addConfig     : `${base.admin}adminBoardConfig`,
+		addSave       : `${base.admin}adminBoardAdd`, 
+		undel         : `${base.admin}adminBoardUndel`, 
+	},
+	box : {
+		getConfig : `${base.admin}adminBoxConfig`,
+		getList   : `${base.admin}adminBoxLists`,
 	}
 };
 const staff = {

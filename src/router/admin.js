@@ -38,8 +38,14 @@ const boardLists  = r => require.ensure([], () => r(require('@/components/admin/
 const boardDescr  = r => require.ensure([], () => r(require('@/components/admin/board/Descr')), 'boardDescr');
 //纸板产品基本信息
 const boardEdit   = r => require.ensure([], () => r(require('@/components/admin/board/Edit')), 'boardEdit');
+//添加纸板
+const boardAdd    = r => require.ensure([], () => r(require('@/components/admin/board/Add')), 'boardAdd');
+//已删除纸板列表
+const boardDel    = r => require.ensure([], () => r(require('@/components/admin/board/DelLists')), 'boardDel');
 //项目配置
 const configInfo  = r => require.ensure([], () => r(require('@/components/admin/config/Config')), 'configInfo');
+//淘宝箱列表
+const boxLists    = r => require.ensure([], () => r(require('@/components/admin/box/Lists')), 'boxLists');
 const admin = [
 	{
 		path : '/admin',
@@ -150,6 +156,21 @@ const admin = [
                 meta: { title: '产品基本信息' },
                 name : 'boardEdit',
                 component: boardEdit,
+            },
+            {
+                path:'board/add',
+                meta: { title: '添加纸板' },
+                component: boardAdd,
+            },
+            {
+                path:'board/del',
+                mate:{ title: '已删除纸板列表' },
+                component:boardDel
+            },
+            {
+                path:'box/lists',
+                mate:{ title:'淘宝箱列表' },
+                component : boxLists
             }
         ]
     }

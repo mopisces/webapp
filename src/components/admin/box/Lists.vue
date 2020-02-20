@@ -109,8 +109,8 @@
 			return {
 				config : {
 					flagName : '',
-					total    : 0,
-					curPage  : 1,
+					total : 0,
+					curPage : 1,
 					filterOptions : {
 						orderType : [
 							{
@@ -166,15 +166,15 @@
 			}
 		},
 		methods:{
-			getAddConfig(){
+			getConfig(){
 				let self = this;
-				this.$request.admin.board.addConfig().then(res=>{
-					self.config.flagName = res.result;
+				this.$request.admin.box.getConfig().then(res=>{
+					self.config.flagName = res.result.flag_name;
 				});
 			},
 			getList(){
 				let self = this;
-				this.$request.admin.board.getList( this.filterForm ).then(res=>{
+				this.$request.admin.box.getList( this.filterForm ).then(res=>{
 					if( res.errorCode == '20250' ){
 						self.tableData    = [];
 						self.config.total = 0;
@@ -269,8 +269,8 @@
 			
 		},
 		mounted(){
-			this.getAddConfig();
 			this.getList();
+			this.getConfig();
 		},
 		updated(){
 			

@@ -62,7 +62,7 @@
 				});
 			},
 			goBack(){
-				this.$router.push('/new/board/lists');
+				this.$router.go(-1);
 			}
 		},
 		created(){
@@ -70,7 +70,7 @@
 				this.$alert('请先选择需要修改的记录', '提示', {
 					confirmButtonText : '返回',
 					callback: action => {
-						this.$router.push('/new/board/lists');
+						this.$router.go(-1);
 					}
 				});
 				return ;

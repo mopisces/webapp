@@ -23,8 +23,8 @@ httpServer.interceptors.request.use(
 			message: '加载中...',
 			loadingType: 'spinner'
 		});
-		let auth = sessionStorage.getItem('jpdn-login-token') == null ? '' : sessionStorage.getItem('jpdn-login-token');
-		//let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1Nzg5NjA5MzEsImV4cCI6MTU3OTA0NzMzMSwiVXNlck5hbWUiOiJhZG1pbiIsIlBhc3NXb3JkIjoiYWRtaW4iLCJST1dfTlVNQkVSIjoiMSIsInRhZyI6ImFkbWluIn0.2GJa_BljiiksrSeDRDq78QQQmZxp6iClGm9Qu5e-XDQ';
+		//let auth = sessionStorage.getItem('jpdn-login-token') == null ? '' : sessionStorage.getItem('jpdn-login-token');
+		let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1ODIxNTgzODAsImV4cCI6MTU4MjI0NDc4MCwiVXNlck5hbWUiOiJhZG1pbiIsIlBhc3NXb3JkIjoiYWRtaW4iLCJST1dfTlVNQkVSIjoiMSIsInRhZyI6ImFkbWluIn0.ZD3STfbICJ5mGzbKMcjC5KDMEwhlKpk9lN3qX15q-xc';
 		config.headers.Authentication = auth;
 		return config;
 	},

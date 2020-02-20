@@ -1,18 +1,18 @@
 <template>
 	<div>
-		<el-form :model="formData" :rules="rules" ref="editForm" label-width="150px" label-position="left">
+		<el-form :model="formData" :rules="rules" ref="addForm" label-width="150px" label-position="left">
 			<el-form-item label="材质" prop="boardId">
 				<el-select v-model="formData.boardId" placeholder="请选择" filterable>
 					<el-option v-for="(item,index) in config.select.options" :key="index" :label="item.BoardId" :value="item.BoardId"></el-option>
 				</el-select>
 			</el-form-item>
 			<el-form-item label="标题" prop="title">
-				<el-input v-model="formData.title" placeholder="请输入内容" style="width: 300px;"></el-input>
+				<el-input v-model="formData.title" placeholder="请输入标题" style="width: 300px;"></el-input>
 			</el-form-item>
 			<el-form-item label="区间价" prop="isRangePrice">
 				<el-checkbox v-model="formData.isRangePrice" label="是否开放" border true-label="1" false-label="0"></el-checkbox>
 			</el-form-item>
-			<el-form-item label="区间价" prop="price">
+			<el-form-item label="价格" prop="price">
 				<template v-if="Number(formData.isRangePrice)">
 					<el-input v-model="formData.buildMin" placeholder="请输入内容" style="width: 100px;"></el-input>&nbsp;&nbsp;㎡&nbsp;~&nbsp;
 					<el-input v-model="formData.firstTo" placeholder="请输入内容" style="width: 100px;"></el-input>&nbsp;&nbsp;㎡&nbsp;=&nbsp;
@@ -32,11 +32,11 @@
 					<el-input v-model="formData.lastPrice" placeholder="请输入内容" style="width: 100px;"></el-input>&nbsp;&nbsp;元/㎡&nbsp;&nbsp;
 				</template>
 				<template v-else>
-					<el-input v-model="formData.price" placeholder="请输入内容" style="width: 100px;"></el-input>&nbsp;&nbsp;元/㎡
+					<el-input v-model="formData.price" placeholder="请输入价格" style="width: 100px;"></el-input>&nbsp;&nbsp;元/㎡
 				</template>
 			</el-form-item>
-			<el-form-item label="市场价" prop="marketPrice">
-				<el-input v-model="formData.marketPrice" placeholder="请输入内容" style="width: 100px;"></el-input>&nbsp;&nbsp;&nbsp;&nbsp;元/㎡
+			<el-form-item label="市场价格" prop="marketPrice">
+				<el-input v-model="formData.marketPrice" placeholder="市场价格" style="width: 100px;"></el-input>&nbsp;&nbsp;&nbsp;&nbsp;元/㎡
 			</el-form-item>
 			<el-form-item label="下单范围" required>
 				<el-col :span="3">
@@ -59,15 +59,17 @@
 			<el-form-item label="总客户限量" prop="total">
 				<el-input v-model="formData.total" placeholder="请输入内容" style="width: 100px;"></el-input>&nbsp;㎡&nbsp;
 			</el-form-item>
-			<el-form-item label="团购时间" prop="dateTime" v-if=" config.isFinishLoad ">
+			<el-form-item label="团购时间" prop="dateTime">
 				<el-date-picker v-model="formData.dateTime" type="datetimerange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+			</el-form-item>
+			<el-form-item label="默认图片" prop="isDefaultPic">
+				<el-checkbox v-model="formData.isDefaultPic" label="是否为默认图片" border true-label="1" false-label="0"></el-checkbox>
 			</el-form-item>
 			<el-form-item :label="formData.flagName" prop="isFlag">
 				<el-checkbox v-model="formData.isFlag" label="是否为指定标签" border true-label="1" false-label="0"></el-checkbox>
 			</el-form-item>
 		</el-form>
-		<el-button type="primary" @click="editSaveValidate()">保存</el-button>
-		<el-button type="success" @click="goBack()">返回</el-button>
+		<el-button type="primary" @click="addSaveValidate()">添加</el-button>
 	</div>
 </template>
 <script>
@@ -76,15 +78,13 @@
 			return {
 				config : {
 					select : {
-						options : []
+						options:[]
 					},
-					isFinishLoad : false
 				},
-				formData : {
-					id           : '',   //id
-					boardId      : '',   //材质
-					title        : '',   //标题
-					isRangePrice : '',   //是否是区间价格
+				formData:{
+					boardId      : '',
+					title        : '',
+					isRangePrice : '0',
 					//区间价格开始
 					rangePrice   : [],  
 					firstTo      : '',   //
@@ -92,15 +92,16 @@
 					lastFrom     : '',   //
 					lastPrice    : '',   //
 					//区间价格结束
-					price        : '',   //非区间价格
-					marketPrice  : '',   //市场价
-					buildMin     : '',   //下单价格下线
-					buildMax     : '',   //下单价格上线
-					cusMax       : '',   //单客户限量
-					total        : '',   //总客户限量
-					dateTime     : [],   //团购时间
-					flagName     : '',   //标签名称
-					isFlag       : '',   //是否是爆款
+					marketPrice  : '',
+					buildMin     : '',
+					buildMax     : '',
+					cusMax       : '',
+					total        : '',
+					dateTime     : [],
+					isDefaultPic : '1',
+					flagName     : '',
+					isFlag       : '0',
+
 				},
 				rules : {
 					boardId : [
@@ -158,36 +159,18 @@
 			}
 		},
 		methods:{
+			getAddConfig(){
+				let self = this;
+				this.$request.admin.board.addConfig().then(res=>{
+					self.formData.flagName = res.result;
+				});
+			},
 			getBoardId(){
 				let self = this;
 				this.$request.admin.board.boardIdSelect().then(res=>{
 					self.config.select.options = res.result;
-				});
-			},
-			editConfig( id ){
-				let self = this;
-				this.$request.admin.board.editConfig( { id:id, type:1 } ).then(res=>{
-					if( res.errorCode == '00000' ){
-						self.formData.boardId      = res.result.BoardId;
-						self.formData.title        = res.result.Title;
-						self.formData.isRangePrice = res.result.IsRangePrice;
-						self.formData.rangePrice   = res.result.rangePrice;
-						self.formData.marketPrice  = res.result.MarketPrice;
-						self.formData.buildMin     = res.result.BuildMin;
-						self.formData.buildMax     = res.result.BuildMax;
-						self.formData.cusMax       = res.result.CusMax;
-						self.formData.total        = res.result.Total;
-						self.formData.dateTime[0]  = res.result.BeginTime;
-						self.formData.dateTime[1]  = res.result.EndTime;
-						self.formData.flagName     = res.result.FlagName;
-						self.formData.isFlag       = res.result.IsFlag;
-						self.formData.firstTo      = res.result.FirstTo;
-						self.formData.firstPrice   = res.result.FirstPrice;
-						self.formData.lastFrom     = res.result.LastFrom;
-						self.formData.lastPrice    = res.result.LastPrice
-					}
 				}).then(()=>{
-					this.config.isFinishLoad = true;
+					this.getAddConfig();
 				});
 			},
 			plusClick( index ){
@@ -196,21 +179,18 @@
 			minusClick( index ){
 				this.formData.rangePrice.splice( index, 1 );
 			},
-			goBack(){
-				this.$router.push('/new/board/lists');
-			},
-			editSaveValidate(){
-				this.$refs['editForm'].validate((valid)=>{
+			addSaveValidate(){
+				this.$refs['addForm'].validate((valid)=>{
 					if( valid ){
-						this.editSave( this.formData );
+						this.addSave( this.formData );
 					}else{
 						return false;
 					}
 				});
 			},
-			editSave( data ){
+			addSave( data ){
 				let self = this;
-				this.$request.admin.board.editSave( data ).then(res=>{
+				this.$request.admin.board.addSave( data ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.$message({
 							message: res.msg,
@@ -230,17 +210,6 @@
 		},
 		mounted(){
 			this.getBoardId();
-			if( this.$route.params.id == '' || typeof(this.$route.params.id) == 'undefined' ){
-				this.$alert('请先选择需要修改的记录', '提示', {
-					confirmButtonText : '返回',
-					callback: action => {
-						this.$router.push('/new/board/lists');
-					}
-				});
-				return ;
-			}
-			this.formData.id = this.$route.params.id;
-			this.editConfig( this.$route.params.id );
 		},
 		updated(){
 			
@@ -256,18 +225,3 @@
 		}
 	}
 </script>
-<style>
-	.info {
-		margin-left: 1rem;
-		display: inline;
-		color: #57a000;
-	}
-	table td p {
-    	display: inline;
-    	margin-left: 10px;
-    	color: #57a000;
-	}
-	table td {
-		padding: 10px;
-	}
-</style>

@@ -32,14 +32,14 @@
 				</el-submenu>
 				<el-submenu index="5">
 					<template slot="title">
-						<i class="el-icon-menu"></i>
+						<i class="el-icon-document"></i>
 						<span>团购纸板管理</span>
 					</template>
 					<el-menu-item-group>
 						<el-menu-item index="/new/board/lists">纸板列表</el-menu-item>
-						<el-menu-item index="5-2">添加纸板</el-menu-item>
+						<el-menu-item index="/new/board/add">添加纸板</el-menu-item>
 						<el-menu-item index="5-3">纸板默认图片</el-menu-item>
-						<el-menu-item index="5-4">已删除纸板列表</el-menu-item>
+						<el-menu-item index="/new/board/del">已删除纸板列表</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>
 				<el-submenu index="6">
@@ -48,7 +48,7 @@
 						<span>团购淘宝箱管理</span>
 					</template>
 					<el-menu-item-group>
-						<el-menu-item index="6-1">淘宝箱列表</el-menu-item>
+						<el-menu-item index="/new/box/lists">淘宝箱列表</el-menu-item>
 						<el-menu-item index="6-2">添加淘宝箱</el-menu-item>
 						<el-menu-item index="6-3">淘宝箱默认图片</el-menu-item>
 						<el-menu-item index="6-4">已删除淘宝箱列表</el-menu-item>

@@ -1,53 +1,63 @@
 <template>
 	<div>
 		<div v-if=" field === 'stowDetailHandle' ">
-			<button class="van-button van-button--primary van-button--mini van-button--plain van-button--hairline van-hairline--surround"  @click="modifyData()">
-	   			<span class="van-button__text">修改</span>
-	   		</button>
+			<van-button plain hairline type="primary" @click="modifyData()" size="small" color="#000">修改</van-button>
+			<van-button plain hairline type="primary" @click="deleteData()" size="small" color="#000">删除</van-button>
+			<!-- <button class="van-button van-button--primary van-button--mini van-button--plain van-button--hairline van-hairline--surround"  @click="modifyData()">
+				   			<span class="van-button__text">修改</span>
+				   		</button>
 			<button class="van-button van-button--primary van-button--mini van-button--plain van-button--hairline van-hairline--surround"  @click="deleteData()">
-	   			<span class="van-button__text">删除</span>
-	   		</button>
+				   			<span class="van-button__text">删除</span>
+				   		</button> -->
 		</div>
 		<div v-if=" field === 'stowDelivery' ">
-			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="prepare()" v-if=" rowData.CarState == 0 ">
-	   			<span class="van-button__text">准备</span>
-	   		</button>
+			<van-button plain hairline type="primary" @click="prepare()" size="small" v-if=" rowData.CarState == 0 " color="#000">准备</van-button>
+			<van-button plain hairline type="primary" @click="cancelPre()" size="small" v-if=" rowData.CarState == 1 " color="#000">取消准备</van-button>
+			<!-- <button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="prepare()" v-if=" rowData.CarState == 0 ">
+				   			<span class="van-button__text">准备</span>
+				   		</button>
 			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="cancelPre()" v-if="rowData.CarState == 1 ">
-	   			<span class="van-button__text">取消准备</span>
-	   		</button>
+				   			<span class="van-button__text">取消准备</span>
+				   		</button> -->
 		</div>
 		<div v-if=" field === 'stowDetail' ">
-			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="detail()">
+			<van-button plain hairline type="primary" @click="detail()" size="small" color="#000">明细</van-button>
+			<!-- <button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="detail()">
 				<span class="van-button__text">明细</span>
-			</button>
+			</button> -->
 		</div>
 		<div v-if=" field === 'stowLoading' && rowData.CarState == 0 ">
-			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="load()">
+			<van-button plain hairline type="primary" @click="load()" size="small" color="#000">装货</van-button>
+			<!-- <button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="load()">
 				<span class="van-button__text">装货</span>
-			</button>
+			</button> -->
 		</div>
 		<div v-if=" field === 'directInStock' ">
-			<button class="van-button van-button--danger van-button--small van-button--round"  @click="operate()">
+			<van-button plain hairline type="danger" @click="operate()" size="small">操作</van-button>
+			<!-- <button class="van-button van-button--danger van-button--small van-button--round"  @click="operate()">
 				<span class="van-button__text">操作</span>
-			</button>
+			</button> -->
 		</div>
 		<div v-if=" field === 'stockOperate' ">
-			<button class="van-button van-button--primary van-button--small"  @click="stockOperate()">
+			<van-button plain hairline type="primary" @click="stockOperate()" size="small">修改</van-button>
+			<!-- <button class="van-button van-button--primary van-button--small"  @click="stockOperate()">
 				<span class="van-button__text">修改</span>
-			</button>
+			</button> -->
 		</div>
 		<div v-if=" field === 'dailyDetail' ">
-			<button class="van-button van-button--primary van-button--small"  @click="dailyDetail()">
+			<van-button plain hairline type="primary" @click="dailyDetail()" size="small">详情</van-button>
+			<!-- <button class="van-button van-button--primary van-button--small"  @click="dailyDetail()">
 				<span class="van-button__text">详情</span>
-			</button>
+			</button> -->
 		</div>
 	
 	</div>
 </template>
 <script>
-	import { Dialog, Toast  } from 'vant';
+	import { Button, Dialog, Toast  } from 'vant';
 	export default {
 		components:{
+			[Button.name]: Button,
 			[Toast.name]: Toast,
 		},
 		props:['rowData','field','index'],

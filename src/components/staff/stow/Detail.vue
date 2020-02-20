@@ -6,7 +6,7 @@
 			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="pageConfig.bMStockArea" @click=" config.popup.stockAreaShow = true ">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
-			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize :rows="1">
+			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize :rows="1" class="readonly">
 			</van-field>
 			<div class="van-row" style="text-align:left;">
 				<div class="van-col van-col--12">
@@ -487,11 +487,11 @@
 			},
 			strStockAreaChange( newV, oldV ){
 				if( newV !== '' ){
-					for (var i = this.strStockAreaAll.length - 1; i >= 0; i--) {
-						if( this.strStockAreaAll[i].StockArea === newV ){
-							this.fieldData.areaQty = this.strStockAreaAll[i].Qty;
+					this.strStockAreaAll.forEach((item,index)=>{
+						if( item.StockArea === newV ){
+							this.fieldData.areaQty = item.Qty;
 						}
-					}
+					});
 				}
 			}
 		}
