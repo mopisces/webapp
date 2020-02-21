@@ -85,10 +85,10 @@
 						<i class="el-icon-edit-outline icon-size" style="color: #0a9c4d;" @click="descr( scope.row )">
 						</i>
 					</el-tooltip>
-					<el-popconfirm title="确定标记成爆款？" @onConfirm="changeFlag(scope,1)" v-if=" scope.row.IsFlag == '0' ">
+					<el-popconfirm :title="'确定标记成' + config.flagName + '？'" @onConfirm="changeFlag(scope,1)" v-if=" scope.row.IsFlag == '0' ">
 						<i class="el-icon-star-off icon-size" style="color: grey;" slot="reference"></i>
 					</el-popconfirm>
-					<el-popconfirm title="确定取消爆款？" @onConfirm="changeFlag(scope,0)" v-else>
+					<el-popconfirm :title="'确定取消' + config.flagName + '？'" @onConfirm="changeFlag(scope,0)" v-else>
 						<i class="el-icon-star-on icon-size" style="color: rgb(224, 24, 53);"  slot="reference"></i>
 					</el-popconfirm>
 					<el-popconfirm title="确定删除吗？" @onConfirm="del(scope)">
@@ -303,7 +303,11 @@
 				this.getList();
 			},
 			curPageChange( newV,oldV ){
-				this.getList();
+				if( newV > 0 ){
+					this.getList();
+				}else{
+					this.filterForm.curPage = 1;
+				}
 			}
 		}
 	}

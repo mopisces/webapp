@@ -34,3 +34,16 @@ export function cTypeChange( cType ){
 			return '';
 	} 
 };
+export function changeIcon( iconName ){
+	switch (iconName) {
+		case 'icon-dianhua':
+			return '电话';
+		case 'icon-weixin':
+			return '微信';
+		case 'icon-QQ':
+			return 'QQ';
+		case 'icon-dizhi1':
+			return '地址';
+		default:  '未知';
+	}
+};

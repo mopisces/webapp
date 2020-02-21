@@ -9,9 +9,9 @@
 		</el-row>
 		<el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
 			<el-table-column prop="Id" label="ID" width="50"></el-table-column>
-			<el-table-column label="材质,标题" width="100">
+			<el-table-column label="货品编号,标题" width="100">
 				<template slot-scope="scope">
-					<span style="color:#e01835">{{ scope.row.BoardId }}</span>
+					<span style="color:#e01835">{{ scope.row.MatNp }}</span>
 					<span v-if="scope.row.Title">,{{ scope.row.Title }}</span>
 				</template>
 			</el-table-column>
@@ -110,7 +110,7 @@
 			},
 			getList(){
 				let self = this;
-				this.$request.admin.board.getDelList( this.filterForm ).then(res=>{
+				this.$request.admin.box.getDelList( this.filterForm ).then(res=>{
 					if( res.errorCode == '20250' ){
 						self.tableData    = [];
 						self.config.total = 0;

@@ -3,7 +3,7 @@
 	  	<el-aside width="200px" style="background-color: #f0f0f0">
 	    	<el-menu :default-active="config.activeIndex" :router="true">
 	    		<el-menu-item index="/new/config/lists">
-					<i class="el-icon-menu"></i>
+					<i class="el-icon-setting"></i>
 					<span slot="title">项目配置</span>
 				</el-menu-item>
 				<el-menu-item index="2">
@@ -12,22 +12,22 @@
 				</el-menu-item>
 				<el-submenu index="3">
 					<template slot="title">
-						<i class="el-icon-menu"></i>
+						<i class="el-icon-phone"></i>
 						<span>联系方式管理</span>
 					</template>
 					<el-menu-item-group>
-						<el-menu-item index="3-1">联系方式列表</el-menu-item>
-						<el-menu-item index="3-2">添加联系方式</el-menu-item>
+						<el-menu-item index="/new/contact/lists">联系方式列表</el-menu-item>
+						<el-menu-item index="/new/contact/add">添加联系方式</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>
 				<el-submenu index="4">
 					<template slot="title">
-						<i class="el-icon-menu"></i>
+						<i class="el-icon-s-custom"></i>
 						<span>后台用户管理</span>
 					</template>
 					<el-menu-item-group>
-						<el-menu-item index="4-1">用户列表</el-menu-item>
-						<el-menu-item index="4-2">添加用户</el-menu-item>
+						<el-menu-item index="/new/user/lists">用户列表</el-menu-item>
+						<el-menu-item index="/new/user/add">添加用户</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>
 				<el-submenu index="5">
@@ -44,14 +44,14 @@
 				</el-submenu>
 				<el-submenu index="6">
 					<template slot="title">
-						<i class="el-icon-menu"></i>
+						<i class="el-icon-box"></i>
 						<span>团购淘宝箱管理</span>
 					</template>
 					<el-menu-item-group>
 						<el-menu-item index="/new/box/lists">淘宝箱列表</el-menu-item>
-						<el-menu-item index="6-2">添加淘宝箱</el-menu-item>
+						<el-menu-item index="/new/box/add">添加淘宝箱</el-menu-item>
 						<el-menu-item index="6-3">淘宝箱默认图片</el-menu-item>
-						<el-menu-item index="6-4">已删除淘宝箱列表</el-menu-item>
+						<el-menu-item index="/new/box/del">已删除淘宝箱列表</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>
 	    	</el-menu>

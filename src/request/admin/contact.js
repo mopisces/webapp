@@ -10,7 +10,7 @@ const contact={
 	},
 	contactAdd( data ){
 		let postData = {
-			add_icon    : data.prefix + '-' + data.iconName,
+			add_icon    : data.iconName,
 			add_name    : data.name,
 			add_content : data.content
 		};
@@ -24,7 +24,7 @@ const contact={
 			edit_save_id      : data.id,
 			edit_save_name    : data.name,
 			edit_save_contact : data.contact,
-			edit_save_icon    : data.prefix + '-' + data.iconName
+			edit_save_icon    : data.iconName
 		};
 		return post(admin.contact.edit, postData);
 	},

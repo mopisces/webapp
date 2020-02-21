@@ -24,7 +24,7 @@ httpServer.interceptors.request.use(
 			loadingType: 'spinner'
 		});
 		//let auth = sessionStorage.getItem('jpdn-login-token') == null ? '' : sessionStorage.getItem('jpdn-login-token');
-		let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1ODIxNTgzODAsImV4cCI6MTU4MjI0NDc4MCwiVXNlck5hbWUiOiJhZG1pbiIsIlBhc3NXb3JkIjoiYWRtaW4iLCJST1dfTlVNQkVSIjoiMSIsInRhZyI6ImFkbWluIn0.ZD3STfbICJ5mGzbKMcjC5KDMEwhlKpk9lN3qX15q-xc';
+		let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1ODIyNDQ2NDMsImV4cCI6MTU4MjMzMTA0MywiVXNlck5hbWUiOiJhZG1pbiIsIlBhc3NXb3JkIjoiYWRtaW4iLCJST1dfTlVNQkVSIjoiMSIsInRhZyI6ImFkbWluIn0._Fk28be6ztbUABlWdV9VQ0qObRFdRaXkciMpdLlBUHs';
 		config.headers.Authentication = auth;
 		return config;
 	},

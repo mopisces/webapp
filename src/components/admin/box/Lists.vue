@@ -25,9 +25,9 @@
 		</el-row>
 		<el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
 			<el-table-column prop="Id" label="ID" width="50"></el-table-column>
-			<el-table-column label="材质,标题" width="100">
+			<el-table-column label="货品编号,标题" width="100">
 				<template slot-scope="scope">
-					<span style="color:#e01835">{{ scope.row.BoardId }}</span>
+					<span style="color:#e01835">{{ scope.row.MatNo }}</span>
 					<span v-if="scope.row.Title">,{{ scope.row.Title }}</span>
 				</template>
 			</el-table-column>
@@ -37,7 +37,7 @@
 					<span v-if="scope.row.Pic.length > 1">等{{ scope.row.Pic.length }}张</span>
 				</template>
 			</el-table-column>
-			<el-table-column label="价格(元/㎡)" width="100">
+			<el-table-column label="价格(元/个)" width="100">
 				<template slot-scope="scope">
 					<span style="color: #e01835;">{{ scope.row.Price }}</span>
 					<br/>
@@ -56,17 +56,17 @@
                     </div>
 				</template>
 			</el-table-column>
-			<el-table-column label="下单范围(㎡)" width="100">
+			<el-table-column label="下单范围(个)" width="100">
 				<template slot-scope="scope">
 					{{ scope.row.BuildMin }}&nbsp;~&nbsp;{{ scope.row.BuildMax }}
 				</template>
 			</el-table-column>
-			<el-table-column label="单客户限量(㎡)" width="100">
+			<el-table-column label="单客户限量(个)" width="100">
 				<template slot-scope="scope">
 					{{ scope.row.CusMax }}
 				</template>
 			</el-table-column>
-			<el-table-column label="售出/总客户限量(㎡)" width="150">
+			<el-table-column label="售出/总客户限量(个)" width="150">
 				<template slot-scope="scope">
 					{{ scope.row.Sale }}&nbsp;/&nbsp;{{ scope.row.Total }}
 				</template>
@@ -85,10 +85,10 @@
 						<i class="el-icon-edit-outline icon-size" style="color: #0a9c4d;" @click="descr( scope.row )">
 						</i>
 					</el-tooltip>
-					<el-popconfirm title="确定标记成爆款？" @onConfirm="changeFlag(scope,1)" v-if=" scope.row.IsFlag == '0' ">
+					<el-popconfirm :title="'确定标记成' + config.flagName + '？'" @onConfirm="changeFlag(scope,1)" v-if=" scope.row.IsFlag == '0' ">
 						<i class="el-icon-star-off icon-size" style="color: grey;" slot="reference"></i>
 					</el-popconfirm>
-					<el-popconfirm title="确定取消爆款？" @onConfirm="changeFlag(scope,0)" v-else>
+					<el-popconfirm :title="'确定取消' + config.flagName + '？'" @onConfirm="changeFlag(scope,0)" v-else>
 						<i class="el-icon-star-on icon-size" style="color: rgb(224, 24, 53);"  slot="reference"></i>
 					</el-popconfirm>
 					<el-popconfirm title="确定删除吗？" @onConfirm="del(scope)">
@@ -207,7 +207,6 @@
 							self.tableData.splice(scope.$index,1);
 						}else{
 							self.filterForm.curPage--;
-							self.getList();
 						}
 					}else{
 						self.$message({
@@ -230,7 +229,6 @@
 							message: postData.isFlag == 1 ? '标记成功!' : '取消标记成功!',
 							type: 'success'
 						});
-						console.log(self.tableData[ scope.$index ]);
 						self.tableData[ scope.$index ].IsFlag = postData.isFlag;
 					}else{
 						self.$message({
@@ -258,7 +256,7 @@
 					return ;
 				}
 				this.$router.push({ 
-					name : 'boardEdit', 
+					name : 'boxEdit', 
 					params:{ 
 						id : rowData.Id,
 					} 
@@ -303,7 +301,11 @@
 				this.getList();
 			},
 			curPageChange( newV,oldV ){
-				this.getList();
+				if( newV > 0 ){
+					this.getList();
+				}else{
+					this.filterForm.curPage = 1;
+				}
 			}
 		}
 	}

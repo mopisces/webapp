@@ -126,33 +126,19 @@
 						{ required: true, message: '请输入市场价格', trigger: 'blur' }
 					],
 					buildMin : [
-						{ required: true, message: '请输入下单范围最小值', trigger: 'blur' },
-						{ validate:(rule, value, callback, source, options)=>{
-							let errors;
-							if( Number(value) < 0 || Number(this.formData.buildMax) < Number(value) ){
-								errors = '请输入正确的下单范围最小值';
-							}
-							callback(errors);
-						} }
+						{ required: true, message: '请输入下单范围最小值', trigger: 'blur' }
 					],
 					buildMax : [
-						{ required: true, message: '请输入下单范围最大值', trigger: 'blur' },
-						{ validate:(rule, value, callback, source, options)=>{
-							let errors;
-							if( Number(value) < 0 || Number(this.formData.buildMin) > Number(value) ){
-								errors = '请输入正确的下单范围最大值';
-							}
-							callback(errors);
-						} }
+						{ required: true, message: '请输入下单范围最大值', trigger: 'blur' }
 					],
 					cusMax : [
-						{ required: true, message: '请输入单客户限量', trigger: 'blur' },	
+						{ required: true, message: '请输入单客户限量', trigger: 'blur' }	
 					],
 					total : [
-						{ required: true, message: '请输入总客户限量', trigger: 'blur' },	
+						{ required: true, message: '请输入总客户限量', trigger: 'blur' }	
 					],
 					dateTime : [
-						{ required: true, message: '请选择团购日期', trigger: 'change' },	
+						{ required: true, message: '请选择团购日期', trigger: 'change' }	
 					]
 				}
 			}
@@ -171,7 +157,9 @@
 						self.formData.boardId      = res.result.BoardId;
 						self.formData.title        = res.result.Title;
 						self.formData.isRangePrice = res.result.IsRangePrice;
-						self.formData.rangePrice   = res.result.rangePrice;
+						if( res.result.IsRangePrice != '0' ){
+							self.formData.rangePrice   = res.result.rangePrice;
+						}
 						self.formData.marketPrice  = res.result.MarketPrice;
 						self.formData.buildMin     = res.result.BuildMin;
 						self.formData.buildMax     = res.result.BuildMax;

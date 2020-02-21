@@ -1,91 +1,91 @@
 <template>
 	<div>
-		<van-radio-group v-model="formData.iconName">
-			<van-cell-group title="图标">
-				<van-cell clickable @click="formData.iconName = item.value " v-for="(item,index) in config.iconList" :key="index" >
-					<van-icon  slot="title" class-prefix="iconfont" :name="item.value" size="24"/>
-					<van-radio slot="right-icon" :name="item.value" />
-				</van-cell>
-			</van-cell-group>
-		</van-radio-group>
-		<van-cell-group title="名称">
-			<van-field v-model="formData.name" label="名称" required placeholder="请输入名称"/>
-		</van-cell-group>
-		<van-cell-group title="内容">
-			<van-field v-model="formData.content" label="内容" required placeholder="请输入内容" type="textarea" rows="1" autosize />
-		</van-cell-group>
-		<div style="width:100%;height:3.125rem;"></div>
-		<van-button type="primary" size="normal" round style="width:100%;position:fixed;bottom:3.125rem;" @click="contactAdd()">
-			添加联系方式
-		</van-button>
+		<el-form :model="formData" ref="addForm" label-position="left" label-width="150px" :rules="rules">
+			<el-form-item label="联系方式" prop="iconName">
+				<el-select v-model="formData.iconName" placeholder="请选择" filterable>
+					<el-option v-for="(item,index) in config.iconOptions" :key="index" :label="item.label" :value="item.icon"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item label="名称" prop="name">
+				<el-input v-model="formData.name" style="width:300px;"></el-input>
+			</el-form-item>
+			<el-form-item label="内容" prop="content">
+				<el-input v-model="formData.content" style="width:300px;"></el-input>
+			</el-form-item>
+		</el-form>
+		<el-button type="primary" @click="addSaveValidate()">添加联系方式</el-button>
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Icon, Field, RadioGroup, Radio, Dialog, Toast } from 'vant';
+	import { changeIcon } from '@/util/index';
 	export default {
-		components:{
-			[Button.name]: Button,
-			[Cell.name]: Cell,
-			[CellGroup.name]: CellGroup,
-			[Icon.name]: Icon,
-			[Field.name]: Field,
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
-			[Toast.name]: Toast,
-		},
 		data(){
 			return {
 				config:{
-					iconList:[]
+					iconOptions : []
 				},
 				formData:{
-					iconName:'',
-					name : '',
-					content : '',
-					prefix : ''
+					iconName : '',
+					name     : '',
+					content  : '',
+				},
+				rules : {
+					iconName : [
+						{ required: true, message: '请选择联系方式', trigger: 'change' }
+					],
+					name : [
+						{ required: true, message: '请输入名称', trigger: 'blur' }
+					],
+					content : [
+						{ required: true, message: '请输入内容', trigger: 'blur' }
+					]
 				}
 			}
 		},
 		methods:{
-			getConfig(){
+			getIconLists(){
 				let self = this;
 				this.$request.admin.contact.contactAddConfig().then((res)=>{
 					res.result.forEach((item,index)=>{
-						let arrIcon = item.split('-');
-						self.formData.prefix = arrIcon[0];
-						self.config.iconList.push({ value:arrIcon[1] });
+						self.config.iconOptions.push({icon:item,label:changeIcon(item)});
 					});
 				});
 			},
-			contactAdd(){
+			addSaveValidate(){
+				this.$refs['addForm'].validate((valid)=>{
+					if( valid ){
+						this.addSave( this.formData );
+					}else{
+						return false;
+					}
+				});
+			},
+			addSave(){
 				let self = this;
 				this.$request.admin.contact.contactAdd( this.formData ).then((res)=>{
-					let message = '';
-					if( res.errorCode == '00000' ){
-						message = '插入成功！';
-						self.getConfig();
+					if( res.errorCode == '00000' ){	
+						self.$message({
+							message: '添加成功',
+							type: 'success'
+						});
 					}else{
-						message = '插入失败';
+						self.$message({
+							message: '添加失败',
+							type: 'warning'
+						});
 					}
-					Dialog.alert({
-						message: message
-					}).then(()=>{
-						Dialog.close();
-					});
 				}).then(()=>{
 					Object.keys( this.formData ).forEach((item,index)=>{
 						this.formData[item] = '';
 					});
-					this.config.iconList = [];
-					this.getConfig();
 				});
 			}
 		},
 		created(){
-			this.$store.commit('admin/setHeaderTitle','添加联系方式');
+			
 		},
 		mounted(){
-			this.getConfig();
+			this.getIconLists();
 		},
 		updated(){
 			

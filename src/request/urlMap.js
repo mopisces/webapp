@@ -34,6 +34,7 @@ const admin = {
 	box : {
 		getConfig : `${base.admin}adminBoxConfig`,
 		getList   : `${base.admin}adminBoxLists`,
+		addSave   : `${base.admin}adminBoxAdd`,
 	}
 };
 const staff = {

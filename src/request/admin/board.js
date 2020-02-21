@@ -15,7 +15,7 @@ const board={
 	del( data ){
 		let postData = {
 			order_id   : data.Id,
-			order_type : data.BoardId == null ? 1 : 2
+			order_type : data.BoardId == null ? 1 : 21
 		};
 		return post(admin.board.del,postData);
 	},
@@ -49,7 +49,7 @@ const board={
 		let postData = {
 			save_board_id       : data.boardId,
 			save_order_id       : data.id,
-			save_order_type     : data.boardId == '' ? 1 : 2,
+			save_order_type     : 1,
 			save_title          : data.title,
 			save_market_price   : data.marketPrice,
 			save_cus_max        : data.cusMax,
@@ -75,6 +75,7 @@ const board={
 	addSave( data ){
 		let postData = {
 			add_board_id       : data.boardId,
+			add_title          : data.title,
 			add_market_price   : data.marketPrice,
 			add_cus_max        : data.cusMax,
 			add_cus_total      : data.total,
@@ -82,15 +83,15 @@ const board={
 			add_end_time       : dateTimeFormat(data.dateTime[1],'yyyy-MM-dd hh:mm:ss'),
 			add_is_default_pic : data.isDefaultPic,
 			add_is_flag        : data.isFlag,
-			add_first_to       : data.firstTo,
-			add_first_price    : data.firstPrice,
-			add_last_from      : data.lastFrom,
-			add_last_price     : data.lastPrice,
 			add_is_range_price : data.isRangePrice,
 			add_range_price    : JSON.stringify( data.rangePrice ),
 			add_build_min      : data.buildMin,
 			add_build_max      : data.buildMax,
-			add_title          : data.title
+			add_price          : data.price,
+			add_first_to       : data.firstTo,
+			add_first_price    : data.firstPrice,
+			add_last_from      : data.lastFrom,
+			add_last_price     : data.lastPrice,
 		};
 		return post(admin.board.addSave,postData);
 	},
@@ -106,7 +107,7 @@ const board={
 	},
 	undel( data ){
 		let postData = {
-			undel_order_type : data.MatNo == null ? '1' : '0',
+			undel_order_type : data.MatNo == null ? '1' : '2',
 			order_id         : data.Id
 		};
 		return post(admin.board.undel,postData);
