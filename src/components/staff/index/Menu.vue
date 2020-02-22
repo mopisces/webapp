@@ -152,19 +152,6 @@
 			}
 		},
 		methods:{
-			portValuable(){
-				if( sessionStorage.getItem('app_domain') !== null ){
-					let domainInfo = JSON.parse(sessionStorage.getItem('app_domain'));
-					this.config.domian.wx80   = domainInfo.app_wx_domain;
-					this.config.domian.normal = domainInfo.app_normal_domain;
-				}
-				let self = this;
-				this.$request.staff.wx.portValuable().then(res=>{
-					sessionStorage.setItem('app_domain',JSON.stringify(res.result));
-					this.config.domian.wx80   = res.result.app_wx_domain;
-					this.config.domian.normal = res.result.app_normal_domain;
-				});
-			},
 			qrClick(){
 				this.config.popup.qrcode.show = true;
 				this.getQrcode();
@@ -172,7 +159,7 @@
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = 'http://test.leaper.ltd:1104/group/login?token=' + res.result;
+					self.loginUrl = this.$store.state.common.loginUrl + 'staff/login?token=' + res.result;
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{
@@ -184,7 +171,7 @@
 				});
 			},
 			getChangePass(){
-				this.formData.account = sessionStorage.getItem('jpdn-login-username');
+				this.formData.account = sessionStorage.getItem('jpdn-staff-username');
 				this.config.popup.changePass.show = true ;
 			},
 			changeClick(){
@@ -227,16 +214,8 @@
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
 		},
 		mounted(){
-			this.userName = sessionStorage.getItem('jpdn-login-username');
-			this.portValuable();
+			this.userName = sessionStorage.getItem('jpdn-staff-username');
 			this.validator = new schema(this.rules);
-			/*this.config.gridItem.forEach((item,index)=>{
-				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' || item.text == '库存修改'){
-					item.url = this.config.domian.wx80 + item.url;
-				}else{
-					item.url = this.config.domian.normal + item.url;
-				}
-			});*/
 			this.authGrid( JSON.parse(sessionStorage.getItem('auth-url') ) );
 		},
 		computed:{

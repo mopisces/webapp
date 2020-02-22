@@ -10,9 +10,10 @@
 		<router-view v-if="isRouterAlive"/>
 		<div style="height:50px;width:100%;"></div>
 		<van-tabbar v-model="config.active">
-			<van-tabbar-item icon="shopping-cart-o" to="/group/index">团购</van-tabbar-item>
-			<van-tabbar-item icon="friends-o" to="/group/login">登录</van-tabbar-item>
-			<van-tabbar-item icon="service" to="/group/contact">联系我们</van-tabbar-item>
+			<van-tabbar-item name="group" icon="shopping-cart-o" to="/group/index">团购</van-tabbar-item>
+			<van-tabbar-item name="clogin" icon="friends-o" to="/group/client/login">客户登录</van-tabbar-item>
+			<van-tabbar-item name="slogin" icon="manager-o" to="/group/staff/login">员工登录</van-tabbar-item>
+			<van-tabbar-item name="contact" icon="service" to="/group/contact">联系我们</van-tabbar-item>
 		</van-tabbar>
 	</div>
 </template>
@@ -29,7 +30,7 @@
 			return {
 				config:{
 					headerTitle : '',
-					active : 0,
+					active : '',
 				},
 				isRouterAlive : true,
 			}
@@ -46,10 +47,11 @@
 			}
 		},
 		created(){
-			this.config.headerTitle = this.$store.state.client.layout.title;
+			this.config.headerTitle = this.$store.state.common.title;
+			this.config.acitve      = this.$store.state.common.indexActive;
 		},
 		mounted(){
-
+			
 		},
 		updated(){
 			
@@ -59,13 +61,21 @@
 		},
 		computed:{
 			setTitle(){
-				return this.$store.state.client.layout.title;
+				return this.$store.state.common.title;
+			},
+			setActive(){
+				return this.$store.state.common.indexActive;
 			}
 		},
 		watch:{
 			'setTitle':{
 				handler:function(newV,oldV){
 					this.config.headerTitle = newV;
+				}
+			},
+			'setActive':{
+				handler:function(newV,oldV){
+					this.config.active = newV;
 				}
 			}
 		}

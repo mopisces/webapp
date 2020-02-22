@@ -32,13 +32,8 @@ const xBuild           = r => require.ensure([], () => r(require('@/components/c
 //支付方式
 const payWay           = r => require.ensure([], () => r(require('@/components/pay/order/Way')), 'payWay');
 
-/*//团购及未登录页面布局
-const indexLayout      = r => require.ensure([], () => r(require('@/components/common/IndexLayout')), 'indexLayout');
-//注册页面
-const register         = r => require.ensure([], () => r(require('@/components/client/index/Register')), 'register');*/
-const client = [
-    
-	{
+export const asyncClientRouterMap = [
+    {
         path:'/client',
         component: clientLayout,
         meta: { title: '外部人员使用' },
@@ -120,5 +115,9 @@ const client = [
             }
         ]
     }
+];
+
+const client = [
+
 ];
 export default client;

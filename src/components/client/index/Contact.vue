@@ -30,10 +30,11 @@
 			}
 		},
 		created(){
-			this.$store.commit('client/setHeaderTitle','联系我们');
+			this.$store.commit('common/setTitle','联系我们');
 		},
 		mounted(){
 			this.getContact();
+			this.$store.commit('common/setIndexActive','contact');
 		},
 		updated(){
 			

@@ -13,7 +13,7 @@ const login = {
 		return post(index.index.index,postData);
 	},
 	quickLogin( data ){
-		return get(index.index.index,data);
+		return get(index.index.index,{ get_user_secret : data } );
 	}
 }
 export default login;

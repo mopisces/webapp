@@ -23,7 +23,7 @@
 
 		},
 		created(){
-			this.$store.commit('admin/setHeaderTitle','厂商logo');
+			
 		},
 		mounted(){
 

@@ -68,10 +68,10 @@
 				Dialog.confirm({
 					message: '确认退出?'
 				}).then(() => {
-					this.userName = sessionStorage.getItem('jpdn-login-username');
+					this.userName = sessionStorage.getItem('jpdn-staff-username');
 					sessionStorage.clear();
-					sessionStorage.setItem('jpdn-login-username',this.userName);
-					this.$router.push('/group/login');
+					sessionStorage.setItem('jpdn-staff-username',this.userName);
+					this.$router.push('/group/staff/login');
 				}).catch(()=>{
 					Dialog.close();
 				});

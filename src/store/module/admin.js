@@ -1,15 +1,18 @@
+import { asyncAdminRouterMap } from '@/router/admin';
 const admin = {
 	namespaced: true,
 	state: {
-		layout:{
-			title:'菜单页面'
-		}
+		navList : null
 	},
 	mutations:{
-		setHeaderTitle( state, title ){
-			state.layout.title = title;
-		},
+		setNavList( state, navList ){
+			state.navList = navList;
+		}
 	},
-	actions: {},
+	actions: {
+		permission : ({commit})=>{
+			commit('setNavList', asyncAdminRouterMap);
+		}
+	},
 };
 export default admin;

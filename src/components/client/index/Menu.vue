@@ -165,7 +165,7 @@
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = 'http://test.leaper.ltd:1104/login/select?token=' + res.result;
+					self.loginUrl = this.$store.state.common.loginUrl + 'client/login?token=' + res.result;
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{
@@ -177,7 +177,7 @@
 				});
 			},
 			getChangePass(){
-				this.formData.account = sessionStorage.getItem('jpdn-login-username');
+				this.formData.account = sessionStorage.getItem('jpdn-client-username');
 				this.config.popup.changePass.show = true ;
 			},
 			changeClick(){
@@ -220,7 +220,7 @@
 			this.$store.commit('client/setHeaderTitle','菜单页面');
 		},
 		mounted(){
-			this.userName = sessionStorage.getItem('jpdn-login-username');
+			this.userName = sessionStorage.getItem('jpdn-client-username');
 			//this.portValuable();
 			this.validator = new schema(this.rules);
 			/*this.config.gridItem.forEach((item,index)=>{

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Dialog, Toast } from 'vant';
 import base from './base';
+import store from '@/store';
 //import errorHandle from './errorHandle';
 /*import Vue from 'vue';
 Vue.use(Toast);*/
@@ -23,8 +24,16 @@ httpServer.interceptors.request.use(
 			message: '加载中...',
 			loadingType: 'spinner'
 		});
-		//let auth = sessionStorage.getItem('jpdn-login-token') == null ? '' : sessionStorage.getItem('jpdn-login-token');
-		let auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1ODIyNDQ2NDMsImV4cCI6MTU4MjMzMTA0MywiVXNlck5hbWUiOiJhZG1pbiIsIlBhc3NXb3JkIjoiYWRtaW4iLCJST1dfTlVNQkVSIjoiMSIsInRhZyI6ImFkbWluIn0._Fk28be6ztbUABlWdV9VQ0qObRFdRaXkciMpdLlBUHs';
+		let auth = '';
+		if( sessionStorage.getItem('jpdn-client-token') ){
+			auth = sessionStorage.getItem('jpdn-client-token');
+		}else if( sessionStorage.getItem('jpdn-staff-token') ){
+			auth = sessionStorage.getItem('jpdn-staff-token');
+		}else if( sessionStorage.getItem('jpdn-admin-token') ){
+			auth = sessionStorage.getItem('jpdn-admin-token');
+		}else{
+			auth = '';
+		}
 		config.headers.Authentication = auth;
 		return config;
 	},

@@ -26,7 +26,7 @@
 		</div>
 		<div class="van-cell" v-for="(item,index) in detailData.RangePrice" :key=" 'RangePrice' + index ">
 			<div class="van-cell__title">
-				<span>{{ item.From }} ㎡ ~ {{ item.to }} ㎡</span>
+				<span>{{ item.From }} ㎡ ~ {{ item.To }} ㎡</span>
 			</div>
 			<span class="van-icon" style="color:rgb(224, 24, 53);">¥{{ item.Price }}/㎡</span>
 		</div>

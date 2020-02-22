@@ -6,6 +6,7 @@ import mutations from './mutation';
 import admin from './module/admin';
 import staff from './module/staff';
 import client from './module/client';
+import common from './module/common';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -16,5 +17,6 @@ export default new Vuex.Store({
  		admin,
  		staff,
  		client,
+ 		common
  	}
 });	

@@ -1,6 +1,9 @@
 import base from './base';
 const admin = {
-	login: `${base.admin}login`,
+	login: {
+		login   : `${base.admin}login`,
+		refresh : `${base.admin}refresh`,
+	},
 	user : {
 		lists : `${base.admin}adminLists`,
 		del   : `${base.admin}adminDel`,
@@ -148,8 +151,8 @@ const erp = {
 
 const index = {
 	index:{
-		index    : `${base.index}login`,
-		getToken : `${base.index}getToken`,
+		index      : `${base.index}login`,
+		getToken   : `${base.index}getToken`,
 	}
 };
 
