@@ -121,16 +121,16 @@
 				formData : {
 					productId       : '',      //产品ID
 					cusOrderId      : '',
-					boardLength     : '1000',      //板长
-					boardWidth      : '1000',	   //板宽
-					lineBallInfo    : '压线1',      //压线名称
-					lineBallFormula : '100+800+100',      //压线公式
-					orderQuantities : '2000',      //订单数量
+					boardLength     : '',      //板长
+					boardWidth      : '',	   //板宽
+					lineBallInfo    : '',      //压线名称
+					lineBallFormula : '',      //压线公式
+					orderQuantities : '',      //订单数量
 					area            : 0,       //下单面积
-					address         : 'CGC',      //送货公司
-					date            : '2019-12-25',      //送货时间
-					deliveryRemark  : '123',      //送货备注
-					productionRemark: '123',      //生产备注
+					address         : '',      //送货公司
+					date            : '',      //送货时间
+					deliveryRemark  : '',      //送货备注
+					productionRemark: '',      //生产备注
 					cost            : 0,       //订单金额
 					saveCost        : 0,       //订单节省金额
 					isRangePrice    : false,   //是否是区间价格
@@ -396,7 +396,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('client/setHeaderTitle','简单纸板下单');
+			this.$store.commit('common/setTitle','简单纸板下单');
 		},
 		mounted(){
 			if( typeof(this.$route.params.productId) != 'undefined' ){
@@ -406,7 +406,6 @@
 			}else{
 				this.$router.go(-1);
 			}
-			console.log(this.formData.productId)
 			this.getConfig( this.formData.productId );
 			this.validator = new schema( this.rules );
 		},

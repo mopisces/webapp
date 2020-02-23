@@ -523,11 +523,17 @@
 			}
 		},
 		created(){
-			this.$store.commit('client/setHeaderTitle','纸箱纸板下单');
+			this.$store.commit('common/setTitle','纸箱纸板下单');
 		},
 		mounted(){
-			this.getConfig( 4 );
-			this.formData.productId = 4;
+			if( typeof(this.$route.params.productId) != 'undefined' ){
+				this.formData.productId = this.$route.params.productId ;
+			}else if( sessionStorage.getItem('group-product-id') != null ){
+				this.formData.productId = sessionStorage.getItem('group-product-id');
+			}else{
+				this.$router.go(-1);
+			}
+			this.getConfig( this.formData.productId );
 			this.validator = new schema( this.rules );
 		},
 		updated(){

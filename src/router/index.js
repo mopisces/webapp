@@ -27,6 +27,12 @@ const groupBoardDetail       = r => require.ensure([], () => r(require('@/compon
 const buildS                 = r => require.ensure([], () => r(require('@/components/group/buildboard/S')), 'buildS');
 //纸箱纸板下单(需要登陆)
 const buildC                 = r => require.ensure([], () => r(require('@/components/group/buildboard/C')), 'buildC');
+//淘宝箱精品列表
+const groupBoxFlag           = r => require.ensure([], () => r(require('@/components/group/box/FlagLists')), 'groupBoxFlag');
+//淘宝箱团购详情
+const groupBoxDetail         = r => require.ensure([], () => r(require('@/components/group/box/Detail')), 'groupBoxDetail');
+//淘宝箱下单(需要登陆)
+const buildT                 = r => require.ensure([], () => r(require('@/components/group/buildbox/T')), 'buildT');
 //404
 const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
 const wxScan                 = r => require.ensure([], () => r(require('@/components/common/WxScanRes')), 'wxScan');
@@ -92,8 +98,24 @@ let routes = [
                 name: 'buildGroupC',
                 meta:{ title:'纸箱纸板下单' },
                 component: buildC
-            }
-            
+            },
+            {
+                path:'box/flagLists',
+                meta: { title: '淘宝箱精品团购列表' },
+                component: groupBoxFlag
+            },
+            {
+                path: 'box/detail',
+                name: 'boxDetail',
+                meta:{ title:'淘宝箱团购详情' },
+                component: groupBoxDetail
+            },
+            {
+                path: 'build/t',
+                name: 'buildGroupT',
+                meta:{ title:'淘宝箱下单' },
+                component: buildT
+            },
         ]
     },
     {

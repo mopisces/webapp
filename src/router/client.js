@@ -82,8 +82,7 @@ export const asyncClientRouterMap = [
                 path:'usedorder/lists',
                 meta: { title: '常用订单' },
                 component: orderList,
-            }
-            ,
+            },
             {
                 path:'wxorder/lists',
                 meta: { title: '微信订单' },

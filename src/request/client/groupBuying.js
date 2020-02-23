@@ -8,10 +8,10 @@ const groupBuying = {
 		};
 		return post(client.groupBuying.faddishList, postData);
 	},
-	groupBuyDetail( id ){
+	groupBuyDetail( data ){
 		let postData = {
-			goods_detail_id : id,
-			is_taobao       : 0
+			goods_detail_id : data.id,
+			is_taobao       : data.isTaobao
 		};
 		return post(client.groupBuying.groupBuyDetail, postData);
 	},
@@ -23,7 +23,6 @@ const groupBuying = {
 		return post(client.groupBuying.sConfig, postData);
 	},
 	getAreaCost( data ){
-		console.log(data);
 		let postData = {
 			area_cost_id     : data.productId,
 			board_length     : data.boardLength,
@@ -35,6 +34,13 @@ const groupBuying = {
 			postData['sheet_quantities'] = data.sheetQuantities
 		}
 		return post(client.groupBuying.getAreaCost, postData);
+	},
+	getBoxCost( data ){
+		let postData = {
+			box_cost_id  : data.productId,
+			box_cost_qty : data.orderQuantities
+		};
+		return post(client.groupBuying.getBoxCost, postData);
 	},
 	sGroupBooking( data ){
 		let postData = {
@@ -86,6 +92,24 @@ const groupBuying = {
 			production_remark     : data.productionRemark
 		};
 		return post(client.groupBuying.cGroupBooking, postData);
+	},
+	getTConfig( id ){
+		let postData = {
+			booking_goods_id : id,
+			is_taobao        : 1,
+		};
+		return post(client.groupBuying.tConfig,postData);
+	},
+	tGroupBooking( data ){
+		let postData = {
+			booking_goods_id  : data.productId,
+			order_quantities  : data.orderQuantities,
+			delivery_address  : data.address,
+			delivery_date     : data.date,
+			delivery_remark   : data.deliveryRemark,
+			production_remark : data.productionRemark,
+		};
+		return post(client.groupBuying.tGroupBooking, postData);
 	}
 };
 export default groupBuying;

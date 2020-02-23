@@ -214,10 +214,13 @@ const client = {
 		groupBuyDetail : `${base.client}groupBuyDetail`, 
 		sConfig        : `${base.client}groupBoardPaperConfig`,
 		getAreaCost    : `${base.client}getAreaCost`,
+		getBoxCost     : `${base.client}getBoxCost`,
 		sGroupBooking  : `${base.client}simpleGroupBooking`,
 		cConfig        : `${base.client}boardBoxGroupConfig`,
 		getBoxFormula  : `${base.client}getBoxFormula`,
 		cGroupBooking  : `${base.client}boxGroupBooking`,
+		tConfig        : `${base.client}taoBaoGroupConfig`,
+		tGroupBooking  : `${base.client}taoBaoGroupBooking`,
 	}
 };
 

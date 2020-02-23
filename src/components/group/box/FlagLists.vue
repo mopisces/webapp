@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-card v-for="(item,index) in listData" :key=" 'card' + index " @click="detailClick( item.Id, 0 )">
+		<van-card v-for="(item,index) in listData" :key=" 'card' + index " @click="detailClick( item.Id, 1 )">
 			<van-image slot="thumb" :src="item.thumb" width="90" height="90"/>
 			<div slot="title">
 				{{ item.BoardId }}
@@ -25,7 +25,7 @@
 			<div slot="origin-price" style="font-size:0.8rem;">
 				¥{{ item.MarketPrice }}/㎡
 			</div>
-			<van-tag mark type="danger" slot="tag">爆款</van-tag>
+			<van-tag mark type="danger" slot="tag">精品</van-tag>
 			<div slot="tags">
 				<div class="progress-bar">
 	                <div class="liquid" :style="'width: ' + item.SalePercent + '%;'"></div>
@@ -62,16 +62,16 @@
 					self.listData = res.result;
 				});
 			},
-			detailClick( cardId ){
-				this.$router.push({ name:'boardDetail', params:{ productId:cardId } });
+			detailClick( cardId, isTaobao ){
+				this.$router.push({ name:'boxDetail', params:{ productId:cardId } });
 				sessionStorage.setItem('group-product-id',cardId);
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','纸板团购');
+			this.$store.commit('client/setHeaderTitle','纸板团购');
 		},
 		mounted(){
-			this.faddishList(0);
+			this.faddishList(1);
 		},
 		updated(){
 			
