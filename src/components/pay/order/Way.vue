@@ -16,22 +16,43 @@
 			</div>
 			<div style="padding: 0 3px;font-size: 12px;color: #fff;background-color: #4b0;position: absolute;top: 0;right: 0;" v-if="info.isOneCent">1分钱支付</div>
 		</div>
-		<van-cell size="large" title="微信支付" is-link v-if="!info.useWechat" @click="payClick( 'wechat' )">
+		<van-cell size="large" title="微信支付" is-link v-if="info.useWechat" @click="payClick( 'wechat' )">
 			<van-icon  slot="icon" name="wechat" style="line-height: inherit;" size="40" color="#0bf147"/>
 		</van-cell>
 		<van-cell size="large" title="支付宝支付" is-link v-if="info.useAlipay" @click="payClick( 'alipay' )">
 			<van-icon  slot="icon" name="alipay" style="line-height: inherit;" size="40" color="#1989FA"/>
 		</van-cell>
+		<van-popup v-model="wxQrCodeShow" position="top" :style="{ height : '100%', width: '100%'}">
+			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
+				<div class="van-nav-bar__title van-ellipsis">
+					请使用微信扫一扫
+				</div>
+			</div>
+			<div id="qrcode" class="qrcode"></div>
+			<p style="text-align:center">请扫码支付</p>
+			<p style="text-align:center;font-size:1.5rem;">￥{{ info.total }}</p>
+			<div style="text-align:center;">
+				<van-button type="primary" size="normal" style="width:60%;" @click="wxQrCodeShow = false">
+					已	完成支付
+				</van-button>
+			</div>
+		</van-popup>
 	</div>
 </template>
 <script>
-	import { Cell, Icon, Dialog, Toast, CountDown } from 'vant';
+	import { Button, Cell, Icon, Popup, Dialog, Toast, CountDown } from 'vant';
+	import NewPopup from '@/components/subject/NewPopup.vue';
+	import QRCode from 'qrcodejs2';
 	export default {
 		components:{
+			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[Icon.name]: Icon,
+			[Popup.name]: Popup,
 			[Toast.name]: Toast,
 			[CountDown.name]: CountDown,
+
+			NewPopup
 		},
 		data(){
 			return {
@@ -46,7 +67,9 @@
 					cusOrderId : '',
 				},
 				time:0,
-				countDownShow : false
+				countDownShow : false,
+				wxQrCodeShow  : false,
+				qrCodeUrl     : ''
 			}
 		},
 		methods:{
@@ -77,13 +100,14 @@
 					return ;
 				}
 				if( type == 'wechat' ){
-					if(navigator.userAgent.toLowerCase().indexOf('micromessenger') !== -1){
+					if(window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i)  != 'micromessenger'){
 						//非微信浏览器
+						this.wxQrCodeShow = true;
 						let data = {
 							tradeType  : 1,
 							cusOrderId : this.info.cusOrderId
 						};
-						this.wxpay( data );
+						this.wxpayMakeQrCode( data );
 					}else{
 						//微信浏览器
 						let data = {
@@ -104,6 +128,7 @@
 				}).then(()=>{
 					Dialog.close();
 				});
+				this.$router.push('/client/wxorder/lists')
 			},
 			alipay( data ){
 				if( data.cusOrderId == '' || data.total <= 0 ){
@@ -118,7 +143,7 @@
 				});
 			},
 			wxpay( data ){
-				if( data.cusOrderId == '' || ( data.tradeType != 1 && data.tradeType != 0 ) ){
+				if( data.cusOrderId == '' || data.tradeType != 0 ){
 					Toast.fail('参数不正确');
 					return ;
 				}
@@ -128,7 +153,27 @@
 						window.location.href = res.result;
 					}
 				});
-			}
+			},
+			wxpayMakeQrCode( data ){
+				if( data.cusOrderId == '' || data.tradeType != 1 ){
+					Toast.fail('参数不正确');
+					return ;
+				}
+				let self = this;
+				this.$request.payAll.payAll.wechatPay( data ).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.qrCodeUrl = res.result;
+					}
+				}).then(()=>{
+					document.getElementById('qrcode').innerHTML = '';
+					new QRCode('qrcode',{
+						text         : this.qrCodeUrl,
+				     	colorDark    : '#000000',
+				      	colorLight   : '#ffffff',
+				      	correctLevel : QRCode.CorrectLevel.H
+					});
+				})
+			},
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','支付方式');
@@ -173,4 +218,8 @@
 		text-align: center;
 		background-color: rgb(105, 105, 105);
 	}
+	#qrcode img {
+        margin: 6.25rem auto 1rem auto;
+        width: 10rem;
+    }
 </style>

@@ -110,6 +110,15 @@ const groupBuying = {
 			production_remark : data.productionRemark,
 		};
 		return post(client.groupBuying.tGroupBooking, postData);
+	},
+	groupBuyList( data ){
+		let postData = {
+			group_state : data.state,
+			filter_name : data.filterName,
+			cur_page    : data.curPage,
+			is_taobao   : data.isTaoBao
+		};
+		return post(client.groupBuying.groupBuyList, postData);
 	}
 };
 export default groupBuying;

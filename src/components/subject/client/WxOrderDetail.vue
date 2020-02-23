@@ -14,23 +14,23 @@
 		<template v-if=" isGroup ">
 			<van-card>
 				<div slot="title">
-					<span style="color: #e01835;" v-if=" groupInfo.BoardId && !groupInfo.MatNo ">{{ groupInfo.BoardId }}</span>
-					<span style="color: #e01835;" v-if=" !groupInfo.BoardId && groupInfo.MatNo ">{{ groupInfo.MatNo }}</span>
-					<span v-if=" groupInfo.Title ">,{{ groupInfo.Title }}</span>
+					<span style="color: #e01835;" v-if=" groupInfo.boardId && !groupInfo.matNo ">{{ groupInfo.boardId }}</span>
+					<span style="color: #e01835;" v-if=" !groupInfo.boardId && groupInfo.matNo ">{{ groupInfo.matNo }}</span>
+					<span v-if=" groupInfo.title ">,{{ groupInfo.title }}</span>
 				</div>
 				<van-image :src="groupInfo.pic" slot="thumb" round width="90" height="90"/>
-				<div slot="desc"  v-if=" groupInfo.BoardId && !groupInfo.MatNo ">
+				<div slot="desc">
 					下单价格：
-					<span style="color: #e01835;">¥{{ groupInfo.Price }}/
-						<span v-if=" groupInfo.BoardId && !groupInfo.MatNo ">㎡</span>
-						<span v-if=" !groupInfo.BoardId && groupInfo.MatNo ">个</span>
+					<span style="color: #e01835;">¥{{ groupInfo.price }}/
+						<span v-if=" groupInfo.boardId && !groupInfo.matNo ">㎡</span>
+						<span v-if=" !groupInfo.boardId && groupInfo.matNo ">个</span>
 					</span>
 					<span style="color: #999;text-decoration: line-through;">¥{{ groupInfo.MarketPrice }}/
-						<span v-if=" groupInfo.BoardId && !groupInfo.MatNo ">㎡</span>
-						<span v-if=" !groupInfo.BoardId && groupInfo.MatNo ">个</span>
+						<span v-if=" groupInfo.boardId && !groupInfo.matNo ">㎡</span>
+						<span v-if=" !groupInfo.boardId && groupInfo.matNo ">个</span>
 					</span><br/>
-					下单金额：<span style="color: #e01835;">¥{{ groupInfo.Cost }}</span><br/>
-					节省金额：<span style="color: #e01835;">¥{{ groupInfo.SaveCost }}</span>
+					下单金额：<span style="color: #e01835;">¥{{ groupInfo.cost }}</span><br/>
+					节省金额：<span style="color: #e01835;">¥{{ groupInfo.saveCost }}</span>
 				</div>
 			</van-card>
 		</template>
@@ -92,7 +92,16 @@
 			return {
 				show        : this.detailShow,
 				orderDetail : {},
-				groupInfo   : {},
+				groupInfo   : {
+					boardId     : '',
+					matNo       : '',
+					productId   : '',
+					title       : '',
+					price       : '',
+					marketPrice : '',
+					cost        : '',
+					saveCost    : '',
+				},
 				isGroup     : false
 			}
 		},
@@ -131,9 +140,17 @@
 				let self = this;
 				this.$request.client.ordersManage.wechatGroupDetail( cusOrderId ).then(res=>{
 					if( res.errorCode == '00000' ){
-						self.groupInfo        = res.result;
-						self.groupInfo['pic'] = require('@/assets/groupImg/' + acct[1].result.FirstPic);
-						self.isGroup          = true;
+						console.log(res)
+						self.groupInfo['pic']      = require('@/assets/groupImg/' + res.result.FirstPic);
+						self.isGroup               = true;
+						self.groupInfo.boardId     = res.result.BoardId;
+						self.groupInfo.matNo       = res.result.MatNo;
+						self.groupInfo.productId   = res.result.WebProductId;
+						self.groupInfo.title       = res.result.Title;
+						self.groupInfo.price       = res.result.Price;
+						self.groupInfo.marketPrice = res.result.MarketPrice;
+						self.groupInfo.cost        = res.result.Cost;
+						self.groupInfo.saveCost    = res.result.SaveCost;
 					}
 				});
 			}

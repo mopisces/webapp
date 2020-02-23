@@ -13,6 +13,7 @@
 		<div style="height:3.125rem;width:100%;"></div> 
 		<van-tabbar v-model="active">
 			<van-tabbar-item icon="home-o" to="/client/index/menu">首页</van-tabbar-item>
+			<van-tabbar-item icon="shopping-cart-o" to="/group/index">团购</van-tabbar-item>
 			<van-tabbar-item @click="logout">
 				退出
 				<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>

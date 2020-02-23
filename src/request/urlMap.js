@@ -221,6 +221,7 @@ const client = {
 		cGroupBooking  : `${base.client}boxGroupBooking`,
 		tConfig        : `${base.client}taoBaoGroupConfig`,
 		tGroupBooking  : `${base.client}taoBaoGroupBooking`,
+		groupBuyList   : `${base.client}groupBuyList`,
 	}
 };
 

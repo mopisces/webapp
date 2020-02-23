@@ -21,6 +21,8 @@ const contact                = r => require.ensure([], () => r(require('@/compon
 const groupIndex             = r => require.ensure([], () => r(require('@/components/group/Index')), 'groupIndex');
 //纸板爆款团购列表
 const groupBoardFlag         = r => require.ensure([], () => r(require('@/components/group/board/FlagLists')), 'groupBoardFlag');
+//纸板团购列表
+const groupBoardLists        = r => require.ensure([], () => r(require('@/components/group/board/Lists')), 'groupBoardLists');
 //纸板团购详情
 const groupBoardDetail       = r => require.ensure([], () => r(require('@/components/group/board/Detail')), 'groupBoardDetail');
 //简单纸板下单（需要登陆）
@@ -75,6 +77,11 @@ let routes = [
                 path: 'index',
                 meta: { title: '团购分类' },
                 component: groupIndex,
+            },
+            {
+                path: 'board/lists',
+                meta: { title: '纸板团购列表' },
+                component: groupBoardLists,
             },
             {
                 path: 'board/flagLists',
