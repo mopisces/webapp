@@ -25,7 +25,7 @@
 			<div slot="origin-price" style="font-size:0.8rem;">
 				¥{{ item.MarketPrice }}/㎡
 			</div>
-			<van-tag mark type="danger" slot="tag">爆款</van-tag>
+			<van-tag mark type="danger" slot="tag">{{ flagName }}</van-tag>
 			<div slot="tags">
 				<div class="progress-bar">
 	                <div class="liquid" :style="'width: ' + item.SalePercent + '%;'"></div>
@@ -46,7 +46,8 @@
 		},
 		data(){
 			return {
-				listData : []
+				listData : [],
+				flagName : ''
 			}
 		},
 		methods:{
@@ -65,13 +66,23 @@
 			detailClick( cardId ){
 				this.$router.push({ name:'boardDetail', params:{ productId:cardId } });
 				sessionStorage.setItem('group-product-id',cardId);
+			},
+			getFlagName(){
+				let self = this;
+				this.$request.client.groupBuying.flagName( { isTaoBao:0 } ).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.flagName = res.result;
+					}
+				});
 			}
 		},
 		created(){
 			this.$store.commit('common/setTitle','纸板团购');
+			this.faddishList(0);
+			this.getFlagName();
 		},
 		mounted(){
-			this.faddishList(0);
+
 		},
 		updated(){
 			

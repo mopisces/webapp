@@ -203,6 +203,8 @@ const client = {
 	},
 	paymentAll : {
 		paymentIndex : `${base.client}paymentIndex`, 
+		payDetail    : `${base.client}payDetail`, 
+		applyRefund  : `${base.client}applyForRefund`, 
 	},
 	index : {
 		contactWay     : `${base.client}contactWay`, 
@@ -222,6 +224,8 @@ const client = {
 		tConfig        : `${base.client}taoBaoGroupConfig`,
 		tGroupBooking  : `${base.client}taoBaoGroupBooking`,
 		groupBuyList   : `${base.client}groupBuyList`,
+		groupBuyFilter : `${base.client}groupBuyFilter`,
+		flagName       : `${base.client}flagName`,
 	}
 };
 

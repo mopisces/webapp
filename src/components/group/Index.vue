@@ -27,7 +27,7 @@
 					{{ config.grid.groupBoardFlag.tagName }}  ( {{ config.grid.groupBoardFlag.flag }} ) 
 				</div>
 			</van-grid-item>
-			<van-grid-item v-if=" boxGroupOpen ">
+			<van-grid-item v-if=" boxGroupOpen " to="/group/box/lists">
 				<div slot="icon" style="position:relative;">
 					<div style="position:absolute;right:0;top:0;z-index:999;">
 						<van-tag mark type="danger">{{ config.grid.groupBox.tagName }}</van-tag>

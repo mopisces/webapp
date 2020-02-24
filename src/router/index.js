@@ -31,6 +31,8 @@ const buildS                 = r => require.ensure([], () => r(require('@/compon
 const buildC                 = r => require.ensure([], () => r(require('@/components/group/buildboard/C')), 'buildC');
 //淘宝箱精品列表
 const groupBoxFlag           = r => require.ensure([], () => r(require('@/components/group/box/FlagLists')), 'groupBoxFlag');
+//淘宝箱团购列表
+const groupBoxLists          = r => require.ensure([], () => r(require('@/components/group/box/Lists')), 'groupBoxLists');
 //淘宝箱团购详情
 const groupBoxDetail         = r => require.ensure([], () => r(require('@/components/group/box/Detail')), 'groupBoxDetail');
 //淘宝箱下单(需要登陆)
@@ -99,6 +101,11 @@ let routes = [
                 name: 'buildGroupS',
                 meta:{ title:'简单纸板下单' },
                 component: buildS
+            },
+            {
+                path: 'box/lists',
+                meta: { title: '淘宝箱团购列表' },
+                component: groupBoxLists,
             },
             {
                 path: 'build/c',

@@ -32,8 +32,8 @@
 			<p style="text-align:center">请扫码支付</p>
 			<p style="text-align:center;font-size:1.5rem;">￥{{ info.total }}</p>
 			<div style="text-align:center;">
-				<van-button type="primary" size="normal" style="width:60%;" @click="wxQrCodeShow = false">
-					已	完成支付
+				<van-button type="primary" size="normal" style="width:60%;" @click="checkPay() ">
+					已完成支付
 				</van-button>
 			</div>
 		</van-popup>
@@ -174,6 +174,14 @@
 					});
 				})
 			},
+			checkPay(){
+				this.wxQrCodeShow = false;
+				if( this.info.cusOrderId.indexOf(',') == -1 ){
+					this.$router.push({ name : 'payDetail' , params : { orderId : this.info.cusOrderId } }); 
+				}else{
+					this.$router.push('/client/wxorder/lists');
+				}
+			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','支付方式');

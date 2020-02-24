@@ -172,7 +172,6 @@
 			this.$store.commit('client/setHeaderTitle','淘宝箱团购详情');
 		},
 		mounted(){
-			console.log( this.$route.params.productId )
 			if( typeof(this.$route.params.productId) != 'undefined' ){
 				this.productId = this.$route.params.productId ;
 			}else if( sessionStorage.getItem('group-product-id') != null ){

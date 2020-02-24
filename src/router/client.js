@@ -31,7 +31,10 @@ const xBuild           = r => require.ensure([], () => r(require('@/components/c
 
 //支付方式
 const payWay           = r => require.ensure([], () => r(require('@/components/pay/order/Way')), 'payWay');
-
+//支付详细信心
+const payDetail        = r => require.ensure([], () => r(require('@/components/pay/order/Detail')), 'payDetail');
+//申请退款
+const payApply         = r => require.ensure([], () => r(require('@/components/pay/order/Apply')), 'payApply');
 export const asyncClientRouterMap = [
     {
         path:'/client',
@@ -111,6 +114,18 @@ export const asyncClientRouterMap = [
                 name: 'payWay',
                 meta: { title: '支付方式' },
                 component: payWay,
+            },
+            {
+                path:'pay/detail',
+                name: 'payDetail',
+                meta: { title: '支付完成' },
+                component: payDetail,
+            },
+            {
+                path:'pay/apply',
+                name: 'payApply',
+                meta: { title: '申请退款' },
+                component: payApply,
             }
         ]
     }

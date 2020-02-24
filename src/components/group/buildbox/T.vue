@@ -30,11 +30,13 @@
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<div style="height:3.5rem;width:100%;"></div>
 		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
-			<div slot="top" style="font-size:1rem;text-align:center;" v-if="formData.isRangePrice">
+			<div slot="top" style="font-size:1rem;text-align:center;" >
+				<template v-if="formData.isRangePrice">
 				当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/㎡</span>
-				<van-tag mark type="danger">最低价</van-tag><br/>
-				<template v-for="(item,index) in helpInfo">
-					订单数满<span style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" @click="maxOrderQty( item.qty )">{{ item.qty }}</span>价格减至 <span style="color: rgb(224, 24, 53);">¥{{ item.price }}/个</span><br/>
+					<van-tag mark type="danger">最低价</van-tag><br/>
+					<template v-for="(item,index) in helpInfo">
+						订单数满<span style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" @click="maxOrderQty( item.qty )">{{ item.qty }}</span>价格减至 <span style="color: rgb(224, 24, 53);">¥{{ item.price }}/个</span><br/>
+					</template>
 				</template>
 				<template>
 					节省金额：<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
@@ -99,7 +101,7 @@
 					cusOrderId      : '',
 					productId       : '',
 					poN             : '',
-					orderQuantities : 1000,
+					orderQuantities : 0,
 					address         : '',
 					date            : '',
 					deliveryRemark  : '',
@@ -127,6 +129,7 @@
 					cusOrderId : '',
 					isSuccess  : false
 				},
+				validator : {},
 				rules:{
 					productId : [
 						{ required : true, message : '产品信息不能为空' }
@@ -162,8 +165,8 @@
 						if( res.result.product_info.Pic[0] ){
 							self.cardInfo.pic = require('@/assets/groupImg/' + res.result.product_info.Pic[0]);
 						}
-						self.pageConfig.minQty = res.result.product_info.BuildMin;
-						self.pageConfig.maxQty = res.result.product_info.BuildMax;
+						self.pageConfig.minQty = parseInt(res.result.product_info.BuildMin);
+						self.pageConfig.maxQty = parseInt(res.result.product_info.BuildMax);
 						self.pageConfig.minDate = res.result.page_config.BuildMinDate;
 						self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
 						if( res.result.product_info.BeginTime * 1000 < (new Date()).valueOf()  ){
@@ -228,7 +231,6 @@
 			saveOrder( postData ){
 				let self = this;
 				this.$request.client.groupBuying.tGroupBooking( postData ).then(res=>{
-					console.log(res)
 					if( res.errorCode == '00000' ){
 						Toast.success(res.result.order_id);
 						self.config.result.cusOrderId = res.result.order_id;

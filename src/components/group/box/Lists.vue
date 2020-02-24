@@ -95,7 +95,7 @@
 				},
 				formData:{
 					state      : '1',
-					isTaoBao   : 0,
+					isTaoBao   : 1,
 					filterName : '全部',
 					curPage    : 1,
 				},
@@ -146,7 +146,7 @@
 				});
 			},
 			detailClick( cardId ){
-				this.$router.push({ name:'boardDetail', params:{ productId:cardId } });
+				this.$router.push({ name:'boxDetail', params:{ productId:cardId } });
 				sessionStorage.setItem('group-product-id',cardId);
 			},
 			getFlagName(){
@@ -159,7 +159,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','纸板团购');
+			this.$store.commit('common/setTitle','淘宝箱团购');
 			this.getBoardList();
 			this.getFilterName();
 			this.getFlagName();

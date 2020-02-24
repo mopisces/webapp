@@ -119,6 +119,21 @@ const groupBuying = {
 			is_taobao   : data.isTaoBao
 		};
 		return post(client.groupBuying.groupBuyList, postData);
+	},
+	groupBuyFilter( data ){
+		console.log(data.isTaoBao)
+		let postData = {
+			group_state : data.state,
+			is_taobao   : data.isTaoBao
+		};
+		return post(client.groupBuying.groupBuyFilter, postData);
+	},
+	flagName( data ){
+
+		let postData = {
+			is_taobao   : data.isTaoBao
+		};
+		return post(client.groupBuying.flagName, postData);
 	}
 };
 export default groupBuying;
