@@ -205,6 +205,7 @@ const client = {
 		paymentIndex : `${base.client}paymentIndex`, 
 		payDetail    : `${base.client}payDetail`, 
 		applyRefund  : `${base.client}applyForRefund`, 
+		checkApply   : `${base.client}applyRefound`, 
 	},
 	index : {
 		contactWay     : `${base.client}contactWay`, 

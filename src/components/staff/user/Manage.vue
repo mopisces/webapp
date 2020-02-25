@@ -145,7 +145,12 @@
 					self.config.popup.qrCode.show = true;
 					this.$nextTick(()=>{
 						document.getElementById('qrcode').innerHTML = '';
-						let url = res.result;//登录地址
+						let url = '';
+						if( data.UserType == 1 ){
+							url = this.$store.state.common.loginUrl + 'staff/login?token=' + res.result; 
+						}else{
+							url = this.$store.state.common.loginUrl + 'client/login?token=' + res.result; 
+						}
 						this.creatQrCode(url);
 					});
 				});

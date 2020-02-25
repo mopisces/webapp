@@ -40,9 +40,9 @@
 				},
 				pageInfo:{
 					factoryId:'',
-					factoryLogo:require('@/assets/logo.png'),
+					factoryLogo:this.$store.state.common.imgUrl + 'logo.png',
 					factoryName:'',
-					bg:'background: url('+ require('@/assets/bg.png') +') no-repeat;background-size:cover;width:100%;height:100%;'
+					bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'
 				},
 				validator:{},
 				rules:{

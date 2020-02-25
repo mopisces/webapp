@@ -21,8 +21,10 @@
 						<div class="van-col van-col--10">退货附加费:{{ item.ReturnFee }}</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">销售面积:{{ item.TSalesArea }}</div>
-						<div class="van-col van-col--10">金额:{{ item.Amt }}</div>
+						<div class="van-col van-col--20">销售面积:{{ item.TSalesArea }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--20">金额:{{ item.Amt }}</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
 						<div class="van-col van-col--20">总数:{{ item.sumCount }}</div>

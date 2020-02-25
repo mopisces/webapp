@@ -13,12 +13,11 @@
 		<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in info.cell.data" :key="index" @click="cellClick(item.CusId)">
 			<div class="van-cell__title">
 				<span>{{ item.CusShortName }}</span><br/>
-				<span>{{ item.CusId }}</span>
+				<span>({{ item.CusId }})</span>
 			</div>
-			<div class="van-cell__title" style="margin-left:1rem;">
-				<span>{{ item.LeftMinAmtCond }}/{{ item.MinAmtCond }}</span>
+			<div class="van-cell__value">
+				<span style="color:black;">{{ item.LeftMinAmtCond }}/{{ item.MinAmtCond }}</span>
 			</div>
-			<van-icon name="arrow" color="#ddd" size="24" style="margin-top:9px"/>
 		</div>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
 			<van-field label="员工" readonly v-model="info.leftPopup.data.userName" placeholder="员工" input-align="right" slot="new-popup-1"/>

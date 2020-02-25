@@ -55,7 +55,7 @@
 				<van-field v-model="orderDetail.Width" label="板宽(mm)" readonly input-align="right"></van-field>
 			</template>
 			<template v-if=" orderDetail.CType === 's' ">
-				<van-field v-model="orderDetail.ScoreName" label="压线名称" readonly input-align="right"></van-field>
+				<van-field v-model="orderDetail.BuildScoreName" label="压线名称" readonly input-align="right"></van-field>
 				<van-field v-model="orderDetail.ScoreInfo" label="压线信息" readonly input-align="right"></van-field>
 			</template>
 			<van-field v-model="orderDetail.PON" label="PO号" readonly input-align="right" v-if=" orderDetail.CType === 'x' || orderDetail.CType === 't' "></van-field>

@@ -9,8 +9,6 @@ Vue.use(Router);
 const indexLayout            = r => require.ensure([], () => r(require('@/components/common/IndexLayout')), 'indexLayout');
 //注册页面
 const register               = r => require.ensure([], () => r(require('@/components/client/index/Register')), 'register');
-//登录
-const loginSelect            = r => require.ensure([], () => r(require('@/components/login/LoginSelect')), 'loginSelect');
 //员工登陆
 const loginStaff             = r => require.ensure([], () => r(require('@/components/login/StaffLogin')), 'loginStaff');
 //客户登陆
@@ -51,12 +49,6 @@ let routes = [
                 path : 'register',
                 meta : { title: '注册页面' },
                 component: register,
-            },
-            {
-                path : 'login',
-                alias: 'login?token=:token',
-                meta: { title: '登录选择界面' },
-                component: loginSelect,
             },
             {
                 path : 'staff/login',
@@ -153,6 +145,9 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+    if( to.meta.title ){
+        document.title = to.meta.title;
+    }
     if( sessionStorage.getItem('auth-url') && store.state.staff.navList == null ){
         store.dispatch('staff/permission', JSON.parse(sessionStorage.getItem('auth-url')));
         router.addRoutes(store.state.staff.navList);

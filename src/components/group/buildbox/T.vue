@@ -116,7 +116,7 @@
 					title        : '',
 					productPrice : '',
 					marketPrice  : '',
-					pic          : require('@/assets/groupImg/zwtp.png'),
+					pic          : this.$store.state.common.imgUrl + 'groupImg/zwtp.png',
 				},
 				pageConfig : {
 					minQty  : 0,
@@ -163,7 +163,7 @@
 						self.cardInfo.productPrice = res.result.product_info.Price;
 						self.cardInfo.marketPrice  = res.result.product_info.MarketPrice;
 						if( res.result.product_info.Pic[0] ){
-							self.cardInfo.pic = require('@/assets/groupImg/' + res.result.product_info.Pic[0]);
+							self.cardInfo.pic = this.$store.state.common.imgUrl + 'groupImg/' + res.result.product_info.Pic[0];
 						}
 						self.pageConfig.minQty = parseInt(res.result.product_info.BuildMin);
 						self.pageConfig.maxQty = parseInt(res.result.product_info.BuildMax);

@@ -46,7 +46,7 @@
 			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  type="password" required/>
 			<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" required/>
 			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6" required/>
-			<div class="van-row van-row--flex van-row--justify-space-between" style="position:fixed;bottom:0;width:100%;">
+			<!-- <div class="van-row van-row--flex van-row--justify-space-between" style="position:fixed;bottom:0;width:100%;">
 				<div class="van-col van-col--10">
 					<van-button type="primary" size="normal" style="width:100%;" @click="changeClick()">
 						提交
@@ -57,9 +57,15 @@
 						取消
 					</van-button>
 				</div>
+			</div> -->
+			<div style="text-align:center;">
+				<van-button type="primary" size="normal" style="width:40%;" @click="changeClick()">
+					提交
+				</van-button>&nbsp;&nbsp;&nbsp;&nbsp;
+				<van-button type="primary" size="danger" style="width:40%;" @click=" config.popup.changePass.show = false ">
+					取消
+				</van-button>
 			</div>
-			
-			
 		</van-popup>
 	</div>
 </template>

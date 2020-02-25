@@ -21,8 +21,8 @@
 					table:{
 						columns:[
 							{field: 'BoardId', title: '材质编号', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'BoardName', title: '材质名称', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'UnitPrice', title: '平方价', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'BoardName', title: '材质名称', width: 120, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'UnitPrice', title: '平方价', width: 120, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
 						height : 0
 					}

@@ -18,6 +18,12 @@ const paymentAll = {
 			apply_refound_reason : data.reason
 		};
 		return post(client.paymentAll.applyRefund,postData);
+	},
+	checkApply( data ){
+		let postData = {
+			apply_check_id : data.orderId
+		};
+		return post(client.paymentAll.checkApply,postData);
 	}
 };
 

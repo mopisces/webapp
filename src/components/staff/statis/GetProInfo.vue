@@ -6,6 +6,7 @@
 			</van-dropdown-menu>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="onRefresh()">刷新</van-button>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="config.popup.filterShow = true">筛选</van-button>
+			<div style="height:0.5rem;width:100%;"></div>
 		</van-sticky>
 		<div id="container" v-show="filterInfo.statis === 'charts' "></div>
 		<van-cell v-for="(item,index) in data" :key="index" v-show="filterInfo.statis === 'lists'">

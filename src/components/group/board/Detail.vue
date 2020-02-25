@@ -142,9 +142,10 @@
 					self.descInfo   = res.result.desc_info;
 					res.result.goods_detail.Pic.forEach((item,index)=>{
 						if( item != '' ){
-							self.imagesList.push( require( '@/assets/groupImg/'  + item ) );
+
+							self.imagesList.push( this.$store.state.common.imgUrl + 'groupImg/' + item );
 						}else{
-							self.imagesList.push( require( '@/assets/groupImg/zwtp.png') );
+							self.imagesList.push( this.$store.state.common.imgUrl + 'groupImg/zwtp.png');
 						}
 					});
 				}).then(()=>{
@@ -179,7 +180,6 @@
 			this.$store.commit('common/setTitle','纸板团购详情');
 		},
 		mounted(){
-			console.log( this.$route.params.productId )
 			if( typeof(this.$route.params.productId) != 'undefined' ){
 				this.productId = this.$route.params.productId ;
 			}else if( sessionStorage.getItem('group-product-id') != null ){

@@ -15,8 +15,10 @@
 					</div>
 					<div slot="default">
 						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">客订单号:&nbsp;{{ item.CusPoNo }}</div>
-							<div class="van-col van-col--10" v-if=" filterForm.orderType === 's' || filterForm.orderType === 'c' ">材质&nbsp;&nbsp;:&nbsp;{{ item.BoardId }}</div>
+							<div class="van-col van-col--20">客订单号:&nbsp;{{ item.CusPoNo }}</div>
+						</div>
+						<div class="van-row van-row--flex van-row--justify-center"  v-if=" filterForm.orderType === 's' || filterForm.orderType === 'c' ">
+							<div class="van-col van-col--20">材质&nbsp;&nbsp;:&nbsp;{{ item.BoardId }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center" v-if=" filterForm.orderType === 'c' ">
 							<div class="van-col van-col--20">箱型:&nbsp;{{ item.BoxName }}</div>

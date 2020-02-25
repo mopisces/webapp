@@ -6,6 +6,7 @@ const common = {
 		useType    : '',
 		loginUrl   : 'http://127.0.0.1:1103/group/',
 		indexActive: '',//indexLayout active item
+		imgUrl     : 'http://127.0.0.1:8001/upload/'
 	},
 	mutations:{
 		setTitle( state, title ){

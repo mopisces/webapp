@@ -15,12 +15,16 @@
 						<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">库存数:{{ item.StockQty }}</div>
-						<div class="van-col van-col--10">库存面积:{{ item.StockArea }}</div>
+						<div class="van-col van-col--20">库存数:{{ item.StockQty }}</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">库存金额:{{ item.StockAmt }}</div>
-						<div class="van-col van-col--10">总数:{{ item.sumCount }}</div>
+						<div class="van-col van-col--20">库存面积:{{ item.StockArea }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--20">库存金额:{{ item.StockAmt }}</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--20">总数:{{ item.sumCount }}</div>
 					</div>
 				</div>
 				<div slot="footer" style="text-align: right;">

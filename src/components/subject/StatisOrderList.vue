@@ -37,8 +37,8 @@
 								<van-col span="10">材质:{{ item.BoardId }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="10">客户:{{ item.CusId }}</van-col>
-								<van-col span="10">客户简称:{{ item.CusShortName }}</van-col>
+								<van-col span="6">客户:{{ item.CusId }}</van-col>
+								<van-col span="14">客户简称:{{ item.CusShortName }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
 								<van-col span="20">规格:{{ item.GuiGe }}</van-col>
@@ -47,10 +47,12 @@
 								<van-col span="20">压线:{{ item.ScoreInfo }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="8">订单数:{{ item.OrdQty }}</van-col>
-								<van-col span="6">送货数:{{ item.DeliQty }}</van-col>
-								<van-col span="6"  v-if=" type === 'stockQty' ">库存数:{{ item.StockQty }}</van-col>
-								<van-col span="6"  v-if=" type === 'returnQty' ">退货数:{{ item.ReturnQty }}</van-col>
+								<van-col span="10">订单数:{{ item.OrdQty }}</van-col>
+								<van-col span="10">送货数:{{ item.DeliQty }}</van-col>
+							</van-row>
+							<van-row type="flex" justify="center">
+								<van-col span="20"  v-if=" type === 'stockQty' ">库存数:{{ item.StockQty }}</van-col>
+								<van-col span="20"  v-if=" type === 'returnQty' ">退货数:{{ item.ReturnQty }}</van-col>
 							</van-row>
 						</div>
 						<div slot="footer" style="text-align: right;">

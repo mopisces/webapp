@@ -150,21 +150,27 @@
 					case 'payOnTime' : 
 						return this.$router.push({ name : 'payWay' , params : { cusOrderId : this.pageInfo.orderId } });
 					case 'apply' :
-						return this.$router.push({ name : 'payApply' , params : { orderId : this.pageInfo.orderId, cost : this.cardInfo.cost } });
+						return this.$router.push({ name : 'payApply' , params : { orderId : this.pageInfo.orderId, cost : this.cardInfo.cost, onApply:0 } });
 					case 'onRefund' : 
-						return '';
+						return this.$router.push({ name : 'payApply' , params : { orderId : this.pageInfo.orderId, cost : this.cardInfo.cost, onApply:1 } });
 					case 'refunded' : 
-						return console.log(15);
+						return this.$router.push({ name : 'payApply' , params : { orderId : this.pageInfo.orderId, cost : this.cardInfo.cost, onApply:1 } });
 					default :
-						return console.log(13);
+						return this.$router.push({ name : 'payWay' , params : { cusOrderId : this.pageInfo.orderId } });
 				}
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','订单支付信息');
+			if( typeof(this.$route.params.orderId) == 'undefined'){
+				this.$router.go(-1);	
+				return ;
+			}else{
+				this.getPayDetail(this.$route.params.orderId)
+			}
 		},
 		mounted(){
-			this.getPayDetail(20200224007)
+			
 		},
 		updated(){
 			

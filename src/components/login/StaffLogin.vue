@@ -10,7 +10,7 @@
 			<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
 			<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
 			<van-field v-model="formData.subFactory" label="分厂" required
-					placeholder="请选择分厂" clickable readonly  @click="config.popup.show = true">
+					placeholder="请选择分厂" clickable readonly  @click="config.popup.show = true" v-if="config.field.show">
 				<van-icon name="arrow" slot="right-icon"/>
 			</van-field>
 			<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
@@ -51,7 +51,8 @@
 						columns:[]
 					},
 					field:{
-						show:false
+						show:false,
+
 					}
 				},
 				formData:{
@@ -63,9 +64,9 @@
 				},
 				pageInfo:{
 					factoryId:'',
-					factoryLogo:require('@/assets/logo.png'),
+					factoryLogo:this.$store.state.common.imgUrl + 'logo.png',
 					factoryName:'',
-					bg:'background: url('+ require('@/assets/bg.png') +') no-repeat;background-size:cover;width:100%;height:100%;'
+					bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'
 				},
 				validator:{},
 				rules:{

@@ -33,7 +33,8 @@ const userAdd      = r => require.ensure([], () => r(require('@/components/admin
 const contactLists = r => require.ensure([], () => r(require('@/components/admin/contact/Lists')), 'contactLists'); 
 //添加联系方式
 const contactAdd   = r => require.ensure([], () => r(require('@/components/admin/contact/Add')), 'contactAdd'); 
-
+//图片配置
+const imgInfo      = r => require.ensure([], () => r(require('@/components/admin/img/Logo.vue')), 'imgInfo'); 
 export const asyncAdminRouterMap = [
     {
         path : '/admin',
@@ -95,23 +96,28 @@ export const asyncAdminRouterMap = [
             },
             {
                 path:'user/lists',
-                mate:{ title: '用户列表' },
+                meta:{ title: '用户列表' },
                 component: userLists
             },
             {
                 path:'user/add',
-                mate:{ title: '添加用户' },
+                meta:{ title: '添加用户' },
                 component: userAdd
             },
             {
                 path:'contact/lists',
-                mate:{ title: '联系方式列表' },
+                meta:{ title: '联系方式列表' },
                 component: contactLists
             },
             {
                 path:'contact/add',
-                mate:{ title: '添加联系方式' },
+                meta:{ title: '添加联系方式' },
                 component: contactAdd
+            },
+            {
+                path:'img/info',
+                meta:{ title: '图片配置' },
+                component: imgInfo
             }
         ]
     }
