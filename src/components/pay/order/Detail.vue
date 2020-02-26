@@ -98,7 +98,7 @@
 						self.cardInfo.marketPrice = res.result.group.MarketPrice;
 						self.cardInfo.cost        = res.result.group.Cost;
 						self.cardInfo.saveCost    = res.result.group.SaveCost;
-						self.cardInfo.pic         = require('@/assets/groupImg/' + res.result.group.FirstPic);
+						self.cardInfo.pic         = this.$store.state.common.imgUrl + 'groupImg/' + res.result.group.FirstPic;
 						self.config.steps.options = res.result.time_line;
 						self.config.steps.active  = res.result.time_line.length - 1;
 

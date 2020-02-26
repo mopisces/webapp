@@ -59,6 +59,7 @@
 		},
 		created(){
 			this.$store.commit('common/setType','admin');
+			sessionStorage.clear();
 		},
 		mounted(){
 

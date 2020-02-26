@@ -97,7 +97,7 @@
 				config:{
 					height:'',
 					fullscreen : false,
-					activeIndex : '/admin/config/lists'
+					activeIndex : ''
 				},
 				adminName : ''
 			}
@@ -111,8 +111,9 @@
 			}
 		},
 		created(){
-			this.config.height = window.innerHeight;
-			this.adminName     = sessionStorage.getItem('jpdn-admin-username');
+			this.config.height      = window.innerHeight;
+			this.adminName          = sessionStorage.getItem('jpdn-admin-username');
+			this.config.activeIndex = this.$store.state.admin.asideActive;
 		},
 		mounted(){
 
@@ -124,10 +125,16 @@
 			
 		},
 		computed:{
-			
+			setActive(){
+				return this.$store.state.admin.asideActive;
+			},
 		},
 		watch:{
-
+			'setActive':{
+				handler:function(newV,oldV){
+					this.config.activeIndex = newV;
+				}
+			},
 		}
 	};
 </script>

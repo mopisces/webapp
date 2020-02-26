@@ -40,7 +40,7 @@
 				},
 				pageInfo:{
 					factoryId:'',
-					factoryLogo:this.$store.state.common.imgUrl + 'logo.png',
+					factoryLogo:'',
 					factoryName:'',
 					bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'
 				},
@@ -90,12 +90,17 @@
 			},
 			getAuthName( data ){
 				this.$store.dispatch('client/permission');
-				console.log(this.$store.state.client.navList);
 				this.$router.addRoutes(this.$store.state.client.navList);
 				this.$router.push('/client/index/menu');
 			},
 			registerClick(){
 				this.$router.push('/group/register');
+			},
+			getLogo(){
+				let self = this;
+				this.$request.staff.login.getSF().then(res=>{
+					self.pageInfo.factoryLogo = this.$store.state.common.imgUrl + res.result.factory_info.FactoryLogo;
+				});
 			}
 		},
 		created(){
@@ -113,6 +118,7 @@
 			if( typeof(this.$route.query.scanRes) == 'string' ){
 				this.formData.strOrderId = this.$route.query.scanRes;
 			}
+			this.getLogo();
 			this.$store.commit('common/setType','client');
 			this.$store.commit('common/setTitle','客户登录');
 			this.$store.commit('common/setIndexActive','clogin');

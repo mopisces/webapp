@@ -874,7 +874,7 @@
 			}
 		},
 		created(){
-			
+			this.$store.commit('admin/setAsideActive','/admin/config/lists');
 		},
 		mounted(){
 			this.getConfig();
