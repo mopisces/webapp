@@ -9,7 +9,7 @@
 		<van-field label="采购日期" v-model="detailItem.Date" readonly input-align="center"></van-field>
 		<van-field label="采购单号" v-model="detailItem.PONo" readonly input-align="center"></van-field>
 		<van-field label="供应商" v-model="detailItem.ShortName" readonly input-align="center"></van-field>
-		<div class="van-row van-row--flex van-row--justify-center" style="text-align:center;color:#0bf147;font-size:0.9375rem;padding:0.75rem 0.9375rem;">
+		<div class="van-row van-row--flex van-row--justify-center" style="text-align:center;color:rgb(26, 173, 25);font-size:0.9375rem;padding:0.75rem 0.9375rem;">
 			<div class="van-col van-col--3">纸类</div>
 			<div class="van-col van-col--4">门幅</div>
 			<div class="van-col van-col--3">克重</div>

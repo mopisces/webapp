@@ -29,27 +29,17 @@
 				<van-button type="primary" size="small" style="width:60%" @click="resetClick">重置</van-button>
 			</div>
 		</div>
-		<van-popup v-model="config.popup.area.show" position="bottom" :style="{ height: '50%' }">
-			<van-sticky>
-				<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
-					<div class="van-nav-bar__left">
-						<span class="van-nav-bar__text">可选入库库区</span>
-					</div>
-					<div class="van-nav-bar__title van-ellipsis"></div>
-					<div class="van-nav-bar__right" @click=" config.popup.area.show = false">
-						<i class="van-icon van-icon-cross" style="font-size: 16px;"><!----></i>
-					</div>
-				</div>
-			</van-sticky>
+		<van-popup v-model="config.popup.area.show" round position="bottom" :style="{ height: '50%' }" closeable>
+			<div style="height:2.5rem;width100%;"></div>
 			<radio-cell :radioInfo.sync="formData.strStockArea" :radioColumns="pageInfo.stockAreaOpt" title=""></radio-cell>
 		</van-popup>
 		<template v-if="pageInfo.bSAreaControl">
-			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="500" @on-custom-comp="customCompFunc"></v-table>
+			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" even-bg-color="#fafafa" :height="500" @on-custom-comp="customCompFunc"></v-table>
 		</template>
 	</div>
 </template>
 <script>
-	import { Popup, Button, Icon, Field, Dialog, Toast, Sticky } from 'vant';
+	import { Popup, Button, Icon, Field, Dialog, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -65,7 +55,6 @@
 			[Field.name]: Field,
 			[Dialog.name]: Dialog,
 			[Toast.name]: Toast,
-			[Sticky.name]: Sticky,
 
 			[VTable.name]: VTable,
 			[VPagination.name]: VPagination,

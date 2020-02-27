@@ -24,11 +24,7 @@
 			}
 		},
 		methods:{
-			focus(){
-				if (this.$refs.variableInput) {
-        			this.$refs.variableInput.focus();
-      			}
-			}
+			
 		},
 		created(){
 			
