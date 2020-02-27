@@ -38,7 +38,7 @@
 					<el-menu-item-group>
 						<el-menu-item index="/admin/board/lists">纸板列表</el-menu-item>
 						<el-menu-item index="/admin/board/add">添加纸板</el-menu-item>
-						<el-menu-item index="5-3">纸板默认图片</el-menu-item>
+						<el-menu-item index="/admin/board/defpic">纸板默认图片</el-menu-item>
 						<el-menu-item index="/admin/board/del">已删除纸板列表</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>
@@ -50,7 +50,7 @@
 					<el-menu-item-group>
 						<el-menu-item index="/admin/box/lists">淘宝箱列表</el-menu-item>
 						<el-menu-item index="/admin/box/add">添加淘宝箱</el-menu-item>
-						<el-menu-item index="6-3">淘宝箱默认图片</el-menu-item>
+						<el-menu-item index="/admin/box/defpic">淘宝箱默认图片</el-menu-item>
 						<el-menu-item index="/admin/box/del">已删除淘宝箱列表</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>

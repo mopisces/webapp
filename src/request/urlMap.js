@@ -32,7 +32,8 @@ const admin = {
 		editSave      : `${base.admin}adminBoardEsave`,
 		addConfig     : `${base.admin}adminBoardConfig`,
 		addSave       : `${base.admin}adminBoardAdd`, 
-		undel         : `${base.admin}adminBoardUndel`, 
+		undel         : `${base.admin}adminBoardUndel`,
+		delPic        : `${base.admin}adminBoardPicDel`,
 	},
 	box : {
 		getConfig : `${base.admin}adminBoxConfig`,

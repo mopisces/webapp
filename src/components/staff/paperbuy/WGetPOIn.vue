@@ -20,7 +20,7 @@
 			<div class="header" style="width:100%;position:fixed;height:46px;top:0px;text-align:center;">
 				<div class="van-nav-bar van-hairline--bottom">
 					<div class="van-nav-bar__title van-ellipsis">
-						详细信息
+						详细信息 
 					</div>
 				</div>
 			</div>
@@ -28,7 +28,7 @@
 				<van-field center input-align="right" label="收货日期" v-model="detailData.fieldData.RecDate"></van-field>
 				<van-field center input-align="right" label="收货单号" v-model="detailData.fieldData.InNo"></van-field>
 				<van-field center input-align="right" label="供应商" v-model="detailData.fieldData.ShortName"></van-field>
-				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="detailData.tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" >
+				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="detailData.tableData" row-hover-color="#eee" row-click-color="#edf7ff" even-bg-color="#fafafa" :height="config.table.height" >
 				</v-table>
 			</div>	
 			<div class="footer" style="width:100%;position:fixed;height:46px;bottom:0px;">

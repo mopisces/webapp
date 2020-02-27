@@ -15,6 +15,8 @@ const boardEdit    = r => require.ensure([], () => r(require('@/components/admin
 const boardAdd     = r => require.ensure([], () => r(require('@/components/admin/board/Add')), 'boardAdd');
 //已删除纸板列表
 const boardDel     = r => require.ensure([], () => r(require('@/components/admin/board/DelLists')), 'boardDel');
+//纸板团购默认图片
+const boardDefPic  = r => require.ensure([], () => r(require('@/components/admin/board/DefaultPic')), 'boardDefPic');
 //项目配置
 const configInfo   = r => require.ensure([], () => r(require('@/components/admin/config/Config')), 'configInfo');
 //淘宝箱列表
@@ -25,6 +27,8 @@ const boxEdit      = r => require.ensure([], () => r(require('@/components/admin
 const boxDel       = r => require.ensure([], () => r(require('@/components/admin/box/DelLists')), 'boxDel');
 //添加淘宝箱
 const boxAdd       = r => require.ensure([], () => r(require('@/components/admin/box/Add')), 'boxAdd');
+//淘宝箱团购默认图片
+const boxDefPic    = r => require.ensure([], () => r(require('@/components/admin/box/DefaultPic')), 'boxDefPic');
 //用户列表
 const userLists    = r => require.ensure([], () => r(require('@/components/admin/user/Lists')), 'userLists');
 //添加用户
@@ -69,6 +73,11 @@ export const asyncAdminRouterMap = [
                 component: boardAdd,
             },
             {
+                path:'board/defpic',
+                meta: { title: '纸板默认图片' },
+                component: boardDefPic,
+            },
+            {
                 path:'board/del',
                 mate:{ title: '已删除纸板列表' },
                 component:boardDel
@@ -93,6 +102,11 @@ export const asyncAdminRouterMap = [
                 path:'box/add',
                 meta: { title: '添加淘宝箱' },
                 component: boxAdd,
+            },
+            {
+                path:'box/defpic',
+                meta: { title: '淘宝箱默认图片' },
+                component: boxDefPic,
             },
             {
                 path:'user/lists',

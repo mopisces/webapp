@@ -207,6 +207,13 @@
 								<el-input style="width: 100px;" v-model="form.WGetPOMainMaxDate"></el-input>
 							</td>
 						</tr>
+						<tr>
+							<td style="width:150px;">原纸库存</td>
+							<td>
+								日期起始范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.WGetPOInRecDate"></el-input>
+							</td>
+						</tr>
 						<tr v-if="!Number(form.Open80Port)">
 							<td style="width:150px;">扫码功能</td>
 							<td>
@@ -240,13 +247,13 @@
 						<tr>
 							<td style="width:150px;">显示库区</td>
 							<td>
-								<el-checkbox v-model="form.bMStockArea" label="是否开启" border></el-checkbox>
+								<el-checkbox v-model="form.bMStockArea" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
 						<tr>
 							<td style="width:150px;">库区控制</td>
 							<td>
-								<el-checkbox v-model="form.bSAreaControl" label="是否开启" border></el-checkbox>
+								<el-checkbox v-model="form.bSAreaControl" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
 						<tr>

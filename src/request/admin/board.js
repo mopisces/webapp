@@ -111,6 +111,13 @@ const board={
 			order_id         : data.Id
 		};
 		return post(admin.board.undel,postData);
+	},
+	delPic( data ){
+		let postData = {
+			default_pic_type : data.type,
+			pic_name         : data.picName
+		};
+		return post(admin.board.delPic,postData);
 	}
 };
 export default board;

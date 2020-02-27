@@ -243,7 +243,7 @@
 					}
 				});
 			},
-			getStockArea( strOrderId ){
+			getStockArea( strOrderId, needReset = true ){
 				let self = this;
 				self.strStockAreaAll = [];
 				this.$request.staff.stow.getStockArea( strOrderId ).then(res=>{
@@ -258,8 +258,10 @@
 						return ;
 					}
 					this.$nextTick(()=>{
-						this.fieldData.strStockArea = this.strStockAreaAll[0].StockArea;
-						this.fieldData.areaQty      = this.strStockAreaAll[0].Qty;
+						if( needReset ){
+							this.fieldData.strStockArea = this.strStockAreaAll[0].StockArea;
+							this.fieldData.areaQty      = this.strStockAreaAll[0].Qty;
+						}
 					})
 				});
 			},
@@ -359,7 +361,7 @@
 					}
 				}
 				this.fieldData.strStockArea = rowData.StockArea;
-				this.getStockArea( this.fieldData.strOrderId );
+				this.getStockArea( this.fieldData.strOrderId , false);
 			},
 			rowDelete( index, rowData ){
 				this.erpDelForm.iPListNo     = rowData.PListNo;
