@@ -9,6 +9,7 @@ const calc = {
 		return post(staff.calc.boardPicker,{board_keyword:keyword});
 	},
 	boxPicker( keyword ){
+		console.log(keyword)
 		return post(staff.calc.boxPicker,{box_keyword:keyword});
 	},
 	getTrimAndArea( cusName ){

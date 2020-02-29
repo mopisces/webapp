@@ -199,7 +199,7 @@
 			},
 			editSave( data ){
 				let self = this;
-				this.$request.admin.board.editSave( data ).then(res=>{
+				this.$request.admin.box.editSave( data ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.$message({
 							message: res.msg,

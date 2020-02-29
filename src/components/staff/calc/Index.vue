@@ -314,7 +314,7 @@
 			},
 			boxPickerSearch(){
 				let self = this;
-				this.$request.staff.calc.boxPicker( this.config.search.boxName ).then(res=>{
+				this.$request.staff.calc.boxPicker( this.config.search.boxId ).then(res=>{
 					self.info.boxPicker.columns = [];
 					res.result.forEach((item,index)=>{
 						self.info.boxPicker.columns.push({text:item.BoxId + '--' + item.BoxName,key:item.BoxId});
