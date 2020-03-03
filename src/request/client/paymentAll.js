@@ -15,7 +15,7 @@ const paymentAll = {
 	applyRefund( data ){
 		let postData = {
 			apply_order_id       : data.orderId,
-			apply_refound_reason : data.reason
+			apply_refund_reason  : data.reason
 		};
 		return post(client.paymentAll.applyRefund,postData);
 	},
