@@ -436,7 +436,6 @@
 				
 				if( typeof(this.formData.length) === 'number' && typeof(this.formData.width) === 'number' && this.formData.bdQty != '' ){
 					let area = this.formData.length * this.formData.width * this.formData.bdQty / 1000000;
-					console.log(area)
 					if( area > this.pageConfig.maxArea || area < this.pageConfig.minArea ){
 						Toast.fail('下单面积范围:' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡');
 						this.formData.ordQty = '';

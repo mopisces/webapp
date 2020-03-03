@@ -172,9 +172,9 @@
 					widthF           : '',
 					length           : '',
 					width            : '',
-					bdMultiple       : '',
-					ordQty           : '',
-					bdQty            : '',
+					bdMultiple       : '',  //张数
+					ordQty           : '',  //订单数
+					bdQty            : '',  //纸板数
 					area             : '',
 					address          : '',
 					date             : '',
