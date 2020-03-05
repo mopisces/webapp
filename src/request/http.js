@@ -25,12 +25,15 @@ httpServer.interceptors.request.use(
 			loadingType: 'spinner'
 		});
 		let auth = '';
+		sessionStorage.setItem('jpdn-sg-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1ODMzNjkyODEsImV4cCI6MTU4MzQ1NTY4MSwicm9vdCI6MiwiZGF0YSI6Im9rXC9vayJ9.Chu3fe8S-AFc0BTx4AuXaSE-kT659lqIJLVBHOlWd_s');
 		if( sessionStorage.getItem('jpdn-client-token') ){
 			auth = sessionStorage.getItem('jpdn-client-token');
 		}else if( sessionStorage.getItem('jpdn-staff-token') ){
 			auth = sessionStorage.getItem('jpdn-staff-token');
 		}else if( sessionStorage.getItem('jpdn-admin-token') ){
 			auth = sessionStorage.getItem('jpdn-admin-token');
+		}else if( sessionStorage.getItem('jpdn-sg-token') ){
+			auth = sessionStorage.getItem('jpdn-sg-token');
 		}else{
 			auth = '';
 		}

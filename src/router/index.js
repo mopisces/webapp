@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import store from '@/store';
 import client from './client';
 import admin from './admin';
+import sg from './sg';
 Vue.use(Router);
 //公共页面
 //团购及未登录页面布局
@@ -135,7 +136,8 @@ let routes = [
         meta : { title:'您访问的页面不存在' }
     },
     ...client,
-    ...admin
+    ...admin,
+    ...sg
 ];
 
 

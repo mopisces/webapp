@@ -7,7 +7,9 @@ const base = {
 	client : 'http://localhost:8001/public/v1/client/',
 	pay    : 'http://localhost:8001/public/v1/alipay/',
 	erp    : 'http://localhost:38081/datasnap/rest/TServerMethods1/',
-	index  : 'http://localhost:8001/public/v1/index/'
+	index  : 'http://localhost:8001/public/v1/index/',
+
+	sg     : 'http://localhost:8001/public/v1/sg/',
 };
 
 export default base;

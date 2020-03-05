@@ -235,4 +235,14 @@ const pay = {
 	alipay : `${base.pay}alipay`,
 	wxpay  : `${base.pay}wxpay`,
 }
-export { admin, staff, erp, index, client, pay };
+
+const sg = {
+	alter : {
+		getConfig : `${base.sg}alterConfig`,
+	},
+	select : {
+		getConfig : `${base.sg}selectConfig`,
+		getBl     : `${base.sg}selectGetBl`,
+	}
+};
+export { admin, staff, erp, index, client, pay, sg };
