@@ -11,6 +11,13 @@ const select = {
 		};
 		return post(sg.select.getBl,postData);
 	},
+	getBlms( data ){
+		let postData = {
+			blms_active_type  : data.active,
+			blms_config_index : data.index
+		};
+		return post(sg.select.getBlms,postData);
+	},
 	getScdd( data ){
 		let postData = {
 			scdd_sn           : data.sn,

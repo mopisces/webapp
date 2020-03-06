@@ -34,7 +34,7 @@
 			return {
 				config:{
 					headerTitle : '',
-					active      : '',
+					active      : 'sgMenu',
 				},
 				isRouterAlive : true
 			}

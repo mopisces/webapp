@@ -27,31 +27,82 @@
 						activeOption : [
 							{
 								text  : '按长度',
-								value : '0'
+								value : 0
 							},
 							{
 								text  : '按重量',
-								value : '1'
+								value : 1
 							}
 						]
 					},
 					table:{
-						columns:[],
+						columns:[
+							{field: '糊机备纸', title: '糊机备纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SF1芯纸', title: 'SF1芯纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SF1面纸', title: 'SF1面纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SF2芯纸', title: 'SF2芯纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SF2面纸', title: 'SF2面纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SF3芯纸', title: 'SF3芯纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SF3面纸', title: 'SF3面纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
+						],
 						height : 0
-					}
+					},
+					isnew : false
 				},
 				formData:{
 					index  : 0,
-					active : 0
+					active : 0,
 				},
 				tableData : []
 			}
 		},
 		methods:{
-
+			getConfig(){
+				let self = this;
+				this.$request.sg.select.getConfig().then(res=>{
+					if( res.errorCode == '00000' ){
+						res.result.forEach((item,index)=>{
+							self.config.dropDown.indexOption.push({text:item.DB_FLAG,value:index,isnew:item.isnew});
+						});
+						self.config.isnew = self.config.dropDown.indexOption[0].isnew == 0 ? false : true;
+					}
+				}).then(()=>{
+					this.getTableData();
+					this.$nextTick(()=>{
+						if( this.config.isnew ){
+							this.config.dropDown.activeOption = [
+								{
+									text  : '按长度',
+									value : 0
+								},
+								{
+									text  : '按重量',
+									value : 1
+								}
+							];
+						}else{
+							this.config.dropDown.activeOption = [
+								{
+									text  : '按长度',
+									value : 0
+								}
+							];
+						}
+					});
+				});
+			},
+			getTableData(){
+				let self = this;
+				this.$request.sg.select.getBlms( this.formData ).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.tableData = res.result;
+					}
+				});
+			}
 		},
 		created(){
 			this.$store.commit('sg/setHeaderTitle','备料查看');
+			this.getConfig();
 		},
 		mounted(){
 			this.config.table.height = window.screen.height - 126;
@@ -69,7 +120,28 @@
 		},
 		watch:{
 			indexChange( newV, oldV ){
-
+				this.config.isnew = this.config.dropDown.indexOption[newV].isnew == 0 ? false : true;
+				if( this.config.isnew ){
+					this.config.dropDown.activeOption = [
+						{
+							text  : '按长度',
+							value : 0
+						},
+						{
+							text  : '按重量',
+							value : 1
+						}
+					];
+				}else{
+					this.config.dropDown.activeOption = [
+						{
+							text  : '按长度',
+							value : 0
+						}
+					];
+				}
+				this.formData.active = 0;
+				this.getTableData();
 			}
 		}
 	}

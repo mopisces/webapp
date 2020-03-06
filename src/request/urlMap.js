@@ -243,6 +243,7 @@ const sg = {
 	select : {
 		getConfig     : `${base.sg}selectConfig`,
 		getBl         : `${base.sg}selectGetBl`,
+		getBlms       : `${base.sg}selectBlms`,
 		getScdd       : `${base.sg}selectGetScdd`,
 		getWgddConfig : `${base.sg}selectGetWgddConfig`,
 		getWgdd       : `${base.sg}selectGetWgdd`, 

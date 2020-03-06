@@ -13,7 +13,7 @@
 			</div>
 		</van-sticky>
 		<div v-if="!config.chart.show">
-			<van-panel v-for="(item,index) in listInfo" :key="index">
+			<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
 				<div slot="default">
 					<div class="van-row van-row--flex van-row--justify-center">
 						<div class="van-col van-col--10">坑型:    {{ item.Flutes }}</div>

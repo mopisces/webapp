@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="font-size:0.8125rem;">
 		<van-notice-bar :text="config.notice.text" left-icon="volume-o" />
 		<van-dropdown-menu>
 			<van-dropdown-item v-model="formData.activeItem" :options="config.dropDownOption" />
