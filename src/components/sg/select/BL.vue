@@ -26,7 +26,7 @@
 						columns : [
 							{field: 'sn', title: '序号', width:50 , titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'width', title: '门幅', width:50 ,titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'paperMaterial', title: '生产纸质', width:80 , titleAlign: 'center', columnAlign: 'center', formatter:(rowData)=>{
+							{field: 'paperMaterial', title: '生产纸质', width:80 , titleAlign: 'center', columnAlign: 'center', isResize:true, formatter:(rowData)=>{
 								if( rowData.paper_code ){
 									return rowData.paper_code;
 								}else{

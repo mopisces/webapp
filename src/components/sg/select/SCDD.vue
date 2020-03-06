@@ -2,12 +2,18 @@
 	<div>
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 		<van-dropdown-menu>
-			<van-dropdown-item v-model="formData.activeItem" :options="config.dropDownItem" />
+			<van-dropdown-item v-model="formData.activeItem" :options="config.dropDownOption" />
 		</van-dropdown-menu>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :immediate-check="false" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<van-panel v-for="(item,index) in listInfo" :key="index">
-					<div slot="default">
+				<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;">
+					<div slot="default" :style=" index%2 == 1 ? 'background-color:#f0f0f0;' : '' ">
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--20" v-if="config.updown">
+								<van-tag type="success" mark size="large" v-if=" item.tag == 1 ">上刀</van-tag>
+								<van-tag type="danger" mark size="large" v-if=" item.tag == -1 ">下刀</van-tag>
+							</div>
+						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--20">序号:{{ item.sn }}</div>
 						</div>
@@ -23,7 +29,7 @@
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--10">纸质:
-								<span v-if="false">{{ item.paper_code }}</span>
+								<span v-if=" config.isnew ">{{ item.paper_code }}</span>
 								<span v-else>{{ item.paper }}</span>
 							</div>
 							<div class="van-col van-col--10">坑型:{{ item.flute_type }}</div>
@@ -38,21 +44,21 @@
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--10">剖1:
-								<span v-if="false">{{ item.slitting }}</span>
+								<span v-if="config.isnew">{{ item.slitting }}</span>
 								<span v-else>{{ item.slitting1 }}</span>
 							</div>
 							<div class="van-col van-col--10">压型:{{ item.pressing_type }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--10">捆数:
-								<span v-if="false">{{ item.bundling_qty }}</span>
+								<span v-if="config.isnew">{{ item.bundling_qty }}</span>
 								<span v-else>{{ item.bundle_qty }}</span>
 							</div>
 							<div class="van-col van-col--10">修边:{{ item.trimming }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--20">压线资料1:
-								<span v-if="false">{{ item.slitting_data }}</span>
+								<span v-if="config.isnew">{{ item.slitting_data }}</span>
 								<span v-else>{{ item.slitting_data1 }}</span>
 							</div>
 						</div>
@@ -79,7 +85,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, DropdownMenu, DropdownItem, PullRefresh, List } from 'vant';
+	import { Button, Field, DropdownMenu, DropdownItem, PullRefresh, List, Panel, Tag } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	export default {
 		components:{
@@ -89,6 +95,8 @@
 			[DropdownItem.name]: DropdownItem,
 			[PullRefresh.name]: PullRefresh,
 			[List.name]: List,
+			[Panel.name]: Panel,
+			[Tag.name]: Tag,
 
 			PopupFilter
 		},
@@ -104,10 +112,12 @@
 							loading  : false
 						}
 					},
-					dropDownItem:[],
+					dropDownOption:[],
 					popup:{
 						filterShow : false
-					}
+					},
+					updown : false,
+					isnew  : false
 				},
 				formData:{
 					activeItem  : 0,
@@ -116,30 +126,74 @@
 					companyName : '',
 					paperCode   : '',
 					fluteType   : '',
-					width       : ''
+					width       : '',
+					curPage     : 1
 				},
 				listInfo : []
 			}
 		},
 		methods:{
 			pullOnRefresh(){
-
+				this.listInfo = [];
+				this.formData.curPage = 1;
+				this.config.list.pullRefresh.reloading = false;
+				this.config.list.pushLoading.finished  = false;
+				this.config.list.pushLoading.loading   = true;;
+				this.getScdd();
 			},
 			onLoad(){
-
+				this.formData.curPage++;
+				this.getScdd();
 			},
 			resetClick(){
-
+				this.formData.sn          = '';
+				this.formData.orderNumber = '';
+				this.formData.companyName = '';
+				this.formData.paperCode   = '';
+				this.formData.fluteType   = '';
+				this.formData.width       = '';
 			},
 			filterClick(){
-
+				this.pullOnRefresh();
+			},
+			getScdd(){
+				let self = this;
+				this.$request.sg.select.getScdd( this.formData ).then(res=>{
+					if( res.errorCode == '00000' ){
+						let maxLength = 3;
+						if( self.config.updown ){
+							maxLength = 6
+						}
+						if( res.result == null || res.result.length < maxLength ){
+							self.config.list.pushLoading.finished = true;
+						}
+						self.config.list.pushLoading.loading = false;
+						res.result.forEach((item,index)=>{
+							self.listInfo.push(item);
+						});
+					}
+				});
+			},
+			getDropDown(){
+				let self = this;
+				this.$request.sg.select.getConfig().then(res=>{
+					if( res.errorCode == '00000' ){
+						res.result.forEach((item,index)=>{
+							self.config.dropDownOption.push({text:item.DB_FLAG,value:index,isnew:item.isnew,updown:item.updown});
+						});
+						self.config.updown = self.config.dropDownOption[ 0 ].updown == 0 ? false : true;
+						self.config.isnew = self.config.dropDownOption[ 0 ].isnew == 0 ? false : true;
+					}
+				}).then(()=>{
+					this.getScdd();
+				});
 			}
 		},
 		created(){
 			this.$store.commit('sg/setHeaderTitle','生产订单');
 		},
 		mounted(){
-
+			this.getDropDown();
 		},
 		updated(){
 			
@@ -148,10 +202,16 @@
 			
 		},
 		computed:{
-			
+			activeItemChange(){
+				return this.formData.activeItem;
+			}
 		},
 		watch:{
-
+			activeItemChange( newV, oldV ){
+				this.config.updown = this.config.dropDownOption[ newV ].updown == 0 ? false : true;
+				this.config.isnew  = this.config.dropDownOption[ newV ].isnew == 0 ? false : true;
+				this.pullOnRefresh();
+			}
 		}
 	}
 </script>

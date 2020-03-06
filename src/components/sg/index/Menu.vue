@@ -11,7 +11,7 @@
 				<van-icon slot="icon" class-prefix="iconfont" name="sousuo" size="35" color="#eff30c"/>
 			</van-grid-item>
 			<van-grid-item text="生产订单" to="/sg/select/scdd">
-				<van-icon slot="icon" name="records" size="35" color="#eff30c"/>
+				<van-icon slot="icon" name="records" size="35" color="#1a991d"/>
 			</van-grid-item>
 			<van-grid-item text="完工订单" to="/sg/select/wgdd">
 				<van-icon slot="icon" name="completed" size="35" color="#eff30c"/>

@@ -241,8 +241,11 @@ const sg = {
 		getConfig : `${base.sg}alterConfig`,
 	},
 	select : {
-		getConfig : `${base.sg}selectConfig`,
-		getBl     : `${base.sg}selectGetBl`,
+		getConfig     : `${base.sg}selectConfig`,
+		getBl         : `${base.sg}selectGetBl`,
+		getScdd       : `${base.sg}selectGetScdd`,
+		getWgddConfig : `${base.sg}selectGetWgddConfig`,
+		getWgdd       : `${base.sg}selectGetWgdd`, 
 	}
 };
 export { admin, staff, erp, index, client, pay, sg };
