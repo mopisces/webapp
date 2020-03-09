@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<wx-scan :scanResult.sync="formData.strOrderId" urlType="2"></wx-scan>
-		<van-field input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" type="textarea" :rows="1" autosize placeholder="订单信息" readonly></van-field>
+		<van-field input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" type="textarea" :rows="1" autosize placeholder="订单信息" readonly class="field-readonly"></van-field>
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
 				<field-label-variable :value.sync="formData.iQty" label="入库数" placeholder="入库数" maxlength="3" :onFocus.sync="config.field.iQtyOnFocus"></field-label-variable>

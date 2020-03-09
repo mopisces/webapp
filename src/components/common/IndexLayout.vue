@@ -30,7 +30,7 @@
 			return {
 				config:{
 					headerTitle : '',
-					active : '',
+					active      : ''
 				},
 				isRouterAlive : true,
 			}

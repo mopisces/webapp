@@ -1,10 +1,10 @@
 <template>
 	<div>
 		<wx-scan :scanResult.sync="formData.stockInNo" urlType="1"></wx-scan>
-		<van-field readonly label="门幅(mm)" v-model="autoData.paperWidth" :placeholder="config.field.placeholder" input-align="center" :error="config.field.error" ></van-field>
-		<van-field readonly label="纸质" v-model="autoData.paperCode" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
-		<van-field readonly label="克重(g)" v-model="autoData.paperWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
-		<van-field readonly label="重量(kg)" v-model="autoData.oriWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
+		<van-field readonly label="门幅(mm)" v-model="autoData.paperWidth" :placeholder="config.field.placeholder" input-align="center" :error="config.field.error" class="field-readonly"></van-field>
+		<van-field readonly label="纸质" v-model="autoData.paperCode" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error" class="field-readonly"></van-field>
+		<van-field readonly label="克重(g)" v-model="autoData.paperWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error" class="field-readonly"></van-field>
+		<van-field readonly label="重量(kg)" v-model="autoData.oriWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error" class="field-readonly"></van-field>
 		<van-field label="回仓重量" type="number" v-model="formData.inWeight" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="formData.inOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="入库日期">
 		</new-time-picker>
@@ -185,6 +185,9 @@
 			stockInNoChange( newV, oldV ){
 				if( newV.length == 12 ){
 					this.paperGetInInfo( newV );
+				}else{
+					this.config.field.error       = false;
+					this.config.field.placeholder = '自动查询';
 				}
 			}
 		}

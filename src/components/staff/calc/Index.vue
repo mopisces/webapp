@@ -61,10 +61,10 @@
 		<template>
 			<van-popup v-model="config.popup.show" position="bottom" :style="{ height: '50%' }" >
 				<van-picker show-toolbar :columns="info.texPicker.columns" @cancel="config.popup.show = false"  @confirm="texConfirm" :default-index="info.texPicker.defaultIndex" v-if=" config.picker.type === 1">
-					<van-search slot="title" v-model="config.search.texName" @search="texPickerSearch"> </van-search>
+					<van-search slot="title" v-model="config.search.texName" @search="texPickerSearch" style="width:60%;"> </van-search>
 				</van-picker>
 				<van-picker show-toolbar :columns="info.boxPicker.columns" @cancel="config.popup.show = false"  @confirm="boxConfirm" :default-index="info.boxPicker.defaultIndex" v-if=" config.picker.type === 2">
-					<van-search slot="title" v-model="config.search.boxId" @search="boxPickerSearch"> </van-search>
+					<van-search slot="title" v-model="config.search.boxId" @search="boxPickerSearch" style="width:60%;"> </van-search>
 				</van-picker>
 			</van-popup>
 		</template>

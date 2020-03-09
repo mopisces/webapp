@@ -102,12 +102,13 @@
 	</div>
 </template>
 <script>
-	import { Button, Image,CountDown, Swipe, SwipeItem } from 'vant';
+	import { Button, Image, Dialog, CountDown, Swipe, SwipeItem } from 'vant';
 	import vueSeamlessScroll from 'vue-seamless-scroll'
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Image.name]: Image,
+			[Dialog.name]: Dialog,
 			[Swipe.name]: Swipe,
 			[SwipeItem.name]: SwipeItem,
 			[CountDown.name]: CountDown,
@@ -137,6 +138,14 @@
 			groupBuyDetail( id ){
 				let self = this;
 				this.$request.client.groupBuying.groupBuyDetail( { id:id, isTaobao:0 } ).then(res=>{
+					if( res.errorCode != '00000' ){
+						Dialog.alert({
+							message:'请登陆查看详细信息'
+						}).then(()=>{
+							self.$router.push('/group/client/login');
+						});
+						return ;
+					}
 					self.detailData = res.result.goods_detail;
 					self.buyResult  = res.result.buy_result;
 					self.descInfo   = res.result.desc_info;

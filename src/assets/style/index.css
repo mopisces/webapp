@@ -24,6 +24,18 @@
 	background-color: #f5f5f5;
 }
 
+.field-readonly textarea{
+	background-color: #f5f5f5 !important;
+}
+
+.field-readonly input{
+	background-color: #f5f5f5 !important;
+}
+
+.van-field__control--center:focus{
+	background-color:#f0ecec;
+}
+
 /*field全局样式*/
 .van-cell{
 	display: flex;

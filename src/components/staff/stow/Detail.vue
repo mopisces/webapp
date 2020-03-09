@@ -6,7 +6,7 @@
 			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="pageConfig.bMStockArea" @click=" config.popup.stockAreaShow = true ">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
-			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize :rows="1" class="readonly">
+			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize :rows="1" class="field-readonly">
 			</van-field>
 			<div class="van-row" style="text-align:left;">
 				<div class="van-col van-col--12">

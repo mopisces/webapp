@@ -1,10 +1,10 @@
 <template>
 	<div>
 		<wx-scan :scanResult.sync="formData.stockOutNo" urlType="0"></wx-scan>
-		<van-field readonly label="门幅(mm)" v-model="infoData.paperWidth" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
-		<van-field readonly label="纸质" v-model="infoData.paperCode" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
-		<van-field readonly label="克重(g)" v-model="infoData.paperWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center"></van-field>
-		<van-field readonly label="重量(kg)" v-model="infoData.curWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center" ></van-field>
+		<van-field readonly label="门幅(mm)" v-model="infoData.paperWidth" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center" class="field-readonly"></van-field>
+		<van-field readonly label="纸质" v-model="infoData.paperCode" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center" class="field-readonly"></van-field>
+		<van-field readonly label="克重(g)" v-model="infoData.paperWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center" class="field-readonly"></van-field>
+		<van-field readonly label="重量(kg)" v-model="infoData.curWt" :placeholder="config.field.placeholder" :error="config.field.error" input-align="center" class="field-readonly"></van-field>
 		<op-class-field :opClass.sync="formData.stockOutOpClass"></op-class-field>
 		<s-flute-select :sFlute.sync="formData.stockOutSFlute"></s-flute-select>
 		<van-field label="剥纸重量" v-model="formData.stockOutBzwt" type="number" input-align="center"></van-field>
@@ -21,6 +21,7 @@
 	import WxScan from '@/components/subject/WxScan.vue';
 	import SFluteSelect from '@/components/subject/staff/SFluteSelect.vue';
 	import OpClassField from '@/components/subject/staff/OpClassField.vue';
+	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -32,7 +33,8 @@
 			NewTimePicker,
 			WxScan,
 			SFluteSelect,
-			OpClassField
+			OpClassField,
+			FieldLabelVariable
 		},
 		data(){
 			return {
@@ -196,6 +198,9 @@
 			outNo( newVal,oldVal ){
 				if( newVal.length === 12 ){
 					this.getOutInfo( newVal );
+				}else{
+					this.config.field.error       = false;
+					this.config.field.placeholder = '自动查询';
 				}
 			},
 		}

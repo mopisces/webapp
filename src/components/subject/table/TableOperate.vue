@@ -20,7 +20,7 @@
 				   			<span class="van-button__text">取消准备</span>
 				   		</button> -->
 		</div>
-		<div v-if=" field === 'stowDetail' ">
+		<div v-if=" field === 'stowDetail' && Number(rowData.DNCount) > 0">
 			<van-button plain hairline type="primary" @click="detail()" size="small" color="#000">明细</van-button>
 			<!-- <button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="detail()">
 				<span class="van-button__text">明细</span>

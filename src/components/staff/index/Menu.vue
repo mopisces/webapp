@@ -1,24 +1,23 @@
 <template>
 	<div style="background-color:#f1f1f1;">
 		<div style="width:100%;height:0.625rem;"></div>
-		<div class="vant-row">
-			<div class="van-col van-col--6">
-				<div class="van-tabbar-item" style="height:2.75rem;">账号：{{ userName }}</div>
+		<div class="vant-row" style="height:3.125rem;">
+			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
+				<div style="font-size:0.875rem;">账号：<span style="color:rgb(26, 173, 25);">{{ userName }}</span></div>
 			</div>
-			<div class="van-col van-col--8">
-				<van-button type="info"  plain hairline round @click="getChangePass()">
+			<div class="van-col van-col--8" style="text-align:center;">
+				<van-button type="info" plain hairline round size="small" @click="getChangePass()">
 					<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
 					更改密码
 				</van-button>
 			</div>
-			<div class="van-col van-col--10">
-				<van-button type="info" plain hairline round @click="qrClick">
+			<div class="van-col van-col--8" style="text-align:center;">
+				<van-button type="info" plain hairline round size="small" @click="qrClick">
 					<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
 					登录二维码
 				</van-button>
 			</div>
 		</div>
-		<div style="width:100%;height:3.75rem;"></div>
 		<van-grid square :gutter="10" :column-num="3">
 			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
 				<van-icon class-prefix="iconfont" size="35" :name="item.iconName" slot="icon" :color="item.state"/>
@@ -46,13 +45,13 @@
 			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  type="password" required/>
 			<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" required/>
 			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6" required/>
-			<div class="van-row van-row--flex van-row--justify-space-between" style="position:fixed;bottom:0;width:100%;">
-				<div class="van-col van-col--10">
+			<div class="van-row van-row--flex van-row--justify-space-between">
+				<div class="van-col van-col--12">
 					<van-button type="primary" size="normal" style="width:100%;" @click="changeClick()">
 						提交
 					</van-button>
 				</div>
-				<div class="van-col van-col--10">
+				<div class="van-col van-col--12">
 					<van-button type="primary" size="danger" style="width:100%;" @click=" config.popup.changePass.show = false ">
 						取消
 					</van-button>
