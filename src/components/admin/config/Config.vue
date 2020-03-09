@@ -208,7 +208,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="width:150px;">原纸库存</td>
+							<td style="width:150px;">原纸收获</td>
 							<td>
 								日期起始范围&nbsp;&nbsp;&nbsp;
 								<el-input style="width: 100px;" v-model="form.WGetPOInRecDate"></el-input>
@@ -768,6 +768,7 @@
 					WGetPOMainEndDate        : '',  //原纸采购
 					WGetPOMainMinDate        : '',  //原纸采购(日期范围)
 					WGetPOMainMaxDate        : '',  //原纸采购
+					WGetPOInRecDate          : '',  //原纸采购(默认起始范围)
 					UseScan                  : '',  //扫码功能
 					DoStockOutOpTime         : '',  //原纸出库(默认日期)
 					DoStockOutMinDate        : '',  //原纸出库(日期范围)

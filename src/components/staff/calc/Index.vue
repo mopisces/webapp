@@ -51,7 +51,7 @@
 						<field-label-variable :value.sync="calcResult.strScoreInfo" label="压线" placeholder="待计算" readonly="readonly"></field-label-variable>
 					</div>
 					<div style="width:100%;height:3.125rem;"></div>
-					<van-button type="primary" size="large" round @click.native="calBdPriceInfo()" style="position:fixed;bottom:3.125rem;" :disabled="config.button.disabled">
+					<van-button type="primary" size="normal" round @click.native="calBdPriceInfo()" style="position:fixed;bottom:3.125rem;width:100%;" :disabled="config.button.disabled">
 						<span v-if="config.tabs.active == 0 ">纸板计算</span>
 						<span v-else>纸箱计算</span>
 					</van-button>
@@ -239,9 +239,6 @@
 								callback(errors);
 							} }
 						]
-						/*factoryId : [
-							{ type : 'string', required : true, message : '分厂id未获取' }
-						]*/
 					}
 				}
 			}
@@ -505,8 +502,5 @@
 	    height: 50px;
 	    text-align: center;
 	    border:1px solid;
-	}
-	.van-search {
-		width:60%;
 	}
 </style>

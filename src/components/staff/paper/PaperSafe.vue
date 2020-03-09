@@ -107,12 +107,12 @@
 		methods:{
 			resetClick(){
 				this.filterForm = {
-					safePaperState:0,
-					safePaperType:'0',
-					safePaperCode:'',
-					safePaperWidth:'',
-					safePaperName:'',
-					safeSRemark:''
+					safePaperState : 0,
+					safePaperType  : '0',
+					safePaperCode  : '',
+					safePaperWidth : '',
+					safePaperName  : '',
+					safeSRemark    : ''
 				};
 				this.config.switch.checked = false;
 			},
@@ -127,10 +127,7 @@
 				});
 			},
 			columnCellClass( rowIndex,columnName,rowData ){
-				if( this.filterForm.safePaperState == 1 ){
-					return 'less';
-				}
-				if( rowData.PCount < rowData.SafeCount ){
+				if( Number(rowData.PCount) < Number(rowData.SafeCount) ){
 					return 'less';
 				}
 			}	

@@ -24,7 +24,7 @@
 			</van-sticky>
 			<van-pull-refresh v-model="pullRefresh.reloading" @refresh="pullOnRefresh">
 				<van-list v-model="pushLoading.loading" :finished="pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
-					<van-panel v-for="(item,index) in listInfo" :key="index">
+					<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
 						<div slot="default">
 							<van-row type="flex" justify="center">
 								<van-col span="20">货品名称:{{ item.MatName }}</van-col>

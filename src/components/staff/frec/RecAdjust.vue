@@ -1,14 +1,10 @@
 <template>
 	<div>
-		<div class="van-tabs van-tabs--card">
-			<div class="van-tabs__wrap">
-				<div class="van-tabs__nav van-tabs__nav--card">
-					<div :class="config.tabs.payClass"  @click="tabsClick(1)">收款</div>
-					<div :class="config.tabs.adjustClass" @click="tabsClick(0)">调账</div>
-					<div class="van-tab" @click="config.popup.filterShow = true">筛选</div>
-				</div>
-			</div>
-		</div>
+		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
+		<van-tabs v-model="filterForm.adjustType" @change="tabsChange">
+			<van-tab title="收款" name="1"></van-tab>
+			<van-tab title="调账" name="0"></van-tab>
+		</van-tabs>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" >
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
@@ -25,7 +21,7 @@
 	</div>
 </template>
 <script>
-	import { Field, SwitchCell } from 'vant';
+	import { Button, Tab, Tabs, Field, SwitchCell } from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
@@ -33,6 +29,9 @@
 	import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
+			[Button.name]: Button,
+			[Tab.name]: Tab,
+			[Tabs.name]: Tabs,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
 
@@ -53,7 +52,7 @@
 						columns:[
 							{field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'Checked', title: '审核', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,formatter: (rowData,rowIndex,pagingIndex,field)=>{
-								return rowData.Checked === '1' ? '<span class="van-icon van-icon-success"></span>' : '<span class="van-icon van-icon-fail"></span>';
+								return rowData.Checked === '1' ? '<span class="van-icon van-icon-success" style="color:#1aad19;"></span>' : '<span class="van-icon van-icon-fail"></span>';
 							}},
 							{field: 'PayId', title: '单号', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'OpDate', title: '操作日期', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
@@ -61,18 +60,13 @@
 							{field: 'Amount', title: '金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Remark', title: '备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'NeedInv', title: '需开票', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true, formatter:(rowData,rowIndex,pagingIndex,field)=>{
-								return rowData.NeedInv === '1' ? '<span class="van-icon van-icon-success"></span>' : '<span class="van-icon van-icon-fail"></span>';
+								return rowData.NeedInv === '1' ? '<span class="van-icon van-icon-success" style="color:#1aad19;"></span>' : '<span class="van-icon van-icon-fail"></span>';
 							}},
 							{field: 'ShortName', title: '科目', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Task', title: '业务员', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'ReceiptNo', title: '收据编号', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
 						height : 0
-					},
-					tabs:{
-						active:0,
-						payClass:'van-tab van-tab--active',
-						adjustClass:'van-tab',
 					},
 					popup:{
 						filterShow:false,
@@ -145,18 +139,7 @@
 					self.info.table.data = res.result;
 				});
 			},
-			tabsClick(data){
-				if( data === 1 ){
-					this.config.tabs.active = 0;
-					this.config.tabs.adjustClass = 'van-tab';
-					this.config.tabs.payClass = 'van-tab van-tab--active';
-					this.filterForm.adjustType = 1;
-				}else{
-					this.config.tabs.active = 1;
-					this.config.tabs.payClass = 'van-tab';
-					this.config.tabs.adjustClass = 'van-tab van-tab--active';
-					this.filterForm.adjustType = 0;
-				}
+			tabsChange(name,title){
 				this.recAdjustMain(this.filterForm);
 			},
 			cusPickerCancel(){
@@ -197,7 +180,7 @@
 		},
 		mounted(){
 			this.recAdjustConfig();
-			this.config.table.height = window.screen.height - 220;
+			this.config.table.height = window.screen.height - 170;
 		},
 		destroyed(){
 			if( this.info.switch.checked ){

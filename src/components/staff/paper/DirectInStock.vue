@@ -4,7 +4,7 @@
 		<van-field input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" type="textarea" :rows="1" autosize placeholder="订单信息" readonly></van-field>
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
-				<field-label-variable :value.sync="formData.iQty" label="入库数" placeholder="入库数" maxlength="3" ></field-label-variable>
+				<field-label-variable :value.sync="formData.iQty" label="入库数" placeholder="入库数" maxlength="3" :onFocus.sync="config.field.iQtyOnFocus"></field-label-variable>
 			</div>
 			<div class="van-col van-col--12">
 				<op-class-field :opClass.sync="formData.strWorkGorup"></op-class-field>
@@ -18,7 +18,9 @@
 				<field-label-variable :value.sync="formData.strSchArea" label="传单库区" placeholder="传单库区" maxlength="10" readonly="readonly"></field-label-variable>
 			</div>
 		</div>
-		<van-field readonly clickable label="库区" placeholder="请选择入库库区" input-align="center" @click=" config.popup.area.show = true " v-model="formData.strStockArea" v-if="pageInfo.bMStockArea"></van-field>
+		<van-field readonly clickable label="库区" placeholder="请选择入库库区" input-align="center" @click=" config.popup.area.show = true " v-model="formData.strStockArea" v-if="pageInfo.bMStockArea">
+			<van-icon name="arrow" slot="right-icon"/>
+		</van-field>
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.dInDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="选择入库日期"></new-time-picker>
 	   	<van-field v-model="formData.strRemark" autosize label="备注" type="textarea" maxlength="50" placeholder="请输入备注" rows="1"/>
 	   	<div class="van-row" style="text-align:center;margin-top:1rem;" >
@@ -39,7 +41,7 @@
 	</div>
 </template>
 <script>
-	import { Popup, Button, Icon, Field, Dialog, Toast } from 'vant';
+	import { Button, Icon, Popup, Field, Dialog, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -84,6 +86,9 @@
 							{field: 'LeftQty', title: '未装订单数',width: 80,  titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'LeftSArea', title: '未装折五面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						]
+					},
+					field:{
+						iQtyOnFocus:false
 					}
 				},
 				formData:{
@@ -180,6 +185,10 @@
 					if( res.result.MatName !== '' && res.result.OrderType === 'x' ){
 						self.pageInfo.strOrderInfo += ' 货品名称:' + res.result.MatName;
 					}
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.config.field.iQtyOnFocus = true;
+					});
 				});
 			},
 			onSubmit(){
@@ -256,6 +265,7 @@
 					if( this.pageInfo.bSAreaControl ){
 						this.getLastSchArea( newV );
 						this.getOrdSchArea( newV );
+
 					}
 				}
 				
@@ -263,8 +273,11 @@
 		}
 	}
 </script>
-<style>
+<style scoped>
 	.van-field__word-limit{
 		line-height: 1rem;
+	}
+	.van-field__control {
+		background-color: #00000d;
 	}
 </style>
