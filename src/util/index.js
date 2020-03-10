@@ -1,7 +1,9 @@
-export function trim(){
+export function trim()
+{
 	return str.replace(/(^\s*)|(\s*$)/g, "");
 };
-export function dateTimeFormat( datetime, format ){
+export function dateTimeFormat( datetime, format )
+{
 	let dt = new Date(datetime);
 	let o = {
 		'M+': dt.getMonth() + 1,
@@ -20,7 +22,8 @@ export function dateTimeFormat( datetime, format ){
 	}
 	return format;
 };
-export function cTypeChange( cType ){
+export function cTypeChange( cType )
+{
 	switch ( cType ) {
 		case 's':
 			return '简单纸板';
@@ -34,7 +37,8 @@ export function cTypeChange( cType ){
 			return '';
 	} 
 };
-export function changeIcon( iconName ){
+export function changeIcon( iconName )
+{
 	switch (iconName) {
 		case 'icon-dianhua':
 			return '电话';
@@ -47,3 +51,55 @@ export function changeIcon( iconName ){
 		default:  '未知';
 	}
 };
+export function deepCopy( routeArr )
+{
+	return routeArr.map((arr) => {
+		arr = Object.assign({}, arr)
+			return arr
+	});
+};
+let urlWhiteList = ( search, type )=>
+{
+	let whiteList;
+	if( type == 'staff' ){
+		whiteList = [
+			'内部人员使用',
+			'菜单页面'
+		];
+	}else{
+		whiteList = [
+			'外部人员使用',
+			'菜单页面'
+		];
+	}
+	for (var i = whiteList.length - 1; i >= 0; i--) {
+		if( whiteList[i] === search ){
+			return true;
+			break;
+		}
+	}
+	return false;
+}
+export function filterAsyncRouter( asyncRouterMap, roles, type )
+{
+	const accessedRouters = asyncRouterMap.filter( route => { 
+		if( typeof(roles) === 'object' && JSON.stringify(roles) !== '[]' ){
+			for (var i = roles.length - 1; i >= 0; i--) {
+				if( urlWhiteList(route.meta.title, type) || route.meta.title.indexOf(roles[i]) >= 0 ){
+					if( route.children && route.children.length){
+						route.children = filterAsyncRouter( route.children,roles, type );
+					}
+					return route;
+				}
+			}
+		}else{
+			if( urlWhiteList(route.meta.title, type) || route.meta.title.indexOf(roles) >= 0 ){
+				if( route.children && route.children.length ){
+					route.children = filterAsyncRouter( route.children,roles, type );
+				}
+				return route;
+			}
+		}
+	});
+	return accessedRouters;
+}

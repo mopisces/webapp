@@ -1,4 +1,5 @@
 import { asyncStaffRouterMap } from '@/router/staff';
+import { deepCopy, filterAsyncRouter } from '@/util/index';
 const staff = {
 	namespaced: true,
 	state: {
@@ -34,12 +35,12 @@ const staff = {
 	actions: {
 		permission : ( { commit }, authUrlArr )=>{
 			let routeArr  = deepCopy(asyncStaffRouterMap);
-			const navList = filterAsyncRouter( routeArr, authUrlArr );
+			const navList = filterAsyncRouter( routeArr, authUrlArr, 'staff' );
 			commit('setNavList', navList);
 		}
 	},
 };
-function filterAsyncRouter (asyncStaffRouterMap, roles) {
+/*function filterAsyncRouter (asyncStaffRouterMap, roles) {
 	const accessedRouters = asyncStaffRouterMap.filter( route => { 
 		if( typeof(roles) === 'object'){
 			for (var i = roles.length - 1; i >= 0; i--) {
@@ -78,5 +79,5 @@ function inStaffWhiteList( search ){
 		}
 	}
 	return false;
-}
+}*/
 export default staff;

@@ -212,6 +212,8 @@ const client = {
 		contactWay     : `${base.client}contactWay`, 
 		register       : `${base.client}register`, 
 		indexConfig    : `${base.client}getIndexConfig`, 
+		clientPwd      : `${base.client}changePwd`, 
+		authUrl        : `${base.client}getMenuUrl`
 	},
 	groupBuying : {
 		faddishList    : `${base.client}faddishList`, 

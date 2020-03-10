@@ -35,8 +35,8 @@ const user = {
 	},
 	changePass( data ){
 		let postData = {
-			old_pass : data,
-			new_pass : data
+			old_pass  : data.oldPass,
+			new_pass  : data.newPass,
 		};
 		return post(staff.user.changePass,postData);
 	}

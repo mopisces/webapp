@@ -89,9 +89,19 @@
 				});
 			},
 			getAuthName( data ){
-				this.$store.dispatch('client/permission');
-				this.$router.addRoutes(this.$store.state.client.navList);
-				this.$router.push('/client/index/menu');
+				let self = this;
+				this.$request.staff.user.getAuthName( data ).then(res=>{
+					if( res.errorCode != '00000' ){
+						return ;
+					}
+					sessionStorage.setItem('auth-url',JSON.stringify(res.result.available));
+					self.$store.dispatch('client/permission',res.result.available);
+					self.$router.addRoutes(self.$store.state.client.navList);
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.$router.push('/client/index/menu');
+					});
+				});
 			},
 			registerClick(){
 				this.$router.push('/group/register');
@@ -108,7 +118,6 @@
 				this.formData.userName = sessionStorage.getItem('jpdn-client-username')
 			}
 			sessionStorage.clear();
-			this.$store.commit('common/setTitle','客户登录');
 			this.config.style.div = 'width:100%;height:' + window.screen.height + 'px';
 			if( typeof (this.$route.query.token) != 'undefined' ){
 				if( this.$route.query.token.length > 100 ){

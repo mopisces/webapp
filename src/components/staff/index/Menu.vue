@@ -2,16 +2,18 @@
 	<div style="background-color:#f1f1f1;">
 		<div style="width:100%;height:0.625rem;"></div>
 		<div class="vant-row" style="height:3.125rem;">
-			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
-				<div style="font-size:0.875rem;">账号：<span style="color:rgb(26, 173, 25);">{{ userName }}</span></div>
+			<div class="van-col van-col--10" style="line-height:1.875rem;text-align:center;">
+				<div style="font-size:0.875rem;">
+					<span style="color:rgb(26, 173, 25);">{{ userName }}</span>
+				</div>
 			</div>
-			<div class="van-col van-col--8" style="text-align:center;">
+			<div class="van-col van-col--7" style="text-align:center;">
 				<van-button type="info" plain hairline round size="small" @click="getChangePass()">
 					<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
 					更改密码
 				</van-button>
 			</div>
-			<div class="van-col van-col--8" style="text-align:center;">
+			<div class="van-col van-col--7" style="text-align:center;">
 				<van-button type="info" plain hairline round size="small" @click="qrClick">
 					<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
 					登录二维码
@@ -184,17 +186,21 @@
 			changePass( data ){
 				let self = this;
 				this.$request.staff.user.changePass( data ).then(res=>{
-					if( res.result.errorCode === '00000' ){
+					if( res.errorCode === '00000' ){
 						Toast.success('密码更新成功');
 						self.config.popup.changePass.show = false;
+					}else{
+						Toast.fail('密码更新失败');
 					}
-				}).catch(()=>{
-					Toast.fail('密码更新失败');
+				}).then(()=>{
+					this.formData.oldPass     = '';
+					this.formData.newPass     = '';
+					this.formData.confirmPass = '';
 				});
 			},
 			authGrid( authName ){
-				if( sessionStorage.getItem('auth-grid') ){
-					this.config.authGrid =  JSON.parse(sessionStorage.getItem('auth-grid'));
+				if( sessionStorage.getItem('staff-auth-grid') ){
+					this.config.authGrid =  JSON.parse(sessionStorage.getItem('staff-auth-grid'));
 					return ;
 				}
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
@@ -205,9 +211,8 @@
 						}
 					}
 				}
-				sessionStorage.setItem('auth-grid',JSON.stringify(this.config.authGrid) );
-			},
-			
+				sessionStorage.setItem('staff-auth-grid',JSON.stringify(this.config.authGrid) );
+			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
@@ -215,7 +220,7 @@
 		mounted(){
 			this.userName = sessionStorage.getItem('jpdn-staff-username');
 			this.validator = new schema(this.rules);
-			this.authGrid( JSON.parse(sessionStorage.getItem('auth-url') ) );
+			this.authGrid( JSON.parse(sessionStorage.getItem('auth-url')) );
 		},
 		computed:{
 			

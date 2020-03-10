@@ -147,9 +147,12 @@
 			getAuthName( data ){
 				let self = this;
 				this.$request.staff.user.getAuthName( data ).then(res=>{
+					if( res.errorCode != '00000' ){
+						return ;
+					}
 					sessionStorage.setItem('auth-url',JSON.stringify(res.result.available));
 					self.$store.dispatch('staff/permission', res.result.available);
-					this.$router.addRoutes(this.$store.state.staff.navList);
+					self.$router.addRoutes(self.$store.state.staff.navList);
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.$router.push('/staff/index/menu');

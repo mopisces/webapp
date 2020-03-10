@@ -1,4 +1,5 @@
 import { asyncClientRouterMap } from '@/router/client';
+import { deepCopy, filterAsyncRouter } from '@/util/index';
 const client = {
 	namespaced: true,
 	state: { 
@@ -16,8 +17,10 @@ const client = {
 		}
 	},
 	actions:{
-		permission : ( { commit } )=>{
-			commit('setNavList', asyncClientRouterMap);
+		permission : ( { commit }, authUrlArr )=>{
+			let routeArr  = deepCopy(asyncClientRouterMap);
+			const navList = filterAsyncRouter( routeArr, authUrlArr, 'client');
+			commit('setNavList', navList);
 		}
 	}
 };

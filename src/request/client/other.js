@@ -23,6 +23,17 @@ const other = {
 			reg_fax_no         : data.faxNo,
 		};
 		return post(client.index.register, postData);
+	},
+	changePass( data ){
+		let postData = {
+			change_old_pass     : data.oldPass,
+			change_new_pass     : data.newPass,
+			change_confirm_pass : data.confirmPass
+		};
+		return post(client.index.clientPwd, postData);
+	},
+	getAuthUrl(){
+		return post(client.index.authUrl);
 	}
 };
 

@@ -3,7 +3,9 @@
 		<div style="width:100%;height:0.625rem;"></div>
 		<div class="vant-row" style="height:3.125rem;">
 			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
-				<div style="font-size:0.875rem;">账号：<span style="color:rgb(26, 173, 25);">{{ userName }}</span></div>
+				<div style="font-size:0.875rem;">
+					<span style="color:rgb(26, 173, 25);">{{ userName }}</span>
+				</div>
 			</div>
 			<div class="van-col van-col--8" style="text-align:center;">
 				<van-button type="info"  plain hairline round @click="getChangePass()" size="small">
@@ -19,7 +21,7 @@
 			</div>
 		</div>
 		<van-grid square :gutter="10" :column-num="3">
-			<van-grid-item v-for="(item,index) in config.gridItem" :key="index" :url="item.url" :text="item.text">
+			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="item.state"/>
 			</van-grid-item>
 		</van-grid>
@@ -92,10 +94,6 @@
 						{text:'信用余额',     iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt',state:'#1a991d'},
 					],
 					authGrid:[],
-					domian:{
-						wx80:'http://luodangfrp2.leaper.ltd',
-						normal:'http://test.leaper.ltd:1104'
-					},
 					popup:{
 						qrcode:{
 							show:false
@@ -112,7 +110,6 @@
 					oldPass     : '',
 					newPass     : '',
 					confirmPass : '',
-
 				},
 				validator:{},
 				rules:{
@@ -138,19 +135,6 @@
 			}
 		},
 		methods:{
-			portValuable(){
-				if( sessionStorage.getItem('app_domain') !== null ){
-					let domainInfo = JSON.parse(sessionStorage.getItem('app_domain'));
-					this.config.domian.wx80   = domainInfo.app_wx_domain;
-					this.config.domian.normal = domainInfo.app_normal_domain;
-				}
-				let self = this;
-				this.$request.staff.wx.portValuable().then(res=>{
-					sessionStorage.setItem('app_domain',JSON.stringify(res.result));
-					this.config.domian.wx80   = res.result.app_wx_domain;
-					this.config.domian.normal = res.result.app_normal_domain;
-				});
-			},
 			qrClick(){
 				this.config.popup.qrcode.show = true;
 				this.getQrcode();
@@ -183,18 +167,22 @@
 			},
 			changePass( data ){
 				let self = this;
-				this.$request.staff.user.changePass( data ).then(res=>{
-					if( res.result.errorCode === '00000' ){
+				this.$request.client.other.changePass( data ).then(res=>{
+					if( res.errorCode === '00000' ){
 						Toast.success('密码更新成功');
 						self.config.popup.changePass.show = false;
+					}else{
+						Toast.fail('密码更新失败');
 					}
-				}).catch(()=>{
-					Toast.fail('密码更新失败');
+				}),then(()=>{
+					this.formData.oldPass     = '';
+					this.formData.newPass     = '';
+					this.formData.confirmPass = '';
 				});
 			},
 			authGrid( authName ){
-				if( sessionStorage.getItem('auth-grid') ){
-					this.config.authGrid =  JSON.parse(sessionStorage.getItem('auth-grid'));
+				if( sessionStorage.getItem('client-auth-grid') ){
+					this.config.authGrid = JSON.parse(sessionStorage.getItem('client-auth-grid'));
 					return ;
 				}
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
@@ -205,7 +193,7 @@
 						}
 					}
 				}
-				sessionStorage.setItem('auth-grid',JSON.stringify(this.config.authGrid) );
+				sessionStorage.setItem('client-auth-grid',JSON.stringify(this.config.authGrid) );
 			},
 			
 		},
@@ -214,16 +202,8 @@
 		},
 		mounted(){
 			this.userName = sessionStorage.getItem('jpdn-client-username');
-			//this.portValuable();
 			this.validator = new schema(this.rules);
-			/*this.config.gridItem.forEach((item,index)=>{
-				if( item.text == '原纸出库' || item.text == '原纸入库' || item.text == '直接入库' || item.text == '扫描装货' || item.text == '库存修改'){
-					item.url = this.config.domian.wx80 + item.url;
-				}else{
-					item.url = this.config.domian.normal + item.url;
-				}
-			});*/
-			//this.authGrid( JSON.parse(sessionStorage.getItem('auth-url') ) );
+			this.authGrid( JSON.parse(sessionStorage.getItem('auth-url')) );
 		},
 		computed:{
 			
