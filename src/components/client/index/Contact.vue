@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-field :label="item.Name" :value="item.Content" v-for="(item,index) in iconInfo" :key="index" input-align="right">
+		<van-field :label="item.Name" :value="item.Content" v-for="(item,index) in iconInfo" :key="index" input-align="right" readonly>
 			<van-icon slot="left-icon" class-prefix="iconfont" :name="item.Icon" size="25" />
 		</van-field>
 	</div>

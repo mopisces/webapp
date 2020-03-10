@@ -1,5 +1,6 @@
 <template>
 	<div id="wGetCusorder">
+		<div style="width:100%;height:0.0625rem;"></div>
 		<van-sticky :offset-top="46">
 			<div class="van-row">
 				<div class="van-col van-col--12">
