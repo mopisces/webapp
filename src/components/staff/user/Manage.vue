@@ -3,7 +3,7 @@
 		<van-tabs v-model="config.tab.active" sticky :offset-top="46">
 			<van-tab title="外部用户" name="0">
 				<div style="margin-top:15px;text-align:center;font-size:0.875rem;" v-for="(item,index) in listData" :key="index">
-					<van-panel>
+					<van-panel style="background-color:#f5f7fa;">
 						<van-row type="flex" justify="space-between" slot="header" >
 							<van-col span="12">
 								<span>{{ item.CusShortName }}( {{ item.CusId }} )</span>
@@ -27,7 +27,7 @@
 			</van-tab>
 			<van-tab title="内部用户" name="1">
 				<div style="margin-top:15px;text-align:center;font-size:0.875rem;" v-for="(item,index) in listData" :key="index">
-					<van-panel>
+					<van-panel style="background-color:#f5f7fa;">
 						<van-row type="flex" justify="space-between" slot="header" >
 							<van-col span="12">
 								<span>员工:{{ item.UserName_ }}( {{ item.UserId }} )</span>
