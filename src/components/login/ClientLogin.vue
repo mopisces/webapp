@@ -94,7 +94,7 @@
 					if( res.errorCode != '00000' ){
 						return ;
 					}
-					sessionStorage.setItem('auth-url',JSON.stringify(res.result.available));
+					sessionStorage.setItem('client-auth-url',JSON.stringify(res.result.available));
 					self.$store.dispatch('client/permission',res.result.available);
 					self.$router.addRoutes(self.$store.state.client.navList);
 				}).then(()=>{

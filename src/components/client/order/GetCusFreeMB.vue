@@ -9,7 +9,7 @@
 			</van-tabs>
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
-			<van-panel v-for="(item,index) in listData" :key="index" style="font-size:0.8125rem;">
+			<van-panel v-for="(item,index) in listData" :key="index" style="font-size:0.8125rem;background-color:#f1f1f1;">
 				<div slot="default">
 					<div class="van-row van-row--flex van-row--justify-center">
 						<div class="van-col van-col--20">生效日期:{{ item.IssueDate }}</div>

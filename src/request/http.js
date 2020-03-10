@@ -77,7 +77,29 @@ const errorHandle = {
 				Toast.fail(msg);
 				break;
 			case '20215':
-				if( sessionStorage.getItem('jpdn-login-token')  !== null && sessionStorage.getItem('jpdn-login-refresh') !== null ){
+				if( sessionStorage.getItem('jpdn-staff-token') !== null && sessionStorage.getItem('jpdn-staff-refresh') !== null ){
+					let postData = {
+						access_token  : sessionStorage.getItem('jpdn-staff-token'),
+						refresh_token : sessionStorage.getItem('jpdn-staff-refresh')
+					};
+					httpServer.post(`${base.index}getToken`,postData).then((res)=>{
+						sessionStorage.setItem('jpdn-staff-token',res.data.result.access_token);
+						sessionStorage.setItem('jpdn-staff-refresh',res.data.result.refresh_token);
+						sessionStorage.setItem('jpdn-staff-username',res.data.result.user_name);
+					});
+				}
+				if( sessionStorage.getItem('jpdn-client-token') !== null && sessionStorage.getItem('jpdn-client-refresh') !== null ){
+					let postData = {
+						access_token  : sessionStorage.getItem('jpdn-client-token'),
+						refresh_token : sessionStorage.getItem('jpdn-client-refresh')
+					};
+					httpServer.post(`${base.index}getToken`,postData).then((res)=>{
+						sessionStorage.setItem('jpdn-client-token',res.data.result.access_token);
+						sessionStorage.setItem('jpdn-client-refresh',res.data.result.refresh_token);
+						sessionStorage.setItem('jpdn-client-username',res.data.result.user_name);
+					});
+				}
+				/*if( sessionStorage.getItem('jpdn-login-token') !== null && sessionStorage.getItem('jpdn-login-refresh') !== null ){
 					let postData = {
 						access_token  : sessionStorage.getItem('jpdn-login-token'),
 						refresh_token : sessionStorage.getItem('jpdn-login-refresh')
@@ -87,11 +109,11 @@ const errorHandle = {
 						sessionStorage.setItem('jpdn-login-refresh',res.data.result.refresh_token);
 						sessionStorage.setItem('jpdn-login-username',res.data.result.user_name);
 					});
-				}
+				}*/
 				break;
 			case '20216':
 				Dialog({ message: '登录过期,请重新登录' }).then(()=>{
-					router.push('/login/select')
+					router.push('/group/index')
 				});
 				break;
 			default :

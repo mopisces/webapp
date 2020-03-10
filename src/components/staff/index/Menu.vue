@@ -220,7 +220,7 @@
 		mounted(){
 			this.userName = sessionStorage.getItem('jpdn-staff-username');
 			this.validator = new schema(this.rules);
-			this.authGrid( JSON.parse(sessionStorage.getItem('auth-url')) );
+			this.authGrid( JSON.parse(sessionStorage.getItem('staff-auth-url')) );
 		},
 		computed:{
 			

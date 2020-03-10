@@ -150,12 +150,12 @@ router.beforeEach((to, from, next) => {
     if( to.meta.title ){
         document.title = to.meta.title;
     }
-    if( sessionStorage.getItem('auth-url') && store.state.staff.navList == null ){
-        store.dispatch('staff/permission', JSON.parse(sessionStorage.getItem('auth-url')));
+    if( sessionStorage.getItem('staff-auth-url') && store.state.staff.navList == null ){
+        store.dispatch('staff/permission', JSON.parse(sessionStorage.getItem('staff-auth-url')));
         router.addRoutes(store.state.staff.navList);
         next({ ...to, replace: true });
-    }else if( sessionStorage.getItem('jpdn-client-token') && store.state.client.navList == null ){
-        store.dispatch('client/permission');
+    }else if( sessionStorage.getItem('client-auth-url') && store.state.client.navList == null ){
+        store.dispatch('client/permission', JSON.parse(sessionStorage.getItem('client-auth-url')));
         router.addRoutes(store.state.client.navList);
         next({ ...to, replace: true });
     }else if( sessionStorage.getItem('jpdn-admin-token') && store.state.admin.navList == null ){

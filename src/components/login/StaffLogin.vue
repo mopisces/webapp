@@ -150,7 +150,7 @@
 					if( res.errorCode != '00000' ){
 						return ;
 					}
-					sessionStorage.setItem('auth-url',JSON.stringify(res.result.available));
+					sessionStorage.setItem('staff-auth-url',JSON.stringify(res.result.available));
 					self.$store.dispatch('staff/permission', res.result.available);
 					self.$router.addRoutes(self.$store.state.staff.navList);
 				}).then(()=>{

@@ -197,6 +197,10 @@
 			cusInfo(){
 				let self = this;
 				this.$request.client.ordersManage.dailyOrdersCusInfo( this.filterForm ).then(res=>{
+					if( res.errorCode != '00000' ){
+						self.leftPopupData = [];
+						return ;
+					}
 					self.leftPopupData = res.result;
 				});
 			},
@@ -204,6 +208,9 @@
 				let self = this;
 				this.config.prevNext.show   = false;
 				this.$request.client.ordersManage.dailyOrderOptionalDate( this.filterForm ).then(res=>{
+					if( res.errorCode != '00000' ){
+						return ;
+					}
 					self.radioData = res.result;
 					self.radioData.forEach((item,index)=>{
 						item['prevNext'] = item.OrderDate;
