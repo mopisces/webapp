@@ -2,18 +2,18 @@
 	<div style="background-color:#f1f1f1;">
 		<div style="width:100%;height:0.625rem;"></div>
 		<div class="vant-row" style="height:3.125rem;">
-			<div class="van-col van-col--10" style="line-height:1.875rem;text-align:center;">
+			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
 				<div style="font-size:0.875rem;">
 					<span style="color:rgb(26, 173, 25);">{{ userName }}</span>
 				</div>
 			</div>
-			<div class="van-col van-col--7" style="text-align:center;">
+			<div class="van-col van-col--8" style="text-align:center;">
 				<van-button type="info" plain hairline round size="small" @click="getChangePass()">
 					<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
 					更改密码
 				</van-button>
 			</div>
-			<div class="van-col van-col--7" style="text-align:center;">
+			<div class="van-col van-col--8" style="text-align:center;">
 				<van-button type="info" plain hairline round size="small" @click="qrClick">
 					<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
 					登录二维码
