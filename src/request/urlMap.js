@@ -249,6 +249,9 @@ const sg = {
 		getScdd       : `${base.sg}selectGetScdd`,
 		getWgddConfig : `${base.sg}selectGetWgddConfig`,
 		getWgdd       : `${base.sg}selectGetWgdd`, 
+	},
+	monitor : {
+		getSocketUrl : `${base.sg}socketUrl`
 	}
 };
 export { admin, staff, erp, index, client, pay, sg };

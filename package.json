@@ -25,6 +25,8 @@
     "mavon-editor": "^2.7.7",
     "qrcodejs2": "0.0.2",
     "qs": "^6.7.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "vant": "^2.2.9",
     "vue": "^2.6.10",
     "vue-draggable-progressbar": "^1.0.2",
@@ -32,6 +34,7 @@
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.7",
     "vue-seamless-scroll": "^1.1.17",
+    "vue-socket.io": "^3.0.7",
     "vue-validator": "^3.0.0-alpha.2",
     "vuex": "^3.1.1",
     "weixin-js-sdk": "^1.4.0-test"

@@ -239,6 +239,7 @@
 </template>
 <script>
 	import { Button, DropdownMenu, DropdownItem, NoticeBar, Grid, GridItem } from 'vant';
+	import io from 'socket.io-client';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -262,6 +263,7 @@
 				formData:{
 					activeItem : 0
 				},
+				socket:{}  //socket链接对象
 			}
 		},
 		methods:{
@@ -270,29 +272,56 @@
 				this.$request.sg.select.getConfig().then(res=>{
 					if( res.errorCode == '00000' ){
 						res.result.forEach((item,index)=>{
-							self.config.dropDownOption.push({text:item.DB_FLAG,value:index,isnew:item.isnew,updown:item.updown});
+							self.config.dropDownOption.push({text:item.DB_FLAG,value:index,isnew:item.isnew,updown:item.updown,socketUrl:item.socketio.domain});
 						});
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
-						//this.config.updown = this.config.dropDownOption[ this.formData.activeItem ].updown;
-						//this.config.isnew = this.config.dropDownOption[ this.formData.activeItem ].isnew;
+						this.config.updown = this.config.dropDownOption[ this.formData.activeItem ].updown;
+						this.config.isnew = this.config.dropDownOption[ this.formData.activeItem ].isnew;
+						this.getSocket(this.config.dropDownOption[ this.formData.activeItem ].socketUrl)
 					});
 				});
 			},
+			getSocket( socketUrl ){
+				this.socket = io(socketUrl,{
+					timeout:3000
+				});
+
+				this.socket.on('connect',()=>{
+					this.config.notice.text = '链接成功！';
+				});
+				this.socket.on('sendMsg', (data)=>{
+					if( data == 10060 ){
+						this.config.notice.text = '后台udp广播暂未开启';
+					}else{
+						//this.config.notice.text = '监控开启成功！！！';
+						this.config.notice.text = JSON.stringify(data);
+					}
+				});
+				this.socket.on('connect_error',(error)=>{
+					this.config.notice.text = '链接失败,后台服务暂未开启！';
+				});
+				this.socket.on('connect_timeout',(timeout)=>{
+					this.config.notice.text = '超时链接,后台服务暂未开启！';
+				});
+				this.socket.on('error',(error)=>{
+					this.config.notice.text = '链接错误';
+				});
+			}
 		},
 		created(){
 			this.$store.commit('sg/setHeaderTitle','生管监控');
 			this.getConfig();
 		},
 		mounted(){
-
+			
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			
+			this.socket.close();
 		},
 		computed:{
 			activeItemChange(){
@@ -303,6 +332,9 @@
 			activeItemChange( newV, oldV ){
 				this.config.updown = this.config.dropDownOption[ newV ].updown;
 				this.config.isnew  = this.config.dropDownOption[ newV ].isnew;
+				this.socket.close();
+				this.config.notice.text = '';
+				this.getSocket(this.config.dropDownOption[ newV ].socketUrl);
 			}
 		}
 	}
@@ -317,12 +349,5 @@
         border: 1px solid #e0e0e0;
         border-top: none;
         text-align: center;
-    }
-    table td button {
-        color: #3598dc;
-        font-size: 1rem;
-        border: none;
-        background: none;
-        cursor: pointer;
     }
 </style>

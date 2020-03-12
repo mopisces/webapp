@@ -11,12 +11,7 @@ import ElementUI from 'element-ui';
 Vue.use(ElementUI);
 
 import TableOperate from '@/components/subject/table/TableOperate.vue'; 
-/*import VueProgressBar from 'vue-progressbar'
-Vue.use(VueProgressBar, {
-	color: '#1890ff',
-	failedColor: 'red',
-	height: '1rem'
-});*/
+
 Vue.component("TableOperate",TableOperate);
 
 Vue.config.productionTip = false;

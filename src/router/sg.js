@@ -1,3 +1,4 @@
+import store from '@/store';
 //生管模块布局
 const sgLayout = r => require.ensure([], () => r(require('@/components/sg/SgLayout')), 'SgLayout');
 //菜单页面

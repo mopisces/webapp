@@ -31,10 +31,12 @@ const xBuild           = r => require.ensure([], () => r(require('@/components/c
 
 //支付方式
 const payWay           = r => require.ensure([], () => r(require('@/components/pay/order/Way')), 'payWay');
-//支付详细信心
+//支付详细信息
 const payDetail        = r => require.ensure([], () => r(require('@/components/pay/order/Detail')), 'payDetail');
 //申请退款
 const payApply         = r => require.ensure([], () => r(require('@/components/pay/order/Apply')), 'payApply');
+//支付宝returnUrl
+const aliReturnUrl     =  r => require.ensure([], () => r(require('@/components/pay/order/AliReturn')), 'aliReturnUrl');
 export const asyncClientRouterMap = [
     {
         path:'/client',
@@ -126,6 +128,11 @@ export const asyncClientRouterMap = [
                 name: 'payApply',
                 meta: { title: '申请退款' },
                 component: payApply,
+            },
+            {
+                path:'alipay/return',
+                meta: { title: '申请退款' },
+                component: aliReturnUrl,
             }
         ]
     }
