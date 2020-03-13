@@ -1,12 +1,12 @@
+import base from '@/request/base';
 const common = {
 	namespaced: true,
 	state: {
 		title      : '',
 		activeItem : '',
 		useType    : '',
-		loginUrl   : 'http://127.0.0.1:1103/group/',
 		indexActive: '',//indexLayout active item
-		imgUrl     : 'http://127.0.0.1:8001/upload/'
+		imgUrl     : base.imgDomain
 	},
 	mutations:{
 		setTitle( state, title ){

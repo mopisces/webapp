@@ -4,6 +4,9 @@ const user = {
 	getUserInfo(){
 		return post(staff.user.staffUserInfo);
 	},
+	getUserManageType(){
+		return post(staff.user.getUserManageType);
+	},
 	getWebUserClient(){
 		return post(staff.user.getWebUserClient);
 	},

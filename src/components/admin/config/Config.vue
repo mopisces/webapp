@@ -864,6 +864,10 @@
 				let self = this;
 				this.$request.admin.config.getConfig().then((res)=>{
 					Object.assign(self.form,res.result);
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.setAsideMenu( self.form.UseBoardGroup, self.form.UseBoxGroup );
+					});
 				});
 			},
 			saveConfig(){
@@ -879,6 +883,12 @@
 				}).then(()=>{
 					this.getConfig();
 				});
+			},
+			setAsideMenu( boardGroup, boxGroup ){
+				let board = boardGroup == 0 ? false : true;
+				let box   = boxGroup   == 0 ? false : true;
+				this.$store.commit('admin/setAsideMenuBoard',board);
+				this.$store.commit('admin/setAsideMenuBox',box);
 			}
 		},
 		created(){

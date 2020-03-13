@@ -30,7 +30,7 @@
 						<el-menu-item index="/admin/user/add">添加用户</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>
-				<el-submenu index="5">
+				<el-submenu index="5" v-if="boardGroup">
 					<template slot="title">
 						<i class="el-icon-document"></i>
 						<span>团购纸板管理</span>
@@ -42,7 +42,7 @@
 						<el-menu-item index="/admin/board/del">已删除纸板列表</el-menu-item>
 					</el-menu-item-group>
 				</el-submenu>
-				<el-submenu index="6">
+				<el-submenu index="6" v-if="boxGroup">
 					<template slot="title">
 						<i class="el-icon-box"></i>
 						<span>团购淘宝箱管理</span>
@@ -99,7 +99,9 @@
 					fullscreen : false,
 					activeIndex : ''
 				},
-				adminName : ''
+				adminName  : '',
+				boardGroup : false,
+				boxGroup   : false
 			}
 		},
 		methods:{
@@ -128,6 +130,12 @@
 			setActive(){
 				return this.$store.state.admin.asideActive;
 			},
+			setBoardGroup(){
+				return this.$store.state.admin.asideMenu.boardGroup;
+			},
+			setBoxGroup(){
+				return this.$store.state.admin.asideMenu.boxGroup;
+			}
 		},
 		watch:{
 			'setActive':{
@@ -135,6 +143,17 @@
 					this.config.activeIndex = newV;
 				}
 			},
+			'setBoardGroup':{
+				handler:function(newV,oldV){
+					this.boardGroup = newV;
+				}
+			},
+			'setBoxGroup':{
+				handler:function(newV,oldV){
+					console.log(newV)
+					this.boxGroup = newV;
+				}
+			}
 		}
 	};
 </script>

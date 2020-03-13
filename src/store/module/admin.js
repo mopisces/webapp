@@ -3,7 +3,11 @@ const admin = {
 	namespaced: true,
 	state: {
 		navList : null,
-		asideActive:''
+		asideActive:'',
+		asideMenu:{
+			boardGroup : false,
+			boxGroup   : false
+		}
 	},
 	mutations:{
 		setNavList( state, navList ){
@@ -11,6 +15,12 @@ const admin = {
 		},
 		setAsideActive( state, active ){
 			state.asideActive = active;
+		},
+		setAsideMenuBoard( state, value ){
+			state.asideMenu.boardGroup = value;
+		},
+		setAsideMenuBox( state, value ){
+			state.asideMenu.boxGroup = value;
 		}
 	},
 	actions: {

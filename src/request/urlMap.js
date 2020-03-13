@@ -39,6 +39,9 @@ const admin = {
 		getConfig : `${base.admin}adminBoxConfig`,
 		getList   : `${base.admin}adminBoxLists`,
 		addSave   : `${base.admin}adminBoxAdd`,
+	},
+	uploadImg : {
+		action : `${base.admin}adminBoardPicAdd`,
 	}
 };
 const staff = {
@@ -121,14 +124,15 @@ const staff = {
 		getDailyUser   : `${base.staff}staffDailyUser`,
 	},
 	user:{
-		staffUserInfo    : `${base.staff}staffUserInfo`,
-		getWebUserClient : `${base.staff}staffWebUserClient`,
-		getWebUserStaff  : `${base.staff}staffWebUserStaff`,
-		getCommonQrCode  : `${base.staff}staffGetCommonQrcode`,
-		getAuthName      : `${base.staff}staffGetAuthName`,
-		saveAuthName     : `${base.staff}staffSaveAuthUrl`,
-		userGetQrcode    : `${base.staff}staffUserGetQrcode`,
-		changePass       : `${base.staff}staffChangePwd`,
+		staffUserInfo     : `${base.staff}staffUserInfo`,
+		getUserManageType : `${base.staff}staffUserManageType`,
+		getWebUserClient  : `${base.staff}staffWebUserClient`,
+		getWebUserStaff   : `${base.staff}staffWebUserStaff`,
+		getCommonQrCode   : `${base.staff}staffGetCommonQrcode`,
+		getAuthName       : `${base.staff}staffGetAuthName`,
+		saveAuthName      : `${base.staff}staffSaveAuthUrl`,
+		userGetQrcode     : `${base.staff}staffUserGetQrcode`,
+		changePass        : `${base.staff}staffChangePwd`,
 	},
 	wx:{
 		scanWxConfig : `${base.staff}staffGetWxConfig`,

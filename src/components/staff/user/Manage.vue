@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-tabs v-model="config.tab.active" sticky :offset-top="46">
-			<van-tab title="外部用户" name="0">
+			<van-tab title="外部用户" :name="0" v-if=" config.tab.active == 0 ">
 				<div style="margin-top:15px;text-align:center;font-size:0.875rem;" v-for="(item,index) in listData" :key="index">
 					<van-panel style="background-color:#f5f7fa;">
 						<van-row type="flex" justify="space-between" slot="header" >
@@ -25,7 +25,7 @@
 					</van-panel>
 				</div>
 			</van-tab>
-			<van-tab title="内部用户" name="1">
+			<van-tab title="内部用户" :name="1" v-if=" config.tab.active == 1 ">
 				<div style="margin-top:15px;text-align:center;font-size:0.875rem;" v-for="(item,index) in listData" :key="index">
 					<van-panel style="background-color:#f5f7fa;">
 						<van-row type="flex" justify="space-between" slot="header" >
@@ -99,7 +99,7 @@
 			return {
 				config:{
 					tab:{
-						active:'0'
+						active:-1,
 					},
 					popup:{
 						qrCode:{
@@ -127,6 +127,20 @@
 			}
 		},
 		methods:{
+			getUserManageType(){
+				let self = this;
+				this.$request.staff.user.getUserManageType().then(res=>{
+					self.config.tab.active = res.result;
+				}).then(()=>{
+					this.$nextTick(()=>{
+						if( this.config.tab.active == 0 ){
+							this.getWebUserClient();
+						}else{
+							this.getWebUserStaff();
+						}
+					});
+				});
+			},
 			getWebUserClient(){
 				let self = this;
 				this.$request.staff.user.getWebUserClient().then(res=>{
@@ -208,11 +222,7 @@
 			this.$store.commit('staff/setHeaderTitle','用户管理');
 		},
 		mounted(){
-			if( this.config.tab.active == '0' ){
-				this.getWebUserClient();
-			}else{
-				this.getWebUserStaff();
-			}
+			this.getUserManageType();
 		},
 		updated(){
 			
