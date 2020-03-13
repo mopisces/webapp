@@ -185,7 +185,7 @@
 				this.formData.rangePrice.splice( index, 1 );
 			},
 			goBack(){
-				this.$router.push('/new/board/lists');
+				this.$router.push('/admin/board/lists');
 			},
 			editSaveValidate(){
 				this.$refs['editForm'].validate((valid)=>{
@@ -222,7 +222,7 @@
 				this.$alert('请先选择需要修改的记录', '提示', {
 					confirmButtonText : '返回',
 					callback: action => {
-						this.$router.push('/new/board/lists');
+						this.$router.push('/admin/board/lists');
 					}
 				});
 				return ;

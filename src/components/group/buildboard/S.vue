@@ -62,7 +62,7 @@
 	</div>
 </template>
 <script>
-	import { Image, Field, Toast, CountDown, Tag, Card, SubmitBar  } from 'vant';
+	import { Image, Field, Dialog, Toast, CountDown, Tag, Card, SubmitBar  } from 'vant';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
@@ -72,6 +72,7 @@
 		components:{
 			[Image.name]: Image,
 			[Field.name]: Field,
+			[Dialog.name]: Dialog,
 			[Toast.name]: Toast,
 			[CountDown.name]: CountDown,
 			[Tag.name]: Tag,
@@ -199,11 +200,13 @@
 						} }
 					],
 					lineBallFormula : [
-						{ required : true, message: '请填写压线信息' },
 						{ pattern : '\\\d+([.]{1}[5]{1}){0,1}(\\\+\\\d+([.]{1}[5]{1}){0,1})+$', message : '压线信息错误' },
 						{ validator : (rule, value, callback, source, options)=>{
 							let errors;
-							if( Number( this.formData.boardWidth ) !=  eval(value) ){
+							if( this.formData.lineBallInfo != '无压线' && value == '' ){
+								errors = '请填写压线信息';
+							}
+							if( this.formData.lineBallInfo != '无压线' && ( Number( this.formData.boardWidth ) !=  eval(value) ) ){
 								errors = '压线和不等于板宽';
 							}
 							callback(errors);
@@ -242,7 +245,14 @@
 			getConfig( goodsId ){
 				let self = this;
 				this.$request.client.groupBuying.getSConfig( goodsId ).then(res=>{
-					console.log(res)
+					if( res.errorCode != '00000' ){
+						Dialog.alert({
+							message:'请登陆查看详细信息'
+						}).then(()=>{
+							self.$router.push('/group/client/login');
+						});
+						return ;
+					}
 					self.pageConfig.minDate   = res.result.page_config.BuildMinDate;
 					self.pageConfig.maxDate   = res.result.page_config.BuildMaxDate;
 					self.pageConfig.minLength = res.result.page_config.BuildMinLength;
@@ -253,6 +263,7 @@
 					res.result.page_config.BuildScoreName.forEach((item,index)=>{
 						self.config.radioData.lineBall.push( { value:item, text:'' } );
 					});
+					self.formData.lineBallInfo = self.config.radioData.lineBall[0].value;
 					res.result.cus_info.forEach((item,index)=>{
 						self.config.radioData.cusInfo.push( { value : item.CusSubNo, text:item.SubDNAddress} );
 					});
@@ -361,9 +372,17 @@
 			checkFormData(){
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
-					self.config.popup.sku.show = true;
+					self.checkData(self.formData);
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
+				});
+			},
+			checkData( postData ){
+				let self = this;
+				this.$request.client.groupBuying.sCheck( postData ).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.config.popup.sku.show = true;
+					}
 				});
 			},
 			saveOrder( postData ){
@@ -397,6 +416,7 @@
 		},
 		created(){
 			this.$store.commit('common/setTitle','简单纸板下单');
+			document.documentElement.scrollTop = 0;
 		},
 		mounted(){
 			if( typeof(this.$route.params.productId) != 'undefined' ){

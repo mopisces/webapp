@@ -48,7 +48,7 @@
 	</div>
 </template>
 <script>
-	import { Image, Field, Toast, CountDown, Tag, Card, SubmitBar } from 'vant';
+	import { Image, Field, Dialog, Toast, CountDown, Tag, Card, SubmitBar } from 'vant';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
@@ -58,6 +58,7 @@
 		components:{
 			[Image.name]: Image,
 			[Field.name]: Field,
+			[Dialog.name]: Dialog,
 			[Toast.name]: Toast,
 			[CountDown.name]: CountDown,
 			[Tag.name]: Tag,
@@ -178,6 +179,13 @@
 							self.config.radioData.address.push({ value : item.CusSubNo, text:item.SubDNAddress})
 						});
 						self.formData.address = res.result.ERPId;
+					}else{
+						Dialog.alert({
+							message:'请登陆查看详细信息'
+						}).then(()=>{
+							self.$router.push('/group/client/login');
+						});
+						return ;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -219,9 +227,17 @@
 			checkFormData(){
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
-					self.config.popup.sku.show = true;
+					self.checkData(self.formData);
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
+				});
+			},
+			checkData( postData ){
+				let self = this;
+				this.$request.client.groupBuying.tCheck( postData ).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.config.popup.sku.show = true;
+					}
 				});
 			},
 			maxOrderQty( qty ){
@@ -258,6 +274,7 @@
 		},
 		created(){
 			this.$store.commit('common/setTitle','淘宝箱下单');
+			document.documentElement.scrollTop = 0;
 		},
 		mounted(){
 			if( typeof(this.$route.params.productId) != 'undefined' ){

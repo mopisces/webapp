@@ -86,7 +86,7 @@
 	</div>
 </template>
 <script>
-	import { Image, Field, Toast, CountDown, Tag, Card, SubmitBar } from 'vant';
+	import { Image, Field, Dialog, Toast, CountDown, Tag, Card, SubmitBar } from 'vant';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
@@ -96,6 +96,7 @@
 		components:{
 			[Image.name]: Image,
 			[Field.name]: Field,
+			[Dialog.name]: Dialog,
 			[Toast.name]: Toast,
 			[CountDown.name]: CountDown,
 			[Tag.name]: Tag,
@@ -280,6 +281,14 @@
 			getConfig( goodsId ){
 				let self = this;
 				this.$request.client.groupBuying.getCConfig( goodsId ).then(res=>{
+					if( res.errorCode != '00000' ){
+						Dialog.alert({
+							message:'请登陆查看详细信息'
+						}).then(()=>{
+							self.$router.push('/group/client/login');
+						});
+						return ;
+					}
 					self.pageConfig.minDate = res.result.page_config.BuildMinDate;
 					self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
 					self.pageConfig.minBoxL = res.result.page_config.BuildMinBoxL;
@@ -345,9 +354,17 @@
 			checkFormData(){
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
-					self.config.popup.sku.show = true;
+					self.checkData(self.formData);
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
+				});
+			},
+			checkData( postData ){
+				let self = this;
+				this.$request.client.groupBuying.cCheck( postData ).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.config.popup.sku.show = true;
+					}
 				});
 			},
 			saveOrder( postData ){
@@ -524,6 +541,7 @@
 		},
 		created(){
 			this.$store.commit('common/setTitle','纸箱纸板下单');
+			document.documentElement.scrollTop = 0;
 		},
 		mounted(){
 			if( typeof(this.$route.params.productId) != 'undefined' ){

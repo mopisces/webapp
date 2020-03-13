@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<el-tabs v-model="config.tabPane.activeName" type="card" @tab-click="handleClick">
+		<el-tabs v-model="config.tabPane.activeName" type="card">
 			<el-tab-pane label="公共" name="common">
-				<table>
+				<table style="width:100%;">
 					<tbody>
 						<tr>
 							<td style="width:150px;">厂商Id</td>
@@ -208,7 +208,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="width:150px;">原纸收获</td>
+							<td style="width:150px;">原纸收货</td>
 							<td>
 								日期起始范围&nbsp;&nbsp;&nbsp;
 								<el-input style="width: 100px;" v-model="form.WGetPOInRecDate"></el-input>
@@ -324,7 +324,7 @@
 				</table>
 			</el-tab-pane>
 			<el-tab-pane label="外部" name="staff">
-				<table>
+				<table style="width:100%;">
 					<tbody>
 						<tr>
 							<td style="width:150px;">用户权限</td>
@@ -344,6 +344,9 @@
 								<el-input style="width: 100px;" v-model="form.WeborderMinDate"></el-input>
 								&nbsp;~&nbsp;
 								<el-input style="width: 100px;" v-model="form.WeborderMaxDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								默认删除原因&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 300px;" v-model="form.WeborderDefaultDelRemark"></el-input><p>用,隔开</p>
 							</td>
 						</tr>
 						<tr>
@@ -422,7 +425,7 @@
 				</table>
 			</el-tab-pane>
 			<el-tab-pane label="下单" name="build">
-				<table>
+				<table style="width:100%;">
 					<tbody>
 						<tr>
 							<td style="width:150px;">常用材质使用报价价格材质</td>
@@ -545,7 +548,7 @@
 				</table>
 			</el-tab-pane>
 			<el-tab-pane label="团购" name="group">
-				<table>
+				<table style="width:100%;">
 					<tbody>
 						<tr>
 							<td style="150px;">纸板团购功能</td>
@@ -621,7 +624,7 @@
 				</table>
 			</el-tab-pane>
 			<el-tab-pane label="微信支付" name="wechat" v-if="(Number(form.UseBoardGroup) || Number(form.UseBoxGroup)) && Number(form.UseWxPay)">
-				<table>
+				<table style="width:100%;">
 					<tbody>
 						<tr>
 							<td style="width:150px;">微信公众号AppSecret</td>
@@ -667,7 +670,7 @@
 				</table>
 			</el-tab-pane>
 			<el-tab-pane label="支付宝支付" name="ali" v-if="(Number(form.UseBoardGroup) || Number(form.UseBoxGroup)) && Number(form.UseAliPay)">
-				<table>
+				<table style="width:100%;">
 					<tbody>
 						<tr>
 							<td style="width:150px;">支付宝AppId</td>
@@ -857,9 +860,6 @@
 			}
 		},
 		methods:{
-			handleClick(){
-				console.log(1);
-			},
 			getConfig(){
 				let self = this;
 				this.$request.admin.config.getConfig().then((res)=>{
@@ -914,5 +914,11 @@
 	}
 	table td {
 		padding: 10px;
+	}
+	table tr:nth-child(2n){
+		background:#F3F3F3;
+	}
+	table tr:nth-child(1){
+		background:#FFF;
 	}
 </style>

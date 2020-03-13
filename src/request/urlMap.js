@@ -230,6 +230,8 @@ const client = {
 		groupBuyList   : `${base.client}groupBuyList`,
 		groupBuyFilter : `${base.client}groupBuyFilter`,
 		flagName       : `${base.client}flagName`,
+
+		bCheck         : `${base.client}groupBCheck`
 	}
 };
 

@@ -50,13 +50,31 @@ const groupBuying = {
 			line_ball_formula        : data.lineBallFormula,
 			simple_board_length      : data.boardLength,
 			simple_board_width       : data.boardWidth,
-			order_quantities         : data.orderQuantities,
+			group_order_qty          : data.orderQuantities,
 			simple_delivery_date     : data.date,
 			simple_delivery_address  : data.address,
 			simple_delivery_remark   : data.deliveryRemark,
 			simple_production_remark : data.productionRemark
 		};
 		return post(client.groupBuying.sGroupBooking, postData);
+	},
+	sCheck( data ){
+		let postData = {
+			goods_type               : 's',
+			booking_goods_id         : data.productId,
+			cus_order_id             : data.cusOrderId,
+			line_ball_info           : data.lineBallInfo,
+			line_ball_formula        : data.lineBallFormula,
+			simple_board_length      : data.boardLength,
+			simple_board_width       : data.boardWidth,
+			group_order_qty          : data.orderQuantities,
+			simple_delivery_date     : data.date,
+			simple_delivery_address  : data.address,
+			simple_delivery_remark   : data.deliveryRemark,
+			simple_production_remark : data.productionRemark
+		};
+		console.log(postData)
+		return post(client.groupBuying.bCheck, postData);
 	},
 	getCConfig( goodsId ){
 		let postData = {
@@ -84,7 +102,7 @@ const groupBuying = {
 			board_length          : data.length,
 			board_width           : data.width,
 			sheet_quantities      : data.bdMultiple,
-			order_quantities      : data.ordQty,
+			group_order_qty       : data.ordQty,
 			card_board_quantities : data.bdQty,
 			delivery_address      : data.address,
 			delivery_date         : data.date,
@@ -92,6 +110,29 @@ const groupBuying = {
 			production_remark     : data.productionRemark
 		};
 		return post(client.groupBuying.cGroupBooking, postData);
+	},
+	cCheck( data ){
+		let postData = {
+			goods_type            : 'c',
+			booking_goods_id      : data.productId,
+			cus_order_id          : data.cusOrderId,
+			box_type              : data.boxType,
+			box_length            : data.boxLength,
+			box_width			  : data.boxWidth,
+			box_height            : data.boxHeight,
+			box_clack             : data.tonLen,
+			box_adjust            : data.uLen,
+			board_length          : data.length,
+			board_width           : data.width,
+			sheet_quantities      : data.bdMultiple,
+			group_order_qty       : data.ordQty,
+			card_board_quantities : data.bdQty,
+			delivery_address      : data.address,
+			delivery_date         : data.date,
+			delivery_remark       : data.deliveryRemark,
+			production_remark     : data.productionRemark
+		};
+		return post(client.groupBuying.bCheck, postData);
 	},
 	getTConfig( id ){
 		let postData = {
@@ -103,13 +144,25 @@ const groupBuying = {
 	tGroupBooking( data ){
 		let postData = {
 			booking_goods_id  : data.productId,
-			order_quantities  : data.orderQuantities,
+			group_order_qty   : data.orderQuantities,
 			delivery_address  : data.address,
 			delivery_date     : data.date,
 			delivery_remark   : data.deliveryRemark,
 			production_remark : data.productionRemark,
 		};
 		return post(client.groupBuying.tGroupBooking, postData);
+	},
+	tCheck( data ){
+		let postData = {
+			goods_type        : 't',
+			booking_goods_id  : data.productId,
+			group_order_qty   : data.orderQuantities,
+			delivery_address  : data.address,
+			delivery_date     : data.date,
+			delivery_remark   : data.deliveryRemark,
+			production_remark : data.productionRemark,
+		};
+		return post(client.groupBuying.bCheck, postData);
 	},
 	groupBuyList( data ){
 		let postData = {
@@ -121,7 +174,6 @@ const groupBuying = {
 		return post(client.groupBuying.groupBuyList, postData);
 	},
 	groupBuyFilter( data ){
-		console.log(data.isTaoBao)
 		let postData = {
 			group_state : data.state,
 			is_taobao   : data.isTaoBao

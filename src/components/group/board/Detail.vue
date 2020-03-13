@@ -54,10 +54,10 @@
 		        <div class="detail-descr">已抢{{ detailData.SalePercent }}%剩余 {{ detailData.Surp1 }} ㎡</div>
 		    </div>
 		</div>
-		<div class="van-cell" style="margin-top:0.625rem;font-size:1rem;">
+		<div class="van-cell" style="margin-top:0.625rem;font-size:1rem;" v-if="detailData.isLogin == 1">
 			单客户限量 {{ detailData.CusMax }} ㎡
 		</div>
-		<div class="van-cell">
+		<div class="van-cell" v-if="detailData.isLogin == 1">
 			<div class="detail-progress-bar">
 		        <div class="detail-liquid" :style="'width: ' + detailData.CusPercent + '%;'"></div>
 		        <div class="detail-descr">你已购{{ detailData.CusPercent }}%剩余 {{ detailData.Surp2 }} ㎡</div>
@@ -138,14 +138,6 @@
 			groupBuyDetail( id ){
 				let self = this;
 				this.$request.client.groupBuying.groupBuyDetail( { id:id, isTaobao:0 } ).then(res=>{
-					if( res.errorCode != '00000' ){
-						Dialog.alert({
-							message:'请登陆查看详细信息'
-						}).then(()=>{
-							self.$router.push('/group/client/login');
-						});
-						return ;
-					}
 					self.detailData = res.result.goods_detail;
 					self.buyResult  = res.result.buy_result;
 					self.descInfo   = res.result.desc_info;

@@ -15,7 +15,7 @@ const board={
 	del( data ){
 		let postData = {
 			order_id   : data.Id,
-			order_type : data.BoardId == null ? 1 : 21
+			order_type : data.BoardId == null ? 1 : 2
 		};
 		return post(admin.board.del,postData);
 	},

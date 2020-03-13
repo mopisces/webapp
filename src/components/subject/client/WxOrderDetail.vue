@@ -25,7 +25,7 @@
 						<span v-if=" groupInfo.boardId && !groupInfo.matNo ">㎡</span>
 						<span v-if=" !groupInfo.boardId && groupInfo.matNo ">个</span>
 					</span>
-					<span style="color: #999;text-decoration: line-through;">¥{{ groupInfo.MarketPrice }}/
+					<span style="color: #999;text-decoration: line-through;">¥{{ groupInfo.marketPrice }}/
 						<span v-if=" groupInfo.boardId && !groupInfo.matNo ">㎡</span>
 						<span v-if=" !groupInfo.boardId && groupInfo.matNo ">个</span>
 					</span><br/>
