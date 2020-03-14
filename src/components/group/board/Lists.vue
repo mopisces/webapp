@@ -161,7 +161,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','纸板团购');
+			this.$store.commit('client/setHeaderTitle','纸板团购');
 			this.getBoardList();
 			this.getFilterName();
 			this.getFlagName();

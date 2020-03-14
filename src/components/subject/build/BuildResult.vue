@@ -17,7 +17,7 @@
 				下单失败!
 			</div>
 		</div>
-		<van-button type="primary" style="width:100%;" v-if=" isGroup " @click="goPay()">去付款</van-button>
+		<van-button type="primary" style="width:100%;" v-if=" group " @click="goPay()">去付款</van-button>
 		<van-button plain type="default" style="width:100%;margin-top:10px;" @click="wxOrderClick()
 		">查看微信订单</van-button>
 		<van-button plain type="primary" style="width:100%;margin-top:10px;" @click="continueOrder()">继续下单</van-button>
@@ -35,6 +35,7 @@
 		data(){
 			return {
 				show : this.resultShow,
+				group : this.isGroup
 			}
 		},
 		methods:{
@@ -71,7 +72,12 @@
 			show(newV,oldV){
 				this.$emit("update:resultShow", newV);
 			},
-
+			isGroup(newV,oldV){
+				this.group = newV;
+			},
+			group(newV,oldV){
+				this.$emit("update:isGroup", newV);
+			},
 		}
 	}
 </script>

@@ -169,7 +169,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','淘宝箱团购详情');
+			this.$store.commit('client/setHeaderTitle','淘宝箱团购详情');
 		},
 		mounted(){
 			if( typeof(this.$route.params.productId) != 'undefined' ){

@@ -108,7 +108,7 @@
 			resetClick(){
 				this.filterForm = {
 					safePaperState : 0,
-					safePaperType  : '0',
+					safePaperType  : 0,
 					safePaperCode  : '',
 					safePaperWidth : '',
 					safePaperName  : '',

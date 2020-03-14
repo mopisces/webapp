@@ -2,43 +2,43 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from '@/store';
 import client from './client';
-//import admin from './admin';
+import admin from './admin';
 import sg from './sg';
 Vue.use(Router);
 //公共页面
 //团购及未登录页面布局
-const indexLayout            = () => import('@/components/common/ClientLayout');
+const indexLayout            = r => require.ensure([], () => r(require('@/components/common/ClientLayout')), 'indexLayout');
 //注册页面
-const register               = () => import('@/components/client/index/Register');
+const register               = r => require.ensure([], () => r(require('@/components/client/index/Register')), 'register');
 //员工登陆
-const loginStaff             = () => import('@/components/login/StaffLogin');
+const loginStaff             = r => require.ensure([], () => r(require('@/components/login/StaffLogin')), 'loginStaff');
 //客户登陆
-const loginClient            = () => import('@/components/login/ClientLogin');
+const loginClient            = r => require.ensure([], () => r(require('@/components/login/ClientLogin')), 'loginClient');
 //联系我们
-const contact                = () => import('@/components/client/index/Contact');
+const contact                = r => require.ensure([], () => r(require('@/components/client/index/Contact')), 'contact');
 //团购分类页面
-const groupIndex             = () => import('@/components/group/Index');
+const groupIndex             = r => require.ensure([], () => r(require('@/components/group/Index')), 'groupIndex');
 //纸板爆款团购列表
-const groupBoardFlag         = () => import('@/components/group/board/FlagLists');
+const groupBoardFlag         = r => require.ensure([], () => r(require('@/components/group/board/FlagLists')), 'groupBoardFlag');
 //纸板团购列表
-const groupBoardLists        = () => import('@/components/group/board/Lists');
+const groupBoardLists        = r => require.ensure([], () => r(require('@/components/group/board/Lists')), 'groupBoardLists');
 //纸板团购详情
-const groupBoardDetail       = () => import('@/components/group/board/Detail');
+const groupBoardDetail       = r => require.ensure([], () => r(require('@/components/group/board/Detail')), 'groupBoardDetail');
 //简单纸板下单（需要登陆）
-const buildS                 = () => import('@/components/group/buildboard/S');
+const buildS                 = r => require.ensure([], () => r(require('@/components/group/buildboard/S')), 'buildS');
 //纸箱纸板下单(需要登陆)
-const buildC                 = () => import('@/components/group/buildboard/C');
+const buildC                 = r => require.ensure([], () => r(require('@/components/group/buildboard/C')), 'buildC');
 //淘宝箱精品列表
-const groupBoxFlag           = () => import('@/components/group/box/FlagLists');
+const groupBoxFlag           = r => require.ensure([], () => r(require('@/components/group/box/FlagLists')), 'groupBoxFlag');
 //淘宝箱团购列表
-const groupBoxLists          = () => import('@/components/group/box/Lists');
+const groupBoxLists          = r => require.ensure([], () => r(require('@/components/group/box/Lists')), 'groupBoxLists');
 //淘宝箱团购详情
-const groupBoxDetail         = () => import('@/components/group/box/Detail');
+const groupBoxDetail         = r => require.ensure([], () => r(require('@/components/group/box/Detail')), 'groupBoxDetail');
 //淘宝箱下单(需要登陆)
-const buildT                 = () => import('@/components/group/buildbox/T');
+const buildT                 = r => require.ensure([], () => r(require('@/components/group/buildbox/T')), 'buildT');
 //404
-const error404               = () => import('@/components/common/404');
-const wxScan                 = () => import('@/components/common/WxScanRes');
+const error404               = r => require.ensure([], () => r(require('@/components/common/404')), 'error404');
+const wxScan                 = r => require.ensure([], () => r(require('@/components/common/WxScanRes')), 'wxScan');
 
 let routes = [
     {
@@ -137,7 +137,7 @@ let routes = [
         meta : { title:'您访问的页面不存在' }
     },
     ...client,
-    //...admin,
+    ...admin,
     ...sg
 ];
 

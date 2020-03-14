@@ -6,7 +6,9 @@ const client = {
 		layout : {
 			title : '首页'
 		},
-		navList : null
+		navList      : null,
+		tabbarActive : '',
+		isLogin      : false
 	},
 	mutations:{ 
 		setHeaderTitle( state, title ){
@@ -14,6 +16,12 @@ const client = {
 		},
 		setNavList( state, navList ){
 			state.navList = navList;
+		},
+		setTabbarActive( state, active ){
+			state.tabbarActive = active;
+		},
+		setIsLogin( state, isLogin ){
+			state.isLogin = isLogin;
 		}
 	},
 	actions:{

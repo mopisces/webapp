@@ -31,6 +31,10 @@
 					style:{
 						div:''
 					},
+					redirect:{
+						name   : '',
+						params : ''
+					}
 				},
 				formData:{
 					userType     : 0,
@@ -99,7 +103,14 @@
 					self.$router.addRoutes(self.$store.state.client.navList);
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.$router.push('/client/index/menu');
+						this.$store.commit('client/setIsLogin',true);
+						if( this.config.redirect.name != '' ){
+							this.$store.commit('client/setTabbarActive','group');
+							this.$router.push({ name : this.config.redirect.name , params : { productId : this.config.redirect.params } }); 
+						}else{
+							this.$store.commit('client/setTabbarActive','menu');
+							this.$router.push('/client/index/menu');
+						}
 					});
 				});
 			},
@@ -127,10 +138,13 @@
 			if( typeof(this.$route.query.scanRes) == 'string' ){
 				this.formData.strOrderId = this.$route.query.scanRes;
 			}
+			if( typeof(this.$route.params.redirectName) != 'undefined' ){
+				this.config.redirect.name   = this.$route.params.redirectName;
+				this.config.redirect.params = this.$route.params.productId;
+			}
 			this.getLogo();
-			this.$store.commit('common/setType','client');
-			this.$store.commit('common/setTitle','客户登录');
-			this.$store.commit('common/setIndexActive','clogin');
+			this.$store.commit('client/setHeaderTitle','客户登录');
+			this.$store.commit('client/setTabbarActive','clogin');
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

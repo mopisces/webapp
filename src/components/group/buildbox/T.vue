@@ -44,7 +44,7 @@
 			</div>
 		</van-submit-bar>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="t" @saveOrder="saveOrder" :isGroup="true"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup="true" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
+		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
 <script>
@@ -95,7 +95,8 @@
 						},
 					},
 					result : {
-						show : false
+						show    : false,
+						isGroup :false
 					}
 				},
 				formData:{
@@ -168,6 +169,9 @@
 						}
 						self.pageConfig.minQty = parseInt(res.result.product_info.BuildMin);
 						self.pageConfig.maxQty = parseInt(res.result.product_info.BuildMax);
+						if( res.result.page_config.UseAliPay == 1 || res.result.page_config.UseWxPay == 1 ){
+							self.config.result.isGroup = true;
+						}
 						self.pageConfig.minDate = res.result.page_config.BuildMinDate;
 						self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
 						if( res.result.product_info.BeginTime * 1000 < (new Date()).valueOf()  ){
@@ -183,7 +187,7 @@
 						Dialog.alert({
 							message:'请登陆查看详细信息'
 						}).then(()=>{
-							self.$router.push('/group/client/login');
+							self.$router.push({ name : 'clientLogin' , params : { redirectName : 'buildGroupT',productId:self.formData.productId } }); 
 						});
 						return ;
 					}
@@ -273,7 +277,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','淘宝箱下单');
+			this.$store.commit('client/setHeaderTitle','淘宝箱下单');
 			document.documentElement.scrollTop = 0;
 		},
 		mounted(){

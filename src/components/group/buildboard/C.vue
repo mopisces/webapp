@@ -82,7 +82,7 @@
 			</div>
 		</van-submit-bar>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="true"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
+		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
 <script>
@@ -146,7 +146,8 @@
 					result : {
 						show       : false,
 						isSuccess  : false,
-						cusOrderId : ''
+						cusOrderId : '',
+						isGroup    : false
 					}
 				},
 				cardInfo:{
@@ -285,9 +286,12 @@
 						Dialog.alert({
 							message:'请登陆查看详细信息'
 						}).then(()=>{
-							self.$router.push('/group/client/login');
+							self.$router.push({ name : 'clientLogin' , params : { redirectName : 'buildGroupC',productId:self.formData.productId } }); 
 						});
 						return ;
+					}
+					if( res.result.page_config.UseAliPay == 1 || res.result.page_config.UseWxPay == 1 ){
+						self.config.result.isGroup = true;
 					}
 					self.pageConfig.minDate = res.result.page_config.BuildMinDate;
 					self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
@@ -540,7 +544,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','纸箱纸板下单');
+			this.$store.commit('client/setHeaderTitle','纸箱纸板下单');
 			document.documentElement.scrollTop = 0;
 		},
 		mounted(){

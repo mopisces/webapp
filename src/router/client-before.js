@@ -1,42 +1,42 @@
 //外部用户
 //布局页面
-const clientLayout     = () => import('@/components/common/ClientLayout');
+const clientLayout     = r => require.ensure([], () => r(require('@/components/common/ClientLayout')), 'clientLayout');
 //菜单页面
-const menu             = () => import('@/components/client/index/Menu');
+const menu             = r => require.ensure([], () => r(require('@/components/client/index/Menu')), 'menu');
 //信用余额
-const wGetCusAmt       = () => import('@/components/client/cred/WGetCusAmt');
+const wGetCusAmt       = r => require.ensure([], () => r(require('@/components/client/cred/WGetCusAmt')), 'wGetCusAmt');
 //报价规则
-const getQuoRuleByCus  = () => import('@/components/client/quo/GetQuoRuleByCus');
+const getQuoRuleByCus  = r => require.ensure([], () => r(require('@/components/client/quo/GetQuoRuleByCus')), 'getQuoRuleByCus');
 //报价价格
-const getQuoPriceByCus = () => import('@/components/client/quo/GetQuoPriceByCus');
+const getQuoPriceByCus = r => require.ensure([], () => r(require('@/components/client/quo/GetQuoPriceByCus')), 'getQuoPriceByCus');
 //ERP订单
-const getOrders        = () => import('@/components/client/order/GetOrders');
+const getOrders        = r => require.ensure([], () => r(require('@/components/client/order/GetOrders')), 'getOrders');
 //每日订单
-const getOrdersP       = () => import('@/components/client/order/GetOrdersP');
+const getOrdersP       = r => require.ensure([], () => r(require('@/components/client/order/GetOrdersP')), 'getOrdersP');
 //对账单
-const getCusFreeMB     = () => import('@/components/client/order/GetCusFreeMB');
+const getCusFreeMB     = r => require.ensure([], () => r(require('@/components/client/order/GetCusFreeMB')), 'getCusFreeMB');
 //常用材质
-const lists            = () => import('@/components/client/usedboard/Lists');
+const lists            = r => require.ensure([], () => r(require('@/components/client/usedboard/Lists')), 'lists');
 //常用订单
-const orderList        = () => import('@/components/client/usedorder/Lists');
+const orderList        = r => require.ensure([], () => r(require('@/components/client/usedorder/Lists')), 'orderList');
 //微信订单
-const wxList           = () => import('@/components/client/wxorder/Lists');
+const wxList           = r => require.ensure([], () => r(require('@/components/client/wxorder/Lists')), 'wxList');
 //简单纸板下单
-const sBuild           = () => import('@/components/client/build/S');
+const sBuild           = r => require.ensure([], () => r(require('@/components/client/build/S')), 'sBuild');
 //纸箱纸板下单
-const cBuild           = () => import('@/components/client/build/C');
+const cBuild           = r => require.ensure([], () => r(require('@/components/client/build/C')), 'cBuild');
 //纸箱下单
-const xBuild           = () => import('@/components/client/build/X');
+const xBuild           = r => require.ensure([], () => r(require('@/components/client/build/X')), 'xBuild');
 
 
 //支付方式
-const payWay           = () => import('@/components/pay/order/Way');
+const payWay           = r => require.ensure([], () => r(require('@/components/pay/order/Way')), 'payWay');
 //支付详细信息
-const payDetail        = () => import('@/components/pay/order/Detail');
+const payDetail        = r => require.ensure([], () => r(require('@/components/pay/order/Detail')), 'payDetail');
 //申请退款
-const payApply         = () => import('@/components/pay/order/Apply');
+const payApply         = r => require.ensure([], () => r(require('@/components/pay/order/Apply')), 'payApply');
 //支付宝returnUrl
-const aliReturnUrl     = () => import('@/components/pay/order/AliReturn');
+const aliReturnUrl     =  r => require.ensure([], () => r(require('@/components/pay/order/AliReturn')), 'aliReturnUrl');
 export const asyncClientRouterMap = [
     {
         path:'/client',

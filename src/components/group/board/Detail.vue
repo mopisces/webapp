@@ -178,7 +178,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','纸板团购详情');
+			this.$store.commit('client/setHeaderTitle','纸板团购详情');
 		},
 		mounted(){
 			if( typeof(this.$route.params.productId) != 'undefined' ){

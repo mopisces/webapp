@@ -1,18 +1,18 @@
 import store from '@/store';
 //生管模块布局
-const sgLayout = () => import('@/components/sg/SgLayout');
+const sgLayout = r => require.ensure([], () => r(require('@/components/sg/SgLayout')), 'SgLayout');
 //菜单页面
-const menu     = () => import('@/components/sg/index/Menu');
+const menu     = r => require.ensure([], () => r(require('@/components/sg/index/Menu')), 'menu');
 //备料页面
-const bl       = () => import('@/components/sg/select/BL');
+const bl       = r => require.ensure([], () => r(require('@/components/sg/select/BL')), 'bl');
 //备料查看页面
-const blms     = () => import('@/components/sg/select/BLMS');
+const blms     = r => require.ensure([], () => r(require('@/components/sg/select/BLMS')), 'blms');
 //生产订单页面
-const scdd     = () => import('@/components/sg/select/SCDD');
+const scdd     = r => require.ensure([], () => r(require('@/components/sg/select/SCDD')), 'scdd');
 //完工订单页面
-const wgdd     = () => import('@/components/sg/select/WGDD');
+const wgdd     = r => require.ensure([], () => r(require('@/components/sg/select/WGDD')), 'wgdd');
 //生管监控页面
-const webSocket = () => import('@/components/sg/monitor/WebSocket');
+const webSocket = r => require.ensure([], () => r(require('@/components/sg/monitor/WebSocket')), 'webSocket');
 const sg = [
     {
         path:'/sg',

@@ -113,7 +113,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','团购页面');
+			this.$store.commit('client/setHeaderTitle','团购页面');
 			this.$store.commit('common/setType','group');
 		},
 		mounted(){

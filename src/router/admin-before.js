@@ -1,44 +1,44 @@
 //布局页面
-const adminLayout  = () => import('@/components/admin/AdminLayout');//r => require.ensure([], () => r(require('@/components/admin/AdminLayout')), 'adminLayout');
+const adminLayout   = () => import('@/components/admin/AdminLayout');//r => require.ensure([], () => r(require('@/components/admin/AdminLayout')), 'adminLayout');
 //登陆页面
-const adminLogin   = () => import('@/components/admin/login/AdminLogin');//r => require.ensure([], () => r(require('@/components/admin/login/AdminLogin')), 'adminLogin');
+const adminLogin    = () => import('@/components/admin/login/AdminLogin');//r => require.ensure([], () => r(require('@/components/admin/login/AdminLogin')), 'adminLogin');
 
 
 //纸板列表
 //const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
-const boardLists   = () => import('@/components/admin/board/Lists');
+const boardLists   = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
 //纸板产品描述
-const boardDescr   = () => import('@/components/admin/board/Descr');
+const boardDescr   = r => require.ensure([], () => r(require('@/components/admin/board/Descr')), 'boardDescr');
 //纸板产品基本信息
-const boardEdit    = () => import('@/components/admin/board/Edit');
+const boardEdit    = r => require.ensure([], () => r(require('@/components/admin/board/Edit')), 'boardEdit');
 //添加纸板
-const boardAdd     = () => import('@/components/admin/board/Add');
+const boardAdd     = r => require.ensure([], () => r(require('@/components/admin/board/Add')), 'boardAdd');
 //已删除纸板列表
-const boardDel     = () => import('@/components/admin/board/DelLists');
+const boardDel     = r => require.ensure([], () => r(require('@/components/admin/board/DelLists')), 'boardDel');
 //纸板团购默认图片
-const boardDefPic  = () => import('@/components/admin/board/DefaultPic');
+const boardDefPic  = r => require.ensure([], () => r(require('@/components/admin/board/DefaultPic')), 'boardDefPic');
 //项目配置
-const configInfo   = () => import('@/components/admin/config/Config');
+const configInfo   = r => require.ensure([], () => r(require('@/components/admin/config/Config')), 'configInfo');
 //淘宝箱列表
-const boxLists     = () => import('@/components/admin/box/Lists');
+const boxLists     = r => require.ensure([], () => r(require('@/components/admin/box/Lists')), 'boxLists');
 //淘宝箱编辑
-const boxEdit      = () => import('@/components/admin/box/Edit');
+const boxEdit      = r => require.ensure([], () => r(require('@/components/admin/box/Edit')), 'boxEdit');
 //已删除淘宝箱列表
-const boxDel       = () => import('@/components/admin/box/DelLists');
+const boxDel       = r => require.ensure([], () => r(require('@/components/admin/box/DelLists')), 'boxDel');
 //添加淘宝箱
-const boxAdd       = () => import('@/components/admin/box/Add');
+const boxAdd       = r => require.ensure([], () => r(require('@/components/admin/box/Add')), 'boxAdd');
 //淘宝箱团购默认图片
-const boxDefPic    = () => import('@/components/admin/box/DefaultPic');
+const boxDefPic    = r => require.ensure([], () => r(require('@/components/admin/box/DefaultPic')), 'boxDefPic');
 //用户列表
-const userLists    = () => import('@/components/admin/user/Lists');
+const userLists    = r => require.ensure([], () => r(require('@/components/admin/user/Lists')), 'userLists');
 //添加用户
-const userAdd      = () => import('@/components/admin/user/Add');
+const userAdd      = r => require.ensure([], () => r(require('@/components/admin/user/Add')), 'userAdd'); 
 //联系方式列表
-const contactLists = () => import('@/components/admin/contact/Lists');
+const contactLists = r => require.ensure([], () => r(require('@/components/admin/contact/Lists')), 'contactLists'); 
 //添加联系方式
-const contactAdd   = () => import('@/components/admin/contact/Add');
+const contactAdd   = r => require.ensure([], () => r(require('@/components/admin/contact/Add')), 'contactAdd'); 
 //图片配置
-const imgInfo      = () => import('@/components/admin/img/Logo');
+const imgInfo      = r => require.ensure([], () => r(require('@/components/admin/img/Logo.vue')), 'imgInfo'); 
 export const asyncAdminRouterMap = [
     {
         path : '/admin',

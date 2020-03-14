@@ -1,61 +1,61 @@
 //公共页面
 //404 微信扫描
-const wxScan                 = () => import('@/components/common/WxScanRes');
+const wxScan                 = r => require.ensure([], () => r(require('@/components/common/WxScanRes')), 'wxScan');
 //staff权限页面
 //布局页面
-const staffLayout            = () => import('@/components/common/StaffLayout');
+const staffLayout            = r => require.ensure([], () => r(require('@/components/common/StaffLayout')), 'staffLayout');
 //菜单
-const indexMenu              = () => import('@/components/staff/index/Menu');
+const indexMenu              = r => require.ensure([], () => r(require('@/components/staff/index/Menu')), 'indexMenu');
 //订单试算
-const clacIndex              = () => import('@/components/staff/calc/Index');
+const clacIndex              = r => require.ensure([], () => r(require('@/components/staff/calc/Index')), 'clacIndex');
 //客户往来统计
-const frecCusContact         = () => import('@/components/staff/frec/CusContact');
+const frecCusContact         = r => require.ensure([], () => r(require('@/components/staff/frec/CusContact')), 'frecCusContact');
 //收款调账
-const frecRecAdjust          = () => import('@/components/staff/frec/RecAdjust');
+const frecRecAdjust          = r => require.ensure([], () => r(require('@/components/staff/frec/RecAdjust')), 'frecRecAdjust');
 //库存修改
-const stockMStockDetailR     = () => import('@/components/staff/stock/MStockDetailR');
+const stockMStockDetailR     = r => require.ensure([], () => r(require('@/components/staff/stock/MStockDetailR')), 'stockMStockDetailR');
 //库区面积
-const stockDeliveryArea      = () => import('@/components/staff/stock/DeliveryArea');
+const stockDeliveryArea      = r => require.ensure([], () => r(require('@/components/staff/stock/DeliveryArea')), 'stockDeliveryArea');
 //安全库存
-const paperSafe              = () => import('@/components/staff/paper/PaperSafe');
+const paperSafe              = r => require.ensure([], () => r(require('@/components/staff/paper/PaperSafe')), 'paperSafe');
 //原纸出库
-const paperDoStockOut        = () => import('@/components/staff/paper/DoStockOut');
+const paperDoStockOut        = r => require.ensure([], () => r(require('@/components/staff/paper/DoStockOut')), 'paperDoStockOut');
 //原纸入库
-const paperDoRStockIn        = () => import('@/components/staff/paper/DoRStockIn');
+const paperDoRStockIn        = r => require.ensure([], () => r(require('@/components/staff/paper/DoRStockIn')), 'paperDoRStockIn');
 //直接入库
-const paperDirectInStock     = () => import('@/components/staff/paper/DirectInStock');
+const paperDirectInStock     = r => require.ensure([], () => r(require('@/components/staff/paper/DirectInStock')), 'paperDirectInStock');
 //原纸库存
-const paperGetSStocks        = () => import('@/components/staff/paper/GetSStocks');
+const paperGetSStocks        = r => require.ensure([], () => r(require('@/components/staff/paper/GetSStocks')), 'paperGetSStocks');
 //客户信用余额
-const credWGetCusAmt         = () => import('@/components/staff/cred/WGetCusAmt');
+const credWGetCusAmt         = r => require.ensure([], () => r(require('@/components/staff/cred/WGetCusAmt')), 'credWGetCusAmt');
 /*//客户信用余额/详情
 const credCusAmtDetail       = r => require.ensure([], () => r(require('@/components/staff/cred/CusAmtDetail')), 'credCusAmtDetail');*/
 //扫描装货
-const stowLists              = () => import('@/components/staff/stow/Lists');
+const stowLists              = r => require.ensure([], () => r(require('@/components/staff/stow/Lists')), 'stowList');
 //扫描装货/详情
-const stowDetail             = () => import('@/components/staff/stow/Detail');
+const stowDetail             = r => require.ensure([], () => r(require('@/components/staff/stow/Detail')), 'stowDetail');
 //生产分析总计
-const statisGetProInfo       = () => import('@/components/staff/statis/GetProInfo');
+const statisGetProInfo       = r => require.ensure([], () => r(require('@/components/staff/statis/GetProInfo')), 'statisGetProInfo');
 //库存统计
-const statisGetOrdStock      = () => import('@/components/staff/statis/GetOrdStock');
+const statisGetOrdStock      = r => require.ensure([], () => r(require('@/components/staff/statis/GetOrdStock')), 'statisGetOrdStock');
 //订单统计
-const statisGetOrderSum      = () => import('@/components/staff/statis/GetOrderSum');
+const statisGetOrderSum      = r => require.ensure([], () => r(require('@/components/staff/statis/GetOrderSum')), 'statisGetOrderSum');
 //退货统计
-const statisGetOrdReturnSum  = () => import('@/components/staff/statis/GetOrdReturnSum');
+const statisGetOrdReturnSum  = r => require.ensure([], () => r(require('@/components/staff/statis/GetOrdReturnSum')), 'statisGetOrdReturnSum');
 //传单统计
-const statisGetSchSum        = () => import('@/components/staff/statis/GetSchSum');
+const statisGetSchSum        = r => require.ensure([], () => r(require('@/components/staff/statis/GetSchSum')), 'statisGetSchSum');
 //ERP订单
-const erpGetOrders           = () => import('@/components/staff/erp/GetOrders');
+const erpGetOrders           = r => require.ensure([], () => r(require('@/components/staff/erp/GetOrders')), 'erpGetOrders');
 //原纸收货
-const paperbuyWGetPOIn       = () => import('@/components/staff/paperbuy/WGetPOIn');
+const paperbuyWGetPOIn       = r => require.ensure([], () => r(require('@/components/staff/paperbuy/WGetPOIn')), 'paperbuyWGetPOIn');
 //原纸采购
-const paperbuyWGetPOMain     = () => import('@/components/staff/paperbuy/WGetPOMain');
+const paperbuyWGetPOMain     = r => require.ensure([], () => r(require('@/components/staff/paperbuy/WGetPOMain')), 'paperbuyWGetPOMain');
 //每日订单
-const dailyWGetCusOrder      = () => import('@/components/staff/daily/WGetCusOrder');
+const dailyWGetCusOrder      = r => require.ensure([], () => r(require('@/components/staff/daily/WGetCusOrder')), 'dailyWGetCusOrder');
 //每日订单详细信息
-const dailyGetOrdersP        = () => import('@/components/staff/daily/GetOrdersP');
+const dailyGetOrdersP        = r => require.ensure([], () => r(require('@/components/staff/daily/GetOrdersP')), 'dailyGetOrdersP');
 //用户管理
-const userManage             = () => import('@/components/staff/paperbuy/WGetPOIn');
+const userManage             = r => require.ensure([], () => r(require('@/components/staff/user/Manage')), 'userManage');
 
 export const asyncStaffRouterMap = [
     {

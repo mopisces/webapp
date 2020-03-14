@@ -12,12 +12,18 @@
 		</div>
 		<div style="height:3.125rem;width:100%;"></div> 
 		<van-tabbar v-model="active">
-			<van-tabbar-item icon="home-o" to="/client/index/menu">首页</van-tabbar-item>
-			<van-tabbar-item icon="shopping-cart-o" to="/group/index">团购</van-tabbar-item>
-			<van-tabbar-item @click="logout">
-				退出
-				<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
-			</van-tabbar-item>
+			<template v-if="!isLogin">
+				<van-tabbar-item name="clogin" icon="friends-o" to="/group/client/login">客户登录</van-tabbar-item>
+				<van-tabbar-item name="slogin" icon="manager-o" to="/group/staff/login">员工登录</van-tabbar-item>
+			</template>
+			<template v-else>
+				<van-tabbar-item name="menu" icon="home-o" to="/client/index/menu">首页</van-tabbar-item>
+				<van-tabbar-item @click="logout">
+					退出
+					<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
+				</van-tabbar-item>
+			</template>
+			<van-tabbar-item name="group" icon="shopping-cart-o" to="/group/index">团购</van-tabbar-item>
 		</van-tabbar>
 	</div>
 </template>
@@ -48,15 +54,14 @@
 					fade: false ,
 					bounce:true,
 				},
-				active:0,
-				userName:'',
+				active   : '',
+				isLogin  : '',
+				userName : '',
 			};
 		},
 		methods:{
 			onClickLeft(){
 				this.$router.go(-1);
-				//this.$router.push( this.$store.state.staff.backPath );
-				//this.$store.commit('staff/setBackPath','/staff/index/menu');
 			},
 			reload(){
 				this.isRouterAlive = false;
@@ -71,6 +76,7 @@
 					this.userName = sessionStorage.getItem('jpdn-client-username');
 					sessionStorage.clear();
 					sessionStorage.setItem('jpdn-client-username',this.userName);
+					this.$store.commit('client/setIsLogin',false);
 					this.$router.push('/group/client/login');
 				}).catch(()=>{
 					Dialog.close();
@@ -79,6 +85,8 @@
 		},
 		created(){
 			this.config.headerTitle = this.$store.state.client.layout.title;
+			this.isLogin = this.$store.state.client.isLogin;
+			this.active  = this.$store.state.client.tabbarActive;
 		},
 		mounted(){
 
@@ -86,12 +94,28 @@
 		computed:{
 			setTitle(){
 				return this.$store.state.client.layout.title;
+			},
+			setActive(){
+				return this.$store.state.client.tabbarActive;
+			},
+			setIsLogin(){
+				return this.$store.state.client.isLogin;
 			}
 		},
 		watch:{
 			'setTitle':{
 				handler:function(newV,oldV){
 					this.config.headerTitle = newV;
+				}
+			},
+			'setActive':{
+				handler:function(newV,oldV){
+					this.active = newV;
+				}
+			},
+			'setIsLogin':{
+				handler:function(newV,oldV){
+					this.isLogin = newV;
 				}
 			}
 		},

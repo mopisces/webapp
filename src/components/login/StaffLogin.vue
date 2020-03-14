@@ -174,9 +174,8 @@
 			if( typeof(this.$route.query.scanRes) == 'string' ){
 				this.formData.strOrderId = this.$route.query.scanRes;
 			}
-			this.$store.commit('common/setType','staff');
-			this.$store.commit('common/setTitle','员工登陆');
-			this.$store.commit('common/setIndexActive','slogin');
+			this.$store.commit('client/setHeaderTitle','员工登陆');
+			this.$store.commit('client/setTabbarActive','slogin');
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

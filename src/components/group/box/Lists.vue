@@ -165,7 +165,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('common/setTitle','淘宝箱团购');
+			this.$store.commit('client/setHeaderTitle','淘宝箱团购');
 			this.getBoardList();
 			this.getFilterName();
 			this.getFlagName();
