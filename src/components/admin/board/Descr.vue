@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<quill-css></quill-css>
 		<div class="ql-container ql-snow" style="height:500px;">
 			<quill-editor v-model="formData.descr" :options="editorOption">
 	        </quill-editor>
@@ -12,9 +13,11 @@
 </template>
 <script>
 	import { quillEditor } from 'vue-quill-editor';
+	import QuillCss from '@/components/subject/admin/QuillCss';
 	export default {
 		components:{
-			quillEditor
+			quillEditor,
+			QuillCss
 		},
 		data(){
 			return {

@@ -5,6 +5,7 @@
 </template>
 <script>
 	import wx from 'weixin-js-sdk';
+	import base from '@/request/base';
 	import { Toast, Loading   } from 'vant';
 	export default {
 		components:{
@@ -13,7 +14,7 @@
 		},
 		data(){
 			return {
-				redirectUri : 'http://test.leaper.ltd:1104',
+				redirectUri : base.wxRediect,
 				path        : ''
 			}
 		},
@@ -54,7 +55,7 @@
 	                    		scanRes = res.resultStr;	
 	                    	}
 	                    	Toast.success(res.resultStr);
-	                    	window.location.href = 'http://test.leaper.ltd:1104' + self.path + '?scanRes=' + scanRes;
+	                    	window.location.href = base.wxRediect + self.path + '?scanRes=' + scanRes;
 	                    	
 	                    }
 	                });
