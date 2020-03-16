@@ -96,19 +96,19 @@ export const asyncClientRouterMap = [
             {
                 path:'build/s',
                 name: 'sBuild',
-                meta: { title: '简单纸板下单' },
+                meta: { title: '纸板下单' },
                 component: sBuild,
             },
             {
                 path:'build/c',
                 name: 'cBuild',
-                meta: { title: '纸箱纸板下单' },
+                meta: { title: '纸箱下单' },
                 component: cBuild,
             },
             {
                 path:'build/x',
                 name: 'xBuild',
-                meta: { title: '纸箱下单' },
+                meta: { title: '淘宝箱下单' },
                 component: xBuild,
             },
             {

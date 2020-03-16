@@ -18,7 +18,7 @@
 			</div>
 			<div class="van-row" style="text-align:left;">
 				<div class="van-col van-col--12">
-					<field-label-variable :value.sync="fieldData.iDeliQty" label="送货数" placeholder="送货数" maxlength="8" type="number" ref="iDeliQtyInput"></field-label-variable>
+					<field-label-variable :value.sync="fieldData.iDeliQty" label="送货数" placeholder="送货数" maxlength="8" type="number" :onFocus.sync="config.field.iDeliQtyOnFocus"></field-label-variable>
 				</div>
 				<div class="van-col van-col--12">
 					<field-label-variable :value.sync="fieldData.iFreeQty" label="赠品数" placeholder="赠品数" maxlength="10" type="number"></field-label-variable>
@@ -143,6 +143,9 @@
 						]
 					},
 					isEdit : 0,
+					field:{
+						iDeliQtyOnFocus : false
+					}
 				},
 				table:{
 					data : []
@@ -247,6 +250,7 @@
 				let self = this;
 				self.strStockAreaAll = [];
 				this.$request.staff.stow.getStockArea( strOrderId ).then(res=>{
+					self.config.field.iDeliQtyOnFocus = true;
 					if( res.result.length <= 0 ){
 						return ;
 					}
@@ -315,7 +319,6 @@
 							self.deliveryAddress.fit.push(this.deliveryAddress.all[i]);
 						}
 					}
-					self.$refs.iDeliQtyInput.focus()
 					if( self.pageConfig.bPackAddODefSQ ){
 						self.fieldData.iDeliQty = self.fieldData.areaQty;
 					}else{
@@ -335,6 +338,7 @@
 				}
 			},
 			rowEdit( index, rowData ){
+				this.config.field.iDeliQtyOnFocus = false;
 				this.fieldData.bModDetail = true;
 				this.fieldData.strOrderId = rowData.OrderType +  rowData.OrderId;
 				let orderInfo = '订单客户:' + rowData.CusId + ' ' + rowData.CusShortName + ' 材质编号:' + rowData.BoardId + ' 长宽:' + rowData.Length + 'x' + rowData.Width;
@@ -484,6 +488,7 @@
 					return ;
 				}
 				if( newV.length === 11 && !this.fieldData.bModDetail ){
+					this.config.field.iDeliQtyOnFocus = false;
 					this.getOrdPackInfo( newV );
 				}
 			},

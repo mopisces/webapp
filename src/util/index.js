@@ -69,7 +69,16 @@ let urlWhiteList = ( search, type )=>
 	}else{
 		whiteList = [
 			'外部人员使用',
-			'菜单页面'
+			'菜单页面',
+			'报价规则',
+			'报价价格',
+			'常用材质',
+			'常用订单',
+			'微信订单',
+			'支付方式',
+			'支付完成',
+			'申请退款',
+			'申请退款'
 		];
 	}
 	for (var i = whiteList.length - 1; i >= 0; i--) {

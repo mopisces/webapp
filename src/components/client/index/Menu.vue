@@ -62,6 +62,7 @@
 	import { Button, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
+	import base from '@/request/base';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -80,18 +81,18 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'简单纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#1a991d'},
-						{text:'纸箱纸板下单', iconName:'zhixiang',    url:'/client/build/c',state:'#1a991d'},
-						{text:'纸箱下单',     iconName:'zhixiang1',   url:'/client/build/x',state:'#1a991d'},
-						{text:'微信订单',     iconName:'shouji',      url:'/client/wxorder/lists',state:'#1a991d'},
-						{text:'常用订单',     iconName:'dingdan1',    url:'/client/usedorder/lists',state:'#1a991d'},
-						{text:'常用材质',     iconName:'caizhi',      url:'/client/usedboard/lists',state:'#1a991d'},
-						{text:'ERP订单',      iconName:'erp',         url:'/client/order/getOrders',state:'#1a991d'},
-						{text:'每日订单',     iconName:'meiri',       url:'/client/order/getOrdersP',state:'#1a991d'},
-						{text:'对账单',       iconName:'duizhang',    url:'/client/order/getCusFreeMB',state:'#1a991d'},
-						{text:'报价价格',     iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus',state:'#1a991d'},
-						{text:'报价规则',     iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus',state:'#1a991d'},
 						{text:'信用余额',     iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt',state:'#1a991d'},
+						{text:'报价规则',     iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus',state:'#1a991d'},
+						{text:'报价价格',     iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus',state:'#1a991d'},
+						{text:'对账单',       iconName:'duizhang',    url:'/client/order/getCusFreeMB',state:'#1a991d'},
+						{text:'每日订单',     iconName:'meiri',       url:'/client/order/getOrdersP',state:'#1a991d'},
+						{text:'ERP订单',      iconName:'erp',         url:'/client/order/getOrders',state:'#1a991d'},
+						{text:'常用材质',     iconName:'caizhi',      url:'/client/usedboard/lists',state:'#1a991d'},
+						{text:'常用订单',     iconName:'dingdan1',    url:'/client/usedorder/lists',state:'#1a991d'},
+						{text:'微信订单',     iconName:'shouji',      url:'/client/wxorder/lists',state:'#1a991d'},
+						{text:'淘宝箱下单',     iconName:'zhixiang1',   url:'/client/build/x',state:'#1a991d'},
+						{text:'纸箱下单', iconName:'zhixiang',    url:'/client/build/c',state:'#1a991d'},
+						{text:'纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#1a991d'},
 					],
 					authGrid:[],
 					popup:{
@@ -142,7 +143,7 @@
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = this.$store.state.common.loginUrl + 'client/login?token=' + res.result;
+					self.loginUrl = base.wxRediect + '/group/client/login?token=' + res.result;
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{

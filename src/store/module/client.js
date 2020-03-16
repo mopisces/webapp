@@ -7,8 +7,9 @@ const client = {
 			title : '首页'
 		},
 		navList      : null,
-		tabbarActive : '',
-		isLogin      : false
+		tabbarActive : 'menu',
+		isLogin      : sessionStorage.getItem('jpdn-client-isLogin'),
+		backPath     : '/client/index/menu'
 	},
 	mutations:{ 
 		setHeaderTitle( state, title ){

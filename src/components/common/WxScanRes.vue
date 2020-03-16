@@ -54,8 +54,8 @@
 	                    	}else{
 	                    		scanRes = res.resultStr;	
 	                    	}
-	                    	Toast.success(res.resultStr);
-	                    	window.location.href = base.wxRediect + self.path + '?scanRes=' + scanRes;
+	                    	Toast.success(self.redirectUri + self.path + '?scanRes=' + scanRes);
+	                    	window.location.href = self.redirectUri + self.path + '?scanRes=' + scanRes;
 	                    	
 	                    }
 	                });

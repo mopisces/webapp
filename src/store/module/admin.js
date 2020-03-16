@@ -5,8 +5,8 @@ const admin = {
 		navList : null,
 		asideActive:'',
 		asideMenu:{
-			boardGroup : false,
-			boxGroup   : false
+			boardGroup : typeof(JSON.parse(sessionStorage.getItem('jpdn-admin-asideMenu'))) == 'string' ? JSON.parse(sessionStorage.getItem('jpdn-admin-asideMenu')).board : false,
+			boxGroup   : typeof(JSON.parse(sessionStorage.getItem('jpdn-admin-asideMenu'))) == 'string' ? JSON.parse(sessionStorage.getItem('jpdn-admin-asideMenu')).box : false,
 		}
 	},
 	mutations:{

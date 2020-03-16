@@ -182,7 +182,7 @@
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸出库');
 			if( typeof(this.$route.query.scanRes) == 'string' ){
-				this.formData.strOrderId = this.$route.query.scanRes;
+				this.formData.stockOutNo = this.$route.query.scanRes;
 			}
 		},
 		mounted(){

@@ -61,7 +61,11 @@
 		},
 		methods:{
 			onClickLeft(){
-				this.$router.go(-1);
+				if( sessionStorage.getItem('jpdn-client-isLogin') ){
+					this.$router.push(this.$store.state.client.backPath);
+				}else{
+					this.$router.go(-1);
+				}
 			},
 			reload(){
 				this.isRouterAlive = false;

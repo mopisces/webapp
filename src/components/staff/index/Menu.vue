@@ -66,6 +66,7 @@
 	import { Button, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
+	import base from '@/request/base';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -160,7 +161,7 @@
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = this.$store.state.common.loginUrl + 'staff/login?token=' + res.result;
+					self.loginUrl = base.wxRediect + '/group/staff/login?token=' + res.result;
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{
@@ -203,6 +204,7 @@
 					this.config.authGrid =  JSON.parse(sessionStorage.getItem('staff-auth-grid'));
 					return ;
 				}
+				console.log(authName);
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
 					for (var j = authName.length - 1; j >= 0; j--) {
 						if( authName[j] == this.config.gridItem[i].text ){

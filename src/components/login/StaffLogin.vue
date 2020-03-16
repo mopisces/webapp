@@ -151,6 +151,7 @@
 						return ;
 					}
 					sessionStorage.setItem('staff-auth-url',JSON.stringify(res.result.available));
+					console.log(res)
 					self.$store.dispatch('staff/permission', res.result.available);
 					self.$router.addRoutes(self.$store.state.staff.navList);
 				}).then(()=>{

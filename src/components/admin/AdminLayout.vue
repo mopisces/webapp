@@ -100,8 +100,8 @@
 					activeIndex : ''
 				},
 				adminName  : '',
-				boardGroup : false,
-				boxGroup   : false
+				boardGroup : sessionStorage.getItem('jpdn-admin-asideMenu') ? sessionStorage.getItem('jpdn-admin-asideMenu').board : false,
+				boxGroup   : sessionStorage.getItem('jpdn-admin-asideMenu') ? sessionStorage.getItem('jpdn-admin-asideMenu').box : false
 			}
 		},
 		methods:{
@@ -118,7 +118,7 @@
 			this.config.activeIndex = this.$store.state.admin.asideActive;
 		},
 		mounted(){
-
+			console.log(sessionStorage.getItem('jpdn-admin-asideMenu'))
 		},
 		updated(){
 			
@@ -130,6 +130,9 @@
 			setActive(){
 				return this.$store.state.admin.asideActive;
 			},
+			/*setAsideMenu(){
+				return sessionStorage.getItem('jpdn-admin-asideMenu');
+			},*/
 			setBoardGroup(){
 				return this.$store.state.admin.asideMenu.boardGroup;
 			},
@@ -143,6 +146,12 @@
 					this.config.activeIndex = newV;
 				}
 			},
+			/*'setAsideMenu':{
+				handler:function(newV,oldV){
+					this.boardGroup = sessionStorage.getItem('jpdn-admin-asideMenu').board;
+					this.boxGroup   = sessionStorage.getItem('jpdn-admin-asideMenu').box;
+				}
+			},*/
 			'setBoardGroup':{
 				handler:function(newV,oldV){
 					this.boardGroup = newV;
@@ -150,7 +159,6 @@
 			},
 			'setBoxGroup':{
 				handler:function(newV,oldV){
-					console.log(newV)
 					this.boxGroup = newV;
 				}
 			}

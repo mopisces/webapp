@@ -169,7 +169,7 @@
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸入库');
 			if( typeof(this.$route.query.scanRes) == 'string' ){
-				this.formData.strOrderId = this.$route.query.scanRes;
+				this.formData.stockInNo = this.$route.query.scanRes;
 			}
 		},
 		mounted(){

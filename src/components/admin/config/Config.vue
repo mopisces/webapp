@@ -887,6 +887,7 @@
 			setAsideMenu( boardGroup, boxGroup ){
 				let board = boardGroup == 0 ? false : true;
 				let box   = boxGroup   == 0 ? false : true;
+				sessionStorage.setItem('jpdn-admin-asideMenu',JSON.stringify({board:board,box:box}));
 				this.$store.commit('admin/setAsideMenuBoard',board);
 				this.$store.commit('admin/setAsideMenuBox',box);
 			}

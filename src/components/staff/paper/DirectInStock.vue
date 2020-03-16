@@ -180,15 +180,16 @@
 			getOrdInInfo( orderId ){
 				let self = this;
 				this.$request.staff.paper.getOrdInInfo( orderId ).then(res=>{
+					if( res.errorCode != '00000' ){
+						self.submitReset();
+						return ;
+					}
 					self.pageInfo.strOrderInfo = '订单数:' + res.result.OrdQty + '客户:' + res.result.CusShortName + ' 规格:' + res.result.OrderDescr;
 					self.pageInfo.iFinishedQty = res.result.FinishedQty;
 					if( res.result.MatName !== '' && res.result.OrderType === 'x' ){
 						self.pageInfo.strOrderInfo += ' 货品名称:' + res.result.MatName;
 					}
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.field.iQtyOnFocus = true;
-					});
+					self.config.field.iQtyOnFocus = true;
 				});
 			},
 			onSubmit(){
@@ -261,6 +262,7 @@
 		watch:{
 			strOrderIdChange( newV, oldV ){
 				if( newV.length === 11 ){
+					this.config.field.iQtyOnFocus = false;
 					this.getOrdInInfo( newV );
 					if( this.pageInfo.bSAreaControl ){
 						this.getLastSchArea( newV );
