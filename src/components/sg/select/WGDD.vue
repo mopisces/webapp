@@ -1,9 +1,11 @@
 <template>
 	<div>
-		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		<van-dropdown-menu>
-			<van-dropdown-item v-model="formData.activeItem" :options="config.dropDownOption" />
-		</van-dropdown-menu>
+		<van-sticky :offset-top="46">
+			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
+			<van-dropdown-menu>
+				<van-dropdown-item v-model="formData.activeItem" :options="config.dropDownOption" />
+			</van-dropdown-menu>
+		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :immediate-check="false" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
 				<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;">
@@ -20,7 +22,7 @@
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--20">订单号:{{ item.order_number }}</div>
 						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-row van-row--flex van-row--justify-center" v-if=" root != 2 ">
 							<div class="van-col van-col--20">客户名称:{{ item.company_name }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
@@ -77,7 +79,7 @@
 			<div slot="filter-field-1">
 				<van-field label="序号" v-model="formData.sn" placeholder="精确查询" input-align="center"/>
 				<van-field label="订单号" v-model="formData.orderNumber" placeholder="精确查询" input-align="center"/>
-				<van-field label="客户名称" v-model="formData.companyName" placeholder="精确查询" input-align="center"/>
+				<van-field label="客户名称" v-model="formData.companyName" placeholder="精确查询" input-align="center" v-if=" root != 2 "/>
 				<van-field label="纸质" v-model="formData.paperCode" placeholder="精确查询" input-align="center"/>
 				<van-field label="坑型" v-model="formData.fluteType" placeholder="精确查询" input-align="center"/>
 				<van-field label="门幅" v-model="formData.width" placeholder="精确查询" input-align="center"/>
@@ -89,19 +91,20 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, DropdownMenu, DropdownItem, PullRefresh, List, SwitchCell, Panel } from 'vant';
+	import { Button, Field, SwitchCell, DropdownMenu, DropdownItem, PullRefresh, List, Panel,  Sticky  } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
+			[SwitchCell.name]: SwitchCell,
 			[DropdownMenu.name]: DropdownMenu,
 			[DropdownItem.name]: DropdownItem,
 			[PullRefresh.name]: PullRefresh,
 			[List.name]: List,
-			[SwitchCell.name]: SwitchCell,
 			[Panel.name]: Panel,
+			[Sticky.name]: Sticky,
 
 			PopupFilter,
 			NewTimePicker
@@ -148,7 +151,8 @@
 					minDate : '',
 					maxDate : ''
 				},
-				listInfo : []
+				listInfo : [],
+				root : ''
 			}
 		},
 		methods:{
@@ -157,7 +161,8 @@
 				this.formData.curPage = 1;
 				this.config.list.pullRefresh.reloading = false;
 				this.config.list.pushLoading.finished  = false;
-				this.config.list.pushLoading.loading   = true;;
+				this.config.list.pushLoading.loading   = true;
+				this.getWgdd();
 			},
 			onLoad(){
 				this.formData.curPage++;
@@ -235,6 +240,7 @@
 				this.config.getInitDate    = false;
 				this.config.switch.checked = true;
 			}
+			this.root = sessionStorage.getItem('jpdn-sg-root');
 		},
 		mounted(){
 			this.getConfig();

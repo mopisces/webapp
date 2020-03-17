@@ -54,7 +54,7 @@
 					</van-button>
 				</div>
 				<div class="van-col van-col--12">
-					<van-button type="primary" size="danger" style="width:100%;" @click=" config.popup.changePass.show = false ">
+					<van-button type="primary" size="danger" style="width:100%;" @click="  onCancel() ">
 						取消
 					</van-button>
 				</div>
@@ -204,7 +204,6 @@
 					this.config.authGrid =  JSON.parse(sessionStorage.getItem('staff-auth-grid'));
 					return ;
 				}
-				console.log(authName);
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
 					for (var j = authName.length - 1; j >= 0; j--) {
 						if( authName[j] == this.config.gridItem[i].text ){
@@ -214,6 +213,12 @@
 					}
 				}
 				sessionStorage.setItem('staff-auth-grid',JSON.stringify(this.config.authGrid) );
+			},
+			onCancel(){
+				this.formData.oldPass = '';
+				this.formData.newPass = '';
+				this.formData.confirmPass = '';
+				this.config.popup.changePass.show = false;
 			}
 		},
 		created(){

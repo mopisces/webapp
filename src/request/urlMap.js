@@ -247,7 +247,11 @@ const pay = {
 
 const sg = {
 	alter : {
-		getConfig : `${base.sg}alterConfig`,
+		getConfig   : `${base.sg}alterConfig`,
+		getValue    : `${base.sg}alertGetValue`,
+		changeVal   : `${base.sg}alertChangeValue`,
+		getRecord   : `${base.sg}alertGetRecord`,
+		clearRecord : `${base.sg}alertClearRecord`,
 	},
 	select : {
 		getConfig     : `${base.sg}selectConfig`,
@@ -259,6 +263,9 @@ const sg = {
 	},
 	monitor : {
 		getSocketUrl : `${base.sg}socketUrl`
+	},
+	login : {
+		login : `${base.sg}login`
 	}
 };
 export { admin, staff, erp, index, client, pay, sg };

@@ -53,7 +53,8 @@
     "stylus-loader": "^3.0.2",
     "vue-cli-plugin-cube-ui": "^0.2.5",
     "vue-easytable": "^1.7.2",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "webpack-bundle-analyzer": "^3.6.1"
   },
   "eslintConfig": {
     "root": true,

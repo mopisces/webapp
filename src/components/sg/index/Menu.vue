@@ -16,7 +16,7 @@
 			<van-grid-item text="完工订单" to="/sg/select/wgdd">
 				<van-icon slot="icon" name="completed" size="35" color="#1a991d"/>
 			</van-grid-item>
-			<van-grid-item text="修改">
+			<van-grid-item text="修改" to="/sg/alter/index">
 				<van-icon slot="icon" class-prefix="iconfont" name="xiugai" size="35" color="#eff30c"/>
 			</van-grid-item>
 		</van-grid>

@@ -1,8 +1,10 @@
 import alter from './alter';
 import select from './select';
 import monitor from './monitor';
+import login from './login';
 export default {
 	alter,
 	select,
-	monitor
+	monitor,
+	login
 }

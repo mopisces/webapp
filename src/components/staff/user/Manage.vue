@@ -135,6 +135,7 @@
 			getUserManageType(){
 				let self = this;
 				this.$request.staff.user.getUserManageType().then(res=>{
+					console.log(res)
 					self.config.tab.active = res.result;
 				}).then(()=>{
 					this.$nextTick(()=>{

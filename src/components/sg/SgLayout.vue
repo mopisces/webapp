@@ -14,7 +14,7 @@
 				<van-icon slot="icon" name="wap-home-o"/>
 				菜单
 			</van-tabbar-item>
-			<van-tabbar-item name="sgLogout" to="">
+			<van-tabbar-item name="sgLogout" @click="logout">
 				<van-icon slot="icon" class-prefix="iconfont" name="tuichu" size="18"/>
 				退出
 			</van-tabbar-item>
@@ -22,10 +22,11 @@
 	</div>
 </template>
 <script>
-	import { Icon, NavBar, Tabbar, TabbarItem } from 'vant';
+	import { Icon, Dialog, NavBar, Tabbar, TabbarItem } from 'vant';
 	export default {
 		components:{
 			[Icon.name]: Icon,
+			[Dialog.name]: Dialog,
 			[NavBar.name]: NavBar,
 			[Tabbar.name]: Tabbar,
 			[TabbarItem.name]: TabbarItem
@@ -49,6 +50,16 @@
 			onClickLeft(){
 				this.$router.go(-1);
 			},
+			logout(){
+				Dialog.confirm({
+					message: '确认退出?'
+				}).then(() => {
+					sessionStorage.clear();
+					this.$router.push('/sg/login');
+				}).catch(()=>{
+					Dialog.close();
+				});
+			}
 		},
 		created(){
 			this.$store.commit('sg/setHeaderTitle','首页');

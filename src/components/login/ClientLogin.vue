@@ -3,10 +3,10 @@
 		<div style="width:100%;height:5%;position:fixed;top:50px;text-align:center;font-weight:500;font-size:1rem;">
 			{{ pageInfo.factoryName }}
 		</div>
-		<div style="width:100%;height:20%;position:fixed;top:80px;text-align:center;">
+		<div style="width:100%;height:20%;position:fixed;top:15%;text-align:center;">
 			<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
 		</div>
-		<div style="width: 80%;height:40%;position: fixed;top: 35%;left:10%;text-align:center;">
+		<div style="width: 80%;height:40%;position: fixed;top: 40%;left:10%;text-align:center;">
 			<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
 			<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
 			<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
@@ -122,6 +122,7 @@
 				let self = this;
 				this.$request.staff.login.getSF().then(res=>{
 					self.pageInfo.factoryLogo = this.$store.state.common.imgUrl + res.result.factory_info.FactoryLogo;
+					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
 				});
 			}
 		},
@@ -130,7 +131,8 @@
 				this.formData.userName = sessionStorage.getItem('jpdn-client-username')
 			}
 			sessionStorage.clear();
-			this.config.style.div = 'width:100%;height:' + window.screen.height + 'px';
+			let height = window.screen.height - 96;
+			this.config.style.div = 'width:100%;height:' + height + 'px';
 			if( typeof (this.$route.query.token) != 'undefined' ){
 				if( this.$route.query.token.length > 100 ){
 					this.quickLogin();

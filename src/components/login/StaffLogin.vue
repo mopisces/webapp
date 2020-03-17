@@ -151,7 +151,6 @@
 						return ;
 					}
 					sessionStorage.setItem('staff-auth-url',JSON.stringify(res.result.available));
-					console.log(res)
 					self.$store.dispatch('staff/permission', res.result.available);
 					self.$router.addRoutes(self.$store.state.staff.navList);
 				}).then(()=>{
@@ -166,7 +165,7 @@
 				this.formData.userName = sessionStorage.getItem('jpdn-staff-username')
 			}
 			sessionStorage.clear();
-			this.config.style.div = 'width:100%;height:' + window.screen.height + 'px';
+			this.config.style.div = 'width:100%;height:' + (window.screen.height - 96 ) + 'px';
 			if( typeof (this.$route.query.token) != 'undefined' ){
 				if( this.$route.query.token.length > 100 ){
 					this.quickLogin();

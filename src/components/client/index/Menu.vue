@@ -51,7 +51,7 @@
 				<van-button type="primary" size="normal" style="width:40%;" @click="changeClick()">
 					提交
 				</van-button>&nbsp;&nbsp;&nbsp;&nbsp;
-				<van-button type="primary" size="danger" style="width:40%;" @click=" config.popup.changePass.show = false ">
+				<van-button type="primary" size="danger" style="width:40%;" @click=" onCancel()">
 					取消
 				</van-button>
 			</div>
@@ -196,7 +196,12 @@
 				}
 				sessionStorage.setItem('client-auth-grid',JSON.stringify(this.config.authGrid) );
 			},
-			
+			onCancel(){
+				this.formData.oldPass = '';
+				this.formData.newPass = '';
+				this.formData.confirmPass = '';
+				this.config.popup.changePass.show = false ;
+			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','菜单页面');

@@ -1,4 +1,6 @@
 import store from '@/store';
+//生管登陆页面
+const sgLogin  = () => import('@/components/login/SgLogin');
 //生管模块布局
 const sgLayout = () => import('@/components/sg/SgLayout');
 //菜单页面
@@ -13,6 +15,8 @@ const scdd     = () => import('@/components/sg/select/SCDD');
 const wgdd     = () => import('@/components/sg/select/WGDD');
 //生管监控页面
 const webSocket = () => import('@/components/sg/monitor/WebSocket');
+//修改
+const alter    = () => import('@/components/sg/alter/Index');
 const sg = [
     {
         path:'/sg',
@@ -48,8 +52,18 @@ const sg = [
                 path : 'monitor/websocket',
                 meta : { title: '生管监控' },
                 component: webSocket,
+            },
+            {
+                path : 'alter/index',
+                meta : { title: '修改' },
+                component: alter,
             }
         ]
+    },
+    {
+        path:'/sg/login',
+        component: sgLogin,
+        meta: { title: '生管监控登陆' }
     }
 ]; 
 export default sg;
