@@ -22,7 +22,10 @@ const user = {
 		return post(staff.user.getCommonQrCode,postData);
 	},
 	getAuthName( data ){
-		return post(staff.user.getAuthName,{user_name:data.UserName});
+		return post(staff.user.getAuthName);
+	},
+	getCommonAuth( data ){
+		return post(staff.user.getCommonAuth,{user_name:data.UserName});
 	},
 	saveAuthName( data ){
 		let postData = {

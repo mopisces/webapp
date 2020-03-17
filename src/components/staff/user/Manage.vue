@@ -54,20 +54,23 @@
 			<div id="qrcode" slot="new-popup-qrcode" class="qrcode"></div>
 		</new-popup>
 		<new-popup :leftShow.sync="config.popup.auth.show" :position="config.popup.auth.position" isClose="3" :title="config.popup.auth.title">
-			<van-checkbox-group v-model="config.checkboxes.result" slot="new-popup-1" v-if="config.popup.auth.show">
+			<van-checkbox-group v-model="config.checkboxes.result" slot="new-popup-1" v-if="config.popup.auth.show" ref="checkboxes">
 				<van-cell-group>
-					<van-cell clickable v-for="(item, index) in authSelectAuth" :key="index" @click="toggle(index)" :title="item">
-						<van-checkbox :name="item" ref="checkboxes" shape="square" slot="right-icon"/>
+					<van-cell clickable v-for="(item, index) in authSelectAuth" :key="index" :title="item">
+						<van-checkbox :name="item" shape="square" slot="right-icon"/>
 					</van-cell>
 				</van-cell-group>
 			</van-checkbox-group>
 			<div slot="new-popup-2">
-				<div class="van-row van-row--flex van-row--justify-space-between" style="text-align:center;">
-					<div class="van-col van-col--12">
-						<van-button type="primary" size="large" @click="saveClick()" style="width:60%;">保存</van-button>
+				<div class="van-row">
+					<div class="van-col van-col--10">
+						<van-switch-cell v-model="config.switchCell" title="全选" style="width:100%;"/>
 					</div>
-					<div class="van-col van-col--12">
-						<van-button type="danger" size="large" @click="config.popup.auth.show = false" style="width:60%;">取消</van-button>
+					<div class="van-col van-col--7">
+						<van-button type="primary" size="normal" @click="saveClick()"  style="width:100%;">保存</van-button>
+					</div>
+					<div class="van-col van-col--7">
+						<van-button type="danger" size="normal" @click="config.popup.auth.show = false"  style="width:100%;">取消</van-button>
 					</div>
 				</div>
 			</div>
@@ -75,7 +78,7 @@
 	</div>
 </template>
 <script>
-	import { Button, CellGroup, Cell, Icon, Row, Col, Checkbox, CheckboxGroup, Toast, Panel, Tab, Tabs } from 'vant';
+	import { Button, CellGroup, Cell, Icon, Row, Col, Checkbox, CheckboxGroup, SwitchCell, Toast, Panel, Tab, Tabs } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
@@ -88,6 +91,7 @@
 			[Col.name]: Col,
 			[Checkbox.name]: Checkbox,
 			[CheckboxGroup.name]: CheckboxGroup,
+			[SwitchCell.name]: SwitchCell,
 			[Toast.name]: Toast,
 			[Panel.name]: Panel,
 			[Tab.name]: Tab,
@@ -115,7 +119,8 @@
 					},
 					checkboxes:{
 						result:[]
-					}
+					},
+					switchCell:false
 				},
 				listData:[],
 				authSelectAuth:[],
@@ -171,7 +176,7 @@
 			},
 			getAuthName( data ){
 				let self = this;
-				this.$request.staff.user.getAuthName( data ).then(res=>{
+				this.$request.staff.user.getCommonAuth( data ).then(res=>{
 					self.authSelectAuth = res.result.select;
 					self.config.checkboxes.result = res.result.available;
 				}).then(()=>{
@@ -233,6 +238,9 @@
 		computed:{
 			tabActiveChange(){
 				return this.config.tab.active;
+			},
+			switchCellChange(){
+				return this.config.switchCell;
 			}
 		},
 		watch:{
@@ -241,6 +249,13 @@
 					this.getWebUserClient();
 				}else{
 					this.getWebUserStaff();
+				}
+			},
+			switchCellChange(newV,oldV){
+				if( newV ){
+					this.$refs.checkboxes.toggleAll();
+				}else{
+					this.$refs.checkboxes.toggleAll(true);
 				}
 			}
 		}

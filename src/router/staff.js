@@ -55,7 +55,7 @@ const dailyWGetCusOrder      = () => import('@/components/staff/daily/WGetCusOrd
 //每日订单详细信息
 const dailyGetOrdersP        = () => import('@/components/staff/daily/GetOrdersP');
 //用户管理
-const userManage             = () => import('@/components/staff/paperbuy/WGetPOIn');
+const userManage             = () => import('@/components/staff/user/Manage');
 
 export const asyncStaffRouterMap = [
     {
