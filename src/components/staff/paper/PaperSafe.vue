@@ -49,11 +49,11 @@
 					},
 					table:{
 						columns:[
-							{field: 'PaperCode', title: '原纸代码', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-							{field: 'PaperWidth', title: '门幅', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-							{field: 'PCount', title: '库存件数', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'SafeCount', title: '安全库存', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'MaxCount', title: '上限库存', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'PaperCode', title: '原纸代码', width: 40, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'PaperWidth', title: '门幅', width: 50, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'PCount', title: '库存件数', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'SafeCount', title: '安全库存', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'MaxCount', title: '上限库存', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'PaperType', title: '纸种类型', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
 								switch( rowData.PaperType ){
 									case '0':

@@ -73,7 +73,6 @@ const groupBuying = {
 			simple_delivery_remark   : data.deliveryRemark,
 			simple_production_remark : data.productionRemark
 		};
-		console.log(postData)
 		return post(client.groupBuying.bCheck, postData);
 	},
 	getCConfig( goodsId ){

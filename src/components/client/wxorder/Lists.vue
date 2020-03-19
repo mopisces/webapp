@@ -321,7 +321,6 @@
 					if( res.result.UseWxPay == '1' || res.result.UseAliPay == '1' ){
 						self.config.floatNav.show = true;
 					}
-					console.log(self.config.floatNav.show)
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timePicker.isFinishLoad = true;

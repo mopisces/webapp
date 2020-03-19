@@ -46,18 +46,18 @@
 					},
 					table:{
 						widthColumns:[
-							{field: 'PaperCode', title: '纸类', width: 80, titleAlign: 'center', columnAlign: 'center', isResize:true ,isFrozen: true},
+							{field: 'PaperCode', title: '纸类', width: 40, titleAlign: 'center', columnAlign: 'center', isResize:true ,isFrozen: true},
 							{field: 'ZJWt', title: '整卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'iZJCount', title: '整卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'RWt', title: '残卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'iRCount', title: '残卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'iZJCount', title: '整卷卷数', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'RWt', title: '残卷重量', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'iRCount', title: '残卷卷数', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
 						codeColumns:[
-							{field: 'PaperWidth', title: '门幅', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'PaperWidth', title: '门幅', width: 50, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'ZJWt', title: '整卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'iZJCount', title: '整卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'RWt', title: '残卷重量', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'iRCount', title: '残卷卷数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'iZJCount', title: '整卷卷数', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'RWt', title: '残卷重量', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'iRCount', title: '残卷卷数', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
 						height : 0
 					},

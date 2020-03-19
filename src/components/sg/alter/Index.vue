@@ -105,7 +105,7 @@
 				Dialog.confirm({
 					message: '确认要清空记录吗?'
 				}).then(()=>{
-					self.recordList = [];
+					self.clearRecord();
 				}).catch(()=>{
 					Dialog.close();
 				});

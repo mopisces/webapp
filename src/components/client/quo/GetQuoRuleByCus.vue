@@ -4,7 +4,7 @@
 			<van-tab title="公共规则" name="1"></van-tab>
 			<van-tab title="特别规则" name="0"></van-tab>
 		</van-tabs>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa">
 		</v-table>
 	</div>
 </template>

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-search placeholder="请输入材质编号" v-model="filterValue" @input="filterData()"/>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData.filter" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" >
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData.filter" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa">
 		</v-table>
 	</div>
 </template>

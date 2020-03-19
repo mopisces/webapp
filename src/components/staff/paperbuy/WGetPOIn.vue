@@ -75,8 +75,8 @@
 						height : 0,
 						columns : [
 							{field: 'PaperCode', title: '纸类', width: 40, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true}, 
-							{field: 'PaperWidth', title: '门幅', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
-							{field: 'PaperWt', title: '克重', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
+							{field: 'PaperWidth', title: '门幅', width: 50, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
+							{field: 'PaperWt', title: '克重', width: 40, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
 							{field: 'InWt', title: '收货重量(kg)', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
 							{field: 'dPrice', title: '单价', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
 						]

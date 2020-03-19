@@ -3,7 +3,7 @@
 		<van-sticky :offset-top="47">
 			<div class="van-row">
 				<div class="van-col van-col--12">
-					<van-button plain hairline type="info" style="width:100%" @click="config.popup.leftPopup.show = true">客户信息信息</van-button>
+					<van-button plain hairline type="info" style="width:100%" @click="cusInfoClick()">客户信息信息</van-button>
 				</div>
 				<div class="van-col van-col--12">
 					<van-button plain hairline type="info" style="width:100%"  @click="config.popup.rightFilter.show = true">筛选</van-button>
@@ -190,9 +190,13 @@
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.optionalDate();
-						this.cusInfo();
+						//this.cusInfo();
 					});
 				});
+			},
+			cusInfoClick(){
+				this.cusInfo();
+				this.config.popup.leftPopup.show = true;
 			},
 			cusInfo(){
 				let self = this;
