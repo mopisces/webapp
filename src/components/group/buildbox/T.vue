@@ -183,7 +183,7 @@
 							self.config.radioData.address.push({ value : item.CusSubNo, text:item.SubDNAddress})
 						});
 						self.formData.address = res.result.ERPId;
-					}else{
+					}else if( res.errorCode == '20210' ){
 						Dialog.alert({
 							message:'请登陆查看详细信息'
 						}).then(()=>{

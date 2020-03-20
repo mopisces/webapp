@@ -152,9 +152,7 @@
 				this.radioVal = value;
 			},
 			detailClick( item, date ){
-
 				item['Date'] = date; 
-				console.log(item);
 				this.config.detailTable.item = item;
 				this.config.popup.detailShow = true;
 			}

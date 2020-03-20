@@ -1,4 +1,4 @@
-import axios from 'axios';
+//import axios from 'axios';
 import { Dialog, Toast } from 'vant';
 import base from './base';
 import store from '@/store';
@@ -25,6 +25,7 @@ httpServer.interceptors.request.use(
 			loadingType: 'spinner'
 		});
 		let auth = '';
+		sessionStorage.setItem('jpdn-admin-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqcC1lcnAiLCJpYXQiOjE1ODQ2NjU3MDUsImV4cCI6MTU4NDc1MjEwNSwiVXNlck5hbWUiOiJhZG1pbiIsIlBhc3NXb3JkIjoiYWRtaW4iLCJST1dfTlVNQkVSIjoiMSIsInRhZyI6ImFkbWluIn0.miflfXg_xGeEA4hhUYseaSGhDgcDQMazGaVF2HsTHsE');
 		if( sessionStorage.getItem('jpdn-client-token') ){
 			auth = sessionStorage.getItem('jpdn-client-token');
 		}else if( sessionStorage.getItem('jpdn-staff-token') ){

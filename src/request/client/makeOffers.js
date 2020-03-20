@@ -1,6 +1,6 @@
 import { get, post } from '../request';
 import { client } from '../urlMap';
-import axios from 'axios';
+
 const makeOffers = {
 	//报价规则
 	makeOffersRule( data ){

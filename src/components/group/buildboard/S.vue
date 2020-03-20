@@ -246,7 +246,7 @@
 			getConfig( goodsId ){
 				let self = this;
 				this.$request.client.groupBuying.getSConfig( goodsId ).then(res=>{
-					if( res.errorCode != '00000' ){
+					if( res.errorCode == '20210' ){
 						Dialog.alert({
 							message:'请登陆查看详细信息'
 						}).then(()=>{

@@ -23,7 +23,9 @@
 					<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
 				</van-tabbar-item>
 			</template>
-			<van-tabbar-item name="group" icon="shopping-cart-o" to="/group/index">团购</van-tabbar-item>
+			<template v-if="config.isOpenGroup">
+				<van-tabbar-item name="group" icon="shopping-cart-o" to="/group/index">团购</van-tabbar-item>
+			</template>
 		</van-tabbar>
 	</div>
 </template>
@@ -47,7 +49,8 @@
 					},
 					tabbar:{
 						showIndex:false
-					}
+					},
+					isOpenGroup:false
 				},
 				options:{
 					scrollbar :true,
@@ -61,6 +64,7 @@
 		},
 		methods:{
 			onClickLeft(){
+				this.$router.go(-1);return ;
 				if( sessionStorage.getItem('jpdn-client-isLogin') ){
 					this.$router.push(this.$store.state.client.backPath);
 				}else{
@@ -85,6 +89,14 @@
 				}).catch(()=>{
 					Dialog.close();
 				});
+			},
+			isOpenGroup(){
+				let self = this;
+				this.$request.staff.login.isOpenGroup().then(res=>{
+					if( res.errorCode == '00000' ){
+						self.config.isOpenGroup = res.result == 0 ? false : true;
+					}
+				});
 			}
 		},
 		created(){
@@ -93,7 +105,7 @@
 			this.active  = this.$store.state.client.tabbarActive;
 		},
 		mounted(){
-
+			this.isOpenGroup();
 		},
 		computed:{
 			setTitle(){

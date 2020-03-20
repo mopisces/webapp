@@ -140,7 +140,8 @@ const staff = {
 		portValuable : `${base.staff}staffPortValuable`,
 	},
 	login:{
-		getSF : `${base.staff}getSF`,
+		getSF       : `${base.staff}getSF`,
+		isOpenGroup : `${base.staff}isOpenGroup`,
 	}
 };
 

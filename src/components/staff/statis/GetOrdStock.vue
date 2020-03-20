@@ -143,11 +143,9 @@
 				this.getOrdStock( this.filterForm );
 			},
 			selectOption( val ){
-				if( val.chartProperties != '' && val.chartType != '' ){
-					this.config.chart.chartProperties = val.chartProperties;
-					this.config.chart.chartType       = val.chartType;
-					//this.config.chart.show            = true;
-				}else{
+				this.config.chart.chartProperties = val.chartProperties;
+				this.config.chart.chartType       = val.chartType;
+				if( val.statisWay == 0 ){
 					this.config.chart.show = false;
 				}
 				this.filterForm.statisState = val.statisType;

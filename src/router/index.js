@@ -1,11 +1,11 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+//import Vue from 'vue';
+//import Router from 'vue-router';
 import store from '@/store';
 import client from './client';
 import admin from './admin';
 import sg from './sg';
 import group from './group';
-Vue.use(Router);
+Vue.use(VueRouter);
 /*//公共页面
 //团购及未登录页面布局
 const indexLayout            = () => import('@/components/common/ClientLayout');
@@ -144,7 +144,7 @@ let routes = [
 ];
 
 
-let router = new Router({
+let router = new VueRouter({
     routes: routes,
     mode: 'history'
 });

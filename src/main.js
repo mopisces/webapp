@@ -1,4 +1,4 @@
-import Vue from 'vue';
+//import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -7,8 +7,8 @@ import 'vue-easytable/libs/themes-base/index.css';
 import './assets/icon/icon.css';
 import './assets/icon/my.css';
 
-import ElementUI from 'element-ui';
-Vue.use(ElementUI);
+//import ElementUI from 'element-ui';
+//Vue.use(ElementUI);
 
 import TableOperate from '@/components/subject/table/TableOperate.vue'; 
 

@@ -106,7 +106,7 @@
 						this.$store.commit('client/setIsLogin',true);
 						if( this.config.redirect.name != '' ){
 							this.$store.commit('client/setTabbarActive','group');
-							this.$router.push({ name : this.config.redirect.name , params : { productId : this.config.redirect.params } }); 
+							this.$router.replace({ name : this.config.redirect.name , params : { productId : this.config.redirect.params } }); 
 						}else{
 							this.$store.commit('client/setTabbarActive','menu');
 							this.$router.push('/client/index/menu');

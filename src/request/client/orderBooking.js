@@ -1,6 +1,6 @@
 import { get, post } from '../request';
 import { client } from '../urlMap';
-import axios from 'axios';
+
 const orderBooking = {
 	//简单纸板下单
 	sBuildConfig( fastOrderId ){

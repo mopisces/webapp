@@ -75,7 +75,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('staff/setHeaderTitle','原纸采购--详细信息');
+			
 		},
 		mounted(){
 			this.paperDetail( this.detailItem );

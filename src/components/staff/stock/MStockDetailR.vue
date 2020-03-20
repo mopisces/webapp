@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<wx-scan :scanResult.sync="formData.strOrderId" urlType="4"></wx-scan>
-		<van-field v-model="formData.strOrderInfo" disabled rows="1" autosize label="订单信息" type="textarea" input-align="center" placeholder="订单信息"></van-field>
-		<van-field v-model="formData.iQty" disabled label="数量" type="number" input-align="center"></van-field>
+		<van-field v-model="formData.strOrderInfo" readonly rows="1" autosize label="订单信息" type="textarea" input-align="center" placeholder="订单信息" class="field-readonly"></van-field>
+		<van-field v-model="formData.iQty" readonly label="数量" type="number" input-align="center" class="field-readonly"></van-field>
 		<van-field readonly clickable label="库区" v-model="formData.strStockArea" placeholder="选择库区" input-align="center" v-if=" pageConfig.bMStockArea == 1 " @click=" config.popup.show = true ">
 			<van-icon slot="right-icon" size="16" name="arrow"/>
 		</van-field>

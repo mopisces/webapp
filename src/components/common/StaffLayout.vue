@@ -8,6 +8,7 @@
 		</van-nav-bar>
 		<div style="width:100%;height:2.875rem;"></div>
 		<div class="container">
+			<div style="width:100%;height:0.1rem;"></div>
 			<router-view v-if="isRouterAlive" />
 			<!-- <div style="width:100%;height:50px;"></div> -->
 			<!-- <div style="margin-bottom:50px;"></div> -->

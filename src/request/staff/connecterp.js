@@ -1,5 +1,5 @@
 import { erp } from '../urlMap';
-import axios from 'axios';
+//import axios from 'axios';
 import QS from 'qs';
 import { Dialog, Toast } from 'vant';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';

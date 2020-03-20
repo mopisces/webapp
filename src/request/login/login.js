@@ -1,6 +1,5 @@
 import { get, post } from '../request';
 import { index } from '../urlMap';
-import axios from 'axios';
 
 const login = {
 	login( data ){

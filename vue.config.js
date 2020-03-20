@@ -20,6 +20,14 @@ module.exports = {
       assetFilter: function(assetFilename) {
         return assetFilename.endsWith('.js');
       }
+    },
+    externals:{
+      'vue' : 'Vue',
+      'vuex': 'vuex',
+      'axios':'axios',
+      'vue-router':'VueRouter',
+      'element-ui':'ElementUI',
+      'vant':'vant'
     }
   },
   devServer: {
