@@ -308,6 +308,9 @@
 				this.socket.on('error',(error)=>{
 					this.config.notice.text = '链接错误';
 				});
+				this.socket.on('disconnect',(error)=>{
+					this.config.notice.text = 'disconnect';
+				});
 			}
 		},
 		created(){

@@ -148,7 +148,7 @@
 					maxWidth  : 0,
 					minArea   : 0,
 					maxArea   : 0,
-					pic       : this.$store.state.common.imgUrl + 'groupImg/zwtp.png',
+					pic       : this.$store.state.common.imgUrl + 'zwtp.png',
 					productPrice : '',
 					marketPrice  : '',
 					title        : '',
@@ -246,7 +246,7 @@
 			getConfig( goodsId ){
 				let self = this;
 				this.$request.client.groupBuying.getSConfig( goodsId ).then(res=>{
-					if( res.errorCode == '20210' ){
+					if( res.errorCode != '00000' && res.errorCode != '20260' ){
 						Dialog.alert({
 							message:'请登陆查看详细信息'
 						}).then(()=>{
@@ -280,7 +280,7 @@
 						self.config.countDown.time = ( res.result.product_info.EndTime - res.result.product_info.BeginTime ) * 1000;
 					}
 					if( res.result.product_info.Pic[0] ){
-						self.pageConfig.pic = this.$store.state.common.imgUrl + 'groupImg/' +res.result.product_info.Pic[0];
+						self.pageConfig.pic = this.$store.state.common.imgUrl +res.result.product_info.Pic[0];
 					}
 					self.pageConfig.productPrice = res.result.product_info.Price;
 					self.pageConfig.marketPrice  = res.result.product_info.MarketPrice;

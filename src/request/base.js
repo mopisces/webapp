@@ -1,4 +1,4 @@
-let phpDomain = 'http://test.leaper.ltd:1110/';//'http://localhost:8001/';//后台接口domain
+let phpDomain = 'http://localhost:8001/';//'http://test.leaper.ltd:1110/';//后台接口domain
 
 const base = {
 	admin     : `${phpDomain}public/v1/admin/`,   //后台管理地址

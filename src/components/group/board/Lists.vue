@@ -125,9 +125,9 @@
 					res.result.forEach((item,index)=>{
 						item.time  = ( Number(item.EndTime) - Number(item.CurTime) ) * 1000;
 						if( typeof(item.Pic) == 'object' && item.Pic[0] != ''){
-							item.thumb = this.$store.state.common.imgUrl + 'groupImg/' + item.Pic[0];
+							item.thumb = this.$store.state.common.imgUrl + item.Pic[0];
 						}else{
-							item.thumb = this.$store.state.common.imgUrl + 'groupImg/zwtp.png';
+							item.thumb = this.$store.state.common.imgUrl + 'zwtp.png';
 						}
 						self.listData.push(item);
 					});

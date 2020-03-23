@@ -40,8 +40,14 @@ const admin = {
 		getList   : `${base.admin}adminBoxLists`,
 		addSave   : `${base.admin}adminBoxAdd`,
 	},
-	uploadImg : {
-		action : `${base.admin}adminBoardPicAdd`,
+	image : {
+		getGroupImg   : `${base.admin}adminGetGroupImg`,   //配置图片显示
+		setDefaultImg : `${base.admin}adminSetDefaultImg`, //上传配置图片
+		defaultImgAdd : `${base.admin}adminDefaultImgAdd`, //上传默认图片
+		defaultImgDel : `${base.admin}adminDefaultImgDel`, //删除默认图片
+		showListImg   : `${base.admin}adminShowListImg`,   //展示编辑图片
+		addListImg    : `${base.admin}admiListImgAdd`,     //添加图片
+		delListImg    : `${base.admin}admiListImgDel`,     //删除图片
 	}
 };
 const staff = {

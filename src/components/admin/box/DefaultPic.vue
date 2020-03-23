@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-upload :action="upload.action" :headers="upload.header" :data="upload.data" name="box" :on-preview="onPreview" :on-remove="onRemove" list-type="picture-card" :file-list="fileList" :on-success="onSuccess">
+		<el-upload :action="upload.action" :headers="upload.header" :data="upload.data" name="image" :on-preview="onPreview" :on-remove="onRemove" list-type="picture-card" :file-list="fileList" :on-success="onSuccess">
 			<i class="el-icon-plus"></i>
 		</el-upload>
 		<el-dialog :visible.sync="dialog.visible">
@@ -17,7 +17,7 @@
 					header:{
 						Authentication : sessionStorage.getItem('jpdn-admin-token')
 					},
-					action:admin.uploadImg.action,
+					action:admin.image.defaultImgAdd,
 					data:{
 						default_pic_type:'box'
 					}
@@ -53,7 +53,7 @@
 					postData.picName = file.name
 				}
 				let self = this;
-				this.$request.admin.board.delPic( postData ).then((res)=>{
+				this.$request.admin.image.defaultImgDel( postData ).then((res)=>{
 					if( res.errorCode == '00000' ){
 						self.$message.success('删除成功！');
 					}else{
@@ -69,7 +69,7 @@
 				this.$request.admin.config.getConfig().then((res)=>{
 					let arr = res.result.BoxDefaultPic.split(",");
 					arr.forEach((item,index)=>{
-						self.fileList.push({name:item,url:this.$store.state.common.imgUrl + 'groupImg/' + item})
+						self.fileList.push({name:item,url:this.$store.state.common.imgUrl + item})
 					})
 				});
 			}

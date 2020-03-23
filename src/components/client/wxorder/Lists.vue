@@ -343,7 +343,7 @@
 					self.config.list.pushLoading.loading = false;
 					res.result.order_data.forEach((item,index)=>{
 						if( item['FirstPic'] != null ){
-							item['pic'] = this.$store.state.common.imgUrl + 'groupImg/' + item.FirstPic;
+							item['pic'] = this.$store.state.common.imgUrl + item.FirstPic;
 						}
 						self.wxOrdersList.push(item);
 					});
@@ -355,7 +355,7 @@
 								title   : item.Title,
 								cost    : item.Cost,
 								id      : item.Id,
-								pic     : item.FirstPic == null ? '' : this.$store.state.common.imgUrl + 'groupImg/' + item.FirstPic,
+								pic     : item.FirstPic == null ? '' : this.$store.state.common.imgUrl + item.FirstPic,
 								isover  : item.PayDeadlineTime*1000 > self.config.floatNav.now ? false : true,
 								cusPoNo : item.CusPoNo
 							});

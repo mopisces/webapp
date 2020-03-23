@@ -165,6 +165,10 @@ router.beforeEach((to, from, next) => {
         store.dispatch('admin/permission');
         router.addRoutes(store.state.admin.navList);
         next({ ...to, replace: true });
+    }else if( sessionStorage.getItem('jpdn-sg-token') && store.state.sg.navList == null ){
+        store.dispatch('sg/permission');
+        router.addRoutes(store.state.sg.navList);
+        next({ ...to, replace: true });
     }else{
         next();
     }

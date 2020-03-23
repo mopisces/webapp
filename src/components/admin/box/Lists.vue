@@ -33,7 +33,7 @@
 			</el-table-column>
 			<el-table-column label="图片(点击编辑)" width="120">
 				<template slot-scope="scope">
-					<img style="width: 60px;" :src=" $store.state.common.imgUrl + 'groupImg/' + scope.row.Pic[0] " v-if="scope.row.Pic[0]">
+					<img style="width: 60px;" :src=" $store.state.common.imgUrl + scope.row.Pic[0] " v-if="scope.row.Pic[0]" @click="showImg(scope.row)">
 					<span v-if="scope.row.Pic.length > 1">等{{ scope.row.Pic.length }}张</span>
 				</template>
 			</el-table-column>
@@ -261,6 +261,9 @@
 						id : rowData.Id,
 					} 
 				});
+			},
+			showImg( rowData ){
+				this.$router.push({ name:'changeImg', params:{ listId:rowData.Id, listType:'box' } });
 			}
 		},
 		created(){

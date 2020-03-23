@@ -1,9 +1,11 @@
+import { asyncSgRouterMap } from '@/router/sg';
 const sg = {
 	namespaced: true,
 	state: { 
 		title : '',
 		//socket连接状态
-		isSuccessConnect : false
+		isSuccessConnect : false,
+		navList:null
 	},
 	mutations:{ 
 		setHeaderTitle( state, title ){
@@ -11,10 +13,15 @@ const sg = {
 		},
 		setConnect( state, value ){
 			state.isSuccessConnect = value;
+		},
+		setNavList( state, navList ){
+			state.navList = navList;
 		}
 	},
 	actions:{
-		
+		permission : ( { commit } )=>{
+			commit('setNavList', asyncSgRouterMap);
+		}
 	}
 };
 export default sg;

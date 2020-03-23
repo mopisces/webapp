@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-upload :action="upload.action" :headers="upload.header" :data="upload.data" name="board" :on-preview="onPreview" :on-remove="onRemove" list-type="picture-card" :file-list="fileList" :on-success="onSuccess">
+		<el-upload :action="upload.action" :headers="upload.header" :data="upload.data" name="image" :on-preview="onPreview" :on-remove="onRemove" list-type="picture-card" :file-list="fileList" :on-success="onSuccess">
 			<i class="el-icon-plus"></i>
 		</el-upload>
 		<el-dialog :visible.sync="dialog.visible">
@@ -17,7 +17,7 @@
 					header:{
 						Authentication : sessionStorage.getItem('jpdn-admin-token')
 					},
-					action:admin.uploadImg.action,
+					action:admin.image.defaultImgAdd,
 					data:{
 						default_pic_type:'board'
 					}
@@ -32,7 +32,8 @@
 		methods:{
 			onSuccess(response, file, fileList){
 				if( response.errorCode == '00000' ){
-					file.name = response.result.picName;
+					file.name = response.result;
+					this.$message.success('上传成功');
 				}else{
 					this.$message.warning(response.msg);
 					this.getDefalutPic();
@@ -45,15 +46,10 @@
 			onRemove(file, fileList){
 				let postData = {
 					type : 'board',
-					picName : null
+					picName : file.name
 				};
-				if( file.response ){
-					postData.picName = response.result;
-				}else{
-					postData.picName = file.name
-				}
 				let self = this;
-				this.$request.admin.board.delPic( postData ).then((res)=>{
+				this.$request.admin.image.defaultImgDel( postData ).then((res)=>{
 					if( res.errorCode == '00000' ){
 						self.$message.success('删除成功！');
 					}else{
@@ -69,7 +65,7 @@
 				this.$request.admin.config.getConfig().then((res)=>{
 					let arr = res.result.BoardDefaultPic.split(",");
 					arr.forEach((item,index)=>{
-						self.fileList.push({name:item,url:this.$store.state.common.imgUrl + 'groupImg/' + item})
+						self.fileList.push({name:item,url:this.$store.state.common.imgUrl + item})
 					})
 				});
 			}
@@ -78,7 +74,7 @@
 			this.getDefalutPic();
 		},
 		mounted(){
-			console.log(aboutImg)
+			
 		},
 		updated(){
 			

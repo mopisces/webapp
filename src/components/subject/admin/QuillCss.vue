@@ -1,8 +1,8 @@
 <template>
-	<div>
-		<remote-css href="https//cdn.quilljs.com/1.3.6/quill.snow.css"></remote-css>
-		<remote-css href="https//cdn.quilljs.com/1.3.6/quill.bubble.css"></remote-css>
-		<remote-css href="https//cdn.quilljs.com/1.3.6/quill.core.css"></remote-css>
+	<div id="quillCss">
+		<remote-css href="https://cdn.quilljs.com/1.3.6/quill.snow.css"></remote-css>
+		<remote-css href="https://cdn.quilljs.com/1.3.6/quill.bubble.css"></remote-css>
+		<remote-css href="https://cdn.quilljs.com/1.3.6/quill.core.css"></remote-css>
 	</div>
 </template>
 <script>

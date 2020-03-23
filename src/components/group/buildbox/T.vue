@@ -118,7 +118,7 @@
 					title        : '',
 					productPrice : '',
 					marketPrice  : '',
-					pic          : this.$store.state.common.imgUrl + 'groupImg/zwtp.png',
+					pic          : this.$store.state.common.imgUrl + 'zwtp.png',
 				},
 				pageConfig : {
 					minQty  : 0,
@@ -165,7 +165,7 @@
 						self.cardInfo.productPrice = res.result.product_info.Price;
 						self.cardInfo.marketPrice  = res.result.product_info.MarketPrice;
 						if( res.result.product_info.Pic[0] ){
-							self.cardInfo.pic = this.$store.state.common.imgUrl + 'groupImg/' + res.result.product_info.Pic[0];
+							self.cardInfo.pic = this.$store.state.common.imgUrl + res.result.product_info.Pic[0];
 						}
 						self.pageConfig.minQty = parseInt(res.result.product_info.BuildMin);
 						self.pageConfig.maxQty = parseInt(res.result.product_info.BuildMax);
@@ -183,7 +183,7 @@
 							self.config.radioData.address.push({ value : item.CusSubNo, text:item.SubDNAddress})
 						});
 						self.formData.address = res.result.ERPId;
-					}else if( res.errorCode == '20210' ){
+					}else if( res.errorCode != '00000' && res.errorCode != '20260' ){
 						Dialog.alert({
 							message:'请登陆查看详细信息'
 						}).then(()=>{

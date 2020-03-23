@@ -143,10 +143,9 @@
 					self.descInfo   = res.result.desc_info;
 					res.result.goods_detail.Pic.forEach((item,index)=>{
 						if( item != '' ){
-
-							self.imagesList.push( this.$store.state.common.imgUrl + 'groupImg/' + item );
+							self.imagesList.push( this.$store.state.common.imgUrl + item );
 						}else{
-							self.imagesList.push( this.$store.state.common.imgUrl + 'groupImg/zwtp.png');
+							self.imagesList.push( this.$store.state.common.imgUrl + 'zwtp.png');
 						}
 					});
 				}).then(()=>{

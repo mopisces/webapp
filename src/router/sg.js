@@ -17,7 +17,7 @@ const wgdd     = () => import('@/components/sg/select/WGDD');
 const webSocket = () => import('@/components/sg/monitor/WebSocket');
 //修改
 const alter    = () => import('@/components/sg/alter/Index');
-const sg = [
+export const asyncSgRouterMap = [
     {
         path:'/sg',
         component: sgLayout,
@@ -28,11 +28,11 @@ const sg = [
                 meta : { title: '菜单页面' },
                 component: menu,
             },
-        	{
-        		path : 'select/bl',
+            {
+                path : 'select/bl',
                 meta : { title: '备料' },
                 component: bl,
-        	},
+            },
             {
                 path : 'select/blms',
                 meta : { title: '备料查看' },
@@ -59,7 +59,10 @@ const sg = [
                 component: alter,
             }
         ]
-    },
+    }
+];
+
+const sg = [
     {
         path:'/sg/login',
         component: sgLogin,
