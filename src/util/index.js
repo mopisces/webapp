@@ -78,7 +78,8 @@ let urlWhiteList = ( search, type )=>
 			'支付方式',
 			'支付完成',
 			'申请退款',
-			'申请退款'
+			'支付宝跳转页面',
+			'支付宝支付页面'
 		];
 	}
 	for (var i = whiteList.length - 1; i >= 0; i--) {

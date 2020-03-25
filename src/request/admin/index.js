@@ -5,7 +5,6 @@ import config from './config';
 import board from './board';
 import box from './box';
 import image from './image';
-import other from './other';
 export default {
 	login,
 	user,
@@ -13,6 +12,5 @@ export default {
 	config,
 	board,
 	box,
-	image,
-	other
+	image
 }

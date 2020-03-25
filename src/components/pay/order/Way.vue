@@ -56,6 +56,9 @@
 		},
 		data(){
 			return {
+				config:{
+					isWx:false
+				},
 				info : {
 					isOneCent  : false,
 					useAlipay  : false,
@@ -100,7 +103,7 @@
 					return ;
 				}
 				if( type == 'wechat' ){
-					if(window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i)  != 'micromessenger'){
+					if( !this.config.isWx ){
 						//非微信浏览器
 						this.wxQrCodeShow = true;
 						let data = {
@@ -138,7 +141,12 @@
 				let self = this;
 				this.$request.payAll.payAll.alipay( data ).then(res=>{
 					if( res.errorCode == '00000' ){
-						window.location.href = res.result;
+						self.$router.push({
+							path:'/client/alipay/index',
+							query:{
+								goto:res.result
+							}
+						});
 					}
 				});
 			},
@@ -200,6 +208,9 @@
 		mounted(){
 			if( this.info.cusOrderId != '' ){
 				this.paymentIndex( this.info.cusOrderId );
+			}
+			if( window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == 'micromessenger' ){
+				this.config.isWx = true;
 			}
 		},
 		updated(){

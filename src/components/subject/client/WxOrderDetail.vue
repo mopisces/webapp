@@ -67,7 +67,7 @@
 				<van-field v-model="orderDetail.BdQty" label="纸板数" readonly input-align="right"></van-field>
 			</template>
 			<van-field v-model="orderDetail.Area" label="下单面积(㎡)" readonly input-align="right" v-if=" orderDetail.CType === 's' || orderDetail.CType === 'c'" ></van-field>
-			<van-field v-model="orderDetail.SubDNAddress" label="送货地址" readonly input-align="right"></van-field>
+			<van-field v-model="orderDetail.SubDNAddress" label="送货地址" readonly input-align="right" type="textarea" :autosize="true"></van-field>
 			<van-field v-model="orderDetail.DeliveryDate" label="交货日期" readonly input-align="right"></van-field>
 			<van-field v-model="orderDetail.DNRemark" label="送货备注" readonly input-align="right"></van-field>
 			<van-field v-model="orderDetail.ProRemark" label="生产备注" readonly input-align="right"></van-field>

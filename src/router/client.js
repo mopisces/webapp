@@ -35,6 +35,8 @@ const payWay           = () => import('@/components/pay/order/Way');
 const payDetail        = () => import('@/components/pay/order/Detail');
 //申请退款
 const payApply         = () => import('@/components/pay/order/Apply');
+//支付宝支付页面
+const aliPay           = () => import('@/components/pay/order/AliPay');
 //支付宝returnUrl
 const aliReturnUrl     = () => import('@/components/pay/order/AliReturn');
 export const asyncClientRouterMap = [
@@ -131,7 +133,7 @@ export const asyncClientRouterMap = [
             },
             {
                 path:'alipay/return',
-                meta: { title: '申请退款' },
+                meta: { title: '支付宝跳转页面' },
                 component: aliReturnUrl,
             }
         ]
@@ -139,6 +141,18 @@ export const asyncClientRouterMap = [
 ];
 
 const client = [
-
+    {
+        path:'/client',
+        component: clientLayout,
+        meta: { title: '外部人员使用' },
+        children:[
+            {
+                path:'alipay/index',
+                meta: { title: '支付宝支付页面' },
+                name: 'alipay',
+                component: aliPay,
+            }
+        ]
+    }
 ];
 export default client;
