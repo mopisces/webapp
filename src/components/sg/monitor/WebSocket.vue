@@ -40,10 +40,10 @@
 				</tr>
 				<tr>
 					<td>车速</td>
-					<td>{{ updownInfo.huji.cs }}</td>
-					<td>{{ updownInfo.SF1.cs }}</td>
-					<td>{{ updownInfo.SF2.cs }}</td>
-					<td>{{ updownInfo.SF3.cs }}</td>
+					<td @click="buildChart('糊机/车速','','huji_cs')">{{ updownInfo.huji.cs }}</td>
+					<td @click="buildChart('SF1/车速','','SF1_cs')">{{ updownInfo.SF1.cs }}</td>
+					<td @click="buildChart('SF2/车速','','SF2_cs')">{{ updownInfo.SF2.cs }}</td>
+					<td @click="buildChart('SF3/车速','','SF3_cs')">{{ updownInfo.SF3.cs }}</td>
 				</tr>
 			</table>
 			<table>
@@ -54,53 +54,53 @@
 				</tr>
 				<tr>
 					<td>总米数(m)</td>
-					<td>{{ updownInfo.benban.zms }}</td>
-					<td>{{ updownInfo.benbi.zms }}</td>
+					<td @click="buildChart('？班/总米数','米(m)','benban_zms')">{{ updownInfo.benban.zms }}</td>
+					<td @click="buildChart('本笔/总米数','米(m)','benbi_zms')">{{ updownInfo.benbi.zms }}</td>
 				</tr>
 				<tr>
 					<td>生产(m)</td>
-					<td>{{ updownInfo.benban.sc }}</td>
-					<td>{{ updownInfo.benbi.sc }}</td>
+					<td @click="buildChart('？班/生产','米(m)','benban_sc')">{{ updownInfo.benban.sc }}</td>
+					<td @click="buildChart('本笔/生产','米(m)','benbi_sc')">{{ updownInfo.benbi.sc }}</td>
 				</tr>
 				<tr>
 					<td>剩余(m)</td>
-					<td>{{ updownInfo.benban.sy }}</td>
-					<td>{{ updownInfo.benbi.sy }}</td>
+					<td @click="buildChart('？班/剩余','米(m)','benban_sy')">{{ updownInfo.benban.sy }}</td>
+					<td @click="buildChart('本笔/剩余','米(m)','benbi_sy')">{{ updownInfo.benbi.sy }}</td>
 				</tr>
 				<tr>
 					<td>不良(m)</td>
-					<td>{{ updownInfo.benban.bl }}</td>
-					<td>{{ updownInfo.benbi.bl }}</td>
+					<td @click="buildChart('？班/不良','米(m)','benban_bl')">{{ updownInfo.benban.bl }}</td>
+					<td @click="buildChart('本笔/不良','米(m)','benbi_bl')">{{ updownInfo.benbi.bl }}</td>
 				</tr>
 				<tr>
 					<td>均速(m/min)</td>
-					<td>{{ updownInfo.benban.js }}</td>
-					<td>{{ updownInfo.benbi.js }}</td>
+					<td @click="buildChart('？班/均速','米(m)','benban_js')">{{ updownInfo.benban.js }}</td>
+					<td @click="buildChart('本笔/均速','米(m)','benbi_js')">{{ updownInfo.benbi.js }}</td>
 				</tr>
 				<tr>
 					<td>生产平方(㎡)</td>
-					<td>{{ updownInfo.benban.scpf }}</td>
-					<td>{{ updownInfo.benbi.scpf }}</td>
+					<td @click="buildChart('？班/生产平方','平方米(㎡)','benban_scpf')">{{ updownInfo.benban.scpf }}</td>
+					<td @click="buildChart('本笔/生产平方','平方米(㎡)','benbi_scpf')">{{ updownInfo.benbi.scpf }}</td>
 				</tr>
 				<tr>
 					<td>停车次数</td>
-					<td>{{ updownInfo.benban.tccs }}</td>
-					<td>{{ updownInfo.benbi.tccs }}</td>
+					<td @click="buildChart('？班/停车次数','次数','benban_tccs')">{{ updownInfo.benban.tccs }}</td>
+					<td @click="buildChart('本笔/停车次数','次数','benbi_tccs')">{{ updownInfo.benbi.tccs }}</td>
 				</tr>
 				<tr>
 					<td>坏纸率(%)</td>
-					<td>{{ updownInfo.benban.hzl }}</td>
-					<td>{{ updownInfo.benbi.hzl }}</td>
+					<td @click="buildChart('？班/坏纸率','%','benban_hzl')">{{ updownInfo.benban.hzl }}</td>
+					<td @click="buildChart('本笔/坏纸率','%','benbi_hzl')">{{ updownInfo.benbi.hzl }}</td>
 				</tr>
 				<tr>
 					<td>修边率(%)</td>
-					<td>{{ updownInfo.benban.xbl }}</td>
-					<td>{{ updownInfo.benbi.xbl }}</td>
+					<td @click="buildChart('？班/修边率','%','benban_xbl')">{{ updownInfo.benban.xbl }}</td>
+					<td @click="buildChart('本笔/修边率','%','benbi_xbl')">{{ updownInfo.benbi.xbl }}</td>
 				</tr>
 				<tr>
 					<td>生产时间</td>
-					<td>{{ updownInfo.benban.scsj }}</td>
-					<td>{{ updownInfo.benbi.scsj }}</td>
+					<td>{{ timeFormat(updownInfo.benban.scsj) }}</td>
+					<td>{{ timeFormat(updownInfo.benbi.scsj) }}</td>
 				</tr>
 				<tr>
 					<td>停车时间</td>
@@ -152,24 +152,24 @@
 				</tr>
 				<tr>
 					<td>车速</td>
-					<td>{{ normalInfo.huji.cs }}</td>
-					<td>{{ normalInfo.SF1.cs }}</td>
-					<td>{{ normalInfo.SF2.cs }}</td>
-					<td>{{ normalInfo.SF3.cs }}</td>
+					<td @click="buildChart('糊机/车速','','huji_cs')">{{ normalInfo.huji.cs }}</td>
+					<td @click="buildChart('SF1/车速','','SF1_cs')">{{ normalInfo.SF1.cs }}</td>
+					<td @click="buildChart('SF2/车速','','SF2_cs')">{{ normalInfo.SF2.cs }}</td>
+					<td @click="buildChart('SF3/车速','','SF3_cs')">{{ normalInfo.SF3.cs }}</td>
 				</tr>
 				<tr v-if="config.isnew">
 					<td>剩余</td>
-					<td>{{ normalInfo.huji.sy }}</td>
-					<td>{{ normalInfo.SF1.sy }}</td>
-					<td>{{ normalInfo.SF2.sy }}</td>
-					<td>{{ normalInfo.SF3.sy }}</td>
+					<td @click="buildChart('糊机/剩余','','huji_cs')">{{ normalInfo.huji.sy }}</td>
+					<td @click="buildChart('SF1/剩余','','SF1_sy')">{{ normalInfo.SF1.sy }}</td>
+					<td @click="buildChart('SF2/剩余','','SF2_sy')">{{ normalInfo.SF2.sy }}</td>
+					<td @click="buildChart('SF3/剩余','','SF3_sy')">{{ normalInfo.SF3.sy }}</td>
 				</tr>
 				<tr v-if="config.isnew">
 					<td>累计</td>
-					<td>{{ normalInfo.huji.lj }}</td>
-					<td>{{ normalInfo.SF1.lj }}</td>
-					<td>{{ normalInfo.SF2.lj }}</td>
-					<td>{{ normalInfo.SF3.lj }}</td>
+					<td @click="buildChart('糊机/累计','','huji_lj')">{{ normalInfo.huji.lj }}</td>
+					<td @click="buildChart('SF1/累计','','SF1_lj')">{{ normalInfo.SF1.lj }}</td>
+					<td @click="buildChart('SF2/累计','','SF2_lj')">{{ normalInfo.SF2.lj }}</td>
+					<td @click="buildChart('SF3/累计','','SF3_lj')">{{ normalInfo.SF3.lj }}</td>
 				</tr>
 			</table>
 			<table>
@@ -180,53 +180,53 @@
 				</tr>
 				<tr>
 					<td>总米数(m)</td>
-					<td>{{ normalInfo.benban.zms }}</td>
-					<td>{{ normalInfo.benbi.zms }}</td>
+					<td @click="buildChart('？班/总米数','米(m)','benban_zms')">{{ normalInfo.benban.zms }}</td>
+					<td @click="buildChart('本笔/总米数','米(m)','benbi_zms')">{{ normalInfo.benbi.zms }}</td>
 				</tr>
 				<tr>
 					<td>生产(m)</td>
-					<td>{{ normalInfo.benban.sc }}</td>
-					<td>{{ normalInfo.benbi.sc }}</td>
+					<td @click="buildChart('？班/生产','米(m)','benban_sc')">{{ normalInfo.benban.sc }}</td>
+					<td @click="buildChart('本笔/生产','米(m)','benbi_sc')">{{ normalInfo.benbi.sc }}</td>
 				</tr>
 				<tr>
 					<td>剩余(m)</td>
-					<td>{{ normalInfo.benban.sy }}</td>
-					<td>{{ normalInfo.benbi.sy }}</td>
+					<td @click="buildChart('？班/剩余','米(m)','benban_sy')">{{ normalInfo.benban.sy }}</td>
+					<td @click="buildChart('本笔/剩余','米(m)','benbi_sy')">{{ normalInfo.benbi.sy }}</td>
 				</tr>
 				<tr>
 					<td>不良(m)</td>
-					<td>{{ normalInfo.benban.bl }}</td>
-					<td>{{ normalInfo.benbi.bl }}</td>
+					<td @click="buildChart('？班/不良','米(m)','benban_bl')">{{ normalInfo.benban.bl }}</td>
+					<td @click="buildChart('本笔/不良','米(m)','benbi_bl')">{{ normalInfo.benbi.bl }}</td>
 				</tr>
 				<tr>
 					<td>生产平方(㎡)</td>
-					<td>{{ normalInfo.benban.scpf }}</td>
-					<td>{{ normalInfo.benbi.scpf }}</td>
+					<td @click="buildChart('？班/生产平方','平方米(㎡)','benban_scpf')">{{ normalInfo.benban.scpf }}</td>
+					<td @click="buildChart('本笔/生产平方','平方米(㎡)','benbi_scpf')">{{ normalInfo.benbi.scpf }}</td>
 				</tr>
 				<tr>
 					<td>坏纸率(%)</td>
-					<td>{{ normalInfo.benban.hzl }}</td>
-					<td>{{ normalInfo.benbi.hzl }}</td>
+					<td @click="buildChart('？班/坏纸率','%','benban_hzl')">{{ normalInfo.benban.hzl }}</td>
+					<td @click="buildChart('本笔/坏纸率','%','benbi_hzl')">{{ normalInfo.benbi.hzl }}</td>
 				</tr>
 				<tr>
 					<td>修边率(%)</td>
-					<td>{{ normalInfo.benban.xbl }}</td>
-					<td>{{ normalInfo.benbi.xbl }}</td>
+					<td @click="buildChart('？班/修边率','%','benban_xbl')">{{ normalInfo.benban.xbl }}</td>
+					<td @click="buildChart('本笔/修边率','%','benbi_xbl')">{{ normalInfo.benbi.xbl }}</td>
 				</tr>
 				<tr>
 					<td>均速(m/min)</td>
-					<td>{{ normalInfo.benban.js }}</td>
-					<td>{{ normalInfo.benbi.js }}</td>
+					<td @click="buildChart('？班/均速','米/分(m/min)','benban_js')">{{ normalInfo.benban.js }}</td>
+					<td @click="buildChart('本笔/均速','米/分(m/min)','benbi_js')">{{ normalInfo.benbi.js }}</td>
 				</tr>
 				<tr>
 					<td>停车次数</td>
-					<td>{{ normalInfo.benban.tccs }}</td>
-					<td>{{ normalInfo.benbi.tccs }}</td>
+					<td @click="buildChart('？班/停车次数','次数','benban_tccs')">{{ normalInfo.benban.tccs }}</td>
+					<td @click="buildChart('本笔/停车次数','次数','benbi_tccs')">{{ normalInfo.benbi.tccs }}</td>
 				</tr>
 				<tr>
 					<td>生产时间</td>
-					<td>{{ normalInfo.benban.scsj }}</td>
-					<td>{{ normalInfo.benbi.scsj }}</td>
+					<td>{{ timeFormat(normalInfo.benban.scsj) }}</td>
+					<td>{{ timeFormat(normalInfo.benbi.scsj) }}</td>
 				</tr>
 				<tr>
 					<td>停车时间</td>
@@ -265,7 +265,8 @@
 						avaliable : false
 					},
 					chart:{
-						show : false
+						show : false,
+						keyName : ''
 					}
 				},
 				formData:{
@@ -408,7 +409,11 @@
 				});
 			},
 			getSocket( socketUrl ){
-				this.socket = io(socketUrl,{
+				/*this.socket = io(socketUrl,{
+					timeout:3000
+				});*/
+
+				this.socket = io('http://nbhw.leaper.ltd:7000',{
 					timeout:3000
 				});
 
@@ -416,18 +421,42 @@
 					this.config.notice.text = '链接成功！';
 				});
 				
-				this.socket.on('sendMsg', (data)=>{
+				this.socket.on('AnalyUdpData0', (data)=>{
+					this.config.updown = false;
+					Object.assign(this.normalInfo, JSON.parse(data).data);
+					if( !this.config.chart.show ) return;
+					if( this.config.chart.keyName.indexOf('_') === -1 ){
+						this.chart.series[0].addPoint([(new Date()).getTime(),this.normalInfo[this.config.chart.keyName]],true,true);
+					}else{
+						let keyArr = this.config.chart.keyName.split('_');
+						this.chart.series[0].addPoint([(new Date()).getTime(),this.normalInfo[keyArr[0]][keyArr[1]]],true,true);
+					}
+					return ;
 					if( data == 10060 ){
 						this.config.notice.text = '后台udp广播暂未开启';
 					}else{
 						this.config.notice.text = '监控开启成功';
-						/*if( this.config.updown ){
+						if( this.config.updown ){
 							Object.assign(this.updownInfo, data);
 						}else{
 							Object.assign(this.normalInfo, data);
-						}*/
-						this.config.notice.text = JSON.stringify( data );
+						}
 						if( !this.config.chart.show ) return;
+						if( this.config.updown ){
+							if( this.config.chart.keyName.indexOf('_') === -1 ){
+								this.chart.series[0].addPoint([(new Date()).getTime(),this.updownInfo[this.config.chart.keyName]],true,true);
+							}else{
+								let keyArr = this.config.chart.keyName.split('_');
+								this.chart.series[0].addPoint([(new Date()).getTime(),this.updownInfo[keyArr[0]][keyArr[1]]],true,true);
+							}
+						}else{
+							if( this.config.chart.keyName.indexOf('_') === -1 ){
+								this.chart.series[0].addPoint([(new Date()).getTime(),this.normalInfo[this.config.chart.keyName]],true,true);
+							}else{
+								let keyArr = this.config.chart.keyName.split('_');
+								this.chart.series[0].addPoint([(new Date()).getTime(),this.normalInfo[keyArr[0]][keyArr[1]]],true,true);
+							}
+						}
 						this.chart.series[0].addPoint([(new Date()).getTime(),12],true,true);
 					}
 				});
@@ -444,7 +473,13 @@
 					this.config.notice.text = 'disconnect';
 				});
 			},
-			buildChart( xTitle, yTitle ){
+			buildChart( xTitle, yTitle, keyName ){
+				let className = '';
+				if( this.config.updown ){
+					className = this.updownInfo.class;
+				}else{
+					className = this.normalInfo.class;
+				}
 				let chartOptions = {
 					chart:{
 						type        : 'spline',
@@ -455,7 +490,7 @@
 						enabled : false
 					},
 					title : {
-						text:xTitle
+						text : xTitle.replace(/？/g,className)
 					},
 					xAxis:{
 						type : 'datetime',
@@ -498,7 +533,8 @@
 						}())
 					}]
 				};
-				this.config.chart.show = true;
+				this.config.chart.keyName = keyName;
+				this.config.chart.show    = true;
 				this.chart = new Highcharts.chart('chart-container',chartOptions);
 			},
 			timeFormat( seconds ){

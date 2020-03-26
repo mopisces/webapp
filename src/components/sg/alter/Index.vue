@@ -13,9 +13,9 @@
 			<van-slider v-model="formData.sliderValue"  bar-height="5px" :max="10000"/>
 		</div>
 		<div style="width:100%;height:1rem;"></div>
-		<van-cell value="Id对应值">
+		<van-cell value="ID对应值">
 			<template slot="right-icon">
-				<van-stepper v-model="value" integer disabled-input input-width="42" min="0" max="10000" @change="stepperChange" />
+				<van-stepper v-model="value" integer input-width="42" min="0" max="10000" @change="stepperChange" :disabled-input="true" />
 			</template>
 		</van-cell>
 		<div style="text-align:center;width:100%;">
