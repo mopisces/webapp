@@ -92,6 +92,7 @@
 				});
 			},
 			getTableData(){
+				this.tableData = [];
 				let self = this;
 				this.$request.sg.select.getBlms( this.formData ).then(res=>{
 					if( res.errorCode == '00000' ){
@@ -116,6 +117,9 @@
 		computed:{
 			indexChange(){
 				return this.formData.index;
+			},
+			activeChange(){
+				return this.formData.active;
 			}
 		},
 		watch:{
@@ -141,6 +145,9 @@
 					];
 				}
 				this.formData.active = 0;
+				this.getTableData();
+			},
+			activeChange( newV, oldV ){
 				this.getTableData();
 			}
 		}
