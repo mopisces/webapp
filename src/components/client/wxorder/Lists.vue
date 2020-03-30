@@ -27,16 +27,16 @@
 								<i class="van-icon van-icon-arrow" style="display: table-cell; vertical-align: middle; font-size: 1rem;top: 17px;color:#4bb0ff;"></i>
 							</div>
 							<div style="display: inline-flex;line-height:3.125rem;font-size:0.875rem;width:30%;color: #ffa500;text-align:center;">
-								<span v-if=" item.UsePay === '1' && item.Paid === '0' " @click="payDetailClick( item.CusPoNo )">
+								<span v-if=" item.UsePay === '1' && item.Paid === '0' ">
 									<span v-if=" item.IsOverTime ">超时</span>未付款
 								</span>
-								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " style="color: #1a991d;" @click="payDetailClick( item.CusPoNo )">
+								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " style="color: #1a991d;">
 									已付款
 								</span>
-								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' " style="color: #ff0000;" @click="payDetailClick( item.CusPoNo )">
+								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' " style="color: #ff0000;">
 									申请退款中
 								</span>
-								<span v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' " style="color: #666;" @click="payDetailClick( item.CusPoNo )">
+								<span v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' " style="color: #666;">
 									已退款
 								</span>
 							</div>
@@ -105,6 +105,9 @@
 						</div>
 					</div>
 					<div slot="footer" style="text-align:right;">
+						<van-button size="small" color="linear-gradient(to right, #4bb0ff, #6149f6)" @click="payDetailClick(item.CusPoNo)" v-if=" filterForm.orderState == 1 ">
+							支付信息
+						</van-button>
 						<van-button size="small" type="primary" @click="wxDetailClick(item.CusPoNo)">
 							详情
 						</van-button>

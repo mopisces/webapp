@@ -23,6 +23,13 @@ const paymentAll = {
 			apply_check_id : data.orderId
 		};
 		return post(client.paymentAll.checkApply,postData);
+	},
+	getOrderId( data ){
+		let postData = {
+			uniqid_id : data.outTradeNo,
+			trade_no  : data.tradeNo
+		};
+		return post(client.paymentAll.getOrderId,postData);
 	}
 };
 

@@ -219,6 +219,7 @@ const client = {
 		payDetail    : `${base.client}payDetail`, 
 		applyRefund  : `${base.client}applyForRefund`, 
 		checkApply   : `${base.client}applyRefund`, 
+		getOrderId   : `${base.client}gerOrderId`
 	},
 	index : {
 		contactWay     : `${base.client}contactWay`, 

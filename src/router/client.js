@@ -130,11 +130,6 @@ export const asyncClientRouterMap = [
                 name: 'payApply',
                 meta: { title: '申请退款' },
                 component: payApply,
-            },
-            {
-                path:'alipay/return',
-                meta: { title: '支付宝跳转页面' },
-                component: aliReturnUrl,
             }
         ]
     }
@@ -151,6 +146,11 @@ const client = [
                 meta: { title: '支付宝支付页面' },
                 name: 'alipay',
                 component: aliPay,
+            },
+            {
+                path:'alipay/return',
+                meta: { title: '支付宝跳转页面' },
+                component: aliReturnUrl,
             }
         ]
     }
