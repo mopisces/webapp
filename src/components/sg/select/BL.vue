@@ -9,14 +9,14 @@
 </template>
 <script>
 	import { DropdownMenu, DropdownItem } from 'vant';
-	import { VTable, VPagination } from 'vue-easytable';
+	//import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
 			[DropdownMenu.name]: DropdownMenu,
 			[DropdownItem.name]: DropdownItem,
 
-			[VTable.name]: VTable,
-			[VPagination.name]: VPagination,
+			/*[VTable.name]: VTable,
+			[VPagination.name]: VPagination,*/
 		},
 		data(){
 			return {

@@ -15,7 +15,6 @@ export default {
 		},
 		created(){
 			let orderId = this.$route.query.out_trade_no;
-			console.log(this.$route.query.out_trade_no)
 			this.$router.push({
 				name:'payDetail',
 				params:{

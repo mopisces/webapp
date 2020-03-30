@@ -25,7 +25,7 @@
 <script>
 	import { Button, Icon, Popup, Field, Picker, Dialog, Toast } from 'vant';
 	import WxScan from '@/components/subject/WxScan.vue';
-	import { VTable, VPagination } from 'vue-easytable';
+	/*import { VTable, VPagination } from 'vue-easytable';*/
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -36,8 +36,8 @@
 			[Picker.name]: Picker,
 			[Toast.name]: Toast,
 
-			[VTable.name]: VTable,
-			[VPagination.name]: VPagination,
+			/*[VTable.name]: VTable,
+			[VPagination.name]: VPagination,*/
 
 			WxScan
 		},

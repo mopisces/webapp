@@ -20,7 +20,7 @@
 </template>
 <script>
 	import { Button, Cell, Checkbox, Field, SwitchCell, Dialog, Toast } from 'vant';
-	import { VTable, VPagination } from 'vue-easytable';
+	//import { VTable, VPagination } from 'vue-easytable';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	export default {
@@ -32,8 +32,8 @@
 			[SwitchCell.name]: SwitchCell,
 			[Toast.name]: Toast,
 
-			[VTable.name]: VTable,
-			[VPagination.name]: VPagination,
+			/*[VTable.name]: VTable,
+			[VPagination.name]: VPagination,*/
 
 			PopupFilter,
 			NewTimePicker

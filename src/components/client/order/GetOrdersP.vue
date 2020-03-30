@@ -71,7 +71,7 @@
 </template>
 <script>
 	import { Button, Icon, Field, SwitchCell, Step, Steps, Sticky } from 'vant';
-	import { VTable, VPagination } from 'vue-easytable';
+	//import { VTable, VPagination } from 'vue-easytable';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -87,8 +87,8 @@
 			[Steps.name]: Steps,
 			[Sticky.name]: Sticky,
 
-			[VTable.name]: VTable,
-			[VPagination.name]: VPagination,
+			/*[VTable.name]: VTable,
+			[VPagination.name]: VPagination,*/
 
 			PrevNext,
 			NewPopup,

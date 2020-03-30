@@ -12,8 +12,8 @@
 					<div slot="default" :style=" index%2 == 1 ? 'background-color:#f0f0f0;' : '' ">
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--20" v-if="config.updown">
-								<van-tag type="success" mark size="large" v-if=" item.tag == 1 ">上刀</van-tag>
-								<van-tag type="danger" mark size="large" v-if=" item.tag == -1 ">下刀</van-tag>
+								<van-tag type="danger" mark size="large" v-if=" item.tag === '1' ">上刀</van-tag>
+								<van-tag type="primary" mark size="large" v-if=" item.tag === '-1' ">下刀</van-tag>
 							</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
@@ -91,7 +91,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, SwitchCell, DropdownMenu, DropdownItem, PullRefresh, List, Panel,  Sticky  } from 'vant';
+	import { Button, Field, SwitchCell, DropdownMenu, DropdownItem, PullRefresh, List, Panel,  Sticky, Tag  } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	export default {
@@ -105,6 +105,7 @@
 			[List.name]: List,
 			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
+			[Tag.name]: Tag,
 
 			PopupFilter,
 			NewTimePicker

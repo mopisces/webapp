@@ -17,7 +17,7 @@
 </template>
 <script>
 	import { Button, Field, SwitchCell } from 'vant';
-	import { VTable, VPagination } from 'vue-easytable';
+	//import { VTable, VPagination } from 'vue-easytable';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	export default {
@@ -26,8 +26,8 @@
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
 			
-			[VTable.name]: VTable,
-			[VPagination.name]: VPagination,
+			/*[VTable.name]: VTable,
+			[VPagination.name]: VPagination,*/
 
 			CusPicker,
 			PopupFilter,

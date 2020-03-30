@@ -33,8 +33,8 @@
 								<van-col span="20">订单编号:{{ item.strOrderId }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="10">客订单号:{{ item.CusPoNo }}</van-col>
-								<van-col span="10">材质:{{ item.BoardId }}</van-col>
+								<van-col span="12">客订单号:{{ item.CusPoNo }}</van-col>
+								<van-col span="8">材质:{{ item.BoardId }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
 								<van-col span="6">客户:{{ item.CusId }}</van-col>

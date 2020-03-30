@@ -413,7 +413,7 @@
 					timeout:3000
 				});*/
 
-				this.socket = io('http://nbhw.leaper.ltd:7000',{
+				this.socket = io('http://ywhx.leaper.ltd:8888',{
 					timeout:3000
 				});
 
@@ -421,7 +421,7 @@
 					this.config.notice.text = '链接成功！';
 				});
 				
-				this.socket.on('AnalyUdpData0', (data)=>{
+				this.socket.on('AnalyUdpData1', (data)=>{
 					this.config.updown = false;
 					Object.assign(this.normalInfo, JSON.parse(data).data);
 					if( !this.config.chart.show ) return;
@@ -480,7 +480,7 @@
 				}else{
 					className = this.normalInfo.class;
 				}
-				let chartOptions = {
+				this.chart = new Highcharts.chart('chart-container',{
 					chart:{
 						type        : 'spline',
 						animation   : Highcharts.svg,
@@ -509,7 +509,7 @@
 						visible : true
 					},
 					tooltip:{
-						formatter : function(){
+						formatter : function() {
 							return '<b>' + this.series.name + '</b><br/>' + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' + Highcharts.numberFormat(this.y, 2);
 						}
 					},
@@ -517,25 +517,23 @@
 						enabled : false
 					},
 					series:[{
-						name : xTitle,
-						visible : true,
+						name : xTitle.replace(/？/g,className),
 						data : (function(){
 							var data = [],
-								time = (new Date()).getTime(),
 								i;
-							for (i = -19; i <= 0; i += 1) {
+							for (i = -10; i <= 0; i++ ) {
 								data.push({
-									x: time + i * 1000,
-									y: Math.random()
+									x: (new Date()).getTime() + i * 1000,
+									y: 0
 								});
 							}
 							return data;
 						}())
 					}]
-				};
+				});
+				
 				this.config.chart.keyName = keyName;
 				this.config.chart.show    = true;
-				this.chart = new Highcharts.chart('chart-container',chartOptions);
 			},
 			timeFormat( seconds ){
 				return secondsFormat( seconds );
@@ -546,7 +544,11 @@
 			this.getConfig();
 		},
 		mounted(){
-			
+			Highcharts.setOptions({
+				global:{
+					useUTC:false
+				}
+			});
 		},
 		updated(){
 			

@@ -41,7 +41,7 @@
 <script>
 	import { Button, Icon, Popup, Field } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
-	import { VTable, VPagination } from 'vue-easytable';
+	/*import { VTable, VPagination } from 'vue-easytable';*/
 
 	export default {
 		components:{
@@ -50,8 +50,8 @@
 			[Popup.name]: Popup,
 			[Field.name]: Field,
 
-			[VTable.name]: VTable,
-			[VPagination.name]: VPagination,
+			/*[VTable.name]: VTable,
+			[VPagination.name]: VPagination,*/
 
 			PrevNext
 		},

@@ -12,8 +12,8 @@
 					<div slot="default" :style=" index%2 == 1 ? 'background-color:#f0f0f0;' : '' ">
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--20" v-if="config.updown">
-								<van-tag type="success" mark size="large" v-if=" item.tag == 1 ">上刀</van-tag>
-								<van-tag type="danger" mark size="large" v-if=" item.tag == -1 ">下刀</van-tag>
+								<van-tag type="danger" mark size="large" v-if=" item.tag === '1' ">上刀</van-tag>
+								<van-tag type="primary" mark size="large" v-if=" item.tag === '-1' ">下刀</van-tag>
 							</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">

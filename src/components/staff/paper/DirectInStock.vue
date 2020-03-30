@@ -47,7 +47,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import OpClassField from '@/components/subject/staff/OpClassField.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
-	import { VTable, VPagination } from 'vue-easytable';
+	//import { VTable, VPagination } from 'vue-easytable';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -58,8 +58,8 @@
 			[Dialog.name]: Dialog,
 			[Toast.name]: Toast,
 
-			[VTable.name]: VTable,
-			[VPagination.name]: VPagination,
+			/*[VTable.name]: VTable,
+			[VPagination.name]: VPagination,*/
 
 			NewTimePicker,
 			WxScan,

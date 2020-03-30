@@ -98,7 +98,7 @@
 	</div>
 </template>
 <script>
-	import { VTable, VPagination } from 'vue-easytable';
+	//import { VTable, VPagination } from 'vue-easytable';
 	import { Button, Cell, CellGroup, Popup, Icon, Field, RadioGroup, Radio } from 'vant';
 	import { Dialog, Toast  } from 'vant';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
@@ -106,8 +106,8 @@
 	import schema from 'async-validator';
 	export default {
 		components:{
-			[VTable.name]: VTable,
-			[VPagination.name]: VPagination,
+			/*[VTable.name]: VTable,
+			[VPagination.name]: VPagination,*/
 
 			[Button.name]: Button,
 			[Cell.name]: Cell,

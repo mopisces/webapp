@@ -7,13 +7,13 @@
 </template>
 <script>
 	import { Search } from 'vant';
-	import { VTable, VPagination } from 'vue-easytable';
+	//import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
 			[Search.name]: Search,
 
-			VTable,
-			VPagination
+			/*VTable,
+			VPagination*/
 		},
 		data(){
 			return {
