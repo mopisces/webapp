@@ -105,7 +105,7 @@
 				this.config.list.pushLoading.finished  = false;
 				this.config.list.pushLoading.loading   = true;;
 				this.filterForm.curPage = 0;
-				this.panelData       = [];
+				this.panelData = [];
 				this.onLoad();
 			},
 			commonOrders( data ){

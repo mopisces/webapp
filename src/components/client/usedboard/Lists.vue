@@ -6,7 +6,7 @@
 		<van-checkbox-group v-model="checkBoxResult">
 			<van-cell-group>
 				<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
-					<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多" @load="onLoad" :offset="100">
+					<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多" @load="onLoad" :immediate-check="false" :offset="100">
 						<van-cell v-for="(item, index) in checkBoxData" clickable :key="index" :title="item" @click="toggle(index)">
 							<van-checkbox :name="item" ref="checkboxes" slot="right-icon"/>
 						</van-cell>
@@ -58,7 +58,7 @@
 				filterForm : {
 					keyWord     : '',
 					showChecked : false,
-					curPage     : 0
+					curPage     : 1
 				},
 				checkBoxData   : [],
 				checkBoxResult : [],
@@ -69,27 +69,21 @@
 				this.$refs.checkboxes[index].toggle();
 			},
 			onLoad(){
-				if( this.config.list.pullRefresh.isInit ){
-					this.filterForm.curPage = 1;
-					this.getConfig();
-					this.config.list.pullRefresh.isInit = false;
-				}else{
-					this.filterForm.curPage++;
-					this.commonMaterial( this.filterForm );
-				}
+				this.filterForm.curPage++;
+				this.commonMaterial( this.filterForm );
 			},
 			pullOnRefresh(){
 				this.config.list.pullRefresh.reloading = false;
 				this.config.list.pushLoading.finished  = false;
 				this.config.list.pushLoading.loading   = true;;
-				this.filterForm.curPage = 0;
+				this.filterForm.curPage = 1;
 				this.checkBoxData       = [];
-				this.onLoad();
+				this.getConfig();
 			},
 			getConfig(){
 				let self = this;
 				this.$request.client.commonMaterial.getConfig().then(res=>{
-					self.config.returnType = res.result;
+					self.config.list.returnType = res.result;
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.commonMaterial( this.filterForm );
@@ -127,7 +121,7 @@
 			this.$store.commit('client/setHeaderTitle','常用材质');
 		},
 		mounted(){
-			
+			this.getConfig();
 		},
 		updated(){
 			
