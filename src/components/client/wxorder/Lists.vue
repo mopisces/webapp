@@ -105,7 +105,7 @@
 						</div>
 					</div>
 					<div slot="footer" style="text-align:right;">
-						<van-button size="small" color="linear-gradient(to right, #4bb0ff, #6149f6)" @click="payDetailClick(item.CusPoNo)" v-if=" filterForm.orderState == 1 ">
+						<van-button size="small" color="linear-gradient(to right, #4bb0ff, #6149f6)" @click="payDetailClick(item.CusPoNo)" v-if=" filterForm.orderState == 1 && item.UsePay === '1' ">
 							支付信息
 						</van-button>
 						<van-button size="small" type="primary" @click="wxDetailClick(item.CusPoNo)">

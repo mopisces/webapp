@@ -29,6 +29,7 @@ const client = {
 		permission : ( { commit }, authUrlArr )=>{
 			let routeArr  = deepCopy(asyncClientRouterMap);
 			const navList = filterAsyncRouter( routeArr, authUrlArr, 'client');
+			console.log(navList)
 			commit('setNavList', navList);
 		}
 	}

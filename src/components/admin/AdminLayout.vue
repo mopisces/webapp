@@ -110,12 +110,22 @@
 				sessionStorage.removeItem('jpdn-admin-refresh');
 				sessionStorage.removeItem('jpdn-admin-username');
 				this.$router.push('/admin/login');
+			},
+			getConfig(){
+				let self = this;
+				this.$request.admin.config.getConfig().then((res)=>{
+					if( res.errorCode == '00000' ){
+						self.boardGroup = res.result.UseBoardGroup;
+						self.boxGroup   = res.result.UseBoxGroup;
+					}
+				});
 			}
 		},
 		created(){
 			this.config.height      = window.innerHeight;
 			this.adminName          = sessionStorage.getItem('jpdn-admin-username');
 			this.config.activeIndex = this.$store.state.admin.asideActive;
+			this.getConfig();
 		},
 		mounted(){
 			console.log(sessionStorage.getItem('jpdn-admin-asideMenu'))

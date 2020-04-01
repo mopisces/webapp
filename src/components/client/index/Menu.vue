@@ -60,6 +60,7 @@
 </template>
 <script>
 	import { Button, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
+	import { urlWhiteList } from '@/util';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
 	import base from '@/request/base';
@@ -81,18 +82,18 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'信用余额',     iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt',state:'#1a991d'},
-						{text:'报价规则',     iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus',state:'#1a991d'},
-						{text:'报价价格',     iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus',state:'#1a991d'},
-						{text:'对账单',       iconName:'duizhang',    url:'/client/order/getCusFreeMB',state:'#1a991d'},
-						{text:'每日订单',     iconName:'meiri',       url:'/client/order/getOrdersP',state:'#1a991d'},
-						{text:'ERP订单',      iconName:'erp',         url:'/client/order/getOrders',state:'#1a991d'},
-						{text:'常用材质',     iconName:'caizhi',      url:'/client/usedboard/lists',state:'#1a991d'},
-						{text:'常用订单',     iconName:'dingdan1',    url:'/client/usedorder/lists',state:'#1a991d'},
-						{text:'微信订单',     iconName:'shouji',      url:'/client/wxorder/lists',state:'#1a991d'},
-						{text:'淘宝箱下单',     iconName:'zhixiang1',   url:'/client/build/x',state:'#1a991d'},
-						{text:'纸箱下单', iconName:'zhixiang',    url:'/client/build/c',state:'#1a991d'},
-						{text:'纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#1a991d'},
+						{text:'信用余额', role:'信用余额', iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt',state:'#1a991d'},
+						{text:'报价规则', role:'报价查询', iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus',state:'#1a991d'},
+						{text:'报价价格', role:'报价查询', iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus',state:'#1a991d'},
+						{text:'对账单', role:'对账单', iconName:'duizhang',    url:'/client/order/getCusFreeMB',state:'#1a991d'},
+						{text:'每日订单', role:'每日订单', iconName:'meiri',       url:'/client/order/getOrdersP',state:'#1a991d'},
+						{text:'ERP订单', role:'ERP订单', iconName:'erp',         url:'/client/order/getOrders',state:'#1a991d'},
+						{text:'常用材质', role:'纸板下单', iconName:'caizhi',      url:'/client/usedboard/lists',state:'#1a991d'},
+						{text:'常用订单', role:'纸板下单', iconName:'dingdan1',    url:'/client/usedorder/lists',state:'#1a991d'},
+						{text:'微信订单', role:'微信订单', iconName:'shouji',      url:'/client/wxorder/lists',state:'#1a991d'},
+						{text:'纸箱下单', role:'纸箱下单', iconName:'zhixiang1',   url:'/client/build/x',state:'#1a991d'},
+						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang',    url:'/client/build/c',state:'#1a991d'},
+						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#1a991d'},
 					],
 					authGrid:[],
 					popup:{
@@ -188,7 +189,10 @@
 				}
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
 					for (var j = authName.length - 1; j >= 0; j--) {
-						if( authName[j] == this.config.gridItem[i].text ){
+						if( urlWhiteList( this.config.gridItem[i].role ) ){
+							this.config.authGrid.push(this.config.gridItem[i]);
+							break;
+						}else if( authName[j] == this.config.gridItem[i].role ){
 							this.config.authGrid.push(this.config.gridItem[i]);
 							break;
 						}

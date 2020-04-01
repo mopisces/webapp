@@ -43,92 +43,92 @@ export const asyncClientRouterMap = [
     {
         path:'/client',
         component: clientLayout,
-        meta: { title: '外部人员使用' },
+        meta: { title: '外部人员使用', role:'外部人员使用' },
         children:[
             {
                 path:'index/menu',
-                meta: { title: '菜单页面' },
+                meta: { title: '菜单页面', role: '菜单页面'},
                 component: menu,
             },
             {
                 path:'cred/wGetCusAmt',
-                meta: { title: '信用余额' },
+                meta: { title: '信用余额', role:'信用余额' },
                 component: wGetCusAmt,
             },
             {
                 path:'quo/getQuoRuleByCus',
-                meta: { title: '报价规则' },
+                meta: { title: '报价规则', role:'报价查询' },
                 component: getQuoRuleByCus,
             },
             {
                 path:'quo/getQuoPriceByCus',
-                meta: { title: '报价价格' },
+                meta: { title: '报价价格', role:'报价查询' },
                 component: getQuoPriceByCus,
             },
             {
                 path:'order/getOrders',
-                meta: { title: 'ERP订单' },
+                meta: { title: 'ERP订单', role:'ERP订单' },
                 component: getOrders,
             },
             {
                 path:'order/getOrdersP',
-                meta: { title: '每日订单' },
+                meta: { title: '每日订单', role:'每日订单' },
                 component: getOrdersP,
             },
             {
                 path:'order/getCusFreeMB',
-                meta: { title: '对账单' },
+                meta: { title: '对账单', role:'对账单' },
                 component: getCusFreeMB,
             },
             {
                 path:'usedboard/lists',
-                meta: { title: '常用材质' },
+                meta: { title: '常用材质', role:'纸板下单' },
                 component: lists,
             },
             {
                 path:'usedorder/lists',
-                meta: { title: '常用订单' },
+                meta: { title: '常用订单', role:'纸板下单' },
                 component: orderList,
             },
             {
                 path:'wxorder/lists',
-                meta: { title: '微信订单' },
+                meta: { title: '微信订单', role:'微信订单' },
                 component: wxList,
             },
             {
                 path:'build/s',
                 name: 'sBuild',
-                meta: { title: '纸板下单' },
+                meta: { title: '简单纸板下单', role:'纸板下单' },
                 component: sBuild,
             },
             {
                 path:'build/c',
                 name: 'cBuild',
-                meta: { title: '纸箱下单' },
+                meta: { title: '纸箱纸板下单', role:'纸板下单' },
                 component: cBuild,
             },
             {
                 path:'build/x',
                 name: 'xBuild',
-                meta: { title: '淘宝箱下单' },
+                meta: { title: '纸箱下单', role:'纸箱下单' },
                 component: xBuild,
             },
             {
                 path:'pay/way',
                 name: 'payWay',
-                meta: { title: '支付方式' },
+                meta: { title: '支付方式', role:'支付方式' },
                 component: payWay,
             },
             {
                 path:'pay/detail',
                 name: 'payDetail',
-                meta: { title: '支付完成' },
+                meta: { title: '支付完成', role:'支付完成' },
                 component: payDetail,
             },
             {
                 path:'pay/apply',
                 name: 'payApply',
-                meta: { title: '申请退款' },
+                meta: { title: '申请退款', role:'申请退款' },
                 component: payApply,
             }
         ]
@@ -143,13 +143,13 @@ const client = [
         children:[
             {
                 path:'alipay/index',
-                meta: { title: '支付宝支付页面' },
+                meta: { title: '支付宝支付页面', role:'支付宝支付页面' },
                 name: 'alipay',
                 component: aliPay,
             },
             {
                 path:'alipay/return',
-                meta: { title: '支付宝跳转页面' },
+                meta: { title: '支付宝跳转页面', role:'支付宝跳转页面' },
                 component: aliReturnUrl,
             }
         ]

@@ -58,7 +58,36 @@ export function deepCopy( routeArr )
 			return arr
 	});
 };
-let urlWhiteList = ( search, type )=>
+export function filterAsyncRouter( asyncRouterMap, roles, type )
+{
+	const accessedRouters = asyncRouterMap.filter( route => { 
+		if( typeof(roles) === 'object' && JSON.stringify(roles) !== '[]' ){
+			for (var i = roles.length - 1; i >= 0; i--) {
+				if( urlWhiteList(route.meta.role, type) || route.meta.role.indexOf(roles[i]) >= 0 ){
+					if( route.children && route.children.length){
+						route.children = filterAsyncRouter( route.children,roles, type );
+					}
+					return route;
+				}
+			}
+		}else{
+			if( urlWhiteList(route.meta.role, type) || route.meta.role.indexOf(roles) >= 0 ){
+				if( route.children && route.children.length ){
+					route.children = filterAsyncRouter( route.children,roles, type );
+				}
+				return route;
+			}
+		}
+	});
+	return accessedRouters;
+};
+
+export function secondsFormat( seconds )
+{
+	return [parseInt(seconds / 60 / 60), parseInt(seconds / 60 % 60), parseInt(seconds % 60)].join(':').replace(/\b(\d)\b/g, '0$1');
+};
+
+export function urlWhiteList( roleName, type )
 {
 	let whiteList;
 	if( type == 'staff' ){
@@ -70,10 +99,6 @@ let urlWhiteList = ( search, type )=>
 		whiteList = [
 			'外部人员使用',
 			'菜单页面',
-			'报价规则',
-			'报价价格',
-			'常用材质',
-			'常用订单',
 			'微信订单',
 			'支付方式',
 			'支付完成',
@@ -83,37 +108,10 @@ let urlWhiteList = ( search, type )=>
 		];
 	}
 	for (var i = whiteList.length - 1; i >= 0; i--) {
-		if( whiteList[i] === search ){
+		if( whiteList[i] === roleName ){
 			return true;
 			break;
 		}
 	}
 	return false;
 }
-export function filterAsyncRouter( asyncRouterMap, roles, type )
-{
-	const accessedRouters = asyncRouterMap.filter( route => { 
-		if( typeof(roles) === 'object' && JSON.stringify(roles) !== '[]' ){
-			for (var i = roles.length - 1; i >= 0; i--) {
-				if( urlWhiteList(route.meta.title, type) || route.meta.title.indexOf(roles[i]) >= 0 ){
-					if( route.children && route.children.length){
-						route.children = filterAsyncRouter( route.children,roles, type );
-					}
-					return route;
-				}
-			}
-		}else{
-			if( urlWhiteList(route.meta.title, type) || route.meta.title.indexOf(roles) >= 0 ){
-				if( route.children && route.children.length ){
-					route.children = filterAsyncRouter( route.children,roles, type );
-				}
-				return route;
-			}
-		}
-	});
-	return accessedRouters;
-};
-
-export function secondsFormat( seconds ){
-	return [parseInt(seconds / 60 / 60), parseInt(seconds / 60 % 60), parseInt(seconds % 60)].join(':').replace(/\b(\d)\b/g, '0$1');
-};

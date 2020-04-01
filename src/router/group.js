@@ -44,74 +44,74 @@ const group = [
             {
                 path : 'staff/login',
                 alias: 'staff/login?token=:token',
-                meta: { title: '员工登录' },
+                meta: { title: '员工登录', role:'员工登录' },
                 component: loginStaff,
             },
             {
                 path : 'client/login',
                 alias: 'client/login?token=:token',
                 name : 'clientLogin',
-                meta: { title: '客户登录' },
+                meta: { title: '客户登录', role:'客户登录' },
                 component: loginClient,
             },
             {
                 path:'contact',
-                meta: { title: '联系我们' },
+                meta: { title: '联系我们', role:'联系我们' },
                 component: contact,
             },
             {
                 path: 'index',
-                meta: { title: '团购分类' },
+                meta: { title: '团购分类', role:'团购分类' },
                 component: groupIndex,
             },
             {
                 path: 'board/lists',
-                meta: { title: '纸板团购列表' },
+                meta: { title: '纸板团购列表', role:'纸板团购列表' },
                 component: groupBoardLists,
             },
             {
                 path: 'board/flagLists',
-                meta: { title: '纸板爆款团购列表' },
+                meta: { title: '纸板爆款团购列表', role:'纸板爆款团购列表' },
                 component: groupBoardFlag,
             },
             {
                 path: 'board/detail',
                 name: 'boardDetail',
-                meta:{ title:'纸板团购详情' },
+                meta:{ title:'纸板团购详情', role:'纸板团购详情' },
                 component: groupBoardDetail
             },
             {
                 path: 'build/s',
                 name: 'buildGroupS',
-                meta:{ title:'简单纸板下单' },
+                meta:{ title:'简单纸板下单', role:'简单纸板下单' },
                 component: buildS
             },
             {
                 path: 'box/lists',
-                meta: { title: '淘宝箱团购列表' },
+                meta: { title: '淘宝箱团购列表', role:'淘宝箱团购列表' },
                 component: groupBoxLists,
             },
             {
                 path: 'build/c',
                 name: 'buildGroupC',
-                meta:{ title:'纸箱纸板下单' },
+                meta:{ title:'纸箱纸板下单', role:'纸箱纸板下单' },
                 component: buildC
             },
             {
                 path:'box/flagLists',
-                meta: { title: '淘宝箱精品团购列表' },
+                meta: { title: '淘宝箱精品团购列表', role:'淘宝箱精品团购列表' },
                 component: groupBoxFlag
             },
             {
                 path: 'box/detail',
                 name: 'boxDetail',
-                meta:{ title:'淘宝箱团购详情' },
+                meta:{ title:'淘宝箱团购详情', role:'淘宝箱团购详情' },
                 component: groupBoxDetail
             },
             {
                 path: 'build/t',
                 name: 'buildGroupT',
-                meta:{ title:'淘宝箱下单' },
+                meta:{ title:'淘宝箱下单', role:'淘宝箱下单' },
                 component: buildT
             },
         ]
