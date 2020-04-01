@@ -14,11 +14,9 @@
 
 <script>
 	import { quillEditor } from 'vue-quill-editor';
-	/*import QuillCss from '@/components/subject/admin/QuillCss';*/
 	export default {
 		components:{
 			quillEditor,
-			QuillCss
 		},
 		data(){
 			return {

@@ -63,6 +63,9 @@
 				this.fileList = [];
 				let self = this;
 				this.$request.admin.config.getConfig().then((res)=>{
+					if( res.errorCode != '00000' || res.result.BoardDefaultPic.length <= 0 ){
+						return ;
+					}
 					let arr = res.result.BoardDefaultPic.split(",");
 					arr.forEach((item,index)=>{
 						self.fileList.push({name:item,url:this.$store.state.common.imgUrl + item})

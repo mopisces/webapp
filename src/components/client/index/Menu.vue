@@ -205,10 +205,23 @@
 				this.formData.newPass = '';
 				this.formData.confirmPass = '';
 				this.config.popup.changePass.show = false ;
+			},
+			getAuthMap(){
+				let self = this;
+				this.$request.staff.user.getAuthName( {UserName:sessionStorage.getItem('jpdn-client-username')} ).then(res=>{
+					console.log(1)
+					if( res.errorCode != '00000' ){
+						return ;
+					}
+					sessionStorage.setItem('client-auth-url',JSON.stringify(res.result.available));
+					self.$store.dispatch('client/permission',res.result.available);
+					self.$router.addRoutes(self.$store.state.client.navList);
+				});
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','菜单页面');
+			this.getAuthMap();
 		},
 		mounted(){
 			this.userName = sessionStorage.getItem('jpdn-client-username');
