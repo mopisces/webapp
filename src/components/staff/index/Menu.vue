@@ -3,7 +3,7 @@
 		<div style="width:100%;height:0.625rem;"></div>
 		<div class="vant-row" style="height:3.125rem;">
 			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
-				<div style="font-size:0.875rem;">
+				<div style="font-size:0.875rem;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
 					<span style="color:rgb(26, 173, 25);">{{ userName }}</span>
 				</div>
 			</div>
@@ -150,7 +150,8 @@
 							callback(errors);
 						}}
 					]
-				}
+				},
+				authUrl:[], //后台权限
 			}
 		},
 		methods:{
@@ -200,10 +201,6 @@
 				});
 			},
 			authGrid( authName ){
-				if( sessionStorage.getItem('staff-auth-grid') ){
-					this.config.authGrid =  JSON.parse(sessionStorage.getItem('staff-auth-grid'));
-					return ;
-				}
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
 					for (var j = authName.length - 1; j >= 0; j--) {
 						if( authName[j] == this.config.gridItem[i].text ){
@@ -212,7 +209,6 @@
 						}
 					}
 				}
-				sessionStorage.setItem('staff-auth-grid',JSON.stringify(this.config.authGrid) );
 			},
 			onCancel(){
 				this.formData.oldPass = '';
@@ -227,15 +223,30 @@
 						self.userName = res.result.user_name + '(' + res.result.ERPId + ')';
 					}
 				});
+			},
+			getAuthName(){
+				let self = this;
+				this.$request.staff.user.getAuthName({ userName:sessionStorage.getItem('jpdn-staff-username') }).then(res=>{
+					if( res.errorCode != '00000' ){
+						return ;
+					}
+					self.authUrl = res.result.available;
+					sessionStorage.setItem('staff-auth-url',JSON.stringify(res.result.available));
+					self.$store.commit('staff/setNavList',null);
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.authGrid( this.authUrl );
+					});
+				});
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
+			this.getMenuUserName();
+			this.getAuthName();
 		},
 		mounted(){
-			this.getMenuUserName();
 			this.validator = new schema(this.rules);
-			this.authGrid( JSON.parse(sessionStorage.getItem('staff-auth-url')) );
 		},
 		computed:{
 			

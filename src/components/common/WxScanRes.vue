@@ -54,9 +54,7 @@
 	                    	}else{
 	                    		scanRes = res.resultStr;	
 	                    	}
-	                    	//Toast.success( self.path + '?scanRes=' + scanRes);
 	                    	window.location.href = 'http://' + self.path + '?scanRes=' + scanRes;
-	                    	
 	                    }
 	                });
 

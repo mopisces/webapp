@@ -64,11 +64,6 @@ export const asyncStaffRouterMap = [
         meta: { title: '内部人员使用', role:'内部人员使用' },
         children:[
             {
-                path:'index/menu',
-                meta: { title: '菜单页面', role:'菜单页面' },
-                component: indexMenu,
-            },
-            {
                 path:'calc/index',
                 meta: { title: '订单试算', role:'订单试算' },
                 component: clacIndex,
@@ -199,6 +194,18 @@ export const asyncStaffRouterMap = [
 ];
 
 const staff = [
+    {
+        path:'/staff',
+        component: staffLayout,
+        meta: { title: '内部人员使用', role:'内部人员使用' },
+        children:[
+            {
+                path:'index/menu',
+                meta: { title: '菜单页面', role:'菜单页面' },
+                component: indexMenu,
+            }
+        ]
+    },
 	{
         path : '/common/wxscan',
         component: wxScan,

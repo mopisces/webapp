@@ -46,11 +46,6 @@ export const asyncClientRouterMap = [
         meta: { title: '外部人员使用', role:'外部人员使用' },
         children:[
             {
-                path:'index/menu',
-                meta: { title: '菜单页面', role: '菜单页面'},
-                component: menu,
-            },
-            {
                 path:'cred/wGetCusAmt',
                 meta: { title: '信用余额', role:'信用余额' },
                 component: wGetCusAmt,
@@ -91,11 +86,6 @@ export const asyncClientRouterMap = [
                 component: orderList,
             },
             {
-                path:'wxorder/lists',
-                meta: { title: '微信订单', role:'微信订单' },
-                component: wxList,
-            },
-            {
                 path:'build/s',
                 name: 'sBuild',
                 meta: { title: '简单纸板下单', role:'纸板下单' },
@@ -112,6 +102,26 @@ export const asyncClientRouterMap = [
                 name: 'xBuild',
                 meta: { title: '纸箱下单', role:'纸箱下单' },
                 component: xBuild,
+            },
+        ]
+    }
+];
+
+const client = [
+    {
+        path:'/client',
+        component: clientLayout,
+        meta: { title: '外部人员使用' },
+        children:[
+            {
+                path:'index/menu',
+                meta: { title: '菜单页面', role: '菜单页面'},
+                component: menu,
+            },
+            {
+                path:'wxorder/lists',
+                meta: { title: '微信订单', role:'微信订单' },
+                component: wxList,
             },
             {
                 path:'pay/way',
@@ -130,17 +140,7 @@ export const asyncClientRouterMap = [
                 name: 'payApply',
                 meta: { title: '申请退款', role:'申请退款' },
                 component: payApply,
-            }
-        ]
-    }
-];
-
-const client = [
-    {
-        path:'/client',
-        component: clientLayout,
-        meta: { title: '外部人员使用' },
-        children:[
+            },
             {
                 path:'alipay/index',
                 meta: { title: '支付宝支付页面', role:'支付宝支付页面' },

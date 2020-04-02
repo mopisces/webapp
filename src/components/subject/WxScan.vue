@@ -22,7 +22,6 @@
 		},
 		methods:{
 			scanQRCode(){
-				console.log( this.base )
 				window.location.href = 'http://' + this.base + '/common/wxScan?urlType=' + this.urlType;
 			},
 			isWX(){

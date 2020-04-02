@@ -133,7 +133,8 @@
 							return errors;
 						}}
 					]
-				}
+				},
+				authUrl:[], //后台权限
 			}
 		},
 		methods:{
@@ -183,22 +184,14 @@
 				});
 			},
 			authGrid( authName ){
-				if( sessionStorage.getItem('client-auth-grid') ){
-					this.config.authGrid = JSON.parse(sessionStorage.getItem('client-auth-grid'));
-					return ;
-				}
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
 					for (var j = authName.length - 1; j >= 0; j--) {
-						if( urlWhiteList( this.config.gridItem[i].role ) ){
-							this.config.authGrid.push(this.config.gridItem[i]);
-							break;
-						}else if( authName[j] == this.config.gridItem[i].role ){
+						if( authName[j] == this.config.gridItem[i].role ){
 							this.config.authGrid.push(this.config.gridItem[i]);
 							break;
 						}
 					}
 				}
-				sessionStorage.setItem('client-auth-grid',JSON.stringify(this.config.authGrid) );
 			},
 			onCancel(){
 				this.formData.oldPass = '';
@@ -209,13 +202,16 @@
 			getAuthMap(){
 				let self = this;
 				this.$request.staff.user.getAuthName( {UserName:sessionStorage.getItem('jpdn-client-username')} ).then(res=>{
-					console.log(1)
 					if( res.errorCode != '00000' ){
 						return ;
 					}
+					self.authUrl = res.result.available;
 					sessionStorage.setItem('client-auth-url',JSON.stringify(res.result.available));
-					self.$store.dispatch('client/permission',res.result.available);
-					self.$router.addRoutes(self.$store.state.client.navList);
+					self.$store.commit('client/setNavList',null);
+				}).then(()=>{
+					this.$nextTick(()=>{
+						this.authGrid( this.authUrl );
+					})
 				});
 			},
 			getMenuUserName(){
@@ -234,7 +230,6 @@
 		},
 		mounted(){
 			this.validator = new schema(this.rules);
-			this.authGrid( JSON.parse(sessionStorage.getItem('client-auth-url')) );
 		},
 		computed:{
 			
