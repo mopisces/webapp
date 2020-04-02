@@ -101,10 +101,8 @@
 				this.formData.orderId = this.$route.params.orderId;
 				this.formData.cost    = this.$route.params.cost;
 				this.formData.onApply = this.$route.params.onApply;
-				if( this.formData.onApply == 1 ){
-					this.checkApply();
-				}
-				this.validator        = new schema( this.rules );
+				this.checkApply();
+				this.validator = new schema( this.rules );
 			}
 		},
 		mounted(){

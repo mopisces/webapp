@@ -90,7 +90,7 @@
 						{text:'ERP订单', role:'ERP订单', iconName:'erp',         url:'/client/order/getOrders',state:'#1a991d'},
 						{text:'常用材质', role:'纸板下单', iconName:'caizhi',      url:'/client/usedboard/lists',state:'#1a991d'},
 						{text:'常用订单', role:'纸板下单', iconName:'dingdan1',    url:'/client/usedorder/lists',state:'#1a991d'},
-						{text:'微信订单', role:'微信订单', iconName:'shouji',      url:'/client/wxorder/lists',state:'#1a991d'},
+						{text:'微信订单', role:'基础权限', iconName:'shouji',      url:'/client/wxorder/lists',state:'#1a991d'},
 						{text:'纸箱下单', role:'纸箱下单', iconName:'zhixiang1',   url:'/client/build/x',state:'#1a991d'},
 						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang',    url:'/client/build/c',state:'#1a991d'},
 						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#1a991d'},
@@ -186,7 +186,7 @@
 			authGrid( authName ){
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
 					for (var j = authName.length - 1; j >= 0; j--) {
-						if( authName[j] == this.config.gridItem[i].role ){
+						if( authName[j] == this.config.gridItem[i].role || this.config.gridItem[i].role == '基础权限'){
 							this.config.authGrid.push(this.config.gridItem[i]);
 							break;
 						}
