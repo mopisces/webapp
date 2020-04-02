@@ -45,6 +45,9 @@ const user = {
 			new_pass  : data.newPass,
 		};
 		return post(staff.user.changePass,postData);
+	},
+	getMenuUserName(){
+		return post(staff.user.menuName);
 	}
 }
 export default user;

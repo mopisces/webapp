@@ -44,7 +44,7 @@
 						],
 					});
 					wx.scanQRCode({
-						debug:true,
+						debug:false,
 	                    needResult: 1,
 	                    scanType: ['qrCode', 'barCode'],
 	                    success: function(res){
@@ -54,8 +54,8 @@
 	                    	}else{
 	                    		scanRes = res.resultStr;	
 	                    	}
-	                    	Toast.success(self.redirectUri + self.path + '?scanRes=' + scanRes);
-	                    	window.location.href = self.redirectUri + self.path + '?scanRes=' + scanRes;
+	                    	//Toast.success( self.path + '?scanRes=' + scanRes);
+	                    	window.location.href = 'http://' + self.path + '?scanRes=' + scanRes;
 	                    	
 	                    }
 	                });
@@ -63,25 +63,32 @@
 				});
 			},
 			getRedirectPath( urlType ){
-				switch( urlType ){
-					case '0' :
-						this.path = '/staff/paper/doStockOut';
-						break;
-					case '1' :
-						this.path = '/staff/paper/doRStockIn';
-						break;
-					case '2' :
-						this.path = '/staff/paper/directInStock';
-						break;
-					case '3' :
-						this.path = '/staff/stow/detail';
-						break;
-					case '4' :
-						this.path = '/staff/stock/mStockDetailR';
-						break;
-					default :
-						this.path = '';
-				}
+				let self = this;
+				this.$request.staff.wx.portValuable().then(res=>{
+					if( res.errorCode == '00000' && res.result.portValuable == '1' ){
+						this.path = res.result.app_normal_domain;
+					}
+				}).then(()=>{
+					switch( urlType ){
+						case '0' :
+							this.path += '/staff/paper/doStockOut';
+							break;
+						case '1' :
+							this.path += '/staff/paper/doRStockIn';
+							break;
+						case '2' :
+							this.path += '/staff/paper/directInStock';
+							break;
+						case '3' :
+							this.path += '/staff/stow/detail';
+							break;
+						case '4' :
+							this.path += '/staff/stock/mStockDetailR';
+							break;
+						default :
+							this.path += '';
+					}
+				});
 			}
 		},
 		created(){

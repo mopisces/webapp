@@ -3,7 +3,7 @@
 		<div style="width:100%;height:0.625rem;"></div>
 		<div class="vant-row" style="height:3.125rem;">
 			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
-				<div style="font-size:0.875rem;">
+				<div style="font-size:0.875rem;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
 					<span style="color:rgb(26, 173, 25);">{{ userName }}</span>
 				</div>
 			</div>
@@ -217,14 +217,22 @@
 					self.$store.dispatch('client/permission',res.result.available);
 					self.$router.addRoutes(self.$store.state.client.navList);
 				});
+			},
+			getMenuUserName(){
+				let self = this;
+				this.$request.client.other.getMenuUserName().then(res=>{
+					if( res.errorCode == '00000' ){
+						self.userName = res.result.short_name + '(' + res.result.ERPId + ')';
+					}
+				});
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','菜单页面');
 			this.getAuthMap();
+			this.getMenuUserName();
 		},
 		mounted(){
-			this.userName = sessionStorage.getItem('jpdn-client-username');
 			this.validator = new schema(this.rules);
 			this.authGrid( JSON.parse(sessionStorage.getItem('client-auth-url')) );
 		},

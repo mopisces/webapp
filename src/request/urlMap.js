@@ -140,6 +140,7 @@ const staff = {
 		saveAuthName      : `${base.staff}staffSaveAuthUrl`,
 		userGetQrcode     : `${base.staff}staffUserGetQrcode`,
 		changePass        : `${base.staff}staffChangePwd`,
+		menuName          : `${base.staff}getStaffUserName`,
 	},
 	wx:{
 		scanWxConfig : `${base.staff}staffGetWxConfig`,
@@ -226,7 +227,8 @@ const client = {
 		register       : `${base.client}register`, 
 		indexConfig    : `${base.client}getIndexConfig`, 
 		clientPwd      : `${base.client}changePwd`, 
-		authUrl        : `${base.client}getMenuUrl`
+		authUrl        : `${base.client}getMenuUrl`,
+		menuName       : `${base.client}getClientUserName`,
 	},
 	groupBuying : {
 		faddishList    : `${base.client}faddishList`, 

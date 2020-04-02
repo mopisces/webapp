@@ -1,5 +1,5 @@
-let phpDomain = 'http://localhost:8001/';//'http://test.leaper.ltd:1110/';//后台接口domain
-//let phpDomain = 'http://test.leaper.ltd:1110/';
+//let phpDomain = 'http://localhost:8001/';//'http://test.leaper.ltd:1110/';//后台接口domain
+let phpDomain = 'http://test.leaper.ltd:1110/';
 
 const base = {
 	admin     : `${phpDomain}public/v1/admin/`,   //后台管理地址

@@ -5,7 +5,6 @@
 </template>
 <script>
 	import { Icon, Field, Toast  } from 'vant';
-	import base from '@/request/base';
 	export default {
 		components:{
 			[Icon.name]: Icon,
@@ -17,35 +16,27 @@
 			return {
 				result: this.scanResult,
 				wxConfig:{},
-				scanValuable:false
+				scanValuable:false,
+				base:''
 			}
 		},
 		methods:{
 			scanQRCode(){
-				window.location.href = base.on80Port + 'common/wxScan?urlType=' + this.urlType;
+				console.log( this.base )
+				window.location.href = 'http://' + this.base + '/common/wxScan?urlType=' + this.urlType;
 			},
 			isWX(){
 				let self = this;
 				this.$request.staff.wx.portValuable().then(res=>{
 					if( res.errorCode == '00000' ){
 						let ua = window.navigator.userAgent.toLowerCase();
-						if( ua.match(/MicroMessenger/i) == 'micromessenger' && res.result.portValuable == 1 ){
+						if( /*ua.match(/MicroMessenger/i) == 'micromessenger' &&*/ res.result.portValuable == 1 ){
 							self.scanValuable = true;
+							self.base = res.result.app_wx_domain;
 						}
 					}
 				});
-				/*let ua = window.navigator.userAgent.toLowerCase();
-				if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-					if( sessionStorage.getItem('app_domain') !== null ){
-						let domainInfo = JSON.parse(sessionStorage.getItem('app_domain'));
-						if( domainInfo.portValuable == 1 ){
-							this.scanValuable = true;
-							return true;
-						}
-					}
-				}
-				this.scanValuable = false;*/
-			}
+			},
 		},
 		created(){
 			this.isWX();

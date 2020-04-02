@@ -33,6 +33,9 @@ const other = {
 	},
 	getAuthUrl(){
 		return post(client.index.authUrl);
+	},
+	getMenuUserName(){
+		return post(client.index.menuName);
 	}
 };
 

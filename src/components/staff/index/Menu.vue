@@ -219,13 +219,21 @@
 				this.formData.newPass = '';
 				this.formData.confirmPass = '';
 				this.config.popup.changePass.show = false;
+			},
+			getMenuUserName(){
+				let self = this;
+				this.$request.staff.user.getMenuUserName().then(res=>{
+					if( res.errorCode == '00000' ){
+						self.userName = res.result.user_name + '(' + res.result.ERPId + ')';
+					}
+				});
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
 		},
 		mounted(){
-			this.userName = sessionStorage.getItem('jpdn-staff-username');
+			this.getMenuUserName();
 			this.validator = new schema(this.rules);
 			this.authGrid( JSON.parse(sessionStorage.getItem('staff-auth-url')) );
 		},
