@@ -1,18 +1,7 @@
-//import axios from 'axios';
 import { Dialog, Toast } from 'vant';
-import base from './base';
+import { index } from './urlMap';
 import store from '@/store';
-//import errorHandle from './errorHandle';
-/*import Vue from 'vue';
-Vue.use(Toast);*/
 
-/*const errorHandle = (errorCode,msg) => {
-	switch(errorCode){
-		case 10014:
-			
-			break;
-	}
-}*/
 
 var httpServer = axios.create();
 httpServer.defaults.timeout = 5000;
@@ -81,7 +70,7 @@ const errorHandle = {
 						access_token  : sessionStorage.getItem('jpdn-staff-token'),
 						refresh_token : sessionStorage.getItem('jpdn-staff-refresh')
 					};
-					httpServer.post(`${base.index}getToken`,postData).then((res)=>{
+					httpServer.post(index.index.getToken,postData).then((res)=>{
 						sessionStorage.setItem('jpdn-staff-token',res.data.result.access_token);
 						sessionStorage.setItem('jpdn-staff-refresh',res.data.result.refresh_token);
 						sessionStorage.setItem('jpdn-staff-username',res.data.result.user_name);
@@ -92,23 +81,12 @@ const errorHandle = {
 						access_token  : sessionStorage.getItem('jpdn-client-token'),
 						refresh_token : sessionStorage.getItem('jpdn-client-refresh')
 					};
-					httpServer.post(`${base.index}getToken`,postData).then((res)=>{
+					httpServer.post(index.index.getToken,postData).then((res)=>{
 						sessionStorage.setItem('jpdn-client-token',res.data.result.access_token);
 						sessionStorage.setItem('jpdn-client-refresh',res.data.result.refresh_token);
 						sessionStorage.setItem('jpdn-client-username',res.data.result.user_name);
 					});
 				}
-				/*if( sessionStorage.getItem('jpdn-login-token') !== null && sessionStorage.getItem('jpdn-login-refresh') !== null ){
-					let postData = {
-						access_token  : sessionStorage.getItem('jpdn-login-token'),
-						refresh_token : sessionStorage.getItem('jpdn-login-refresh')
-					};
-					httpServer.post(`${base.index}getToken`,postData).then((res)=>{
-						sessionStorage.setItem('jpdn-login-token',res.data.result.access_token);
-						sessionStorage.setItem('jpdn-login-refresh',res.data.result.refresh_token);
-						sessionStorage.setItem('jpdn-login-username',res.data.result.user_name);
-					});
-				}*/
 				break;
 			case '20216':
 				Dialog({ message: '登录过期,请重新登录' }).then(()=>{
