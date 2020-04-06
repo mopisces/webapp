@@ -107,7 +107,7 @@
 						{ required: true, message: '请选择货品编号', trigger: 'change' }
 					],
 					price : [
-						{ validate:(rule, value, callback)=>{
+						{ validator:(rule, value, callback)=>{
 							let errors;
 							if( this.formData.isRangePrice == '0' && value <= 0 ){
 								errors = '请输入价格';

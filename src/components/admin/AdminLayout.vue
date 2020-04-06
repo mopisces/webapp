@@ -128,7 +128,7 @@
 			this.getConfig();
 		},
 		mounted(){
-			console.log(sessionStorage.getItem('jpdn-admin-asideMenu'))
+			
 		},
 		updated(){
 			

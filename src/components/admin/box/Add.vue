@@ -108,17 +108,13 @@
 						{ required: true, message: '请选择货品编号', trigger: 'change' }
 					],
 					price : [
-						{ validate:(rule, value, callback)=>{
+						{ validator:(rule, value, callback)=>{
 							let errors;
 							if( this.formData.isRangePrice == '0' && value <= 0 ){
 								errors = '请输入价格';
 							}
-							if( this.formData.isRangePrice == '1' ){
-								this.formData.rangePrice.forEach((item,index)=>{
-									if(!item.From || !item.To || !item.Price){
-										errors = '区间价信息不完整';
-									}
-								});
+							if( this.formData.isRangePrice == '1' && ( this.formData.firstTo <= 0 || this.formData.firstPrice <= 0 || this.formData.lastFrom <= 0 || this.formData.lastPrice <= 0 ) ){
+								errors = '区间价信息不完整';
 							}
 							callback(errors);
 						} }
@@ -127,18 +123,18 @@
 						{ required: true, message: '请输入市场价格', trigger: 'blur' }
 					],
 					buildMin : [
-						{ required: true, message: '请输入下单范围最小值', trigger: 'blur' },
-						{ validate:(rule, value, callback, source, options)=>{
+						{ required: true, message: '请输入下单范围最小值', trigger: 'change' },
+						{ validator:(rule, value, callback)=>{
 							let errors;
-							if( Number(value) < 0 || Number(this.formData.buildMax) < Number(value) ){
+							if( Number(value) < 0 ){
 								errors = '请输入正确的下单范围最小值';
 							}
 							callback(errors);
 						} }
 					],
 					buildMax : [
-						{ required: true, message: '请输入下单范围最大值', trigger: 'blur' },
-						{ validate:(rule, value, callback, source, options)=>{
+						{ required: true, message: '请输入下单范围最大值', trigger: 'change' },
+						{ validator:(rule, value, callback)=>{
 							let errors;
 							if( Number(value) < 0 || Number(this.formData.buildMin) > Number(value) ){
 								errors = '请输入正确的下单范围最大值';
