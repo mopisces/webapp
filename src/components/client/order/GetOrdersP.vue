@@ -63,7 +63,7 @@
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<new-time-picker :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
-				<radio-cell :radioInfo.sync="filterForm.orderState" :radioColumns="config.step.status" title="订单状态"></radio-cell>
+				<radio-cell :radioInfo.sync="filterForm.orderState" :radioColumns="config.filterStatus.status" title="订单状态" v-if="config.filterStatus.show"></radio-cell>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
@@ -71,7 +71,6 @@
 </template>
 <script>
 	import { Button, Icon, Field, SwitchCell, Step, Steps, Sticky } from 'vant';
-	//import { VTable, VPagination } from 'vue-easytable';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
@@ -86,9 +85,6 @@
 			[Step.name]: Step,
 			[Steps.name]: Steps,
 			[Sticky.name]: Sticky,
-
-			/*[VTable.name]: VTable,
-			[VPagination.name]: VPagination,*/
 
 			PrevNext,
 			NewPopup,
@@ -135,20 +131,15 @@
 					step:{
 						show   : false,
 						active : 0,
-						status : [
-							{ title:'全部',     value:8 },
-							{ title:'未排产',   value:1 },
-							{ title:'排产中',   value:2 },
-							{ title:'生产中',   value:3 },
-							{ title:'生产完成', value:4 },
-							{ title:'装车中',   value:5 },
-							{ title:'已送货',   value:6 },
-							{ title:'已签收',   value:7 },
-						]
+						status : []
 					},
 					switch:{
 						checked : false
-					}
+					},
+					filterStatus:{
+						show   : false,
+						status : []
+					},
 				},
 				radioData : [],
 				fieldData : [],
@@ -161,7 +152,7 @@
 					orderQuantity : '',
 					beginDate     : '',
 					endDate       : '',
-					orderState    : 8, 
+					orderState    : '全部', 
 					bookingDate   : ''
 				},
 				pageConfig:{
@@ -181,16 +172,26 @@
 				}
 			},
 			getConfig(){
+				this.config.step.status         = [];
+				this.config.filterStatus.status = [];
 				let self = this;
 				this.$request.client.ordersManage.dailyOrdersConfig().then(res=>{
 					self.filterForm.beginDate = res.result.GetOrdersPBeginDate;
 					self.filterForm.endDate   = res.result.GetOrdersPEndDate;
 					self.pageConfig.maxDate   = res.result.GetOrdersPMaxDate;
 					self.pageConfig.minDate   = res.result.GetOrdersPMinDate;
+					res.result.daily_order_status.forEach((item,index)=>{
+						if( item != '全部' ){
+							self.config.step.status.push({ title: item, value:item });
+						}
+					});
+					res.result.daily_order_status.forEach((item,index)=>{
+						self.config.filterStatus.status.push({ title: item, value:item });
+					});
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.optionalDate();
-						//this.cusInfo();
+						this.config.filterStatus.show = true;
 					});
 				});
 			},
@@ -212,7 +213,7 @@
 				let self = this;
 				this.config.prevNext.show   = false;
 				this.$request.client.ordersManage.dailyOrderOptionalDate( this.filterForm ).then(res=>{
-					if( res.errorCode != '00000' ){
+					if( res.errorCode != '00000' || res.result.length <= 0 ){
 						return ;
 					}
 					self.radioData = res.result;
@@ -220,11 +221,8 @@
 						item['prevNext'] = item.OrderDate;
 						item['tag']      = 'daily';
 					});
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.prevNext.show   = true;
-						this.filterForm.bookingDate = this.radioData[0].OrderDate;
-					});
+					self.config.prevNext.show   = true;
+					self.filterForm.bookingDate = this.radioData[0].OrderDate;
 				});
 			},
 			dailyOrders( data ){
@@ -262,7 +260,7 @@
 					orderQuantity : '',
 					beginDate     : '',
 					endDate       : '',
-					orderState    : 8, 
+					orderState    : '全部', 
 					bookingDate   : ''
 				};
 				this.config.switch.checked = false;

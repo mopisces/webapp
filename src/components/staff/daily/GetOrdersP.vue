@@ -67,7 +67,7 @@
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<new-time-picker :dateTime.sync="filterCount.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker :dateTime.sync="filterCount.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
-				<radio-cell :radioInfo.sync="filterForm.sState" :radioColumns="config.step.status" :title="config.radio.title"></radio-cell>
+				<radio-cell :radioInfo.sync="filterForm.sState" :radioColumns="config.filterStatus.status" title="订单状态" v-if="config.filterStatus.show"></radio-cell>
 			</div>
 		</popup-filter>
 	</div>
@@ -118,17 +118,7 @@
 					},
 					step:{
 						show:false,
-						//status:['未排产','排产中','生产中','生产完成','装车中','已送货','已签收'],
-						status:[
-							{title:'全部',value:0},
-							{title:'未排产',value:1},
-							{title:'排产中',value:2},
-							{title:'生产中',value:3},
-							{title:'生产完成',value:4},
-							{title:'装车中',value:5},
-							{title:'已送货',value:6},
-							{title:'已签收',value:7},
-						],
+						status:[],
 						active:0
 					},
 					radio:{
@@ -136,6 +126,10 @@
 					},
 					field:{
 						show : false
+					},
+					filterStatus : {
+						show   : false,
+						status : []
 					}
 				},
 				form:{
@@ -154,13 +148,13 @@
 					scoreInfo     : '',
 					orderQuantity : '',
 					orderDate     : '',
-					sState        : 0,
+					sState        : '全部',
 				},
 				filterCount:{
 					cusId     : '',
 					beginDate : '',
 					endDate   : '',
-					sState    : 0
+					sState    : '全部'
 				},
 				fieldData:[],
 				pageConfig:{
@@ -241,8 +235,22 @@
 				this.filterForm.orderDate = this.radioData[0].OrderDate;
 				this.getDailyDetail( this.filterForm );
 				this.config.popup.rightFilter.show = false;
+			},
+			getConfig(){
+				let self = this;
+				this.$request.staff.daily.dailyConfig().then(res=>{
+					if( res.errorCode != '00000' ){
+						return ;
+					}
+					res.result.daily_order_status.forEach((item,index)=>{
+						self.config.filterStatus.status.push({ title:item, value:item });
+						if( item != '全部' ){
+							self.config.step.status.push({ title:item, value:item });
+						}
+					});
+					self.config.filterStatus.show = true;
+				});
 			}
-			
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','每日订单详细信息');
@@ -258,6 +266,7 @@
 			}
 		},
 		mounted(){
+			this.getConfig();
 			this.getCusInfo( this.form );
 			this.getCountOrder( this.filterCount );
 		},
