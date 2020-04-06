@@ -92,6 +92,7 @@
 					lastFrom     : '',   //
 					lastPrice    : '',   //
 					//区间价格结束
+					price        : '',   //非区间价格
 					marketPrice  : '',
 					buildMin     : '',
 					buildMax     : '',
