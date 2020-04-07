@@ -10,10 +10,18 @@
 		</van-sticky>
 		<div id="container" v-show="filterInfo.statis === 'charts' "></div>
 		<van-cell v-for="(item,index) in data" :key="index" v-show="filterInfo.statis === 'lists'">
-			<div slot="title">{{ item.CateName }}</div>
+			<div slot="title">
+				{{ item.CateName }}
+			</div>
 			<div slot="label">
-				<p>订单总面积:{{ item.sumOrdArea }}</p>
-				<p>总金额:{{ item.sumAmt }}</p>
+				<p>
+					<span style="color:#000;">订单总面积:</span>
+					<span style="color:#1da02b;">{{ item.sumOrdArea }}</span>
+				</p>
+				<p>
+					<span style="color:#000;">总金额:</span>
+					<span style="color:#1da02b;">{{ item.sumAmt }}</span>
+				</p>
 			</div>
 		</van-cell>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">

@@ -250,7 +250,6 @@
 			detailShowClick( item ){
 				switch( this.filterForm.limitFactor ){
 					case 'cusId' :
-						console.log(1)
 						this.filterForm.limitValue = item.CusId;
 						break;
 					default :
