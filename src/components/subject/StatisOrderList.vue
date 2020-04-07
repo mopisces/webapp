@@ -27,28 +27,28 @@
 					<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
 						<div slot="default">
 							<van-row type="flex" justify="center">
-								<van-col span="20">货品名称:{{ item.MatName }}</van-col>
+								<van-col span="20"  style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">货品名称:{{ item.MatName }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="20">订单编号:{{ item.strOrderId }}</van-col>
+								<van-col span="20"  style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">订单编号:{{ item.strOrderId }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="12">客订单号:{{ item.CusPoNo }}</van-col>
-								<van-col span="8">材质:{{ item.BoardId }}</van-col>
+								<van-col span="10"  style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">客订单号:{{ item.CusPoNo }}</van-col>
+								<van-col span="10"  style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">材质:{{ item.BoardId }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="6">客户:{{ item.CusId }}</van-col>
-								<van-col span="14">客户简称:{{ item.CusShortName }}</van-col>
+								<van-col span="10" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">客户:{{ item.CusId }}</van-col>
+								<van-col span="10"  style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">客户简称:{{ item.CusShortName }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="20">规格:{{ item.GuiGe }}</van-col>
+								<van-col span="20" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">规格:{{ item.GuiGe }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="20">压线:{{ item.ScoreInfo }}</van-col>
+								<van-col span="20" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">压线:{{ item.ScoreInfo }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
-								<van-col span="10">订单数:{{ item.OrdQty }}</van-col>
-								<van-col span="10">送货数:{{ item.DeliQty }}</van-col>
+								<van-col span="10" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">订单数:{{ item.OrdQty }}</van-col>
+								<van-col span="10" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">送货数:{{ item.DeliQty }}</van-col>
 							</van-row>
 							<van-row type="flex" justify="center">
 								<van-col span="20"  v-if=" type === 'stockQty' ">库存数:{{ item.StockQty }}</van-col>

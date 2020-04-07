@@ -11,20 +11,37 @@
 			<van-panel v-for="(item,index) in info.panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
 				<div slot="default">
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
-						<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+						<div class="van-col van-col--10">客户编号:
+							<span style="color:#1da02b;">{{ item.CusId }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							客户简称:
+							<span style="color:#1da02b;">{{ item.CusShortName }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">库存数:{{ item.StockQty }}</div>
+						<div class="van-col van-col--20">
+							库存数:
+							<span style="color:#1da02b;">{{ item.StockQty }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">库存面积:{{ item.StockArea }}</div>
+						<div class="van-col van-col--20">
+							库存面积:
+							<span style="color:#1da02b;">{{ item.StockArea }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">库存金额:{{ item.StockAmt }}</div>
+						<div class="van-col van-col--20">
+							库存金额:
+							<span style="color:#1da02b;">{{ item.StockAmt }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">总数:{{ item.sumCount }}</div>
+						<div class="van-col van-col--20">
+							总数:
+							<span style="color:#1da02b;">{{ item.sumCount }}</span>
+						</div>
 					</div>
 				</div>
 				<div slot="footer" style="text-align: right;">

@@ -10,24 +10,48 @@
 			<van-panel v-for="(item,index) in panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
 				<div slot="default">
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">退货原因:{{ item.ReturnCause }}</div>
+						<div class="van-col van-col--20">
+							退货原因:
+							<span style="color:#1da02b;">{{ item.ReturnCause }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
-						<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+						<div class="van-col van-col--10">
+							客户编号:
+							<span style="color:#1da02b;">{{ item.CusId }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							客户简称:
+							<span style="color:#1da02b;">{{ item.CusShortName }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">退货数:{{ item.ReturnQty }}</div>
-						<div class="van-col van-col--10">退货附加费:{{ item.ReturnFee }}</div>
+						<div class="van-col van-col--10">
+							退货数:
+							<span style="color:#1da02b;">{{ item.ReturnQty }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							退货附加费:
+							<span style="color:#1da02b;">{{ item.ReturnFee }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">销售面积:{{ item.TSalesArea }}</div>
+						<div class="van-col van-col--20">
+							销售面积:
+							<span style="color:#1da02b;">{{ item.TSalesArea }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">金额:{{ item.Amt }}</div>
+						<div class="van-col van-col--20">
+							金额:
+							<span style="color:#1da02b;">{{ item.Amt }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">总数:{{ item.sumCount }}</div>
+						<div class="van-col van-col--20">
+							总数:
+							<span style="color:#1da02b;">{{ item.sumCount }}</span>
+						</div>
 					</div>
 				</div>
 				<div slot="footer" style="text-align: right;">
