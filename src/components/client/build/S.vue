@@ -5,19 +5,19 @@
 		<van-field clearable label="纸板规格(mm)" right-icon="question-o" @click-right-icon="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth +'mm~' + pageConfig.maxWidth + 'mm' )">
 			<div class="van-row van-row--flex van-row--justify-center" slot="input">
 				<div class="van-col van-col--12">
-					<input type="number" placeholder="板长" v-model="formData.boardLength" class="van-field__control van-field__control--center"/>
+					<input type="number" placeholder="板长" v-model="formData.boardLength" class="van-field__control van-field__control--center"  @blur=" calcArea() "/>
 				</div>
 				<div class="van-col van-col--1">
 					x 
 				</div>
 				<div class="van-col van-col--11">
-					<input type="number" placeholder="板宽" v-model="formData.boardWidth" class="van-field__control van-field__control--center"/>
+					<input type="number" placeholder="板宽" v-model="formData.boardWidth" class="van-field__control van-field__control--center" @blur=" calcArea() "/>
 				</div>
 			</div>
 		</van-field>
 		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
 		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="压线和=板宽(格式:x+x+x)"/>
-		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数"/>
+		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数" @blur=" calcArea() "/>
 		<van-field v-model="formData.area" clearable readonly input-align="center" label="下单面积(㎡)" placeholder="待计算" right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡' ) ">
 		</van-field>
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.cusInfo" :radioData="config.radioData.cusInfo" selectType="cusInfo"></popup-select>
@@ -25,7 +25,7 @@
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
 		<div style="width:100%;height:3.125rem;"></div>
-		<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()">下单</van-button>
+		<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder" :isGroup="false"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
@@ -86,7 +86,10 @@
 						isSuccess  : false,
 						cusOrderId :''
 					},
-					isFastBuild : false
+					isFastBuild : false,
+					button:{
+						disabled : true
+					}
 				},
  				pageConfig : {
 					maxDate   : '',
@@ -246,9 +249,6 @@
 
 			},
 			buildOrder(){
-				if( !this.calc() ){
-					return ;
-				}
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
 					self.config.popup.sku.show = true;
@@ -256,15 +256,52 @@
 					Toast.fail(errors[0].message);
 				});
 			},
-			calc(){
-				this.formData.area = this.formData.boardLength * this.formData.boardWidth * this.formData.orderQuantities / 1000000;
+			calcArea(){
+				/*this.formData.area = this.formData.boardLength * this.formData.boardWidth * this.formData.orderQuantities / 1000000;
 				if( this.formData.area > this.pageConfig.maxArea || this.formData.area < this.pageConfig.minArea ){
 					Toast.fail('下单面积范围:' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡');
 					this.formData.area            = '';
 					this.formData.orderQuantities = '';
 					return false;
 				}
-				return true;
+				return true;*/
+				if( this.formData.boardLength && ( Number(this.formData.boardLength) < Number(this.pageConfig.minLength) || Number(this.formData.boardLength) > Number(this.pageConfig.maxLength) ) ){
+					this.formData.boardLength = '';
+					Toast.fail( '板长范围:' + this.pageConfig.minLength + 'mm~\n' + this.pageConfig.maxLength + 'mm' );
+					return ;
+				}
+				if( this.formData.boardWidth && ( Number(this.formData.boardWidth) < Number(this.pageConfig.minWidth || Number(this.formData.boardWidth) > Number(this.pageConfig.maxWidth) ) ) ){
+					this.formData.boardWidth = '';
+					Toast.fail( '板宽范围:' + this.pageConfig.minWidth + 'mm~\n' + this.pageConfig.maxWidth + 'mm' );
+					return ;
+				}
+				if( this.formData.orderQuantities && !(/(^[1-9]\d*$)/.test(this.formData.orderQuantities)) ){
+					this.formData.orderQuantities = 0;
+					Toast.fail('订单数错误');
+					return ;
+				}
+				if( this.formData.boardLength && this.formData.boardWidth && this.formData.orderQuantities ){
+					let postData = {
+						areaLength : this.formData.boardLength,
+						areaWidth  : this.formData.boardWidth,
+						areaOrdQty : this.formData.orderQuantities,
+						areaBdQty  : 0
+					};
+					let self = this;
+					this.$request.client.orderBooking.getCalcArea( postData ).then(res=>{
+						if( res.errorCode == '00000' ){
+							self.formData.area          = res.result.area;
+							if( res.result.valid_area == '0' ){
+								Toast.fail( '下单面积范围:' + self.pageConfig.minArea + '㎡\n' + self.pageConfig.maxArea + '㎡' );
+								self.formData.area            = '';
+								self.formData.orderQuantities = '';
+								self.config.button.disabled   = true;
+							}else{
+								self.config.button.disabled   = false;
+							}
+						}
+					});
+				}
 			},
 			saveOrder( data ){
 				let self = this;

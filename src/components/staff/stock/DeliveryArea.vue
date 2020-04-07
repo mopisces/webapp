@@ -3,12 +3,7 @@
 	</v-table>
 </template>
 <script>
-	/*import { VTable, VPagination } from 'vue-easytable';*/
 	export default {
-		components:{
-			/*[VTable.name]: VTable,
-			[VPagination.name]: VPagination,*/
-		},
 		data(){
 			return {
 				config:{

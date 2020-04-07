@@ -88,6 +88,15 @@ const orderBooking = {
 			material_type : materialType
 		};
 		return post(client.orderBooking.getClackAdjust, postData);
+	},
+	getCalcArea( data ){
+		let postData = {
+			area_length  : data.areaLength,
+			area_width   : data.areaWidth,
+			area_bd_qty  : data.areaBdQty,
+			area_ord_qty : data.areaOrdQty
+		};
+		return post(client.orderBooking.getCalcArea, postData);
 	}
 };
 export default orderBooking;

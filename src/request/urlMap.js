@@ -214,6 +214,8 @@ const client = {
 		boxPaperSave           : `${base.client}boxPaperSave`,
 		getBoxFormula          : `${base.client}getBoxFormula`,
 		getClackAdjust         : `${base.client}getClackAdjust`,
+
+		getCalcArea            : `${base.client}getClacArea`,
 	},
 	paymentAll : {
 		paymentIndex : `${base.client}paymentIndex`, 

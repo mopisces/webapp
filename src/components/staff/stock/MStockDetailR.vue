@@ -234,7 +234,7 @@
 				let self = this;
 				this.$request.staff.stow.getOrdPackInfo( strOrderId ).then(res=>{
 					if( res.errorCode != '00000' ){
-						Toast.fail('修改错误');
+						Toast.fail('订单号无法定位有效信息');
 						self.packInfoReset();
 						return ;
 					}
