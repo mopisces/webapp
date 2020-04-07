@@ -136,7 +136,6 @@
 			getUserManageType(){
 				let self = this;
 				this.$request.staff.user.getUserManageType().then(res=>{
-					console.log(res)
 					self.config.tab.active = res.result;
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -220,9 +219,6 @@
 			saveClick(){
 				let postData = Object.assign({},this.authChangeForm,{ authName: this.config.checkboxes.result.join(',') });
 				this.saveAuthName(postData);
-			},
-			toggle( index ){
-				this.$refs.checkboxes[index].toggle();
 			}
 		},
 		created(){
@@ -254,11 +250,7 @@
 				}
 			},
 			switchCellChange(newV,oldV){
-				if( newV ){
-					this.$refs.checkboxes.toggleAll();
-				}else{
-					this.$refs.checkboxes.toggleAll(true);
-				}
+				this.$refs.checkboxes.toggleAll();
 			}
 		}
 	}
