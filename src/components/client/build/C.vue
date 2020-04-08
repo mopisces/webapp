@@ -47,14 +47,14 @@
 		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
 		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="clickQuestion(2)"/>
 		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/>
-		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly/>
-		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="clickQuestion(3)" />
+		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly :disabled=" true " />
+		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="clickQuestion(3)" :disabled=" true " />
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo">
 		</popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
-		<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()">下单</van-button>
+		<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
 		<div style="width:100%;height:3.125rem;"></div>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="false"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
@@ -123,7 +123,10 @@
 						isSuccess  : false,
 						cusOrderId : ''
 					},
-					isFastBuild : false
+					isFastBuild : false,
+					button:{
+						disabled : true
+					}
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -289,9 +292,17 @@
 			buildOrder(){
 				let self = this;
 				this.validator.buildOrder.validate(this.formData).then(()=>{
-					self.config.popup.sku.show = true;
+					self.checkData();
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
+				});
+			},
+			checkData(){
+				let self = this;
+				this.$request.client.orderBooking.cBuildCheck(this.formData).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.config.popup.sku.show = true;
+					}
 				});
 			},
 			getConfig( fastOrderId ){
@@ -425,24 +436,37 @@
 			calcArea(){
 				if( this.formData.ordQty && !( /(^[1-9]\d*$)/.test(this.formData.ordQty) ) ){
 					Toast.fail('订单数错误');
-					this.formData.ordQty = '';
+					this.formData.ordQty        = '';
+					this.config.button.disabled = true;
 					return ;
 				}
 				if( this.formData.bdQty && !( /(^[1-9]\d*$)/.test(this.formData.bdQty) ) ){
-					Toast.fail('订单数错误');
-					this.formData.bdQty = '';
+					Toast.fail('纸板数错误');
+					this.formData.bdQty         = '';
+					this.config.button.disabled = true;
 					return ;
 				}
-				
 				if( typeof(this.formData.length) === 'number' && typeof(this.formData.width) === 'number' && this.formData.bdQty != '' ){
-					let area = this.formData.length * this.formData.width * this.formData.bdQty / 1000000;
-					if( area > this.pageConfig.maxArea || area < this.pageConfig.minArea ){
-						Toast.fail('下单面积范围:' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡');
-						this.formData.ordQty = '';
-						this.formData.area   = '';
-					}else{
-						this.formData.area   = area;
-					}
+					let postData = {
+						areaLength : this.formData.length,
+						areaWidth  : this.formData.width,
+						areaOrdQty : 0,
+						areaBdQty  : this.formData.bdQty
+					};
+					let self = this;
+					this.$request.client.orderBooking.getCalcArea( postData ).then(res=>{
+						if( res.errorCode == '00000' ){
+							this.formData.area = res.result.area;
+							if( res.result.valid_area == '0' ){
+								Toast.fail('下单面积范围:' + self.pageConfig.minArea + '㎡~' + self.pageConfig.maxArea + '㎡');
+								self.formData.ordQty        = '';
+								self.formData.area          = '';
+								self.config.button.disabled = true;
+							}else{
+								self.config.button.disabled = false;
+							}
+						}
+					});
 				}
 			},
 			getBoxFormula( boxType ){

@@ -216,6 +216,7 @@ const client = {
 		getClackAdjust         : `${base.client}getClackAdjust`,
 
 		getCalcArea            : `${base.client}getClacArea`,
+		checkBuild             : `${base.client}checkBuildData`,
 	},
 	paymentAll : {
 		paymentIndex : `${base.client}paymentIndex`, 

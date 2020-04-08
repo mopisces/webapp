@@ -251,20 +251,20 @@
 			buildOrder(){
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
-					self.config.popup.sku.show = true;
+					self.checkData();					
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
 			},
+			checkData(){
+				let self = this;
+				this.$request.client.orderBooking.sBuildCheck(this.formData).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.config.popup.sku.show = true;
+					}
+				});
+			},
 			calcArea(){
-				/*this.formData.area = this.formData.boardLength * this.formData.boardWidth * this.formData.orderQuantities / 1000000;
-				if( this.formData.area > this.pageConfig.maxArea || this.formData.area < this.pageConfig.minArea ){
-					Toast.fail('下单面积范围:' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡');
-					this.formData.area            = '';
-					this.formData.orderQuantities = '';
-					return false;
-				}
-				return true;*/
 				if( this.formData.boardLength && ( Number(this.formData.boardLength) < Number(this.pageConfig.minLength) || Number(this.formData.boardLength) > Number(this.pageConfig.maxLength) ) ){
 					this.formData.boardLength = '';
 					Toast.fail( '板长范围:' + this.pageConfig.minLength + 'mm~\n' + this.pageConfig.maxLength + 'mm' );
@@ -290,7 +290,7 @@
 					let self = this;
 					this.$request.client.orderBooking.getCalcArea( postData ).then(res=>{
 						if( res.errorCode == '00000' ){
-							self.formData.area          = res.result.area;
+							self.formData.area = res.result.area;
 							if( res.result.valid_area == '0' ){
 								Toast.fail( '下单面积范围:' + self.pageConfig.minArea + '㎡\n' + self.pageConfig.maxArea + '㎡' );
 								self.formData.area            = '';

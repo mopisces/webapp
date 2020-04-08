@@ -155,9 +155,17 @@
 			buildOrder(){
 				let self = this;
 				this.validator.validate( this.formData ).then(()=>{
-					self.config.popup.sku.show = true ;
+					self.checkData();
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
+				});
+			},
+			checkData(){
+				let self = this;
+				this.$request.client.orderBooking.xBuildCheck(this.formData).then(res=>{
+					if( res.errorCode == '00000' ){
+						self.config.popup.sku.show = true;
+					}
 				});
 			},
 			saveOrder( data ){
