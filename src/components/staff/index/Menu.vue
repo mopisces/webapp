@@ -110,10 +110,6 @@
 					],
 					gridItemColor:'',
 					authGrid:[],
-					domian:{
-						wx80:'http://luodangfrp2.leaper.ltd',
-						normal:'http://test.leaper.ltd:1104'
-					},
 					popup:{
 						qrcode:{
 							show:false

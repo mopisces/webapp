@@ -80,6 +80,9 @@
 					节省金额：<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
 				</template>
 			</div>
+			<div slot="default" style="font-size:1rem;text-align:center;padding:1rem;" v-else>
+				节省金额：<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
+			</div>
 		</van-submit-bar>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="true"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
@@ -92,6 +95,7 @@
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
 	import BuildResult from '@/components/subject/build/BuildResult.vue';
 	import schema from 'async-validator';
+	import base from '@/request/base';
 	export default {
 		components:{
 			[Image.name]: Image,
@@ -155,7 +159,7 @@
 					title        : '',
 					productPrice : '',
 					marketPrice  : '',
-					pic          : this.$store.state.common.imgUrl + 'zwtp.png',
+					pic          : base.imgDomain + 'zwtp.png',
 					countDown    :{
 						time : 0,
 						show : false,
@@ -398,6 +402,7 @@
 						this.formData[item] = false;
 					}
 				});
+				this.getConfig( this.formData.productId );
 			},
 			calcBdLW(){
 				if(this.formData.boxLength && (this.formData.boxLength < this.pageConfig.minBoxL || this.formData.boxLength > this.pageConfig.maxBoxL)){
