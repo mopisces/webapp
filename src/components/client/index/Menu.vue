@@ -22,7 +22,7 @@
 		</div>
 		<van-grid square :gutter="10" :column-num="3">
 			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
-				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="item.state"/>
+				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="config.gridItemColor"/>
 			</van-grid-item>
 		</van-grid>
 		<van-popup v-model="config.popup.qrcode.show" position="top" :style="{ height : '100%', width: '100%'}">
@@ -82,19 +82,20 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'信用余额', role:'信用余额', iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt',state:'#1a991d'},
-						{text:'报价规则', role:'报价查询', iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus',state:'#1a991d'},
-						{text:'报价价格', role:'报价查询', iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus',state:'#1a991d'},
-						{text:'对账单', role:'对账单', iconName:'duizhang',    url:'/client/order/getCusFreeMB',state:'#1a991d'},
-						{text:'每日订单', role:'每日订单', iconName:'meiri',       url:'/client/order/getOrdersP',state:'#1a991d'},
-						{text:'ERP订单', role:'ERP订单', iconName:'erp',         url:'/client/order/getOrders',state:'#1a991d'},
-						{text:'常用材质', role:'纸板下单', iconName:'caizhi',      url:'/client/usedboard/lists',state:'#1a991d'},
-						{text:'常用订单', role:'纸板下单', iconName:'dingdan1',    url:'/client/usedorder/lists',state:'#1a991d'},
-						{text:'微信订单', role:'基础权限', iconName:'shouji',      url:'/client/wxorder/lists',state:'#1a991d'},
-						{text:'纸箱下单', role:'纸箱下单', iconName:'zhixiang1',   url:'/client/build/x',state:'#1a991d'},
-						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang',    url:'/client/build/c',state:'#1a991d'},
-						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s',state:'#1a991d'},
+						{text:'信用余额', role:'信用余额', iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt'},
+						{text:'报价规则', role:'报价查询', iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus'},
+						{text:'报价价格', role:'报价查询', iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus'},
+						{text:'对账单',   role:'对账单', iconName:'duizhang',    url:'/client/order/getCusFreeMB'},
+						{text:'每日订单', role:'每日订单', iconName:'meiri',       url:'/client/order/getOrdersP'},
+						{text:'ERP订单', role:'ERP订单', iconName:'erp',         url:'/client/order/getOrders'},
+						{text:'常用材质', role:'纸板下单', iconName:'caizhi',      url:'/client/usedboard/lists'},
+						{text:'常用订单', role:'纸板下单', iconName:'dingdan1',    url:'/client/usedorder/lists'},
+						{text:'微信订单', role:'基础权限', iconName:'shouji',      url:'/client/wxorder/lists'},
+						{text:'纸箱下单', role:'纸箱下单', iconName:'zhixiang1',   url:'/client/build/x'},
+						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang',    url:'/client/build/c'},
+						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s'},
 					],
+					gridItemColor:'#1a991d',
 					authGrid:[],
 					popup:{
 						qrcode:{

@@ -12,21 +12,42 @@
 			<van-panel v-for="(item,index) in listData" :key="index" style="font-size:0.8125rem;background-color:#f1f1f1;">
 				<div slot="default">
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">生效日期:{{ item.IssueDate }}</div>
+						<div class="van-col van-col--20">
+							生效日期:
+							<span style="color:#1da02b;">{{ item.IssueDate }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">类型:{{ item.CTypeName }}</div>
-						<div class="van-col van-col--10">单号:{{ item.DNStr }}</div>
+						<div class="van-col van-col--10">
+							类型:
+							<span style="color:#1da02b;">{{ item.CTypeName }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							单号:
+							<span style="color:#1da02b;">{{ item.DNStr }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">订单编号:{{ item.strOrderId }}</div>
+						<div class="van-col van-col--20">
+							订单编号:
+							<span style="color:#1da02b;">{{ item.strOrderId }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">客订单号:{{ item.CusPoNo }}</div>
+						<div class="van-col van-col--20">
+							客订单号:
+							<span style="color:#1da02b;">{{ item.CusPoNo }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">送货数:{{ item.DeliQty }}</div>
-						<div class="van-col van-col--10">金额:{{ item.Amount }}</div>
+						<div class="van-col van-col--10">
+							送货数:
+							<span style="color:#1da02b;">{{ item.DeliQty }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							金额:
+							<span style="color:#1da02b;">{{ item.Amount }}</span>
+						</div>
 					</div>
 					<div slot="footer" style="text-align: right;">
 						<van-button size="small" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>

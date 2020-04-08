@@ -16,52 +16,124 @@
 			<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
 				<div slot="default">
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">坑型:    {{ item.Flutes }}</div>
-						<div class="van-col van-col--10">业务编码:{{ item.TaskId }}</div>
+						<div class="van-col van-col--10">
+							坑型:    
+							<span style="color:#1da02b;">{{ item.Flutes }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							业务编码:
+							<span style="color:#1da02b;">{{ item.TaskId }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">业务员:  {{ item.TaskName }}</div>
-						<div class="van-col van-col--10">客户编号:{{ item.CusId }}</div>
+						<div class="van-col van-col--10">
+							业务员:  
+							<span style="color:#1da02b;">{{ item.TaskName }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							客户编号:
+							<span style="color:#1da02b;">{{ item.CusId }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
-						<div class="van-col van-col--10">总面积:  {{ item.sumArea }}</div>
+						<div class="van-col van-col--10">
+							客户简称:
+							<span style="color:#1da02b;">{{ item.CusShortName }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							总面积:  
+							<span style="color:#1da02b;">{{ item.sumArea }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">总订单面积:{{ item.sumOrdArea }}</div>
-						<div class="van-col van-col--10">总体积:    {{ item.sumOrdVol }}</div>
+						<div class="van-col van-col--10">
+							总订单面积:
+							<span style="color:#1da02b;">{{ item.sumOrdArea }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							总体积:    
+							<span style="color:#1da02b;">{{ item.sumOrdVol }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">总长度:{{ item.sumLength }}</div>
-						<div class="van-col van-col--10">总金额:{{ item.sumAmt }}</div>
+						<div class="van-col van-col--10">
+							总长度:
+							<span style="color:#1da02b;">{{ item.sumLength }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							总金额:
+							<span style="color:#1da02b;">{{ item.sumAmt }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">订单总数:{{ item.sumQty }}</div>
-						<div class="van-col van-col--10">总款数:{{ item.sumCount }}</div>
+						<div class="van-col van-col--10">
+							订单总数:
+							<span style="color:#1da02b;">{{ item.sumQty }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							总款数:
+							<span style="color:#1da02b;">{{ item.sumCount }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">单坑面积:{{ item.sumArea1 }}</div>
-						<div class="van-col van-col--10">单坑长度:{{ item.sumLength1 }}</div>
+						<div class="van-col van-col--10">
+							单坑面积:
+							<span style="color:#1da02b;">{{ item.sumArea1 }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							单坑长度:
+							<span style="color:#1da02b;">{{ item.sumLength1 }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">单坑金额:{{ item.sumAmt1 }}</div>
-						<div class="van-col van-col--10">单坑款数:{{ item.sumCount1 }}</div>
+						<div class="van-col van-col--10">
+							单坑金额:
+							<span style="color:#1da02b;">{{ item.sumAmt1 }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							单坑款数:
+							<span style="color:#1da02b;">{{ item.sumCount1 }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">双坑面积:{{ item.sumArea2 }}</div>
-						<div class="van-col van-col--10">双坑长度:{{ item.sumLength2 }}</div>
+						<div class="van-col van-col--10">
+							双坑面积:
+							<span style="color:#1da02b;">{{ item.sumArea2 }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							双坑长度:
+							<span style="color:#1da02b;">{{ item.sumLength2 }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">双坑金额:{{ item.sumAmt2 }}</div>
-						<div class="van-col van-col--10">双坑款数:{{ item.sumCount2 }}</div>
+						<div class="van-col van-col--10">
+							双坑金额:
+							<span style="color:#1da02b;">{{ item.sumAmt2 }}</span>
+							</div>
+						<div class="van-col van-col--10">
+							双坑款数:
+							<span style="color:#1da02b;">{{ item.sumCount2 }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">三坑面积:{{ item.sumArea3 }}</div>
-						<div class="van-col van-col--10">三坑长度:{{ item.sumLength3 }}</div>
+						<div class="van-col van-col--10">
+							三坑面积:
+							<span style="color:#1da02b;">{{ item.sumArea3 }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							三坑长度:
+							<span style="color:#1da02b;">{{ item.sumLength3 }}</span>
+						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">三坑金额:{{ item.sumAmt3 }}</div>
-						<div class="van-col van-col--10">三坑款数:{{ item.sumCount3 }}</div>
+						<div class="van-col van-col--10">
+							三坑金额:
+							<span style="color:#1da02b;">{{ item.sumAmt3 }}</span>
+						</div>
+						<div class="van-col van-col--10">
+							三坑款数:
+							<span style="color:#1da02b;">{{ item.sumCount3 }}</span>
+						</div>
 					</div>
 				</div>
 				<div slot="footer" style="text-align: right;">

@@ -22,7 +22,7 @@
 		</div>
 		<van-grid square :gutter="10" :column-num="3">
 			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
-				<van-icon class-prefix="iconfont" size="35" :name="item.iconName" slot="icon" :color="item.state"/>
+				<van-icon class-prefix="iconfont" size="35" :name="item.iconName" slot="icon" :color="config.gridItemColor"/>
 			</van-grid-item>
 		</van-grid>
 		<van-popup v-model="config.popup.qrcode.show" position="top" :style="{ height : '100%', width: '100%'}">
@@ -85,29 +85,30 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'客户往来统计',iconName:'kehu',url: '/staff/frec/cusContact',state:'#1a991d'},
-						{text:'收款调账',iconName:'yewutiaozhang',url:'/staff/frec/recAdjust',state:'#1a991d'},
-						{text:'订单试算',iconName:'jisuanqi',url:'/staff/calc/index',state:'#1a991d'},
-						{text:'库区面积',iconName:'fangwumianji',url:'/staff/stock/deliveryArea',state:'#1a991d'},
-						{text:'库存修改',iconName:'iconfontzhizuobiaozhunbduan24',url:'/staff/stock/mStockDetailR',state:'#1a991d'},
-						{text:'扫描装货',iconName:'zhuangche1',url:'/staff/stow/lists',state:'#1a991d'},
-						{text:'安全库存',iconName:'anquanmenhu',url:'/staff/paper/paperSafe',state:'#1a991d'},
-						{text:'原纸库存',iconName:'weishengzhi',url:'/staff/paper/getSStocks',state:'#1a991d'},
-						{text:'直接入库',iconName:'ruku2',url:'/staff/paper/directInStock',state:'#1a991d'},
-						{text:'原纸入库',iconName:'ruku',url:'/staff/paper/doRStockIn',state:'#1a991d'},
-						{text:'原纸出库',iconName:'ccgl-chukucaozuo-5',url:'/staff/paper/doStockOut',state:'#1a991d'},
-						{text:'原纸收货',iconName:'che2',url:'/staff/paperbuy/wGetPOIn',state:'#1a991d'},
-						{text:'原纸采购',iconName:'caigou',url:'/staff/paperbuy/wGetPOMain',state:'#1a991d'},
-						{text:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo',state:'#1a991d'},
-						{text:'库存统计',iconName:'storage',url:'/staff/statis/getOrdStock',state:'#1a991d'},
-						{text:'传单统计',iconName:'chuandan',url:'/staff/statis/getSchSum',state:'#1a991d'},
-						{text:'退货统计',iconName:'tuihuo1',url:'/staff/statis/getOrdReturnSum',state:'#1a991d'},
-						{text:'订单统计',iconName:'dingdan2',url:'/staff/statis/getOrderSum',state:'#1a991d'},
-						{text:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt',state:'#1a991d'},
-						{text:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder',state:'#1a991d'},
-						{text:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders',state:'#1a991d'},
-						{text:'用户管理',iconName:'guanwangicon31334',url:'/staff/user/manage',state:'#1a991d'},
+						{text:'客户往来统计',iconName:'kehu',url: '/staff/frec/cusContact'},
+						{text:'收款调账',iconName:'yewutiaozhang',url:'/staff/frec/recAdjust'},
+						{text:'订单试算',iconName:'jisuanqi',url:'/staff/calc/index'},
+						{text:'库区面积',iconName:'fangwumianji',url:'/staff/stock/deliveryArea'},
+						{text:'库存修改',iconName:'iconfontzhizuobiaozhunbduan24',url:'/staff/stock/mStockDetailR'},
+						{text:'扫描装货',iconName:'zhuangche1',url:'/staff/stow/lists'},
+						{text:'安全库存',iconName:'anquanmenhu',url:'/staff/paper/paperSafe'},
+						{text:'原纸库存',iconName:'weishengzhi',url:'/staff/paper/getSStocks'},
+						{text:'直接入库',iconName:'ruku2',url:'/staff/paper/directInStock'},
+						{text:'原纸入库',iconName:'ruku',url:'/staff/paper/doRStockIn'},
+						{text:'原纸出库',iconName:'ccgl-chukucaozuo-5',url:'/staff/paper/doStockOut'},
+						{text:'原纸收货',iconName:'che2',url:'/staff/paperbuy/wGetPOIn'},
+						{text:'原纸采购',iconName:'caigou',url:'/staff/paperbuy/wGetPOMain'},
+						{text:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo'},
+						{text:'库存统计',iconName:'storage',url:'/staff/statis/getOrdStock'},
+						{text:'传单统计',iconName:'chuandan',url:'/staff/statis/getSchSum'},
+						{text:'退货统计',iconName:'tuihuo1',url:'/staff/statis/getOrdReturnSum'},
+						{text:'订单统计',iconName:'dingdan2',url:'/staff/statis/getOrderSum'},
+						{text:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt'},
+						{text:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder'},
+						{text:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders'},
+						{text:'用户管理',iconName:'guanwangicon31334',url:'/staff/user/manage'},
 					],
+					gridItemColor:'',
 					authGrid:[],
 					domian:{
 						wx80:'http://luodangfrp2.leaper.ltd',
