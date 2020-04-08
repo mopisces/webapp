@@ -103,7 +103,7 @@
 </template>
 <script>
 	import { Button, Image, Dialog, CountDown, Swipe, SwipeItem } from 'vant';
-	import vueSeamlessScroll from 'vue-seamless-scroll'
+	import vueSeamlessScroll from 'vue-seamless-scroll';
 	export default {
 		components:{
 			[Button.name]: Button,

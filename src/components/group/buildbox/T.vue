@@ -54,7 +54,6 @@
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
 	import BuildResult from '@/components/subject/build/BuildResult.vue';
 	import schema from 'async-validator';
-	import base from '@/request/base';
 	export default {
 		components:{
 			[Image.name]: Image,
@@ -119,7 +118,7 @@
 					title        : '',
 					productPrice : '',
 					marketPrice  : '',
-					pic          : base.imgDomain + 'zwtp.png',
+					pic          : this.$store.state.common.imgUrl + 'zwtp.png',
 				},
 				pageConfig : {
 					minQty  : 0,

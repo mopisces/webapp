@@ -58,6 +58,7 @@
 </template>
 <script>
 	import { Image, Tag, Grid, GridItem } from 'vant';
+	import base from '@/request/base';
 	export default {
 		components:{
 			[Image.name]: Image,
@@ -98,14 +99,14 @@
 				let self = this;
 				this.$request.client.other.getIndexConfig().then(res=>{
 					if( res.result.UseBoardGroup == '1' ){
-						self.config.grid.groupBoard.img      = this.$store.state.common.imgUrl + res.result.BoardGroupPic;
-						self.config.grid.groupBoardFlag.img  = this.$store.state.common.imgUrl + res.result.FlagBoardGroupPic;
+						self.config.grid.groupBoard.img      = base.imgDomain + res.result.BoardGroupPic;
+						self.config.grid.groupBoardFlag.img  = base.imgDomain + res.result.FlagBoardGroupPic;
 						self.config.grid.groupBoardFlag.flag = res.result.BoardFlag;
 						self.boardGroupOpen = true;
 					}
 					if( res.result.UseBoxGroup == '1' ){
-						self.config.grid.groupBox.img      = this.$store.state.common.imgUrl  + res.result.BoxGroupPic;
-						self.config.grid.groupBoxFlag.img  = this.$store.state.common.imgUrl  +  res.result.FlagBoxGroupPic;
+						self.config.grid.groupBox.img      = base.imgDomain  + res.result.BoxGroupPic;
+						self.config.grid.groupBoxFlag.img  = base.imgDomain  +  res.result.FlagBoxGroupPic;
 						self.config.grid.groupBoxFlag.flag = res.result.BoxFlag;
 						self.boxGroupOpen = true;
 					}
