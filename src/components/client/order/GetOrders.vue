@@ -35,7 +35,7 @@
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--6">订单数:{{ item.OrdQty }}</div>
 							<div class="van-col van-col--6">送货数:{{ item.DeliQty }}</div>
-							<div class="van-col van-col--6">退货数:{{ item.ReturnQty }}</div>
+							<div class="van-col van-col--8">退货数:{{ item.ReturnQty }}</div>
 						</div>
 						<div slot="footer" style="text-align: right;">
 							<van-button size="small" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>
