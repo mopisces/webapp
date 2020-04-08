@@ -22,7 +22,7 @@
 		</div>
 		<van-grid square :gutter="10" :column-num="3">
 			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
-				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" :color="config.gridItemColor"/>
+				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" color="#1a991d"/>
 			</van-grid-item>
 		</van-grid>
 		<van-popup v-model="config.popup.qrcode.show" position="top" :style="{ height : '100%', width: '100%'}">
@@ -95,7 +95,6 @@
 						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang',    url:'/client/build/c'},
 						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s'},
 					],
-					gridItemColor:'#1a991d',
 					authGrid:[],
 					popup:{
 						qrcode:{
