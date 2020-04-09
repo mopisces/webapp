@@ -1,56 +1,51 @@
 <template>
 	<div>
+		<!--内部用户-扫描装货详情-->
 		<div v-if=" field === 'stowDetailHandle' ">
-			<van-button plain hairline type="primary" @click="modifyData()" size="small" color="#000">修改</van-button>
-			<van-button plain hairline type="primary" @click="deleteData()" size="small" color="#000">删除</van-button>
-			<!-- <button class="van-button van-button--primary van-button--mini van-button--plain van-button--hairline van-hairline--surround"  @click="modifyData()">
-				   			<span class="van-button__text">修改</span>
-				   		</button>
-			<button class="van-button van-button--primary van-button--mini van-button--plain van-button--hairline van-hairline--surround"  @click="deleteData()">
-				   			<span class="van-button__text">删除</span>
-				   		</button> -->
+			<van-button plain hairline type="primary" @click="modifyData()" size="small" color="#000">
+				修改
+			</van-button>
+			<van-button plain hairline type="primary" @click="deleteData()" size="small" color="#000">
+				删除
+			</van-button>
 		</div>
+		<!--内部用户-扫描装货-->
 		<div v-if=" field === 'stowDelivery' ">
-			<van-button plain hairline type="primary" @click="prepare()" size="small" v-if=" rowData.CarState == 0 " color="#000">准备</van-button>
-			<van-button plain hairline type="primary" @click="cancelPre()" size="small" v-if=" rowData.CarState == 1 " color="#000">取消准备</van-button>
-			<!-- <button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="prepare()" v-if=" rowData.CarState == 0 ">
-				   			<span class="van-button__text">准备</span>
-				   		</button>
-			<button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="cancelPre()" v-if="rowData.CarState == 1 ">
-				   			<span class="van-button__text">取消准备</span>
-				   		</button> -->
+			<van-button plain hairline type="primary" @click="prepare()" size="small" v-if=" rowData.CarState == 0 " color="#000">
+				准备
+			</van-button>
+			<van-button plain hairline type="primary" @click="cancelPre()" size="small" v-if=" rowData.CarState == 1 " color="#000">
+				取消准备
+			</van-button>
 		</div>
 		<div v-if=" field === 'stowDetail' && Number(rowData.DNCount) > 0">
-			<van-button plain hairline type="primary" @click="detail()" size="small" color="#000">明细</van-button>
-			<!-- <button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="detail()">
-				<span class="van-button__text">明细</span>
-			</button> -->
+			<van-button plain hairline type="primary" @click="detail()" size="small" color="#000">
+				明细
+			</van-button>
 		</div>
 		<div v-if=" field === 'stowLoading' && rowData.CarState == 0 ">
-			<van-button plain hairline type="primary" @click="load()" size="small" color="#000">装货</van-button>
-			<!-- <button class="van-button van-button--primary van-button--small van-button--plain van-button--hairline van-hairline--surround"  @click="load()">
-				<span class="van-button__text">装货</span>
-			</button> -->
+			<van-button plain hairline type="primary" @click="load()" size="small" color="#000">
+				装货
+			</van-button>
 		</div>
+		<!--内部用户-直接入库-->
 		<div v-if=" field === 'directInStock' ">
-			<van-button plain hairline type="danger" @click="operate()" size="small">操作</van-button>
-			<!-- <button class="van-button van-button--danger van-button--small van-button--round"  @click="operate()">
-				<span class="van-button__text">操作</span>
-			</button> -->
+			<van-button plain hairline type="danger" @click="operate()" size="small">
+				操作
+			</van-button>
 		</div>
+		<!--内部用户-库存修改-->
 		<div v-if=" field === 'stockOperate' ">
-			<van-button plain hairline type="primary" @click="stockOperate()" size="small">修改</van-button>
-			<!-- <button class="van-button van-button--primary van-button--small"  @click="stockOperate()">
-				<span class="van-button__text">修改</span>
-			</button> -->
+			<van-button type="info" @click="stockOperate()" size="small">
+				修改
+			</van-button>
 		</div>
+		<!--外部用户-每日订单-->
 		<div v-if=" field === 'dailyDetail' ">
-			<van-button plain hairline type="primary" @click="dailyDetail()" size="small">详情</van-button>
-			<!-- <button class="van-button van-button--primary van-button--small"  @click="dailyDetail()">
-				<span class="van-button__text">详情</span>
-			</button> -->
+			<van-button plain hairline type="primary" @click="dailyDetail()" size="small">
+				详情
+			</van-button>
 		</div>
-	
 	</div>
 </template>
 <script>

@@ -23,7 +23,7 @@
 		</van-field>
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.dInDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="选择入库日期"></new-time-picker>
 	   	<van-field v-model="formData.strRemark" autosize label="备注" type="textarea" maxlength="50" placeholder="请输入备注" rows="1"/>
-	   	<div class="van-row" style="text-align:center;margin-top:1rem;" >
+	   	<div class="van-row" style="text-align:center;padding:0.625rem;" >
 			<div class="van-col van-col--12">
 				<van-button type="primary" size="small" style="width:60%" @click="onSubmit">入库</van-button>
 			</div>
@@ -47,7 +47,6 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import OpClassField from '@/components/subject/staff/OpClassField.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
-	//import { VTable, VPagination } from 'vue-easytable';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -57,9 +56,6 @@
 			[Field.name]: Field,
 			[Dialog.name]: Dialog,
 			[Toast.name]: Toast,
-
-			/*[VTable.name]: VTable,
-			[VPagination.name]: VPagination,*/
 
 			NewTimePicker,
 			WxScan,

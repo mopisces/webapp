@@ -166,7 +166,7 @@
 				this.$router.go(-1);	
 				return ;
 			}else{
-				this.getPayDetail(this.$route.params.orderId)
+				this.getPayDetail(this.$route.params.orderId);
 			}
 		},
 		mounted(){
