@@ -29,23 +29,24 @@
 			</van-field>
 			<van-field v-model="fieldData.strDNRemark" placeholder="送货备注" label="送货备注" input-align="center" type="textarea" autosize maxlength="50" :rows="1">
 			</van-field>
-			<div class="van-row van-row--flex van-row--justify-end" v-if=" fieldData.bModDetail ">
-				<div class="van-col van-col--8">
-					<van-button type="primary" style="width:90%" size="small" @click="onLoadClick()">修改</van-button>
-				</div>
-				<div class="van-col van-col--8">
-					<van-button plain type="primary"  size="small" style="width:100%" @click="cancelClick()">取消修改</van-button>
-				</div>
+			<div class="van-row van-row--flex van-row--justify-end" style=" padding:0.625rem; ">
+				<template v-if=" fieldData.bModDetail ">
+					<div class="van-col van-col--8">
+						<van-button type="primary" style="width:90%" size="small" @click="onLoadClick()">修改</van-button>
+					</div>
+					<div class="van-col van-col--8">
+						<van-button plain type="primary"  size="small" style="width:100%" @click="cancelClick()">取消修改</van-button>
+					</div>
+				</template>
+				<template v-else>
+					<div class="van-col van-col--8">
+						<van-button type="primary"  size="small" style="width:90%" @click="onLoadClick()">装货</van-button>
+					</div>
+					<div class="van-col van-col--8">
+						<van-button plain type="primary"  size="small" style="width:90%" @click="resetClick()">重置</van-button>
+					</div>
+				</template>
 			</div>
-			<div class="van-row van-row--flex van-row--justify-end" v-else>
-				<div class="van-col van-col--8">
-					<van-button type="primary"  size="small" style="width:90%" @click="onLoadClick()">装货</van-button>
-				</div>
-				<div class="van-col van-col--8">
-					<van-button plain type="primary"  size="small" style="width:90%" @click="resetClick()">重置</van-button>
-				</div>
-			</div>
-			<div style="width:100%;height:0.625rem;"></div>
 		</div>
 		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0rem 1rem;" v-else>
 			明细
@@ -98,7 +99,6 @@
 	</div>
 </template>
 <script>
-	//import { VTable, VPagination } from 'vue-easytable';
 	import { Button, Cell, CellGroup, Popup, Icon, Field, RadioGroup, Radio } from 'vant';
 	import { Dialog, Toast  } from 'vant';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
@@ -106,9 +106,6 @@
 	import schema from 'async-validator';
 	export default {
 		components:{
-			/*[VTable.name]: VTable,
-			[VPagination.name]: VPagination,*/
-
 			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,

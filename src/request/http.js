@@ -6,6 +6,16 @@ import store from '@/store';
 var httpServer = axios.create();
 httpServer.defaults.timeout = 5000;
 httpServer.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+let sources = [];
+let cancelToken = axios.CancelToken;
+let removeSource = (config)=>{
+	for( let source in sources ){
+		if( sources[ source ].umet === config.url + '&' + config.method ){
+			sources[ source ].cancel('取消请求');
+			sources.splice(source,1);
+		}
+	}
+};
 httpServer.interceptors.request.use(
 	config => {
 		Toast.loading({
@@ -26,6 +36,10 @@ httpServer.interceptors.request.use(
 			auth = '';
 		}
 		config.headers.Authentication = auth;
+		removeSource( config );
+		config.cancelToken = new cancelToken( (c)=>{
+			sources.push({umet:config.url + '&' + config.method, cancel:c});
+		} );
 		return config;
 	},
 	error => {
@@ -37,6 +51,7 @@ httpServer.interceptors.request.use(
 
 httpServer.interceptors.response.use(
 	response =>{
+		removeSource( response.config );
 		Toast.clear();
 		if( response.status !== 200 || response.data.errorCode != '00000' ){
 			errorHandle.mainHandle(response.data.errorCode,response.data.msg);

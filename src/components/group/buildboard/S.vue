@@ -46,18 +46,17 @@
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<div style="height:3.5rem;width:100%;"></div>
 		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
-			<div slot="top" style="font-size:1rem;text-align:center;" v-if="formData.isRangePrice">
-				当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/㎡</span>
-				<van-tag mark type="danger" v-if=" helpInfo.sheetQuantities == 0 && helpInfo.price == 0 ">最低价</van-tag><br/>
-				<template  v-if=" helpInfo.sheetQuantities != 0 && helpInfo.price != 0 ">
-					订单数满<span style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" @click="maxOrderQty()">{{ helpInfo.sheetQuantities }}</span>价格减至 <span style="color: rgb(224, 24, 53);">¥{{ helpInfo.price }}/㎡</span><br/>
+			<div slot="top" style="font-size:1rem;text-align:center;">
+				<template v-if="formData.isRangePrice">
+					当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/㎡</span>
+					<van-tag mark type="danger" v-if=" helpInfo.sheetQuantities == 0 && helpInfo.price == 0 ">最低价</van-tag><br/>
+					<template  v-if=" helpInfo.sheetQuantities != 0 && helpInfo.price != 0 ">
+						订单数满<span style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" @click="maxOrderQty()">{{ helpInfo.sheetQuantities }}</span>价格减至 <span style="color: rgb(224, 24, 53);">¥{{ helpInfo.price }}/㎡</span><br/>
+					</template>
 				</template>
 				<template>
 					节省金额：<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
 				</template>
-			</div>
-			<div slot="default" style="font-size:1rem;text-align:center;padding:1rem;" v-else>
-				节省金额：<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
 			</div>
 		</van-submit-bar>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder" :isGroup="true"></build-sku>

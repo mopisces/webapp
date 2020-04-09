@@ -7,12 +7,12 @@
 			<van-icon slot="right-icon" size="16" name="arrow"/>
 		</van-field>
 		<van-field v-model="formData.strRemark" rows="1" autosize label="备注" type="textarea" placeholder="输入备注"></van-field>
-		<div class="van-row van-row--flex van-row--justify-end">
+		<div class="van-row van-row--flex van-row--justify-end" style="padding:0.625rem;">
 			<div class="van-col van-col--8">
-				<van-button type="primary" style="width:90%" @click="onChangeClick()" :disabled="config.button.change.disabled">修改</van-button>
+				<van-button type="primary" style="width:90%" @click="onChangeClick()" :disabled="config.button.change.disabled" size="small">修改</van-button>
 			</div>
 			<div class="van-col van-col--8">
-				<van-button plain type="primary" style="width:100%" @click="onResetClick()">重置</van-button>
+				<van-button plain type="primary" style="width:100%" @click="onResetClick()" size="small">重置</van-button>
 			</div>
 		</div>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :height="config.table.height">
@@ -25,7 +25,6 @@
 <script>
 	import { Button, Icon, Popup, Field, Picker, Dialog, Toast } from 'vant';
 	import WxScan from '@/components/subject/WxScan.vue';
-	/*import { VTable, VPagination } from 'vue-easytable';*/
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -35,9 +34,6 @@
 			[Field.name]: Field,
 			[Picker.name]: Picker,
 			[Toast.name]: Toast,
-
-			/*[VTable.name]: VTable,
-			[VPagination.name]: VPagination,*/
 
 			WxScan
 		},
@@ -180,10 +176,17 @@
 							Dialog.close();
 						});
 					}else{
-						Toast.success('修改成功');
+						Dialog.alert({
+							message:'修改成功！'
+						}).then(()=>{
+							Dialog.close();
+						});
+						self.afterModifyReset();
 					}
 				}).then(()=>{
-					this.getStockDetailReload( this.formData.strOrderId );
+					this.$nextTick(()=>{
+						this.getStockDetailReload( this.formData.strOrderId );
+					});
 				});
 			},
 			getStockDetailReload( strOrderId ){
