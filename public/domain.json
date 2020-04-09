@@ -1,5 +1,5 @@
 {
-	"backStage": "http://localhost:8001/", 
+	"backStage": "http://test.leaper.ltd:1110/", 
 	"mixDomain":{
 		"erp": "http://localhost:38081/datasnap/rest/TServerMethods1/",
 		"on80Port": "http://luodangfrp2.leaper.ltd/",
