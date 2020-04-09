@@ -6,7 +6,7 @@
 <script>
 	import wx from 'weixin-js-sdk';
 	import base from '@/request/base';
-	import { Toast, Loading   } from 'vant';
+	import { Toast, Loading } from 'vant';
 	export default {
 		components:{
 			[Toast.name]: Toast,
@@ -14,8 +14,7 @@
 		},
 		data(){
 			return {
-				redirectUri : base.wxRediect,
-				path        : ''
+				path : ''
 			}
 		},
 		methods:{
@@ -54,44 +53,42 @@
 	                    		scanRes = res.resultStr;	
 	                    	}
 	                    	Toast.success( scanRes );
-	                    	window.location.href = self.path + '?scanRes=' + scanRes;
+	                    	window.location.href = 'http://' + self.path + '?scanRes=' + scanRes;
 	                    }
 	                });
 
 				});
 			},
 			getRedirectPath( urlType ){
-				this.path = base.wxRediect;
-				switch( urlType ){
-					case '0' :
-						this.path += '/staff/paper/doStockOut';
-						break;
-					case '1' :
-						this.path += '/staff/paper/doRStockIn';
-						break;
-					case '2' :
-						this.path += '/staff/paper/directInStock';
-						break;
-					case '3' :
-						this.path += '/staff/stow/detail';
-						break;
-					case '4' :
-						this.path += '/staff/stock/mStockDetailR';
-						break;
-					default :
-						this.path += '';
-				}
-				this.setWxConfig();
-				/*let self = this;
+				let self = this;
 				this.$request.staff.wx.portValuable().then(res=>{
-					if( res.errorCode == '00000' && res.result.portValuable == '1' ){
-						self.path = base.wxRediect;
+					if( res.errorCode == '00000' ){
+						self.base = res.result.app_normal_domain + ':' + res.result.app_normal_port;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
-						
+						switch( urlType ){
+							case '0' :
+								this.path += '/staff/paper/doStockOut';
+								break;
+							case '1' :
+								this.path += '/staff/paper/doRStockIn';
+								break;
+							case '2' :
+								this.path += '/staff/paper/directInStock';
+								break;
+							case '3' :
+								this.path += '/staff/stow/detail';
+								break;
+							case '4' :
+								this.path += '/staff/stock/mStockDetailR';
+								break;
+							default :
+								this.path += '';
+						}
+						this.setWxConfig();
 					});
-				});*/
+				});
 			}
 		},
 		created(){

@@ -14,10 +14,10 @@
 		props:['scanResult','urlType'],
 		data(){
 			return {
-				result: this.scanResult,
-				wxConfig:{},
-				scanValuable:false,
-				base:''
+				result       : this.scanResult,
+				wxConfig     : {},
+				scanValuable : false,
+				base         : ''
 			}
 		},
 		methods:{
@@ -29,13 +29,13 @@
 				this.$request.staff.wx.portValuable().then(res=>{
 					if( res.errorCode == '00000' ){
 						let ua = window.navigator.userAgent.toLowerCase();
-						if( ua.match(/MicroMessenger/i) == 'micromessenger' && res.result.portValuable == 1 ){
+						if( ua.match(/MicroMessenger/i) == 'micromessenger'){
 							self.scanValuable = true;
 							self.base = res.result.app_wx_domain;
 						}
 					}
 				});
-			},
+			}
 		},
 		created(){
 			this.isWX();
