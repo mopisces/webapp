@@ -26,7 +26,6 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
-	/*import { VTable, VPagination } from 'vue-easytable';*/
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -34,9 +33,6 @@
 			[Tabs.name]: Tabs,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
-
-			/*[VTable.name]: VTable,
-			[VPagination.name]: VPagination,*/
 
 			CusPicker,
 			PopupFilter,

@@ -23,7 +23,6 @@
 </template>
 <script>
 	import { Button, Field, SwitchCell, Sticky, Tab, Tabs} from 'vant';
-	/*import { VTable, VPagination } from 'vue-easytable';*/
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	export default {
@@ -34,9 +33,6 @@
 			[Sticky.name]: Sticky,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
-
-			/*[VTable.name]: VTable,
-			[VPagination.name]: VPagination,*/
 
 			PopupFilter,
 			RadioCell

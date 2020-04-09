@@ -21,15 +21,11 @@
 <script>
 	import { Button, Tab, Tabs } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
-	/*import { VTable, VPagination } from 'vue-easytable';*/
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
-
-			/*[VTable.name]: VTable,
-			[VPagination.name]: VPagination,*/
 
 			PrevNext
 		},

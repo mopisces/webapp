@@ -10,14 +10,10 @@
 </template>
 <script>
 	import { Tab, Tabs } from 'vant';
-	//import { VTable, VPagination } from 'vue-easytable';
 	export default {
 		components:{
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
-
-			/*VTable,
-			VPagination*/
 		},
 		data(){
 			return {
