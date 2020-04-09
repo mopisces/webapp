@@ -5,7 +5,6 @@
 </template>
 <script>
 	import wx from 'weixin-js-sdk';
-	import base from '@/request/base';
 	import { Toast, Loading } from 'vant';
 	export default {
 		components:{
@@ -52,7 +51,7 @@
 	                    	}else{
 	                    		scanRes = res.resultStr;	
 	                    	}
-	                    	Toast.success( scanRes );
+	                    	/*Toast.success( scanRes );*/
 	                    	window.location.href = 'http://' + self.path + '?scanRes=' + scanRes;
 	                    }
 	                });
