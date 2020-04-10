@@ -3,8 +3,11 @@ import { staff } from '../urlMap';
 const wx = {
 	getScanConfig( data ){
 		let postData = {
-			scan_url_type : data.urlType
+			scan_url_type   : data.urlType,
+			redirect_domain : data.domain,
+			redirect_port   : data.port
 		};
+		console.log(postData)
 		return post(staff.wx.scanWxConfig,postData);
 	},
 	portValuable(){

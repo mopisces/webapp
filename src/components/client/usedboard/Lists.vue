@@ -8,7 +8,13 @@
 				<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 					<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多" @load="onLoad" :immediate-check="false" :offset="100">
 						<van-cell v-for="(item, index) in checkBoxData" clickable :key="index" :title="item" @click="toggle(index)">
-							<van-checkbox :name="item" ref="checkboxes" slot="right-icon"/>
+							<div slot="title">
+								{{ item.BoardId }}
+								<van-tag type="danger" size="medium" v-if=" item.BoardName ">
+									{{ item.BoardName }}
+								</van-tag>
+							</div>
+							<van-checkbox :name="item.BoardId" ref="checkboxes" slot="right-icon"/>
 						</van-cell>
 					</van-list>
 				</van-pull-refresh>
@@ -25,7 +31,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Checkbox, CheckboxGroup, Search, SwitchCell, PullRefresh, Toast , List, Sticky } from 'vant';
+	import { Button, Cell, CellGroup, Checkbox, CheckboxGroup, Search, SwitchCell, PullRefresh, Toast , List, Sticky, Tag } from 'vant';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -39,6 +45,7 @@
 			[Toast.name]: Toast,
 			[List.name]: List,
 			[Sticky.name]: Sticky,
+			[Tag.name]: Tag,
 		},
 		data(){
 			return {
@@ -101,7 +108,7 @@
 						self.checkBoxResult = res.result.BeChecked;
 					}
 					res.result.BoardCodeCheckbox.forEach((item,index)=>{
-						self.checkBoxData.push(item.BoardId);
+						self.checkBoxData.push({BoardId:item.BoardId,BoardName:item.BoardName});
 					});
 				});
 			},

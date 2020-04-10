@@ -19,7 +19,7 @@
 		methods:{
 			setWxConfig(){
 				let self = this;
-				this.$request.staff.wx.getScanConfig( { urlType:this.$route.query.urlType } ).then(res=>{
+				this.$request.staff.wx.getScanConfig( { urlType:this.$route.query.urlType, domain:this.$route.query.redirectDomain, port:this.$route.query.redirectPort} ).then(res=>{
 					wx.config({
 		                debug     : false,
 		                appId     : res.result.appId,
@@ -27,36 +27,42 @@
 		                nonceStr  : res.result.nonceStr,
 		                signature : res.result.signature,
 		                jsApiList : ['scanQRCode']
-		            });				
+		            });
+
+				}).then(()=>{
+					this.$nextTick(()=>{
+						wx.error((err)=>{
+							console.log(err)
+		                	Toast.fail(err);
+		                });
+
+						wx.ready(()=>{
+							wx.checkJsApi({
+								jsApiList: [
+									'scanQRCode'
+								],
+							});
+							wx.scanQRCode({
+								debug:false,
+			                    needResult: 1,
+			                    scanType: ['qrCode', 'barCode'],
+			                    success: function(res){
+			                    	let scanRes;
+			                    	if( res.resultStr.indexOf(",") != -1 ){
+			                    		scanRes = res.resultStr.split(',')[1];
+			                    	}else{
+			                    		scanRes = res.resultStr;	
+			                    	}
+			                    	/*Toast.success( scanRes );*/
+			                    	window.location.href = self.path + '?scanRes=' + scanRes;
+			                    }
+			                });
+
+						});
+					})
 				});
 
-				wx.error((err)=>{
-                	Toast.fail(err);
-                });
-
-				wx.ready(()=>{
-					wx.checkJsApi({
-						jsApiList: [
-							'scanQRCode'
-						],
-					});
-					wx.scanQRCode({
-						debug:false,
-	                    needResult: 1,
-	                    scanType: ['qrCode', 'barCode'],
-	                    success: function(res){
-	                    	let scanRes;
-	                    	if( res.resultStr.indexOf(",") != -1 ){
-	                    		scanRes = res.resultStr.split(',')[1];
-	                    	}else{
-	                    		scanRes = res.resultStr;	
-	                    	}
-	                    	/*Toast.success( scanRes );*/
-	                    	window.location.href = 'http://' + self.path + '?scanRes=' + scanRes;
-	                    }
-	                });
-
-				});
+				
 			},
 			getRedirectPath( urlType ){
 				/*let self = this;
@@ -91,7 +97,7 @@
 			}
 		},
 		created(){
-			this.path = this.$route.query.redirectUri;
+			this.path = 'http://' + this.$route.query.redirectDomain + ':' + this.$route.query.redirectPort;
 			this.getRedirectPath( this.$route.query.urlType );
 		},
 		mounted(){

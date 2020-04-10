@@ -1,4 +1,4 @@
-import { backStage, erpDomain } from '../../public/domain.js';
+import { backStage, erpDomain, pageDomain } from '../../public/domain.js';
 const base = {
 	admin     : `${backStage}public/v1/admin/`,   //后台管理地址
 	staff     : `${backStage}public/v1/staff/`,   //后台内部用户地址
@@ -7,6 +7,7 @@ const base = {
 	index     : `${backStage}public/v1/index/`,   //后台登陆地址
 	sg        : `${backStage}public/v1/sg/`,      //后台生管地址
 	imgDomain : `${backStage}upload/`,            //图片存放地址
-	erp       : erpDomain.erp,                    //erp接口地址
+	erp       : erpDomain,                    //erp接口地址
+	wxRediect : pageDomain                    //前端页面地址
 };
 export default base;

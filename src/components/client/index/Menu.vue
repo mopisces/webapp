@@ -145,7 +145,7 @@
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = base.wxRediect + '/group/client/login?token=' + res.result;
+					self.loginUrl = base.wxRediect + 'group/client/login?token=' + res.result;
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{
