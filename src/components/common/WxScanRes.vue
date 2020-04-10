@@ -59,38 +59,39 @@
 				});
 			},
 			getRedirectPath( urlType ){
-				let self = this;
+				/*let self = this;
 				this.$request.staff.wx.portValuable().then(res=>{
 					if( res.errorCode == '00000' ){
 						self.base = res.result.app_normal_domain + ':' + res.result.app_normal_port;
 					}
 				}).then(()=>{
-					this.$nextTick(()=>{
-						switch( urlType ){
-							case '0' :
-								this.path += '/staff/paper/doStockOut';
-								break;
-							case '1' :
-								this.path += '/staff/paper/doRStockIn';
-								break;
-							case '2' :
-								this.path += '/staff/paper/directInStock';
-								break;
-							case '3' :
-								this.path += '/staff/stow/detail';
-								break;
-							case '4' :
-								this.path += '/staff/stock/mStockDetailR';
-								break;
-							default :
-								this.path += '';
-						}
-						this.setWxConfig();
-					});
-				});
+					this.$nextTick(()=>{*/
+				switch( urlType ){
+					case '0' :
+						this.path += '/staff/paper/doStockOut';
+						break;
+					case '1' :
+						this.path += '/staff/paper/doRStockIn';
+						break;
+					case '2' :
+						this.path += '/staff/paper/directInStock';
+						break;
+					case '3' :
+						this.path += '/staff/stow/detail';
+						break;
+					case '4' :
+						this.path += '/staff/stock/mStockDetailR';
+						break;
+					default :
+						this.path += '';
+				}
+				this.setWxConfig();
+					/*});
+				});*/
 			}
 		},
 		created(){
+			this.path = this.$route.query.redirectUri;
 			this.getRedirectPath( this.$route.query.urlType );
 		},
 		mounted(){

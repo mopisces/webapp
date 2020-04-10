@@ -78,15 +78,17 @@
 			checkApply(){
 				let self = this;
 				this.$request.client.paymentAll.checkApply( this.formData ).then(res=>{
-					console.log(res)
 					if( res.errorCode == '00000' ){
-						self.formData.reason      = res.result.ApplyReason;
-						self.config.tag.text      = '申请退款中';
-						self.config.tag.show      = true;
-						self.config.button.show   = false;
-						self.config.field.disabled= true;
-						if( res.result.Refund == 1 ){
-							self.config.tag.text  = '已退款';
+						self.formData.reason      = res.result.ApplyReason == null ? '' : res.result.ApplyReason;
+						if( res.result.Apply == '1' ){
+							self.config.tag.show      = true;
+							self.config.field.disabled= true;
+							if( res.result.Refund == '1' ){
+								self.config.tag.text  = '已退款';
+							}else{
+								self.config.tag.text  = '申请退款中';
+							}
+							self.config.button.show   = false;
 						}
 					}
 				});

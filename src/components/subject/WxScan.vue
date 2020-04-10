@@ -17,12 +17,13 @@
 				result       : this.scanResult,
 				wxConfig     : {},
 				scanValuable : false,
-				base         : ''
+				base         : '',
+				redirectUri  : '',
 			}
 		},
 		methods:{
 			scanQRCode(){
-				window.location.href = 'http://' + this.base + '/common/wxScan?urlType=' + this.urlType;
+				window.location.href = 'http://' + this.base + '/common/wxScan?urlType=' + this.urlType + '&redirectUri=' + this.redirectUri;
 			},
 			isWX(){
 				let self = this;
@@ -31,7 +32,8 @@
 						let ua = window.navigator.userAgent.toLowerCase();
 						if( ua.match(/MicroMessenger/i) == 'micromessenger'){
 							self.scanValuable = true;
-							self.base = res.result.app_wx_domain;
+							self.base         = res.result.app_wx_domain;
+							self.redirectUri  = res.result.app_normal_domain + ':' + res.result.app_normal_port;
 						}
 					}
 				});
