@@ -49,7 +49,8 @@
 							<span style="color:#1da02b;">{{ item.Amount }}</span>
 						</div>
 					</div>
-					<div slot="footer" style="text-align: right;" v-if=" filterForm.type == '1' || filterForm.type == '2' ">
+					<div slot="footer" style="text-align: right;">
+					<!-- v-if=" filterForm.type == '1' || filterForm.type == '2' " -->
 						<van-button size="small" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>
 					</div>
 				</div>
