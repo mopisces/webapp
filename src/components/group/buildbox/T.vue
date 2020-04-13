@@ -174,6 +174,7 @@
 						}
 						self.pageConfig.minDate = res.result.page_config.BuildMinDate;
 						self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
+						self.formData.date      = res.result.page_config.BuildDeliveryDate;
 						if( res.result.product_info.BeginTime * 1000 < (new Date()).valueOf()  ){
 							self.config.countDown.time = res.result.product_info.EndTime * 1000 - (new Date()).valueOf();
 						}else{

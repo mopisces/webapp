@@ -8,8 +8,19 @@ Vue.use(VueRouter);
 //404
 const error404 = () => import('@/components/common/404');
 const wxScan   = () => import('@/components/common/WxScanRes');
-
+const wxPay    = () => import('@/components/common/WxPay');
+const wxOpenID = () => import('@/components/pay/wx/getOpenId');
 let routes = [
+    {
+        path : '/common/getOpenId',
+        component: wxOpenID,
+        meta:{ title: '微信支付' }
+    },
+    {
+        path : '/common/wxpay',
+        component: wxPay,
+        meta:{ title: '微信支付' }
+    },
     {
         path : '/common/wxscan',
         component: wxScan,

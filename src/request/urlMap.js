@@ -254,8 +254,10 @@ const client = {
 };
 
 const pay = {
-	alipay : `${base.pay}alipay`,
-	wxpay  : `${base.pay}wxpay`,
+	alipay        : `${base.pay}alipay`,
+	wxpay         : `${base.pay}wxpay`,
+	wxPayForJsapi : `${base.pay}wxPayForJsapi`,
+	wxPayJwt      : `${base.pay}wxPayJwt`,
 }
 
 const sg = {

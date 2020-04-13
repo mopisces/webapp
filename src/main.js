@@ -11,7 +11,6 @@ Vue.component("TableOperate",TableOperate);
 
 Vue.config.productionTip = false;//生产提示
 Vue.prototype.$request   = request;
-
 new Vue({
 	router,
 	store,

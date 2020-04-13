@@ -11,10 +11,24 @@ const payAll = {
 	},
 	wechatPay( data ){
 		let postData = {
-			trade_type   : data.tradeType,
-			cus_order_id : data.cusOrderId
+			trade_type      : data.tradeType,
+			cus_order_id    : data.cusOrderId,
+			redirect_domain : 'http://test.leaper.ltd:1104',
 		};
 		return post(pay.wxpay,postData);
+	},
+	wxPayForJsapi( data ){
+		let getData = {
+			code  : data.code,
+			token : data.token
+		};
+		return get(pay.wxPayForJsapi,getData);
+	},
+	wxPayJwt( data ){
+		let postData = {
+			token : data
+		};
+		return post(pay.wxPayJwt,postData);
 	}
 }
 export default payAll;
