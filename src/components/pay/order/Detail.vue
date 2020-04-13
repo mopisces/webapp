@@ -162,11 +162,17 @@
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','订单支付信息');
-			if( typeof(this.$route.params.orderId) == 'undefined'){
+			if( typeof(this.$route.params.orderId) == 'undefined' && typeof(this.$route.query.orderId) == 'undefined' ){
 				this.$router.go(-1);	
 				return ;
 			}else{
-				this.getPayDetail(this.$route.params.orderId);
+				let orderId = '';
+				if( typeof(this.$route.params.orderId) == 'undefined' ){
+					orderId = this.$route.query.orderId;
+				}else{
+					orderId = this.$route.params.orderId;
+				}
+				this.getPayDetail(orderId);
 			}
 		},
 		mounted(){

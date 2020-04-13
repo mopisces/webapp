@@ -18,11 +18,11 @@ const payAll = {
 		return post(pay.wxpay,postData);
 	},
 	wxPayForJsapi( data ){
-		let getData = {
+		let postData = {
 			code  : data.code,
 			token : data.token
 		};
-		return get(pay.wxPayForJsapi,getData);
+		return post(pay.wxPayForJsapi,postData);
 	},
 	wxPayJwt( data ){
 		let postData = {

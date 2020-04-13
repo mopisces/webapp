@@ -4,16 +4,27 @@
 	</div>
 </template>
 <script>
-	import { Toast, Loading } from 'vant';
+	import { Dialog, Loading, Toast  } from 'vant';
 	export default {
 		components:{
-			[Toast.name]: Toast,
+			[Dialog.name]: Dialog,
 			[Loading.name]: Loading,
+			[Toast.name]: Toast,
 		},
 		data(){
 			return {
-				config : {},
+				config : {
+					debug     : true,
+					appId     : '',
+					timeStamp : '',
+					nonceStr  : '',
+					package   : '',
+					signType  : '',
+					paySign   : ''
+				},
 				redirectDomain:'',
+				orderId:'',
+				returnDomain:'',
 			}
 		},
 		methods:{
@@ -34,19 +45,30 @@
 					'getBrandWCPayRequest',
 					config,
 					function (res){
-						alert(res.err_code+res.err_desc+res.err_msg)
+						let message = '';
+						if( res.err_msg === "get_brand_wcpay_request:ok" ){
+							message = '支付成功';
+						}else{
+							message = '支付失败';
+						}
+						Dialog.alert({
+							message     : message
+						}).then(()=>{
+							window.location.href = window.returnDomain + '/client/pay/detail?orderId=' + window.orderId;
+						});
 					}
 				);
 			},
 			wxPayJwt(){
 				let self = this;
 				this.$request.payAll.payAll.wxPayJwt( this.$route.query.token ).then(res=>{
-					alert(  JSON.stringify(res.result) )
 					if( res.errorCode == '00000' ){
-						self.redirectDomain = res.data.redirect_domain;
+						self.redirectDomain = res.result.data.redirect_domain;
 					}
 				}).then(()=>{
-					this.wxPayForJsapi();
+					this.$nextTick(()=>{
+						this.wxPayForJsapi();
+					});
 				});
 			},
 			wxPayForJsapi(){
@@ -55,17 +77,22 @@
 					code  : this.$route.query.code
 				};
 				let self = this;
-				alert( 123 );
 				this.$request.payAll.payAll.wxPayForJsapi(data).then(res=>{
-					alert(  JSON.stringify(res.result) )
 					if( res.errorCode == '00000' ){
-						self.config = res.result;
+						self.config.appId     = res.result.appId;
+						self.config.timeStamp = res.result.timeStamp;
+						self.config.nonceStr  = res.result.nonceStr;
+						self.config.package   = res.result.package;
+						self.config.signType  = res.result.signType;
+						self.config.paySign   = res.result.paySign;
+						window.orderId = res.result.orderId;
+						window.returnDomain = res.result.return_domain;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.isReady();
 					});
-				});
+				});	
 			},
 			isReady(){
 				this.time = setInterval(() =>{
@@ -78,8 +105,9 @@
 		},
 		created(){
 			if( this.$route.query.token && this.$route.query.code ){
-				alert(this.$route.query.code);
 				this.wxPayJwt();
+			}else{
+				Toast.fail( JSON.stringify( this.$route.query ) )
 			}
 		},
 		mounted(){
