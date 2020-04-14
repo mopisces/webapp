@@ -167,6 +167,7 @@
 				return ;
 			}else{
 				let orderId = '';
+				console.log(this.$route.params.orderId)
 				if( typeof(this.$route.params.orderId) == 'undefined' ){
 					orderId = this.$route.query.orderId;
 				}else{

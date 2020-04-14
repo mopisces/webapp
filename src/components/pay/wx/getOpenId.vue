@@ -5,6 +5,7 @@
 </template>
 <script>
 	import { Toast, Loading } from 'vant';
+	import { post } from '@/request/request';
 	export default {
 		components:{
 			[Toast.name]: Toast,
@@ -17,16 +18,21 @@
 		},
 		methods:{
 			wxPayJwt(){
-				this.$request.payAll.payAll.wxPayJwt( this.$route.query.token ).then(res=>{
+				let postData = {
+					token : this.$route.query.token
+				};
+				post( 'http://' + this.$route.query.oriDomain + ':' + this.$route.query.backstagePort + '/public/v1/alipay/wxPayJwt', postData ).then(res=>{
 					if( res.errorCode == '00000' ){
-						window.location.href = res.result.url;
+						window.location.href = res.result;
 					}
-				})
+				});
 			}
 		},
 		created(){
-			if( this.$route.query.token  ){
+			if( this.$route.query.token && this.$route.query.oriDomain && this.$route.query.oriPort && this.$route.query.backstagePort  ){
 				this.wxPayJwt();
+			}else{
+				this.$route.go(-1);
 			}
 		},
 		mounted(){

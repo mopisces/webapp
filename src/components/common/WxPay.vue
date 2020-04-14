@@ -5,6 +5,7 @@
 </template>
 <script>
 	import { Dialog, Loading, Toast  } from 'vant';
+	import { post } from '@/request/request';
 	export default {
 		components:{
 			[Dialog.name]: Dialog,
@@ -22,9 +23,9 @@
 					signType  : '',
 					paySign   : ''
 				},
-				redirectDomain:'',
-				orderId:'',
-				returnDomain:'',
+				orderId      : '',
+				returnDomain : '',
+				backstagePath: ''
 			}
 		},
 		methods:{
@@ -59,25 +60,13 @@
 					}
 				);
 			},
-			wxPayJwt(){
-				let self = this;
-				this.$request.payAll.payAll.wxPayJwt( this.$route.query.token ).then(res=>{
-					if( res.errorCode == '00000' ){
-						self.redirectDomain = res.result.data.redirect_domain;
-					}
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.wxPayForJsapi();
-					});
-				});
-			},
 			wxPayForJsapi(){
-				let data = {
+				let postData = {
 					token : this.$route.query.token,
 					code  : this.$route.query.code
 				};
-				let self = this;
-				this.$request.payAll.payAll.wxPayForJsapi(data).then(res=>{
+				post(this.backstagePath + '/public/v1/alipay/wxPayForJsapi', postData).then(res=>{
+					Toast.fail( JSON.stringify( res ) )
 					if( res.errorCode == '00000' ){
 						self.config.appId     = res.result.appId;
 						self.config.timeStamp = res.result.timeStamp;
@@ -85,14 +74,14 @@
 						self.config.package   = res.result.package;
 						self.config.signType  = res.result.signType;
 						self.config.paySign   = res.result.paySign;
-						window.orderId = res.result.orderId;
-						window.returnDomain = res.result.return_domain;
+						window.orderId        = res.result.orderId;
+						window.returnDomain   = res.result.return_domain;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.isReady();
 					});
-				});	
+				});
 			},
 			isReady(){
 				this.time = setInterval(() =>{
@@ -104,10 +93,11 @@
 			}
 		},
 		created(){
-			if( this.$route.query.token && this.$route.query.code ){
-				this.wxPayJwt();
+			if( this.$route.query.token && this.$route.query.oriDomain && this.$route.query.backstagePort && this.$route.query.code  ){
+				this.backstagePath = 'http://' + this.$route.query.oriDomain + ':' + this.$route.query.backstagePort;
+				this.wxPayForJsapi();
 			}else{
-				Toast.fail( JSON.stringify( this.$route.query ) )
+				Toast.fail( '参数错误' );
 			}
 		},
 		mounted(){

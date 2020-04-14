@@ -158,7 +158,8 @@
 				let self = this;
 				this.$request.payAll.payAll.wechatPay( data ).then(res=>{
 					if( res.errorCode == '00000' ){
-						window.location.href = 'http://' + res.result.redirectDomain + '/common/getOpenId' + '?token=' + res.result.token;
+						let url = 'http://' + res.result.server_info.Frp80PortDomain + '/common/getOpenId?token=' + res.result.token + '&oriDomain=' + res.result.server_info.OriDomain + '&oriPort=' + res.result.server_info.OriPort + '&backstagePort=' + res.result.server_info.BackstagePort;
+						window.location.href = url;
 						//window.location.href = res.result;
 					}
 				});

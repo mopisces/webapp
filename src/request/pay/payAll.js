@@ -11,9 +11,8 @@ const payAll = {
 	},
 	wechatPay( data ){
 		let postData = {
-			trade_type      : data.tradeType,
-			cus_order_id    : data.cusOrderId,
-			redirect_domain : 'http://test.leaper.ltd:1104',
+			trade_type         : data.tradeType,
+			cus_order_id       : data.cusOrderId
 		};
 		return post(pay.wxpay,postData);
 	},
