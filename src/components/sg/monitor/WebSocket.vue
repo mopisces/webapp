@@ -413,17 +413,19 @@
 					timeout:3000
 				});*/
 
-				this.socket = io('http://ywhx.leaper.ltd:8888',{
+				this.socket = io('http://xzys.leaper.ltd:8888',{
 					timeout:3000
 				});
 
 				this.socket.on('connect',()=>{
 					this.config.notice.text = '链接成功！';
 				});
-				
-				this.socket.on('AnalyUdpData1', (data)=>{
-					this.config.updown = false;
-					Object.assign(this.normalInfo, JSON.parse(data).data);
+				this.socket.on('AnalyUdpData0', (data)=>{
+					/*if( this.config.isnew ){
+						Object.assign(this.updownInfo, JSON.parse(data).data);
+					}else{
+						Object.assign(this.normalInfo, JSON.parse(data).data);
+					}
 					if( !this.config.chart.show ) return;
 					if( this.config.chart.keyName.indexOf('_') === -1 ){
 						this.chart.series[0].addPoint([(new Date()).getTime(),this.normalInfo[this.config.chart.keyName]],true,true);
@@ -431,15 +433,18 @@
 						let keyArr = this.config.chart.keyName.split('_');
 						this.chart.series[0].addPoint([(new Date()).getTime(),this.normalInfo[keyArr[0]][keyArr[1]]],true,true);
 					}
-					return ;
+					return ;*/
 					if( data == 10060 ){
 						this.config.notice.text = '后台udp广播暂未开启';
 					}else{
 						this.config.notice.text = '监控开启成功';
+						if( JSON.parse(data).data ){
+							console.log('数据不完整');
+						}
 						if( this.config.updown ){
-							Object.assign(this.updownInfo, data);
+							Object.assign(this.updownInfo, JSON.parse(data).data);
 						}else{
-							Object.assign(this.normalInfo, data);
+							Object.assign(this.normalInfo, JSON.parse(data).data);
 						}
 						if( !this.config.chart.show ) return;
 						if( this.config.updown ){

@@ -160,7 +160,6 @@
 					if( res.errorCode == '00000' ){
 						let url = 'http://' + res.result.server_info.Frp80PortDomain + '/common/getOpenId?token=' + res.result.token + '&oriDomain=' + res.result.server_info.OriDomain + '&oriPort=' + res.result.server_info.OriPort + '&backstagePort=' + res.result.server_info.BackstagePort;
 						window.location.href = url;
-						//window.location.href = res.result;
 					}
 				});
 			},
