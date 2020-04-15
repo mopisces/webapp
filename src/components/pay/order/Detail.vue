@@ -167,9 +167,10 @@
 				return ;
 			}else{
 				let orderId = '';
-				console.log(this.$route.params.orderId)
-				if( typeof(this.$route.params.orderId) == 'undefined' ){
-					orderId = this.$route.query.orderId;
+				let orderIdArr = [];
+				if( this.$route.query.orderId ){
+					orderIdArr = this.$route.query.orderId.split(',');
+					orderId    = orderIdArr[0];
 				}else{
 					orderId = this.$route.params.orderId;
 				}

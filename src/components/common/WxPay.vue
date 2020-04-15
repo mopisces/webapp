@@ -133,4 +133,3 @@
         padding-top: 10rem; 
     }
 </style>
-{"signType":"MD5","appId":"wx8f9065d8c32ab018","timeStamp":"'1586911474'","package":"prepay_id=wx1508443448054579b1e064071009597700","nonceStr":"14m0z9342897me0j4la34r6akcctw81m","paySign":"E4EEE8D26DB464E8E8B909762C47B30B","orderId":"20200415002","return_domain":"http://test.leaper.ltd:1104"}
