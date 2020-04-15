@@ -23,6 +23,7 @@
 					signType  : '',
 					paySign   : ''
 				},
+				getConfig    : false,
 				orderId      : '',
 				returnDomain : '',
 				backstagePath: ''
@@ -65,8 +66,8 @@
 					token : this.$route.query.token,
 					code  : this.$route.query.code
 				};
+				let self = this;
 				post(this.backstagePath + '/public/v1/alipay/wxPayForJsapi', postData).then(res=>{
-					Toast.fail( JSON.stringify( res ) )
 					if( res.errorCode == '00000' ){
 						self.config.appId     = res.result.appId;
 						self.config.timeStamp = res.result.timeStamp;
@@ -76,6 +77,7 @@
 						self.config.paySign   = res.result.paySign;
 						window.orderId        = res.result.orderId;
 						window.returnDomain   = res.result.return_domain;
+						self.getConfig        = true;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -84,6 +86,10 @@
 				});
 			},
 			isReady(){
+				if( !this.getConfig ){
+					Toast.fail('获取支付信息失败');
+					this.$router.go(-2);
+				}
 				this.time = setInterval(() =>{
 					if (typeof WeixinJSBridge != "undefined"){
 						this.jsApiCall(this.config);
@@ -127,3 +133,4 @@
         padding-top: 10rem; 
     }
 </style>
+{"signType":"MD5","appId":"wx8f9065d8c32ab018","timeStamp":"'1586911474'","package":"prepay_id=wx1508443448054579b1e064071009597700","nonceStr":"14m0z9342897me0j4la34r6akcctw81m","paySign":"E4EEE8D26DB464E8E8B909762C47B30B","orderId":"20200415002","return_domain":"http://test.leaper.ltd:1104"}

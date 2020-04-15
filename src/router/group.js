@@ -31,7 +31,7 @@ const buildT           = () => import('@/components/group/buildbox/T');
 const error404         = () => import('@/components/common/404');
 const wxScan           = () => import('@/components/common/WxScanRes');
 const group = [
-	    {
+	{
         path : '/group',
         component : indexLayout,
         meta: { title: '团购及未登录' },
@@ -75,12 +75,6 @@ const group = [
                 component: groupBoardFlag,
             },
             {
-                path: 'board/detail',
-                name: 'boardDetail',
-                meta:{ title:'纸板团购详情', role:'纸板团购详情' },
-                component: groupBoardDetail
-            },
-            {
                 path: 'build/s',
                 name: 'buildGroupS',
                 meta:{ title:'简单纸板下单', role:'简单纸板下单' },
@@ -103,18 +97,24 @@ const group = [
                 component: groupBoxFlag
             },
             {
-                path: 'box/detail',
-                name: 'boxDetail',
-                meta:{ title:'淘宝箱团购详情', role:'淘宝箱团购详情' },
-                component: groupBoxDetail
-            },
-            {
                 path: 'build/t',
                 name: 'buildGroupT',
                 meta:{ title:'淘宝箱下单', role:'淘宝箱下单' },
                 component: buildT
             },
         ]
+    },
+    {
+        path: '/group/board/detail',
+        name: 'boardDetail',
+        meta:{ title:'纸板团购详情', role:'纸板团购详情' },
+        component: groupBoardDetail
+    },
+    {
+        path: '/group/box/detail',
+        name: 'boxDetail',
+        meta:{ title:'淘宝箱团购详情', role:'淘宝箱团购详情' },
+        component: groupBoxDetail
     }
 ];
 export default group;

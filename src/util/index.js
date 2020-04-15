@@ -114,4 +114,20 @@ export function urlWhiteList( roleName, type )
 		}
 	}
 	return false;
+};
+
+export function groupCheck( toName )
+{
+	let checkList = [
+		'buildGroupT',
+		'buildGroupS',
+		'buildGroupC'
+	];
+	for( var i = checkList.length - 1; i >= 0; i-- ){
+		if( checkList[i] === toName ){
+			return true;
+			break;
+		}
+	}
+	return false;
 }

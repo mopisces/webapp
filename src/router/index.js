@@ -4,6 +4,7 @@ import client from './client';
 import admin from './admin';
 import sg from './sg';
 import group from './group';
+import { groupCheck } from '@/util';
 Vue.use(VueRouter);
 //404
 const error404 = () => import('@/components/common/404');
@@ -45,6 +46,7 @@ let router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    window,scrollTo(0,0);
     if( to.meta.title ){
         document.title = to.meta.title;
     }

@@ -1,5 +1,7 @@
 <template>
 	<div style="background-color:#f5f5f5;">
+		<van-nav-bar title="纸板详情" left-text="返回" left-arrow @click-left="goBack()" :fixed="true"/>
+		<div style="width:100%;height:2.875rem;"></div>
 		<van-swipe :autoplay="3000" indicator-color="white" style="width: 100%; height: 30%; transform: translateX(0px);">
 			<van-swipe-item v-for="(image, index) in imagesList" :key="  'img' + index"  >
 				<van-image :src="image" style="width:100%;height:10%;">
@@ -92,26 +94,31 @@
 				{{ descInfo }}
 			</div>
 		</template>
-		<div class="van-cell">
+		<div style="height:3.125rem;width:100%;"></div> 
+		<van-goods-action>
 			<template v-if="!config.button.disabled">
-				<van-button type="warning" size="large" square class="van-goods-action-button van-goods-action-button--first van-goods-action-button--warning" @click="builds()">简单纸板</van-button>
-				<van-button type="danger" size="large" square class="van-goods-action-button van-goods-action-button--last van-goods-action-button--danger" @click="buildc()">纸箱纸板</van-button>
+				<van-goods-action-button type="warning" text="简单纸板" @click="builds()"/>
+				<van-goods-action-button type="danger" text="纸箱纸板" @click="buildc()"/>
 			</template>
-			<van-button size="large" color="#868080" v-else>团购已结束</van-button>
-		</div>
+			<van-goods-action-button size="large" color="#868080" v-else>团购已结束</van-goods-action-button>
+		</van-goods-action>
 	</div>
 </template>
 <script>
-	import { Button, Image, Dialog, CountDown, Swipe, SwipeItem } from 'vant';
+	import { Button, Image, Dialog, CountDown, Swipe, SwipeItem, NavBar, GoodsAction, GoodsActionIcon, GoodsActionButton  } from 'vant';
 	import vueSeamlessScroll from 'vue-seamless-scroll';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Image.name]: Image,
 			[Dialog.name]: Dialog,
+			[CountDown.name]: CountDown,
 			[Swipe.name]: Swipe,
 			[SwipeItem.name]: SwipeItem,
-			[CountDown.name]: CountDown,
+			[NavBar.name]: NavBar,
+			[GoodsAction.name]: GoodsAction,
+			[GoodsActionIcon.name]: GoodsActionIcon,
+			[GoodsActionButton.name]: GoodsActionButton,
 			
 			vueSeamlessScroll
 		},
@@ -174,6 +181,9 @@
 					name : 'buildGroupC', 
 					params : { productId : sessionStorage.getItem('group-product-id') } 
 				});
+			},
+			goBack(){
+				this.$router.go(-1);
 			}
 		},
 		created(){
