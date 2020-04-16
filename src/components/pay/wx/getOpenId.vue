@@ -19,7 +19,8 @@
 		methods:{
 			getCode(){
 				let postData = {
-					token : this.$route.query.token
+					token     : this.$route.query.token,
+					code_type : this.$route.query.type
 				};
 				post( 'http://' + this.$route.query.oriDomain + ':' + this.$route.query.backstagePort + '/public/v1/alipay/getCode', postData ).then(res=>{
 					if( res.errorCode == '00000' ){
@@ -29,7 +30,7 @@
 			}
 		},
 		created(){
-			if( this.$route.query.token && this.$route.query.oriDomain && this.$route.query.oriPort && this.$route.query.backstagePort  ){
+			if( this.$route.query.token && this.$route.query.oriDomain && this.$route.query.oriPort && this.$route.query.backstagePort && this.$route.query.type ){
 				this.getCode();
 			}else{
 				this.$route.go(-1);
