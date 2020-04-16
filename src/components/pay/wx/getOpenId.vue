@@ -17,11 +17,11 @@
 			}
 		},
 		methods:{
-			getOpenId(){
+			getCode(){
 				let postData = {
 					token : this.$route.query.token
 				};
-				post( 'http://' + this.$route.query.oriDomain + ':' + this.$route.query.backstagePort + '/public/v1/alipay/getOpenId', postData ).then(res=>{
+				post( 'http://' + this.$route.query.oriDomain + ':' + this.$route.query.backstagePort + '/public/v1/alipay/getCode', postData ).then(res=>{
 					if( res.errorCode == '00000' ){
 						window.location.href = res.result;
 					}
@@ -30,7 +30,7 @@
 		},
 		created(){
 			if( this.$route.query.token && this.$route.query.oriDomain && this.$route.query.oriPort && this.$route.query.backstagePort  ){
-				this.getOpenId();
+				this.getCode();
 			}else{
 				this.$route.go(-1);
 			}
