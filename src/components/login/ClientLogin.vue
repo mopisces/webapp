@@ -1,22 +1,30 @@
 <template>
 	<div :style="pageInfo.bg">
-		<div style="width:100%;height:5%;position:fixed;top:50px;text-align:center;font-weight:500;font-size:1rem;">
+		<div style="padding-top: 1.875rem;  height: 100%;text-align:center;">
 			{{ pageInfo.factoryName }}
 		</div>
-		<div style="width:100%;height:20%;position:fixed;top:15%;text-align:center;">
-			<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
+		<div style="width: 100%; text-align: center;font-size:7.5rem; color: #fff;">
+			<van-image :src="pageInfo.factoryLogo" width="40%" height="50%"/>
 		</div>
-		<div style="width: 80%;height:40%;position: fixed;top: 40%;left:10%;text-align:center;">
+		<div style="margin: 0 auto; float:none; padding-top: 20px;">
 			<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
 			<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
 			<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
 			<van-button type="danger" size="normal" style="width:100%;margin-top:5px;" @click="registerClick()">注册</van-button>
 		</div>
+		<div style="width:100%;position:fixed;bottom:3.125rem;text-align:center;">
+			<van-divider dashed>
+				<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
+			</van-divider>
+			<van-divider dashed>
+				<a href="http://www.jpeng.com.cn/"> Copyright © 2019 佳鹏电脑.All rights reserved. </a>
+			</van-divider>
+		</div>
 		<div :style="config.style.div"></div>
 	</div>
 </template>
 <script>
-	import { Button, Image, Field, Toast } from 'vant';
+	import { Button, Image, Field, Toast, Divider } from 'vant';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -24,6 +32,7 @@
 			[Image.name]: Image,
 			[Field.name]: Field,
 			[Toast.name]: Toast,
+			[Divider.name]: Divider,
 		},
 		data(){
 			return {
@@ -46,7 +55,7 @@
 					factoryId:'',
 					factoryLogo:'',
 					factoryName:'',
-					bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'
+					bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') rgb(42,144,223) top no-repeat;background-size:cover;width:100%;height:100%;'
 				},
 				validator:{},
 				rules:{

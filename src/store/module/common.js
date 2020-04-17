@@ -5,7 +5,7 @@ const common = {
 		title      : '',
 		activeItem : '',
 		useType    : '',
-		indexActive: '',//indexLayout active item
+		indexActive: '',
 		imgUrl     : base.imgDomain
 	},
 	mutations:{
