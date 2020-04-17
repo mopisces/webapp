@@ -90,9 +90,7 @@
 			<div class="van-cell" style="margin-top:0.625rem;font-size:1rem;">
 				产品描述
 			</div>
-			<div class="van-cell" v-html="descInfo">
-				
-			</div>
+			<div v-html="descInfo"></div>
 		</template>
 		<div style="height:3.125rem;width:100%;"></div> 
 		<van-goods-action>

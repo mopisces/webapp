@@ -48,6 +48,7 @@ const admin = {
 		showListImg   : `${base.admin}adminShowListImg`,   //展示编辑图片
 		addListImg    : `${base.admin}admiListImgAdd`,     //添加图片
 		delListImg    : `${base.admin}admiListImgDel`,     //删除图片
+		descrImg      : `${base.admin}addDescrImage`       //保存描述图片
 	}
 };
 const staff = {

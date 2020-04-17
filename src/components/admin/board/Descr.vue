@@ -1,12 +1,11 @@
 <template>
 	<div>
-		<el-upload action="" list-type="picture" v-show="false" id="quill-upload" name="upload_file" multiple :limit="3" :show-file-list="false" :before-upload="beforeUpload" :on-error="uploadError" :on-success="handleExceed">
+		<el-upload :action=" config.upload.action " :data="config.upload.data" :headers="config.upload.header" list-type="picture" v-show="false" id="quill-upload" :multiple="true" :limit="3" :show-file-list="false" :before-upload="beforeUpload" :on-error="uploadError" :on-success="handleExceed" name="image">
 			<el-button size="small" type="primary" ></el-button>
 			<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
 		</el-upload>
-		<quill-css></quill-css>
-		<div class="ql-container ql-snow" style="height:500px;">
-			<quill-editor v-model="formData.descr" :options="editorOption">
+		<div class="ql-container ql-snow" style="height:500px;width:100%;" v-loading=" config.upload.loading ">
+			<quill-editor v-model="formData.descr" :options="editorOption" ref="myQuillEditor">
 			</quill-editor>
 		</div>
 		<div style="position:fixed;bottom:3rem;">
@@ -18,12 +17,25 @@
 
 <script>
 	import { quillEditor } from 'vue-quill-editor';
+	import { admin } from '@/request/urlMap';
 	export default {
 		components:{
 			quillEditor,
 		},
 		data(){
 			return {
+				config:{
+					upload:{
+						action : admin.image.descrImg,
+						header:{
+							Authentication : sessionStorage.getItem('jpdn-admin-token')
+						},
+						data   : {
+							goods_id : ''
+						},
+						loading: false
+					}
+				},
 				formData : {
 					descr     : '',
 					id        : '',
@@ -41,14 +53,18 @@
 								[{ 'indent': '-1' }, { 'indent': '+1' }],
 								[{ 'direction': 'rtl' }],
 								[{ 'size': ['small', false, 'large', 'huge'] }],
+								[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+								[{ 'color': [] }, { 'background': [] }],
+								[{ 'font': [] }],
+								[{ 'align': [] }],
 								['link'],
 								['image'],
-								['clean']
+								['clean'],
 							],
 							handlers:{
 								'image' : ( value ) => {
 									if( value ){
-										console.log(value);
+										document.querySelector('#quill-upload input').click();
 									}else{
 										this.quill.format( 'image', false );
 									}
@@ -60,6 +76,7 @@
               				highlight: text => hljs.highlightAuto(text).value
             			}
           			},
+          			placeholder:'请输入描述信息~',
           			theme:'snow'
 				}
 			}
@@ -83,6 +100,25 @@
 			},
 			goBack(){
 				this.$router.go(-1);
+			},
+			beforeUpload(){
+				this.config.upload.loading = true;
+			},
+			uploadError(){
+				this.config.upload.loading = false;
+				this.$message.error('图片插入失败');
+			},
+			handleExceed( response, file, fileList ){
+				let quill = this.$refs.myQuillEditor.quill;
+				if ( response.errorCode === '00000' ) {
+					let length = quill.getSelection().index;
+					quill.insertEmbed(length, 'image', this.$store.state.common.imgUrl + response.result);
+					quill.setSelection(length + 1);
+				}else{
+					this.$message.error('图片插入失败');
+				}
+				this.fileList = fileList;
+				this.config.upload.loading = false;
 			}
 		},
 		created(){
@@ -97,7 +133,8 @@
 			}
 			this.formData.descr     = this.$route.params.descr;
 			this.formData.id        = this.$route.params.id;
-			this.formData.orderType = this.$route.params.orderType
+			this.formData.orderType = this.$route.params.orderType;
+			this.config.upload.data.goods_id = this.$route.params.id;
 		},
 		mounted(){
 
