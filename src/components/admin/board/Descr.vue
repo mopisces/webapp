@@ -1,9 +1,13 @@
 <template>
 	<div>
-		<!-- <quill-css></quill-css> -->
+		<el-upload action="" list-type="picture" v-show="false" id="quill-upload" name="upload_file" multiple :limit="3" :show-file-list="false" :before-upload="beforeUpload" :on-error="uploadError" :on-success="handleExceed">
+			<el-button size="small" type="primary" ></el-button>
+			<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+		</el-upload>
+		<quill-css></quill-css>
 		<div class="ql-container ql-snow" style="height:500px;">
 			<quill-editor v-model="formData.descr" :options="editorOption">
-	        </quill-editor>
+			</quill-editor>
 		</div>
 		<div style="position:fixed;bottom:3rem;">
         	<el-button type="primary" plain @click="saveDescr()">保存</el-button>
@@ -27,20 +31,34 @@
 				},
 				editorOption : {
 					modules: {
-						toolbar: [
-              				['bold', 'italic', 'underline', 'strike'],
-              				['blockquote', 'code-block'],
-							[{ 'header': 1 }, { 'header': 2 }],
-							[{ 'list': 'ordered' }, { 'list': 'bullet' }],
-							[{ 'script': 'sub' }, { 'script': 'super' }],
-							[{ 'indent': '-1' }, { 'indent': '+1' }],
-							[{ 'direction': 'rtl' }],
-							[{ 'size': ['small', false, 'large', 'huge'] }],
-							['clean'],
-            			],
+						toolbar:{
+							container:[
+								['bold', 'italic', 'underline', 'strike'],
+	              				['blockquote', 'code-block'],
+								[{ 'header': 1 }, { 'header': 2 }],
+								[{ 'list': 'ordered' }, { 'list': 'bullet' }],
+								[{ 'script': 'sub' }, { 'script': 'super' }],
+								[{ 'indent': '-1' }, { 'indent': '+1' }],
+								[{ 'direction': 'rtl' }],
+								[{ 'size': ['small', false, 'large', 'huge'] }],
+								['link'],
+								['image'],
+								['clean']
+							],
+							handlers:{
+								'image' : ( value ) => {
+									if( value ){
+										console.log(value);
+									}else{
+										this.quill.format( 'image', false );
+									}
+								} 
+							}
+              				
+            			},
             			syntax: {
               				highlight: text => hljs.highlightAuto(text).value
-            			},
+            			}
           			},
           			theme:'snow'
 				}

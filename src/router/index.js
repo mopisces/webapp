@@ -11,7 +11,13 @@ const error404 = () => import('@/components/common/404');
 const wxScan   = () => import('@/components/common/WxScanRes');
 const wxPay    = () => import('@/components/common/WxPay');
 const wxOpenID = () => import('@/components/pay/wx/getOpenId');
+const wxTest   = () => import('@/components/common/Test');
 let routes = [
+    {
+        path : '/common/test',
+        component: wxTest,
+        meta:{ title: '微信授权' }
+    },
     {
         path : '/common/getOpenId',
         component: wxOpenID,

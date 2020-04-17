@@ -61,6 +61,7 @@ httpServer.interceptors.response.use(
 	error =>{
 		Toast.clear();
 		if( error ){
+			Toast.fail( JSON.stringify(error) );
 			errorHandle.mainHandle(error.data.errorCode,error.data.msg);
 			return Promise.reject(error);
 		}
