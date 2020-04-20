@@ -37,7 +37,16 @@
 					faxNo         : '',  //联系传真
 				},
 				rules:{
-					userName : [{required : true , message:'请填写账号'}],
+					userName : [
+						{required : true , message:'请填写账号'},
+						{validator: (rule, value, callback, source, options)=>{
+							let errors;
+							if( !(/(^[a-zA-Z][A-Za-z0-9]{1,5}$)/.test(this.formData.ordQty) ) ){
+								errors = '账号只能字母开头且只能有数字和字母';
+							}
+							callback(errors);
+						}}
+					],
 					passWord : [{required : true , message:'请填写密码'}],
 					confirmPass : [
 						{required : true , message:'请确认密码'},
