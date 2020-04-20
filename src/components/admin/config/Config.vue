@@ -623,7 +623,7 @@
 					</tbody>
 				</table>
 			</el-tab-pane>
-			<el-tab-pane label="微信支付" name="wechat" v-if="(Number(form.UseBoardGroup) || Number(form.UseBoxGroup)) && Number(form.UseWxPay)">
+			<!-- <el-tab-pane label="微信支付" name="wechat" v-if="(Number(form.UseBoardGroup) || Number(form.UseBoxGroup)) && Number(form.UseWxPay)">
 				<table style="width:100%;">
 					<tbody>
 						<tr>
@@ -700,7 +700,7 @@
 						</tr>
 					</tbody>
 				</table>
-			</el-tab-pane>
+			</el-tab-pane> -->
 		</el-tabs>
 		<el-dialog title="提示" :visible="config.dialog.show" width="30%">
 			<span>{{ config.dialog.value }}</span>
@@ -846,7 +846,7 @@
 					UseWxPay      : '',  //微信支付功能
 					UseAliPay     : '',  //支付宝支付功能
 					ValidPayTime  : '',  //有效支付时间(秒)
-					//支付宝参数
+					/*//支付宝参数
 					AliAppId         : '',
 					AliPublicKey     : '',
 					AliRsaPrivateKey : '',
@@ -855,7 +855,7 @@
 					WxMchId       : '',
 					WxKey         : '',
 					WxSslcertPath : '',
-					WxSslkeyPath  : '',
+					WxSslkeyPath  : '',*/
 				}
 			}
 		},
@@ -873,7 +873,6 @@
 			saveConfig(){
 				let self = this;
 				this.$request.admin.config.saveConfig( JSON.stringify( this.form ) ).then((res)=>{
-					let message = ''
 					if( res.errorCode == '00000' ){
 						self.config.dialog.value = '修改成功!';
 					}else{

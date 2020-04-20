@@ -22,18 +22,32 @@
 			}
 		},
 		methods:{
-			getAuth(){
-				let self = this;
-				this.$request.payAll.payAll.wechatPay( data ).then(res=>{
+			getCode(){
+				let postData = {
+					token     : 'test_token',
+					code_type : 'auth'
+				};
+				post( 'http://' + this.info.oriDomain + ':' + this.info.backstagePort + '/public/v1/alipay/getCode',postData).then(res=>{
 					if( res.errorCode == '00000' ){
-						let url = 'http://' + res.result.server_info.Frp80PortDomain + '/getCode.html?token=' + res.result.token + '&oriDomain=' + res.result.server_info.OriDomain + '&oriPort=' + res.result.server_info.OriPort + '&backstagePort=' + res.result.server_info.BackstagePort + '&type=auth';
-						window.location.href = url;
+						window.location.href = res.result;
 					}
+				});
+			},
+			getAuth(){
+				let postData = {
+					code:this.$route.query.code,
+				};
+				post( 'http://' + this.info.oriDomain + ':' + this.info.backstagePort + '/public/v1/alipay/getWxUserInfo',postData).then(res=>{
+					Toast( JSON.stringify(res) )
 				});
 			}
 		},
 		created(){
-			this.getAuth();
+			if( this.$route.query.code ){
+				this.getAuth();
+			}else{
+				this.getCode();
+			}
 		},
 		mounted(){
 
