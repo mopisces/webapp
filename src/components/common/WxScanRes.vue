@@ -53,7 +53,6 @@
 			                    	}else{
 			                    		scanRes = res.resultStr;	
 			                    	}
-			                    	/*Toast.success( scanRes );*/
 			                    	window.location.href = self.path + '?scanRes=' + scanRes;
 			                    }
 			                });
@@ -65,13 +64,6 @@
 				
 			},
 			getRedirectPath( urlType ){
-				/*let self = this;
-				this.$request.staff.wx.portValuable().then(res=>{
-					if( res.errorCode == '00000' ){
-						self.base = res.result.app_normal_domain + ':' + res.result.app_normal_port;
-					}
-				}).then(()=>{
-					this.$nextTick(()=>{*/
 				switch( urlType ){
 					case '0' :
 						this.path += '/staff/paper/doStockOut';
@@ -92,8 +84,6 @@
 						this.path += '';
 				}
 				this.setWxConfig();
-					/*});
-				});*/
 			}
 		},
 		created(){

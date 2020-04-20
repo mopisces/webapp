@@ -24,14 +24,14 @@
 		},
 		methods:{
 			scanQRCode(){
-				window.location.href = 'http://' + this.base + '/common/wxScan?urlType=' + this.urlType + '&redirectDomain=' + this.redirectDomain + '&redirectPort=' + this.redirectPort;
+				window.location.href = 'http://' + this.base + '/WxScanResult.html?urlType=' + this.urlType + '&redirectDomain=' + this.redirectDomain + '&redirectPort=' + this.redirectPort;
 			},
 			isWX(){
 				let self = this;
 				this.$request.staff.wx.portValuable().then(res=>{
 					if( res.errorCode == '00000' ){
 						let ua = window.navigator.userAgent.toLowerCase();
-						if( ua.match(/MicroMessenger/i) == 'micromessenger'){
+						if( /*ua.match(/MicroMessenger/i) != 'micromessenger'*/ true){
 							self.scanValuable   = true;
 							self.base           = res.result.app_wx_domain;
 							self.redirectDomain = res.result.app_normal_domain;

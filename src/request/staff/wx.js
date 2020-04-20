@@ -7,7 +7,6 @@ const wx = {
 			redirect_domain : data.domain,
 			redirect_port   : data.port
 		};
-		console.log(postData)
 		return post(staff.wx.scanWxConfig,postData);
 	},
 	portValuable(){
