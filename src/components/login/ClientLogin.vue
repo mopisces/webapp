@@ -1,18 +1,20 @@
 <template>
-	<div :style="pageInfo.bg">
-		<div style="padding-top: 1.875rem;  height: 100%;text-align:center;">
-			{{ pageInfo.factoryName }}
+	<div>
+		<div :style="pageInfo.bg">
+			<div style="padding-top: 0.875rem;  height: 100%;text-align:center;">
+				{{ pageInfo.factoryName }}
+			</div>
+			<div style="width: 100%; text-align: center;font-size:1.5rem; color: #fff;">
+				<van-image :src="pageInfo.factoryLogo" width="40%" height="50%"/>
+			</div>
+			<div style="margin: 0 auto; float:none;width:80%;">
+				<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
+				<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
+				<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
+				<van-button type="danger" size="normal" style="width:100%;margin-top:5px;" @click="registerClick()">注册</van-button>
+			</div>
 		</div>
-		<div style="width: 100%; text-align: center;font-size:7.5rem; color: #fff;">
-			<van-image :src="pageInfo.factoryLogo" width="40%" height="50%"/>
-		</div>
-		<div style="margin: 0 auto; float:none; padding-top: 20px;">
-			<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
-			<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
-			<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
-			<van-button type="danger" size="normal" style="width:100%;margin-top:5px;" @click="registerClick()">注册</van-button>
-		</div>
-		<div style="width:100%;position:fixed;bottom:3.125rem;text-align:center;">
+		<div style="width:100%;text-align: center;padding-top:3rem;">
 			<van-divider dashed>
 				<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
 			</van-divider>
@@ -20,7 +22,6 @@
 				<a href="http://www.jpeng.com.cn/"> Copyright © 2019 佳鹏电脑.All rights reserved. </a>
 			</van-divider>
 		</div>
-		<div :style="config.style.div"></div>
 	</div>
 </template>
 <script>

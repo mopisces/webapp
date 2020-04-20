@@ -54,6 +54,14 @@
 				</div>
 			</van-grid-item>
 		</van-grid>
+		<div style="width:100%;text-align: center;padding-top:3rem;">
+			<van-divider dashed>
+				<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
+			</van-divider>
+			<van-divider dashed>
+				<a href="http://www.jpeng.com.cn/"> Copyright © 2019 佳鹏电脑.All rights reserved. </a>
+			</van-divider>
+		</div>
 	</div>
 </template>
 <script>
