@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div :style="pageInfo.bg">
+		<div>
 			<div style="padding-top: 0.875rem;  height: 100%;text-align:center;">
 				{{ pageInfo.factoryName }}
 			</div>
@@ -14,12 +14,12 @@
 				<van-button type="danger" size="normal" style="width:100%;margin-top:5px;" @click="registerClick()">注册</van-button>
 			</div>
 		</div>
-		<div style="width:100%;text-align: center;padding-top:3rem;">
+		<div style="width:100%;text-align: center;padding-top:0.5rem;font-size:0.875rem;">
 			<van-divider dashed>
 				<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
 			</van-divider>
 			<van-divider dashed>
-				<a href="http://www.jpeng.com.cn/"> Copyright © 2019 佳鹏电脑.All rights reserved. </a>
+				<a href="http://www.jpeng.com.cn/"> Copyright © 2025 佳鹏电脑.All rights reserved. </a>
 			</van-divider>
 		</div>
 	</div>
@@ -56,7 +56,7 @@
 					factoryId:'',
 					factoryLogo:'',
 					factoryName:'',
-					bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') rgb(42,144,223) top no-repeat;background-size:cover;width:100%;height:100%;'
+					/*bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') rgb(42,144,223) top no-repeat;background-size:cover;width:100%;height:100%;'*/
 				},
 				validator:{},
 				rules:{

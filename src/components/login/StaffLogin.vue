@@ -1,28 +1,37 @@
 <template>
-	<div :style="pageInfo.bg">
-		<div style="width:100%;height:5%;position:fixed;top:50px;text-align:center;font-weight:500;font-size:1rem;">
-			{{ pageInfo.factoryName }}
+	<div>
+		<div>
+			<div style="padding-top: 0.875rem;  height: 100%;text-align:center;">
+				{{ pageInfo.factoryName }}
+			</div>
+			<div style="width: 100%; text-align: center;font-size:1.5rem; color: #fff;">
+				<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
+			</div>
+			<div style="margin: 0 auto; float:none;width:80%;">
+				<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
+				<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
+				<van-field v-model="formData.subFactory" label="分厂" required
+						placeholder="请选择分厂" clickable readonly  @click="config.popup.show = true" v-if="config.field.show">
+					<van-icon name="arrow" slot="right-icon"/>
+				</van-field>
+				<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
+			</div>
+			<van-popup v-model="config.popup.show" position="bottom" :style="{ height: '50%' }">
+				<van-picker :columns="config.picker.columns" :default-index="0" show-toolbar @cancel="config.popup.show = false" @confirm="confirm" title="请选择分厂"/>
+			</van-popup>
 		</div>
-		<div style="width:100%;height:20%;position:fixed;top:80px;text-align:center;">
-			<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
+		<div style="width:100%;text-align: center;padding-top:0.5rem;font-size:0.875rem;">
+			<van-divider dashed>
+				<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
+			</van-divider>
+			<van-divider dashed>
+				<a href="http://www.jpeng.com.cn/"> Copyright © 2025 佳鹏电脑.All rights reserved. </a>
+			</van-divider>
 		</div>
-		<div style="width: 80%;height:40%;position: fixed;top: 35%;left:10%;text-align:center;">
-			<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
-			<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
-			<van-field v-model="formData.subFactory" label="分厂" required
-					placeholder="请选择分厂" clickable readonly  @click="config.popup.show = true" v-if="config.field.show">
-				<van-icon name="arrow" slot="right-icon"/>
-			</van-field>
-			<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
-		</div>
-		<div :style="config.style.div"></div>
-		<van-popup v-model="config.popup.show" position="bottom" :style="{ height: '50%' }">
-			<van-picker :columns="config.picker.columns" :default-index="0" show-toolbar @cancel="config.popup.show = false" @confirm="confirm" title="请选择分厂"/>
-		</van-popup>
 	</div>
 </template>
 <script>
-	import { Button, Icon, Image, Row, Col, Popup, Field, Picker, Toast, Tab, Tabs } from 'vant';
+	import { Button, Icon, Image, Row, Col, Popup, Field, Picker, Toast, Divider, Tab, Tabs } from 'vant';
 	import schema from 'async-validator';
 	export default {
 		components:{
@@ -35,6 +44,7 @@
 			[Field.name]: Field,
 			[Picker.name]: Picker,
 			[Toast.name]: Toast,
+			[Divider.name]: Divider,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 		},
@@ -66,7 +76,7 @@
 					factoryId:'',
 					factoryLogo:'',
 					factoryName:'',
-					bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'
+					/*bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'*/
 				},
 				validator:{},
 				rules:{

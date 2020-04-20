@@ -7,7 +7,7 @@
 </template>
 <script>
 	import { Toast, Loading } from 'vant';
-	import { post,get } from '@/request/request';
+	import { post } from '@/request/request';
 	export default {
 		components:{
 			[Toast.name]: Toast,
@@ -16,7 +16,7 @@
 		data(){
 			return {
 				info:{
-					oriDomain: 'test.leaper.ltd',
+					oriDomain     : 'test.leaper.ltd',
 					backstagePort : '1110'
 				}
 			}
@@ -24,7 +24,6 @@
 		methods:{
 			getCode(){
 				let postData = {
-					token     : 'test_token',
 					code_type : 'auth'
 				};
 				post( 'http://' + this.info.oriDomain + ':' + this.info.backstagePort + '/public/v1/alipay/getCode',postData).then(res=>{
@@ -33,21 +32,12 @@
 					}
 				});
 			},
-			getAuth(){
-				let postData = {
-					code:this.$route.query.code,
-				};
-				post( 'http://' + this.info.oriDomain + ':' + this.info.backstagePort + '/public/v1/alipay/getWxUserInfo',postData).then(res=>{
-					Toast( JSON.stringify(res) )
-				});
+			getConfig(){
+				
 			}
 		},
 		created(){
-			if( this.$route.query.code ){
-				this.getAuth();
-			}else{
-				this.getCode();
-			}
+			this.getCode();
 		},
 		mounted(){
 
@@ -76,4 +66,3 @@
         padding-top: 10rem; 
     }
 </style>
-{"message":"Request failed with status code 500","name":"Error","stack":"Error: Request failed with status code 500\n    at e.exports (https://cdn.bootcss.com/axios/0.19.0/axios.min.js:8:6410)\n    at e.exports (https://cdn.bootcss.com/axios/0.19.0/axios.min.js:8:6257)\n    at XMLHttpRequest.d.onreadystatechange (https://cdn.bootcss.com/axios/0.19.0/axios.min.js:8:5142)","config":{"url":"http://test.leaper.ltd:1110/public/v1/alipay/getWxUserInfo","method":"post","data":"code=001zSJMw1UGELf0UyeKw1UMoMw1zSJMY","headers":{"Accept":"application/json, text/plain, */*","Content-Type":"application/x-www-form-urlencoded;charset=UTF-8","Authentication":""},"transformRequest":[null],"transformResponse":[null],"timeout":5000,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"cancelToken":{"promise":{}}}}
