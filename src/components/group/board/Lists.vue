@@ -22,6 +22,7 @@
 			</van-tab>
 		</van-tabs>
 		</van-sticky>
+		<keep-alive>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100" :immediate-check="false">
 				<van-card v-for="(item,index) in listData" :key=" 'card' + index " @click="detailClick( item.Id, 0 )">
@@ -59,6 +60,7 @@
 				</van-card>
 			</van-list>
 		</van-pull-refresh>
+		</keep-alive>
 	</div>
 </template>
 <script>
@@ -161,6 +163,7 @@
 			}
 		},
 		created(){
+			this.config.list.pushLoading.loading = false;
 			this.$store.commit('client/setHeaderTitle','纸板团购');
 			this.getBoardList();
 			this.getFilterName();
@@ -191,6 +194,12 @@
 			filterNameChange( newV,oldV ){
 				this.pullOnRefresh();
 			}
+		},
+		activated(){
+			console.log('activated')
+		},
+		deactivated(){
+			console.log('deactivated')
 		}
 	}
 </script>

@@ -165,6 +165,7 @@
 			}
 		},
 		created(){
+			this.config.list.pushLoading.loading = false;
 			this.$store.commit('client/setHeaderTitle','淘宝箱团购');
 			this.getBoardList();
 			this.getFilterName();

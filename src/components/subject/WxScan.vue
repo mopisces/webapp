@@ -29,7 +29,7 @@
 				this.$request.staff.wx.portValuable().then(res=>{
 					if( res.errorCode == '00000' ){
 						let ua = window.navigator.userAgent.toLowerCase();
-						if( ua.match(/MicroMessenger/i) != 'micromessenger' ){
+						if( ua.match(/MicroMessenger/i) == 'micromessenger' ){
 							self.scanValuable   = true;
 							self.href = 'http://' + res.result.main_domain + '/WxScanResult.html?urlType=' + self.urlType + '&redirectDomain=' + res.result.ori_domain + '&backPort=' + res.result.ori_back_port;
 						}
