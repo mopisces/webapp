@@ -158,7 +158,7 @@
 				let self = this;
 				this.$request.payAll.payAll.wechatPay( data ).then(res=>{
 					if( res.errorCode == '00000' ){
-						let url = 'http://' + res.result.server_info.Frp80PortDomain + '/getCode.html?token=' + res.result.token + '&oriDomain=' + res.result.server_info.OriDomain + '&oriPort=' + res.result.server_info.OriPort + '&backstagePort=' + res.result.server_info.BackstagePort + '&type=pay';
+						let url = 'http://' + res.result.server_info.Frp80PortDomain + '/getCode.html?token=' + res.result.token + '&oriDomain=' + res.result.server_info.OriDomain + '&backstagePort=' + res.result.server_info.OriPort + '&type=pay';
 						window.location.href = url;
 					}
 				});

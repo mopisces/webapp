@@ -17,25 +17,21 @@
 				result       : this.scanResult,
 				wxConfig     : {},
 				scanValuable : false,
-				base         : '',
-				redirectDomain : '',
-				redirectPort   : ''
+				href         : ''
 			}
 		},
 		methods:{
 			scanQRCode(){
-				window.location.href = 'http://' + this.base + '/WxScanResult.html?urlType=' + this.urlType + '&redirectDomain=' + this.redirectDomain + '&redirectPort=' + this.redirectPort;
+				window.location.href = this.href;
 			},
 			isWX(){
 				let self = this;
 				this.$request.staff.wx.portValuable().then(res=>{
 					if( res.errorCode == '00000' ){
 						let ua = window.navigator.userAgent.toLowerCase();
-						if( /*ua.match(/MicroMessenger/i) != 'micromessenger'*/ true){
+						if( ua.match(/MicroMessenger/i) != 'micromessenger' ){
 							self.scanValuable   = true;
-							self.base           = res.result.app_wx_domain;
-							self.redirectDomain = res.result.app_normal_domain;
-							self.redirectPort   = res.result.app_normal_port;
+							self.href = 'http://' + res.result.main_domain + '/WxScanResult.html?urlType=' + self.urlType + '&redirectDomain=' + res.result.ori_domain + '&backPort=' + res.result.ori_back_port;
 						}
 					}
 				});
