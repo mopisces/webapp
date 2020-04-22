@@ -158,7 +158,9 @@
 						self.formData.title        = res.result.Title;
 						self.formData.isRangePrice = res.result.IsRangePrice;
 						if( res.result.IsRangePrice != '0' ){
-							self.formData.rangePrice   = res.result.rangePrice;
+							self.formData.rangePrice = res.result.rangePrice;
+						}else{
+							self.formData.price = res.result.Price
 						}
 						self.formData.marketPrice  = res.result.MarketPrice;
 						self.formData.buildMin     = res.result.BuildMin;
@@ -214,9 +216,6 @@
 			}
 		},
 		created(){
-			
-		},
-		mounted(){
 			this.getBoardId();
 			if( this.$route.params.id == '' || typeof(this.$route.params.id) == 'undefined' ){
 				this.$alert('请先选择需要修改的记录', '提示', {
@@ -229,6 +228,9 @@
 			}
 			this.formData.id = this.$route.params.id;
 			this.editConfig( this.$route.params.id );
+		},
+		mounted(){
+			
 		},
 		updated(){
 			

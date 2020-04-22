@@ -551,6 +551,12 @@
 				<table style="width:100%;">
 					<tbody>
 						<tr>
+							<td style="150px;">最大超时未支付订单数量</td>
+							<td>
+								<el-input style="width: 100px;" v-model="form.MaxOverTimeOrder"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="150px;">纸板团购功能</td>
 							<td>
 								<el-checkbox v-model="form.UseBoardGroup" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
@@ -837,6 +843,7 @@
 					BuildMinDate              : '',  //交货日期(范围)
 					BuildMaxDate              : '',  //交货日期
 					//团购参数
+					MaxOverTimeOrder : '', //最大超时未支付订单数量
 					UseBoardGroup : '',  //纸板团购功能
 					ShowEdBoard   : '',  //展示团购已结束的纸板
 					BoardFlag     : '',  //纸板特殊标识文字
@@ -864,10 +871,6 @@
 				let self = this;
 				this.$request.admin.config.getConfig().then((res)=>{
 					Object.assign(self.form,res.result);
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.setAsideMenu( self.form.UseBoardGroup, self.form.UseBoxGroup );
-					});
 				});
 			},
 			saveConfig(){
@@ -882,17 +885,10 @@
 				}).then(()=>{
 					this.getConfig();
 				});
-			},
-			setAsideMenu( boardGroup, boxGroup ){
-				let board = boardGroup == 0 ? false : true;
-				let box   = boxGroup   == 0 ? false : true;
-				sessionStorage.setItem('jpdn-admin-asideMenu',JSON.stringify({board:board,box:box}));
-				this.$store.commit('admin/setAsideMenuBoard',board);
-				this.$store.commit('admin/setAsideMenuBox',box);
 			}
 		},
 		created(){
-			this.$store.commit('admin/setAsideActive','/admin/config/lists');
+			
 		},
 		mounted(){
 			this.getConfig();

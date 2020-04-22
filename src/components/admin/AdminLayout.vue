@@ -1,7 +1,7 @@
 <template>
 	<el-container :style="'height: ' + config.height + 'px; border: 1px solid #eee'">
 	  	<el-aside width="200px" style="background-color: #f0f0f0">
-	    	<el-menu :default-active="config.activeIndex" :router="true" :unique-opened="true">
+	    	<el-menu :default-active="config.activeIndex" :router="true" :unique-opened="true" @open="menuOpen" @select="menuSelect">
 	    		<el-menu-item index="/admin/config/lists">
 					<i class="el-icon-setting"></i>
 					<span slot="title">项目配置</span>
@@ -100,8 +100,8 @@
 					activeIndex : ''
 				},
 				adminName  : '',
-				boardGroup : sessionStorage.getItem('jpdn-admin-asideMenu') ? sessionStorage.getItem('jpdn-admin-asideMenu').board : false,
-				boxGroup   : sessionStorage.getItem('jpdn-admin-asideMenu') ? sessionStorage.getItem('jpdn-admin-asideMenu').box : false
+				boardGroup : false,
+				boxGroup   : false
 			}
 		},
 		methods:{
@@ -115,10 +115,16 @@
 				let self = this;
 				this.$request.admin.config.getConfig().then((res)=>{
 					if( res.errorCode == '00000' ){
-						self.boardGroup = res.result.UseBoardGroup;
-						self.boxGroup   = res.result.UseBoxGroup;
+						self.boardGroup = res.result.UseBoardGroup == '0' ? false : true;
+						self.boxGroup   = res.result.UseBoxGroup == '0' ? false : true;
 					}
 				});
+			},
+			menuOpen(key, keyPath){
+				this.getConfig();
+			},
+			menuSelect(key, keyPath){
+				this.getConfig();
 			}
 		},
 		created(){
@@ -137,41 +143,10 @@
 			
 		},
 		computed:{
-			setActive(){
-				return this.$store.state.admin.asideActive;
-			},
-			/*setAsideMenu(){
-				return sessionStorage.getItem('jpdn-admin-asideMenu');
-			},*/
-			setBoardGroup(){
-				return this.$store.state.admin.asideMenu.boardGroup;
-			},
-			setBoxGroup(){
-				return this.$store.state.admin.asideMenu.boxGroup;
-			}
+			
 		},
 		watch:{
-			'setActive':{
-				handler:function(newV,oldV){
-					this.config.activeIndex = newV;
-				}
-			},
-			/*'setAsideMenu':{
-				handler:function(newV,oldV){
-					this.boardGroup = sessionStorage.getItem('jpdn-admin-asideMenu').board;
-					this.boxGroup   = sessionStorage.getItem('jpdn-admin-asideMenu').box;
-				}
-			},*/
-			'setBoardGroup':{
-				handler:function(newV,oldV){
-					this.boardGroup = newV;
-				}
-			},
-			'setBoxGroup':{
-				handler:function(newV,oldV){
-					this.boxGroup = newV;
-				}
-			}
+			
 		}
 	};
 </script>

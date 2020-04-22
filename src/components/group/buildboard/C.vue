@@ -292,6 +292,14 @@
 						});
 						return ;
 					}
+					if( res.errorCode == '20260' ){
+						Dialog.alert({
+							message:res.msg
+						}).then(()=>{
+							self.$router.push('/group/board/lists'); 
+						});
+						return ;
+					}
 					if( res.result.page_config.UseAliPay == 1 || res.result.page_config.UseWxPay == 1 ){
 						self.config.result.isGroup = true;
 					}

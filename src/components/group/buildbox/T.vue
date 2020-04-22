@@ -191,6 +191,12 @@
 							self.$router.push({ name : 'clientLogin' , params : { redirectName : 'buildGroupT',productId:self.formData.productId } }); 
 						});
 						return ;
+					}else if( res.errorCode == '20260' ){
+						Dialog.alert({
+							message:res.msg
+						}).then(()=>{
+							self.$router.push('/group/box/lists'); 
+						});
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{

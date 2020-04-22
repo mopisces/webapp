@@ -16,6 +16,12 @@
 				<span>下单金额:￥{{ cardInfo.cost }}</span><br/>
 				<span>节省金额:￥{{ cardInfo.saveCost }}</span>
 			</div>
+			<div slot="footer">
+				<van-button size="mini" @click="onClick()" v-if=" this.config.button.icon == 'shenqingdan' ">
+					<van-icon class-prefix="iconfont" :name="config.button.icon" size="12"/>
+					&nbsp;&nbsp;{{ config.button.text }}
+				</van-button>
+			</div>
 			<van-image :src="cardInfo.pic" slot="thumb"/>
 		</van-card>
 		<van-steps direction="vertical" :active="config.steps.active">
@@ -24,9 +30,13 @@
 				<p>{{ item.datetime }}</p>
 			</van-step>
 		</van-steps>
-		<div style="text-align:center;" v-if=" pageInfo.isDel == 0 ">
-			<van-button type="info" style="width:60%;" @click="onClick()">
-				<van-icon class-prefix="iconfont" :name="config.button.icon" size="16"/>&nbsp;&nbsp;{{ config.button.text }}
+		<div style="text-align:center;">
+			<van-button type="info" style="width:60%;" @click="onClick()"  v-if=" pageInfo.isDel == 0 && this.config.button.icon != 'shenqingdan'">
+				<van-icon class-prefix="iconfont" :name="config.button.icon" size="16"/>
+				&nbsp;&nbsp;{{ config.button.text }}
+			</van-button>
+			<van-button type="info" style="width:60%;" @click="goWxOrder()"  v-else>
+				返回微信订单
 			</van-button>
 		</div>
 	</div>
@@ -158,6 +168,9 @@
 					default :
 						return this.$router.push({ name : 'payWay' , params : { cusOrderId : this.pageInfo.orderId } });
 				}
+			},
+			goWxOrder(){
+				this.$router.push('/client/wxorder/lists');
 			}
 		},
 		created(){
