@@ -23,7 +23,7 @@ module.exports = {
   configureWebpack:{
     plugins:[
       new GenerateAssetPlugin({
-        filename: 'dynamicConfig.json',
+        filename: 'domainConfig.json',
         fn: (compilation, cb)=>{
           cb(null, createConfig(compilation))
         }

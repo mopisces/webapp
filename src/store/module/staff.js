@@ -10,7 +10,6 @@ const staff = {
 			orderId:'',
 			orderType:''
 		},
-		domain:'http://test.leaper.ltd:1104',
 		wxConfig : null,
 		navList  : null,
 		backPath : '/staff/index/menu'

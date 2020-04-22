@@ -1,4 +1,17 @@
 import { backStage, erpDomain, pageDomain } from '../../public/domain.js';
+/*import axios from 'axios';
+function getDomain(){
+	axios.get('/domainConfig.json').then((res)=>{
+		console.log(res)
+		window.jpdnApiUrl = res.data;
+	}).catch(err=>{
+		console.log(err)
+	});
+};
+async function getBaseUrl(){
+	await getDomain();
+}
+getBaseUrl();*/
 const base = {
 	admin     : `${backStage}public/v1/admin/`,   //后台管理地址
 	staff     : `${backStage}public/v1/staff/`,   //后台内部用户地址
