@@ -115,41 +115,41 @@ const client = [
         children:[
             {
                 path:'index/menu',
-                meta: { title: '菜单页面', role: '菜单页面', needLogin:true},
+                meta: { title: '菜单页面', role: '菜单页面' },
                 component: menu,
             },
             {
                 path:'wxorder/lists',
-                meta: { title: '微信订单', role:'微信订单', needLogin:true },
+                meta: { title: '微信订单', role:'微信订单' },
                 component: wxList,
             },
             {
                 path:'pay/way',
                 name: 'payWay',
-                meta: { title: '支付方式', role:'支付方式', needLogin:true },
+                meta: { title: '支付方式', role:'支付方式' },
                 component: payWay,
             },
             {
                 path:'pay/detail',
                 name: 'payDetail',
-                meta: { title: '支付完成', role:'支付完成', needLogin:true },
+                meta: { title: '支付完成', role:'支付完成' },
                 component: payDetail,
             },
             {
                 path:'pay/apply',
                 name: 'payApply',
-                meta: { title: '申请退款', role:'申请退款', needLogin:true },
+                meta: { title: '申请退款', role:'申请退款' },
                 component: payApply,
             },
             {
                 path:'alipay/index',
-                meta: { title: '支付宝支付页面', role:'支付宝支付页面', needLogin:true },
+                meta: { title: '支付宝支付页面', role:'支付宝支付页面' },
                 name: 'alipay',
                 component: aliPay,
             },
             {
                 path:'alipay/return',
-                meta: { title: '支付宝跳转页面', role:'支付宝跳转页面', needLogin:true },
+                meta: { title: '支付宝跳转页面', role:'支付宝跳转页面' },
                 component: aliReturnUrl,
             }
         ]
