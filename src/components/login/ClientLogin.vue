@@ -118,7 +118,6 @@
 							this.$router.push('/client/index/menu');
 						}
 					});
-					sessionStorage.setItem('jpdn-client-isLogin',true);
 				});
 			},
 			registerClick(){

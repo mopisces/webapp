@@ -8,7 +8,7 @@ const client = {
 		},
 		navList      : null,
 		tabbarActive : 'menu',
-		isLogin      : sessionStorage.getItem('jpdn-client-isLogin'),
+		isLogin      : false,
 		backPath     : '/client/index/menu'
 	},
 	mutations:{ 
