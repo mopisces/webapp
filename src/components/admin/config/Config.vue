@@ -557,6 +557,12 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="150px;">最大未支付订单数量</td>
+							<td>
+								<el-input style="width: 100px;" v-model="form.MaxUnPaidOrder"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="150px;">纸板团购功能</td>
 							<td>
 								<el-checkbox v-model="form.UseBoardGroup" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
@@ -844,15 +850,16 @@
 					BuildMaxDate              : '',  //交货日期
 					//团购参数
 					MaxOverTimeOrder : '', //最大超时未支付订单数量
-					UseBoardGroup : '',  //纸板团购功能
-					ShowEdBoard   : '',  //展示团购已结束的纸板
-					BoardFlag     : '',  //纸板特殊标识文字
-					UseBoxGroup   : '',  //淘宝箱团购功能
-					ShowEdBox     : '',  //展示团购已结束的淘宝箱
-					BoxFlag       : '',  //淘宝箱特殊标识文字
-					UseWxPay      : '',  //微信支付功能
-					UseAliPay     : '',  //支付宝支付功能
-					ValidPayTime  : '',  //有效支付时间(秒)
+					MaxUnPaidOrder   : '', //最大未支付订单数量
+					UseBoardGroup    : '',  //纸板团购功能
+					ShowEdBoard      : '',  //展示团购已结束的纸板
+					BoardFlag        : '',  //纸板特殊标识文字
+					UseBoxGroup      : '',  //淘宝箱团购功能
+					ShowEdBox        : '',  //展示团购已结束的淘宝箱
+					BoxFlag          : '',  //淘宝箱特殊标识文字
+					UseWxPay         : '',  //微信支付功能
+					UseAliPay        : '',  //支付宝支付功能
+					ValidPayTime     : '',  //有效支付时间(秒)
 					/*//支付宝参数
 					AliAppId         : '',
 					AliPublicKey     : '',

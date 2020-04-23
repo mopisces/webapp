@@ -77,7 +77,7 @@ const group = [
             {
                 path: 'build/s',
                 name: 'buildGroupS',
-                meta:{ title:'简单纸板下单', role:'简单纸板下单' },
+                meta:{ title:'简单纸板下单', role:'简单纸板下单', needLogin:true },
                 component: buildS
             },
             {
@@ -88,7 +88,7 @@ const group = [
             {
                 path: 'build/c',
                 name: 'buildGroupC',
-                meta:{ title:'纸箱纸板下单', role:'纸箱纸板下单' },
+                meta:{ title:'纸箱纸板下单', role:'纸箱纸板下单', needLogin:true },
                 component: buildC
             },
             {
@@ -99,7 +99,7 @@ const group = [
             {
                 path: 'build/t',
                 name: 'buildGroupT',
-                meta:{ title:'淘宝箱下单', role:'淘宝箱下单' },
+                meta:{ title:'淘宝箱下单', role:'淘宝箱下单', needLogin:true },
                 component: buildT
             },
         ]

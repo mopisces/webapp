@@ -113,7 +113,7 @@
 					self.$router.addRoutes(self.$store.state.client.navList);
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.$store.commit('client/setIsLogin',true);
+						sessionStorage.setItem('jpdn-client-isLogin',true);
 						if( this.config.redirect.name != '' ){
 							this.$store.commit('client/setTabbarActive','group');
 							this.$router.replace({ name : this.config.redirect.name , params : { productId : this.config.redirect.params } }); 

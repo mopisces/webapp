@@ -9,13 +9,7 @@ Vue.use(VueRouter);
 //404
 const error404 = () => import('@/components/common/404');
 const wxScan   = () => import('@/components/common/WxScanRes');
-const wxTest   = () => import('@/components/common/Test');
 let routes = [
-    {
-        path : '/common/test',
-        component: wxTest,
-        meta:{ title: '微信授权' }
-    },
     {
         path : '/common/wxscan',
         component: wxScan,
@@ -44,7 +38,13 @@ router.beforeEach((to, from, next) => {
     if( to.meta.title ){
         document.title = to.meta.title;
     }
-    if( sessionStorage.getItem('staff-auth-url') && store.state.staff.navList == null ){
+    if( to.meta.needLogin && ( !sessionStorage.getItem('jpdn-client-isLogin') && to.params ) ){
+        next({
+            replace:true,
+            name:'clientLogin',
+            params:Object.assign(to.params,{redirectName:to.name})
+        });
+    }else if( sessionStorage.getItem('staff-auth-url') && store.state.staff.navList == null ){
         store.dispatch('staff/permission', JSON.parse(sessionStorage.getItem('staff-auth-url')));
         router.addRoutes(store.state.staff.navList);
         next({ ...to, replace: true });

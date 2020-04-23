@@ -284,14 +284,6 @@
 			getConfig( goodsId ){
 				let self = this;
 				this.$request.client.groupBuying.getCConfig( goodsId ).then(res=>{
-					if( res.errorCode != '00000' && res.errorCode != '20260' ){
-						Dialog.alert({
-							message:'请登陆查看详细信息'
-						}).then(()=>{
-							self.$router.replace({ name : 'clientLogin' , params : { redirectName : 'buildGroupC',productId:self.formData.productId } }); 
-						});
-						return ;
-					}
 					if( res.errorCode == '20260' ){
 						Dialog.alert({
 							message:res.msg

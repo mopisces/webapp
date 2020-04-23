@@ -159,6 +159,14 @@
 			getConfig( goodsId ){
 				let self = this;
 				this.$request.client.groupBuying.getTConfig( goodsId ).then(res=>{
+					if( res.errorCode == '20260' ){
+						Dialog.alert({
+							message:res.msg
+						}).then(()=>{
+							self.$router.push('/group/box/lists'); 
+						});
+						return ;
+					}
 					if( res.errorCode == '00000' ){
 						self.cardInfo.matNo        = res.result.product_info.MatNo;
 						self.cardInfo.title        = res.result.product_info.Title;
@@ -184,19 +192,6 @@
 							self.config.radioData.address.push({ value : item.CusSubNo, text:item.SubDNAddress})
 						});
 						self.formData.address = res.result.ERPId;
-					}else if( res.errorCode != '00000' && res.errorCode != '20260' ){
-						Dialog.alert({
-							message:'请登陆查看详细信息'
-						}).then(()=>{
-							self.$router.push({ name : 'clientLogin' , params : { redirectName : 'buildGroupT',productId:self.formData.productId } }); 
-						});
-						return ;
-					}else if( res.errorCode == '20260' ){
-						Dialog.alert({
-							message:res.msg
-						}).then(()=>{
-							self.$router.push('/group/box/lists'); 
-						});
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
