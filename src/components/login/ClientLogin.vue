@@ -14,19 +14,13 @@
 				<van-button type="danger" size="normal" style="width:100%;margin-top:5px;" @click="registerClick()">注册</van-button>
 			</div>
 		</div>
-		<div style="width:100%;text-align: center;padding-top:0.5rem;font-size:0.875rem;">
-			<van-divider dashed>
-				<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
-			</van-divider>
-			<van-divider dashed>
-				<a href="http://www.jpeng.com.cn/"> Copyright © 2025 佳鹏电脑.All rights reserved. </a>
-			</van-divider>
-		</div>
+		<copy-right></copy-right>
 	</div>
 </template>
 <script>
 	import { Button, Image, Field, Toast, Divider } from 'vant';
 	import schema from 'async-validator';
+	import CopyRight from '@/components/subject/footer/CopyRight';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -34,6 +28,8 @@
 			[Field.name]: Field,
 			[Toast.name]: Toast,
 			[Divider.name]: Divider,
+
+			CopyRight
 		},
 		data(){
 			return {

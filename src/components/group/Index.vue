@@ -54,25 +54,21 @@
 				</div>
 			</van-grid-item>
 		</van-grid>
-		<div style="width:100%;text-align: center;padding-top:3rem;">
-			<van-divider dashed>
-				<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
-			</van-divider>
-			<van-divider dashed>
-				<a href="http://www.jpeng.com.cn/"> Copyright © 2019 佳鹏电脑.All rights reserved. </a>
-			</van-divider>
-		</div>
+		<copy-right></copy-right>
 	</div>
 </template>
 <script>
 	import { Image, Tag, Grid, GridItem } from 'vant';
 	import base from '@/request/base';
+	import CopyRight from '@/components/subject/footer/CopyRight';
 	export default {
 		components:{
 			[Image.name]: Image,
 			[Tag.name]: Tag,
 			[Grid.name]: Grid,
 			[GridItem.name]: GridItem,
+
+			CopyRight
 		},
 		data(){
 			return {

@@ -20,19 +20,13 @@
 				<van-picker :columns="config.picker.columns" :default-index="0" show-toolbar @cancel="config.popup.show = false" @confirm="confirm" title="请选择分厂"/>
 			</van-popup>
 		</div>
-		<div style="width:100%;text-align: center;padding-top:0.5rem;font-size:0.875rem;">
-			<van-divider dashed>
-				<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
-			</van-divider>
-			<van-divider dashed>
-				<a href="http://www.jpeng.com.cn/"> Copyright © 2025 佳鹏电脑.All rights reserved. </a>
-			</van-divider>
-		</div>
+		<copy-right></copy-right>
 	</div>
 </template>
 <script>
-	import { Button, Icon, Image, Row, Col, Popup, Field, Picker, Toast, Divider, Tab, Tabs } from 'vant';
+	import { Button, Icon, Image, Row, Col, Popup, Field, Picker, Toast, Tab, Tabs } from 'vant';
 	import schema from 'async-validator';
+	import CopyRight from '@/components/subject/footer/CopyRight';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -44,9 +38,10 @@
 			[Field.name]: Field,
 			[Picker.name]: Picker,
 			[Toast.name]: Toast,
-			[Divider.name]: Divider,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
+
+			CopyRight
 		},
 		data(){
 			return {

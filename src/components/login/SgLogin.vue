@@ -4,30 +4,33 @@
 			<div class="van-nav-bar__title van-ellipsis">生管监控登陆</div>
 		</div>
 		<div :style="pageInfo.bg">
-			<div style="width:100%;height:5%;position:fixed;top:10%;text-align:center;font-weight:500;font-size:1rem;">
+			<div style="padding-top: 0.875rem;  height: 100%;text-align:center;">
 				{{ pageInfo.factoryName }}
 			</div>
-			<div style="width:100%;height:20%;position:fixed;top:20%;text-align:center;">
-				<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
+			<div style="width: 100%; text-align: center;font-size:1.5rem; color: #fff;">
+				<van-image :src="pageInfo.factoryLogo" width="40%" height="50%"/>
 			</div>
-			<div style="width: 80%;height:40%;position: fixed;top: 45%;left:10%;text-align:center;">
+			<div style="margin: 0 auto; float:none;width:80%;">
 				<van-field v-model="formData.userName" label="用户名" placeholder="请输入登录名" required/>
 				<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
 				<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
 			</div>
-			<div :style="config.style.div"></div>
 		</div>
+		<copy-right></copy-right>
 	</div>
 </template>
 <script>
 	import { Button, Image, Field, Toast } from 'vant';
 	import schema from 'async-validator';
+	import CopyRight from '@/components/subject/footer/CopyRight';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Image.name]: Image,
 			[Field.name]: Field,
 			[Toast.name]: Toast,
+
+			CopyRight
 		},
 		data(){
 			return {
