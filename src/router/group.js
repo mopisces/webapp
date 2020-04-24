@@ -38,68 +38,68 @@ const group = [
         children : [
             {
                 path : 'register',
-                meta : { title: '注册页面' },
+                meta : { title: '注册页面', isGroup:true },
                 component: register,
             },
             {
                 path : 'staff/login',
                 alias: 'staff/login?token=:token',
-                meta: { title: '员工登录', role:'员工登录' },
+                meta: { title: '员工登录', role:'员工登录', isGroup:true },
                 component: loginStaff,
             },
             {
                 path : 'client/login',
                 alias: 'client/login?token=:token',
                 name : 'clientLogin',
-                meta: { title: '客户登录', role:'客户登录' },
+                meta: { title: '客户登录', role:'客户登录', isGroup:true },
                 component: loginClient,
             },
             {
                 path:'contact',
-                meta: { title: '联系我们', role:'联系我们' },
+                meta: { title: '联系我们', role:'联系我们', isGroup:true },
                 component: contact,
             },
             {
                 path: 'index',
-                meta: { title: '团购分类', role:'团购分类' },
+                meta: { title: '团购分类', role:'团购分类', isGroup:true },
                 component: groupIndex,
             },
             {
                 path: 'board/lists',
-                meta: { title: '纸板团购列表', role:'纸板团购列表' },
+                meta: { title: '纸板团购列表', role:'纸板团购列表', isGroup:true },
                 component: groupBoardLists,
             },
             {
                 path: 'board/flagLists',
-                meta: { title: '纸板爆款团购列表', role:'纸板爆款团购列表' },
+                meta: { title: '纸板爆款团购列表', role:'纸板爆款团购列表', isGroup:true },
                 component: groupBoardFlag,
             },
             {
                 path: 'build/s',
                 name: 'buildGroupS',
-                meta:{ title:'简单纸板下单', role:'简单纸板下单', needLogin:true },
+                meta:{ title:'简单纸板下单', role:'简单纸板下单', needLogin:true, isGroup:true },
                 component: buildS
             },
             {
                 path: 'box/lists',
-                meta: { title: '淘宝箱团购列表', role:'淘宝箱团购列表' },
+                meta: { title: '淘宝箱团购列表', role:'淘宝箱团购列表', isGroup:true },
                 component: groupBoxLists,
             },
             {
                 path: 'build/c',
                 name: 'buildGroupC',
-                meta:{ title:'纸箱纸板下单', role:'纸箱纸板下单', needLogin:true },
+                meta:{ title:'纸箱纸板下单', role:'纸箱纸板下单', needLogin:true, isGroup:true },
                 component: buildC
             },
             {
                 path:'box/flagLists',
-                meta: { title: '淘宝箱精品团购列表', role:'淘宝箱精品团购列表' },
+                meta: { title: '淘宝箱精品团购列表', role:'淘宝箱精品团购列表', isGroup:true },
                 component: groupBoxFlag
             },
             {
                 path: 'build/t',
                 name: 'buildGroupT',
-                meta:{ title:'淘宝箱下单', role:'淘宝箱下单', needLogin:true },
+                meta:{ title:'淘宝箱下单', role:'淘宝箱下单', needLogin:true, isGroup:true },
                 component: buildT
             },
         ]
@@ -107,13 +107,13 @@ const group = [
     {
         path: '/group/board/detail',
         name: 'boardDetail',
-        meta:{ title:'纸板团购详情', role:'纸板团购详情' },
+        meta:{ title:'纸板团购详情', role:'纸板团购详情', isGroup:true },
         component: groupBoardDetail
     },
     {
         path: '/group/box/detail',
         name: 'boxDetail',
-        meta:{ title:'淘宝箱团购详情', role:'淘宝箱团购详情' },
+        meta:{ title:'淘宝箱团购详情', role:'淘宝箱团购详情', isGroup:true },
         component: groupBoxDetail
     }
 ];

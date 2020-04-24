@@ -41,6 +41,8 @@ const contactAdd   = () => import('@/components/admin/contact/Add');
 const imgInfo      = () => import('@/components/admin/img/Logo');
 //图片修改
 const imgChange    = () => import('@/components/admin/img/ChangeImg');
+//项目配置
+const configIndex  = () => import('@/components/admin/config/Index');
 export const asyncAdminRouterMap = [
     {
         path : '/admin',
@@ -140,6 +142,11 @@ export const asyncAdminRouterMap = [
                 name:'changeImg',
                 meta:{ title: '列表图片修改' },
                 component:imgChange
+            },
+            {
+                path:'config/index',
+                meta:{ title: '项目配置' },
+                component:configIndex
             }
         ]
     }

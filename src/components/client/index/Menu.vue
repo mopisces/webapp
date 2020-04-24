@@ -225,6 +225,7 @@
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','菜单页面');
+			this.$store.commit('client/setTabbarActive','menu');
 			this.getAuthMap();
 			this.getMenuUserName();
 		},

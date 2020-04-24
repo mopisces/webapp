@@ -39,6 +39,11 @@ router.beforeEach((to, from, next) => {
     if( to.meta.title ){
         document.title = to.meta.title;
     }
+    if( to.meta.isGroup ){
+        store.commit('client/setTabbarActive','group');
+    }else{
+        store.commit('client/setTabbarActive','menu');
+    }
     if( to.meta.needLogin && ( !sessionStorage.getItem('jpdn-client-isLogin') && to.params ) ){
         next({
             replace:true,

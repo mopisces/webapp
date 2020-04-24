@@ -551,6 +551,12 @@
 				<table style="width:100%;">
 					<tbody>
 						<tr>
+							<td style="150px;">团购纸板销售宽默认值</td>
+							<td>
+								<el-input style="width: 100px;" type="number" v-model="form.WebSalesWidth"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="150px;">最大超时未支付订单数量</td>
 							<td>
 								<el-input style="width: 100px;" v-model="form.MaxOverTimeOrder"></el-input>
@@ -849,8 +855,9 @@
 					BuildMinDate              : '',  //交货日期(范围)
 					BuildMaxDate              : '',  //交货日期
 					//团购参数
-					MaxOverTimeOrder : '', //最大超时未支付订单数量
-					MaxUnPaidOrder   : '', //最大未支付订单数量
+					WebSalesWidth    : '',  //团购纸板销售宽默认值
+					MaxOverTimeOrder : '',  //最大超时未支付订单数量
+					MaxUnPaidOrder   : '',  //最大未支付订单数量
 					UseBoardGroup    : '',  //纸板团购功能
 					ShowEdBoard      : '',  //展示团购已结束的纸板
 					BoardFlag        : '',  //纸板特殊标识文字
