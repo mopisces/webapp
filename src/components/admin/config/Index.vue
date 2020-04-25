@@ -1,12 +1,35 @@
 <template>
 	<div>
-		<el-form ref="form" :model="form" :rules="rules" label-width="100px">
+		<el-form ref="form" :model="form" :rules="rules" label-width="150px" style="width1000px;">
+			<table>
 				<el-tabs v-model="config.tabPane.activeName" type="card">
-					<el-tab-pane label="公共" name="common"  style="width:500px;">
-						<el-form-item label="厂商Id" prop="FactoryId" size="small">
-							<el-input v-model="form.FactoryId"></el-input>
-						</el-form-item>
-						<p class="info">2代不填写/3代填写</p>
+					<el-tab-pane label="公共" name="common">
+						<tr>
+							<el-form-item label="厂商Id" prop="FactoryId">
+								<el-input style="width: 140px;" v-model="form.FactoryId"></el-input>
+								<el-tag type="success" style="margin-left:10px;">2代不填写/3代填写</el-tag>
+							</el-form-item>
+						</tr>
+						<tr>
+							<el-form-item label="厂商名称" prop="FactoryName">
+								<el-input style="width: 140px;" v-model="form.FactoryName"></el-input>
+							</el-form-item>
+						</tr>
+						<tr>
+							<el-form-item label="外部80端口" prop="Open80Port">
+								<el-checkbox v-model="form.Open80Port" label="是否开放" border true-label="1" false-label="0"></el-checkbox>
+							</el-form-item>
+						</tr>
+						<template v-if="!Number(form.Open80Port) && (Number(form.UseScan) || Number(form.UseWxPay))">
+							<tr>
+								<el-form-item label="FRP80端口的域名" prop="Open80Port">
+									<el-input style="width: 240px;" v-model="form.Frp80PortDomain"></el-input>
+									<el-tag type="success" style="margin-left:10px;">
+										作用于：内部扫码，团购微信支付
+									</el-tag>
+								</el-form-item>
+							</tr>
+						</template>
 					</el-tab-pane>
 					<el-tab-pane label="内部" name="client">
 					</el-tab-pane>
@@ -17,6 +40,7 @@
 					<el-tab-pane label="团购" name="group">
 					</el-tab-pane>
 				</el-tabs>
+			</table>
 		</el-form>
 	</div>
 </template>
@@ -174,10 +198,15 @@
 			}
 		},
 		methods:{
-
+			getConfig(){
+				let self = this;
+				this.$request.admin.config.getConfig().then((res)=>{
+					Object.assign(self.form,res.result);
+				});
+			},
 		},
 		created(){
-			this.$store.commit('client/setHeaderTitle','');
+			this.getConfig();
 		},
 		mounted(){
 
@@ -197,9 +226,10 @@
 	}
 </script>
 <style>
-	.info {
-		margin-left: 1rem;
-		height: 100%;
-		color: #57a000;
+	table tr:nth-child(2n){
+		background:#F3F3F3;
+	}
+	table tr:nth-child(1){
+		background:#FFF;
 	}
 </style>

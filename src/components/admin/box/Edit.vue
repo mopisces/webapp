@@ -12,7 +12,7 @@
 			<el-form-item label="区间价" prop="isRangePrice">
 				<el-checkbox v-model="formData.isRangePrice" label="是否开放" border true-label="1" false-label="0"></el-checkbox>
 			</el-form-item>
-			<el-form-item label="区间价" prop="price">
+			<el-form-item label="价格" prop="price">
 				<template v-if="Number(formData.isRangePrice)">
 					<el-input v-model="formData.buildMin" placeholder="请输入内容" style="width: 100px;"></el-input>&nbsp;&nbsp;个&nbsp;~&nbsp;
 					<el-input v-model="formData.firstTo" placeholder="请输入内容" style="width: 100px;"></el-input>&nbsp;&nbsp;个&nbsp;=&nbsp;

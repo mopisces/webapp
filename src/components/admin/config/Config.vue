@@ -17,26 +17,26 @@
 								<el-input v-model="form.FactoryName" style="width: 300px;"></el-input>
 							</td>
 						</tr>
-						<tr>
+						<!-- <tr>
 							<td style="width:150px;">ERP端口</td>
 							<td>
 								<el-input v-model="form.ErpPort" style="width: 160px;"></el-input>
 								<p class="info">作用于：内部直接入库，内部库存修改，内部订单试算，内部扫描装货</p>
 							</td>
-						</tr>
+						</tr>-->
 						<tr>
 							<td style="width:150px;">外部80端口</td>
 							<td>
-								<el-checkbox v-model="form.Open80Port" label="是否开放" border true-label="1" false-label="0"></el-checkbox>
+								<el-checkbox v-model="form.Open80Port" label="是否开放" border true-label="0" false-label="0"></el-checkbox>
 							</td>
 						</tr>
-						<tr v-if=" Number(form.UseScan) || Number(form.UseWxPay)">
+						<!--<tr v-if=" Number(form.UseScan) || Number(form.UseWxPay)">
 							<td style="width:150px;">微信公众号AppId</td>
 							<td>
 								<el-input style="width: 200px;" v-model="form.WxAppId"></el-input>
 								<p class="info">作用于：内部扫码，团购微信支付</p>
 							</td>
-						</tr>
+						</tr> -->
 						<template  v-if="!Number(form.Open80Port) && (Number(form.UseScan) || Number(form.UseWxPay))">
 							<tr>
 								<td style="width:150px;">FRP80端口的域名</td>
@@ -46,14 +46,21 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="width:150px;">原来的域名</td>
+								<td style="width:150px;">项目域名</td>
 								<td>
 									<el-input style="width: 200px;" v-model="form.OriDomain"></el-input>
+									<p class="info">作用于：内部扫码，团购微信支付( 不带http:// 及 / )</p>
+								</td>
+							</tr>
+							<tr>
+								<td style="width:150px;">项目前端端口</td>
+								<td>
+									<el-input style="width: 100px;" v-model="form.OriPagePort"></el-input>
 									<p class="info">作用于：内部扫码，团购微信支付</p>
 								</td>
 							</tr>
 							<tr>
-								<td style="width:150px;">原来的端口</td>
+								<td style="width:150px;">项目后台端口</td>
 								<td>
 									<el-input style="width: 100px;" v-model="form.OriPort"></el-input>
 									<p class="info">作用于：内部扫码，团购微信支付</p>
@@ -749,8 +756,9 @@
 					Open80Port      : '',
 					WxAppId         : '',
 					Frp80PortDomain : '',
-					OriDomain       : '',
-					OriPort         : '',
+					OriDomain       : '',  //项目域名(不带http:// 及 / )
+					OriPagePort     : '',  //项目前端页面端口
+					OriPort         : '',  //项目后台端口
 					//内部参数
 					Wap1Right                : '',  //用户权限
 					WGetCusOrderBeginDate    : '',  //客户每日订单(默认日期)
@@ -885,6 +893,7 @@
 				let self = this;
 				this.$request.admin.config.getConfig().then((res)=>{
 					Object.assign(self.form,res.result);
+					self.form.Open80Port = 0;
 				});
 			},
 			saveConfig(){
