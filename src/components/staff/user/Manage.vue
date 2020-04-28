@@ -167,9 +167,9 @@
 						document.getElementById('qrcode').innerHTML = '';
 						let url = '';
 						if( data.UserType == 1 ){
-							url = base.wxRediect + '/staff/login?token=' + res.result; 
+							url = base.wxRediect + 'group/staff/login?token=' + res.result; 
 						}else{
-							url = base.wxRediect + '/client/login?token=' + res.result; 
+							url = base.wxRediect + 'group/client/login?token=' + res.result; 
 						}
 						this.creatQrCode(url);
 					});

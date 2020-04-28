@@ -29,7 +29,7 @@
 				<cus-picker :cusName.sync="filterForm.cusName"></cus-picker>
 				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
-				<van-switch-cell v-model="filterForm.addUserId" title="下单员"/>
+				<van-switch-cell v-model="filterForm.addUserId" title="下单员" v-if=" false "/>
 				<van-switch-cell v-model="config.switch.rem.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>

@@ -117,11 +117,11 @@
 				rules:{
 					oldPass : [
 						{  require : true, message: '请填写原密码' },
-						{  type:'string' , regexp:'/^[0-9a-zA-Z]{2,12}$/' , message: '原密码不符合规则' },
+						{  type:'string' , regexp:'/^[0-9a-zA-Z]{1,6}$/' , message: '原密码不符合规则' },
 					],
 					newPass : [
 						{  require : true, message: '请填写新密码' },
-						{  type:'string' , regexp: '/^[0-9a-zA-Z]{6,12}$/', message: '新密码不符合规则' }
+						{  type:'string' , regexp: '/^[0-9a-zA-Z]{1,6}$/', message: '新密码不符合规则' }
 					],
 					confirmPass : [
 						{  require : true, message: '请填写确认密码' },
@@ -174,6 +174,7 @@
 					if( res.errorCode === '00000' ){
 						Toast.success('密码更新成功');
 						self.config.popup.changePass.show = false;
+						self.$router.push('/group/client/login');
 					}else{
 						Toast.fail('密码更新失败');
 					}
