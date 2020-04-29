@@ -18,6 +18,7 @@ const base = {
 	client    : `${backStage}public/v1/client/`,  //后台外部用户地址
 	pay       : `${backStage}public/v1/alipay/`,  //后台支付地址
 	index     : `${backStage}public/v1/index/`,   //后台登陆地址
+	wechat    : `${backStage}public/v1/wechat/`,  //微信地址
 	sg        : `${backStage}public/v1/sg/`,      //后台生管地址
 	imgDomain : `${backStage}upload/`,            //图片存放地址
 	erp       : erpDomain,                    //erp接口地址

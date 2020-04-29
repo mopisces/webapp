@@ -11,7 +11,13 @@ const error404 = () => import('@/components/common/404');
 const wxScan   = () => import('@/components/common/WxScanRes');
 const wxQrCode = () => import('@/components/login/WxQrCode');
 const wxAuthLogin = () => import('@/components/login/WxAuthLogin');
+const login = () => import('@/components/login/Login');
 let routes = [
+    {
+        path : '/login/index',
+        component: login,
+        meta:{ title: '新登陆接口' }
+    },
     {
         path : '/login/wxQrCode',
         component: wxQrCode,

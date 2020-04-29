@@ -16,7 +16,6 @@
 			getQrcode(){
 				let self = this;
 				post('http://test.leaper.ltd:1110/public/v1/staff/WxQrCode').then((res)=>{
-					console.log('http://luodangfrp2.leaper.ltd/getCode.html?token='+ res.result +'&oriDomain=test.leaper.ltd&backstagePort=1110&type=auth');
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{
 						text         : 'http://luodangfrp2.leaper.ltd/getCode.html?token='+ res.result +'&oriDomain=test.leaper.ltd&backstagePort=1110&type=auth',

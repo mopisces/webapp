@@ -284,4 +284,10 @@ const sg = {
 		login : `${base.sg}login`
 	}
 };
-export { admin, staff, erp, index, client, pay, sg };
+const wechat = {
+	login : {
+		checkUserInfo : `${base.wechat}checkUserInfo`,
+		bindAccount   : `${base.wechat}bindAccount`,
+	}
+};
+export { admin, staff, erp, index, client, pay, sg, wechat };
