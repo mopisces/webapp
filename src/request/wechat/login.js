@@ -13,6 +13,21 @@ const login = {
 			tel_no    : data.phone
 		};
 		return post(wechat.login.bindAccount,postData);
+	},
+	wxStaffLogin( data ){
+		let postData = {
+			openid   : sessionStorage.getItem('jpdn_webapp_openid'),
+			sub_fact : data.subFacId
+		};
+		return post(wechat.login.wxStaffLogin,postData);
+	},
+	wxMulitLogin( data ){
+		let postData = {
+			openid   : sessionStorage.getItem('jpdn_webapp_openid'),
+			sub_fact : data.subFacId,
+			acc_name : data.accName
+		};
+		return post(wechat.login.wxMulitLogin,postData);
 	}
 };
 export default login;
