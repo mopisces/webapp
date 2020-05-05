@@ -29,6 +29,12 @@ const boxDel       = () => import('@/components/admin/box/DelLists');
 const boxAdd       = () => import('@/components/admin/box/Add');
 //淘宝箱团购默认图片
 const boxDefPic    = () => import('@/components/admin/box/DefaultPic');
+//淘宝箱材质报价
+const boxQuoAdd    = () => import('@/components/admin/box/QuoAdd');
+//淘宝箱材质报价列表
+const boxQuoList   = () => import('@/components/admin/box/QuoBoxList');
+//淘宝箱材质报价修改
+const boxQuoEdit   = () => import('@/components/admin/box/QuoBoxEdit');
 //用户列表
 const userLists    = () => import('@/components/admin/user/Lists');
 //添加用户
@@ -111,6 +117,22 @@ export const asyncAdminRouterMap = [
                 path:'box/defpic',
                 meta: { title: '淘宝箱默认图片' },
                 component: boxDefPic,
+            },
+            {
+                path:'box/quoAdd',
+                meta: { title: '淘宝箱材质报价' },
+                component: boxQuoAdd,
+            },
+            {
+                path:'box/quoList',
+                meta: { title: '淘宝箱材质报价列表' },
+                component: boxQuoList,
+            },
+            {
+                path:'box/quoEdit',
+                name:'quoBoxEdit',
+                meta: { title: '淘宝箱材质报价修改' },
+                component: boxQuoEdit,
             },
             {
                 path:'user/lists',

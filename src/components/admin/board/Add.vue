@@ -190,11 +190,19 @@
 				this.$request.admin.board.addSave( data ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.$message({
+							duration: 1500,
 							message: res.msg,
-							type: 'success'
+							type: 'success',
+							onClose:function(){
+								for(let key in self.formData){
+									self.formData[key]  = '';
+								}
+								self.$router.push('/admin/board/lists');
+							}
 						});
 					}else{
 						self.$message({
+							duration: 1500,
 							message: '数据更新失败',
 							type: 'warning'
 						});

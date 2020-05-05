@@ -12,7 +12,13 @@ const wxScan   = () => import('@/components/common/WxScanRes');
 const wxQrCode = () => import('@/components/login/WxQrCode');
 const wxAuthLogin = () => import('@/components/login/WxAuthLogin');
 const login = () => import('@/components/login/Login');
+const index = () => import('@/components/login/Index');
 let routes = [
+    {
+        path : '/index',
+        component: index,
+        meta:{ title: '新登陆接口1' }
+    },
     {
         path : '/login/index',
         component: login,

@@ -186,7 +186,7 @@
 				this.formData.rangePrice.splice( index, 1 );
 			},
 			goBack(){
-				this.$router.push('/new/box/lists');
+				this.$router.push('/admin/box/lists');
 			},
 			editSaveValidate(){
 				this.$refs['editForm'].validate((valid)=>{
@@ -202,11 +202,19 @@
 				this.$request.admin.box.editSave( data ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.$message({
+							duration: 1500,
 							message: res.msg,
-							type: 'success'
+							type: 'success',
+							onClose:function(){
+								for(let key in self.formData){
+									self.formData[key]  = '';
+								}
+								self.$router.push('/admin/box/lists');
+							}
 						});
 					}else{
 						self.$message({
+							duration: 1500,
 							message: '数据更新失败',
 							type: 'warning'
 						});
@@ -223,7 +231,7 @@
 				this.$alert('请先选择需要修改的记录', '提示', {
 					confirmButtonText : '返回',
 					callback: action => {
-						this.$router.push('/new/box/lists');
+						this.$router.push('/admin/box/lists');
 					}
 				});
 				return ;

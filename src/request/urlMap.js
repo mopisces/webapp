@@ -36,9 +36,15 @@ const admin = {
 		delPic        : `${base.admin}adminBoardPicDel`,
 	},
 	box : {
-		getConfig : `${base.admin}adminBoxConfig`,
-		getList   : `${base.admin}adminBoxLists`,
-		addSave   : `${base.admin}adminBoxAdd`,
+		getConfig    : `${base.admin}adminBoxConfig`,
+		getList      : `${base.admin}adminBoxLists`,
+		addSave      : `${base.admin}adminBoxAdd`,
+		quoAddConfig : `${base.admin}adminBoxQuoAddConfig`,
+		quoAdd       : `${base.admin}adminBoxQuoAdd`,
+		quoBoxList   : `${base.admin}adminBoxQuoList`,
+		delQuoBox    : `${base.admin}adminBoxQuoDel`,
+		editQuoBox   : `${base.admin}adminBoxQuoEdit`,
+		saveQuoBox   : `${base.admin}adminBoxQuoSave`
 	},
 	image : {
 		getGroupImg   : `${base.admin}adminGetGroupImg`,   //配置图片显示
@@ -292,7 +298,8 @@ const wechat = {
 		wxMulitLogin  : `${base.wechat}wxMulitLogin`,
 	},
 	config : {
-		serverInfo : `${base.wechat}wxConfig`,
+		serverInfo  : `${base.wechat}wxConfig`,
+		getBindInfo : `${base.wechat}wxBindInfo`,
 	}
 };
 export { admin, staff, erp, index, client, pay, sg, wechat };

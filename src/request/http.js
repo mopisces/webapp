@@ -4,7 +4,7 @@ import store from '@/store';
 
 
 var httpServer = axios.create();
-httpServer.defaults.timeout = 5000;
+httpServer.defaults.timeout = 15000;
 httpServer.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 /*let sources = [];
 let cancelToken = axios.CancelToken;

@@ -87,11 +87,16 @@
 				this.$request.admin.board.saveDescr( this.formData ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.$message({
+							duration: 1500,
 							message: '保存成功',
-							type: 'success'
+							type: 'success',
+							onClose:function(){
+								self.$router.go(-1);
+							}
 						});
 					}else{
 						self.$message({
+							duration: 1500,
 							message: '保存失败',
 							type: 'warning'
 						});

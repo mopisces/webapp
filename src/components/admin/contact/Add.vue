@@ -65,11 +65,16 @@
 				this.$request.admin.contact.contactAdd( this.formData ).then((res)=>{
 					if( res.errorCode == '00000' ){	
 						self.$message({
+							duration: 1500,
 							message: '添加成功',
-							type: 'success'
+							type: 'success',
+							onClose:function(){
+								self.$router.push('/admin/contact/lists');
+							}
 						});
 					}else{
 						self.$message({
+							duration: 1500,
 							message: '添加失败',
 							type: 'warning'
 						});

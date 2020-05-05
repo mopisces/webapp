@@ -558,6 +558,18 @@
 				<table style="width:100%;">
 					<tbody>
 						<tr>
+							<td style="150px;">淘宝箱材质报价</td>
+							<td>
+								<el-checkbox v-model="form.OpenBoxForArea" label="是否按面积报价" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr v-if="config.openBoxForAreaShow">
+							<td style="150px;">淘宝箱材质报价换算保留小数位</td>
+							<td>
+								<el-input style="width: 100px;" type="number" v-model="form.BoxForAreaDecimals"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="150px;">团购纸板销售宽默认值</td>
 							<td>
 								<el-input style="width: 100px;" type="number" v-model="form.WebSalesWidth"></el-input>
@@ -746,7 +758,8 @@
 					dialog : {
 						value : '',
 						show : false
-					}
+					},
+					openBoxForAreaShow : false
 				},
 				form : {
 					//公共参数
@@ -836,7 +849,8 @@
 					GetOrdersPBeginDate      : '',  //每日订单(默认日期)
 					GetOrdersPEndDate        : '',  //每日订单
 					GetOrdersPMinDate        : '',  //每日订单(日期范围)
-					GetOrdersPMaxDate        : '',  //每日订单
+					GetOrdersPMaxDate        : '',  //每日订单,
+					WGetCusOrderShowAmt      : '',  //每日订单是否显示金额
 					GetCusFreeMBBeginDate    : '',  //对账单(默认日期)
 					GetCusFreeMBEndDate      : '',  //对账单
 					GetCusFreeMBMinDate      : '',  //对账单(日期范围)
@@ -875,6 +889,9 @@
 					UseWxPay         : '',  //微信支付功能
 					UseAliPay        : '',  //支付宝支付功能
 					ValidPayTime     : '',  //有效支付时间(秒)
+					//淘宝箱按面积报价
+					OpenBoxForArea   : '',  //淘宝箱是否按面积报价
+					BoxForAreaDecimals : ''  //保留小数位数
 					/*//支付宝参数
 					AliAppId         : '',
 					AliPublicKey     : '',
@@ -923,10 +940,14 @@
 			
 		},
 		computed:{
-			
+			openBoxForAreaChange(){
+				return this.form.OpenBoxForArea;
+			}
 		},
 		watch:{
-
+			openBoxForAreaChange( newV, oldV ){
+				this.config.openBoxForAreaShow =  1 == newV ? true : false;
+			}
 		}
 	}
 </script>

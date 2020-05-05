@@ -1,9 +1,9 @@
 import { get, post } from '../request';
 import { wechat } from '../urlMap';
 const login = {
-	checkUserInfo( openid ){
+	/*checkUserInfo( openid ){
 		return post(wechat.login.checkUserInfo,{openid:openid});
-	},
+	},*/
 	bindAccount( data ){
 		let postData = {
 			openid    : sessionStorage.getItem('jpdn_webapp_openid'),
@@ -14,18 +14,18 @@ const login = {
 		};
 		return post(wechat.login.bindAccount,postData);
 	},
-	wxStaffLogin( data ){
+	/*wxStaffLogin( data ){
 		let postData = {
 			openid   : sessionStorage.getItem('jpdn_webapp_openid'),
 			sub_fact : data.subFacId
 		};
 		return post(wechat.login.wxStaffLogin,postData);
-	},
+	},*/
 	wxMulitLogin( data ){
 		let postData = {
 			openid   : sessionStorage.getItem('jpdn_webapp_openid'),
 			sub_fact : data.subFacId,
-			acc_name : data.accName
+			acc_name : data.userName
 		};
 		return post(wechat.login.wxMulitLogin,postData);
 	}

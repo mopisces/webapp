@@ -48,6 +48,10 @@
 						<span>团购淘宝箱管理</span>
 					</template>
 					<el-menu-item-group>
+						<template v-if="openBoxArea">
+							<el-menu-item index="/admin/box/quoAdd">淘宝箱报价</el-menu-item>
+							<el-menu-item index="/admin/box/quoList">淘宝箱报价列表</el-menu-item>
+						</template>
 						<el-menu-item index="/admin/box/lists">淘宝箱列表</el-menu-item>
 						<el-menu-item index="/admin/box/add">添加淘宝箱</el-menu-item>
 						<el-menu-item index="/admin/box/defpic">淘宝箱默认图片</el-menu-item>
@@ -101,7 +105,8 @@
 				},
 				adminName  : '',
 				boardGroup : false,
-				boxGroup   : false
+				boxGroup   : false,
+				openBoxArea : false
 			}
 		},
 		methods:{
@@ -117,6 +122,7 @@
 					if( res.errorCode == '00000' ){
 						self.boardGroup = res.result.UseBoardGroup == '0' ? false : true;
 						self.boxGroup   = res.result.UseBoxGroup == '0' ? false : true;
+						self.openBoxArea = res.result.OpenBoxForArea == '0' ? false : true;
 					}
 				});
 			},
