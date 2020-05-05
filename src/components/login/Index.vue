@@ -18,12 +18,17 @@
 				</van-button>
 			</template>
 			<template v-if=" formData.stopped == 0 ">
-				<template v-if=" config.isMulit ">
+				<template v-if=" config.isMulit && config.type == 'staff' ">
 					<van-cell-group title="请选择账号">
-						<van-cell :title="user.UserName" is-link @click=" mulitClick(user.UserName) " v-for="(user,key) in config.userInfo" :key="key" />
+						<van-cell :title="user.UserName" is-link @click=" mulitClick(user) " v-for="(user,key) in config.userInfo" :key="key" />
 					</van-cell-group>
 				</template>
-				<template v-else>
+				<template v-if=" config.type == 'client' ">
+					<van-cell-group title="请选择账号">
+						<van-cell :title="client.UserName" is-link @click=" clientLogin(client) " v-for="(client,key) in config.userInfo" :key="key" />
+					</van-cell-group>
+				</template>
+				<template v-if=" !config.isMulit && config.type == 'staff' ">
 					<van-radio-group v-model="formData.subFacId">
 						<van-cell-group title="请选择分厂">
 							<van-cell :title="item.title" clickable @click=" formData.subFacId = item.value " v-for="(item,index) in config.radioInfo" :key="index">
@@ -65,7 +70,12 @@
 						loading : false,
 						text    : '提交审核'
 					},
-					userInfo : []
+					userInfo : [],
+					type : '',
+					redirect:{
+						name:'',
+						params:''
+					}
 				},
 				formData:{
 					userName : '',
@@ -73,7 +83,8 @@
 					fullName : '',
 					phone    : '',
 					stopped  : 1,
-					subFacId : ''
+					subFacId : '',
+					userType : ''
 				}
 			}
 		},
@@ -87,10 +98,12 @@
 			},
 			selectType( type ){
 				if( type == 'staff' ){
+					this.config.type = 'staff';
 					this.getBindInfo();
 				}
 				if( type == 'client' ){
-					console.log(client);
+					this.config.type = 'client';
+					this.getBindInfo();
 				}
 			},
 			bindClick(){
@@ -101,8 +114,9 @@
 					}
 				});
 			},
-			mulitClick( userName ){
-				this.formData.userName = userName;
+			mulitClick( user ){
+				this.formData.userName = user.UserName;
+				this.formData.userType = user.UserType;
 				this.config.isMulit    = false;
 			},
 			getBindInfo(){
@@ -148,6 +162,19 @@
 					}
 				});
 			},
+			clientLogin( client ){
+				this.formData.userName = client.UserName;
+				this.formData.userType = client.UserType;
+				let self = this;
+				this.$request.wechat.login.wxMulitLogin( this.formData ).then(res=>{
+					if( res.errorCode == '00000' ){
+						sessionStorage.setItem('jpdn-client-token',res.result.access_token);
+						sessionStorage.setItem('jpdn-client-refresh',res.result.refresh_token);
+						sessionStorage.setItem('jpdn-client-username',res.result.user_name);
+						self.getAuthName();
+					}
+				});
+			},
 			getAuthName( type = 0 ){
 				let self = this;
 				this.$request.staff.user.getAuthName().then(res=>{
@@ -186,6 +213,7 @@
 			if( this.$route.query.isAuth == 1 && this.$route.query.openid){
 				sessionStorage.setItem('jpdn_webapp_openid',this.$route.query.openid);
 				this.config.selectShow = true;
+				//this.getBindInfo();
 			}else{
 				this.getWxAuth();
 			}

@@ -17,7 +17,7 @@ let routes = [
     {
         path : '/index',
         component: index,
-        meta:{ title: '新登陆接口1' }
+        meta:{ title: '登陆接口' }
     },
     {
         path : '/login/index',

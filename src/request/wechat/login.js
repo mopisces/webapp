@@ -23,9 +23,10 @@ const login = {
 	},*/
 	wxMulitLogin( data ){
 		let postData = {
-			openid   : sessionStorage.getItem('jpdn_webapp_openid'),
-			sub_fact : data.subFacId,
-			acc_name : data.userName
+			openid    : sessionStorage.getItem('jpdn_webapp_openid'),
+			sub_fact  : data.subFacId,
+			acc_name  : data.userName,
+			user_type : data.userType
 		};
 		return post(wechat.login.wxMulitLogin,postData);
 	}
