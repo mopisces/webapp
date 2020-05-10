@@ -95,6 +95,7 @@
 				this.$request.staff.login.isOpenGroup().then(res=>{
 					if( res.errorCode == '00000' ){
 						self.config.isOpenGroup = res.result == 0 ? false : true;
+						this.$store.commit('client/setGroupOpen',res.result);
 					}
 				});
 			}

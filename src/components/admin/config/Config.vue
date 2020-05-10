@@ -557,18 +557,7 @@
 			<el-tab-pane label="团购" name="group">
 				<table style="width:100%;">
 					<tbody>
-						<tr>
-							<td style="150px;">淘宝箱材质报价</td>
-							<td>
-								<el-checkbox v-model="form.OpenBoxForArea" label="是否按面积报价" border true-label="1" false-label="0"></el-checkbox>
-							</td>
-						</tr>
-						<tr v-if="config.openBoxForAreaShow">
-							<td style="150px;">淘宝箱材质报价换算保留小数位</td>
-							<td>
-								<el-input style="width: 100px;" type="number" v-model="form.BoxForAreaDecimals"></el-input>
-							</td>
-						</tr>
+						
 						<tr>
 							<td style="150px;">团购纸板销售宽默认值</td>
 							<td>
@@ -615,6 +604,18 @@
 							</td>
 						</tr>
 						<template v-if="Number(form.UseBoxGroup)">
+							<tr>
+								<td style="150px;">淘宝箱材质报价</td>
+								<td>
+									<el-checkbox v-model="form.OpenBoxForArea" label="是否按面积报价" border true-label="1" false-label="0"></el-checkbox>
+								</td>
+							</tr>
+							<tr v-if="config.openBoxForAreaShow">
+								<td style="150px;">淘宝箱材质报价换算保留小数位</td>
+								<td>
+									<el-input style="width: 100px;" type="number" v-model="form.BoxForAreaDecimals"></el-input>
+								</td>
+							</tr>
 							<tr>
 								<td style="150px;">团购已结束的淘宝箱</td>
 								<td>

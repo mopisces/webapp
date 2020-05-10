@@ -1,6 +1,6 @@
 const indexLayout      = () => import('@/components/common/ClientLayout');
-//注册页面
-const register         = () => import('@/components/client/index/Register');
+/*//注册页面
+const register         = () => import('@/components/client/index/Register');*/
 //员工登陆
 const loginStaff       = () => import('@/components/login/StaffLogin');
 //客户登陆
@@ -36,11 +36,11 @@ const group = [
         component : indexLayout,
         meta: { title: '团购及未登录' },
         children : [
-            {
+            /*{
                 path : 'register',
                 meta : { title: '注册页面', isGroup:true },
                 component: register,
-            },
+            },*/
             {
                 path : 'staff/login',
                 alias: 'staff/login?token=:token',
