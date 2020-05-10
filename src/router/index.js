@@ -9,10 +9,10 @@ Vue.use(VueRouter);
 //404
 const error404 = () => import('@/components/common/404');
 const wxScan   = () => import('@/components/common/WxScanRes');
-/*const wxQrCode = () => import('@/components/login/WxQrCode');
-const login    = () => import('@/components/login/Login');*/
+const wxQrCode = () => import('@/components/login/WxQrCode');
+const login    = () => import('@/components/login/Login');
 let routes = [
-/*    {
+    {
         path : '/login/index',
         component: login,
         meta:{ title: '新登陆接口' }
@@ -21,7 +21,7 @@ let routes = [
         path : '/login/wxQrCode',
         component: wxQrCode,
         meta:{ title: '微信授权生成二维码登陆' }
-    },*/
+    },
     {
         path : '/common/wxscan',
         component: wxScan,
