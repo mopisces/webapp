@@ -420,10 +420,11 @@
 						Toast.success(res.msg);
 					}
 				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.del.show = false;
-						this.pullOnRefresh();
-					});
+					var self = this;
+					setTimeout(function(){
+						self.config.popup.del.show = false;
+						self.pullOnRefresh();
+					},3000);
 				});
 			},
 			headerClick( rowData ){
@@ -501,7 +502,7 @@
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','微信订单');
-			if( sessionStorage.getItem('client/wxOrders') !== null ){
+			if( sessionStorage.getItem('client/wxOrders') ){
 				let storageData = JSON.parse(sessionStorage.getItem('client/wxOrders'));
 				this.filterForm            = storageData;
 				this.config.getConfig      = false;

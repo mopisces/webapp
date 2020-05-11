@@ -61,8 +61,8 @@
 				<van-field label="板宽" v-model="filterForm.boardWidth" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<van-field label="压线" v-model="filterForm.lineBall" placeholder="模糊查询" input-align="center"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
-				<new-time-picker :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<new-time-picker :dateTime.sync="filterForm.beginDate" :minDate="filterForm.minDate" :maxDate="filterForm.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker :dateTime.sync="filterForm.endDate" :minDate="filterForm.minDate" :maxDate="filterForm.maxDate" label="结束日期"></new-time-picker>
 				<radio-cell :radioInfo.sync="filterForm.orderState" :radioColumns="config.filterStatus.status" title="订单状态" v-if="config.filterStatus.show"></radio-cell>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
@@ -99,17 +99,12 @@
 						columns : [
 							{field: 'guige', title: '规格', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'OrdQty', title: '订单数量', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-							{field: 'OrdAmt', title: '金额', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
-								if( rowData.sstate == '未审核' ){
-									return '<span style="color:#ddd;">' + rowData.OrdAmt + '</span>';
-								}else{
-									return rowData.OrdAmt;
-								}
-							}},
 							{field: 'sstate', title: '订单状态', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true },
 							{field: 'dailyDetail', title: '详情',width: 100, titleAlign: 'center',componentName:'table-operate',columnAlign:'center',isResize:true}
 						],
-						height : 0
+						height     : 0,
+						showOrdAmt : false,
+						alreadyCalc: false,
 					},
 					popup:{
 						leftPopup:{
@@ -153,11 +148,10 @@
 					beginDate     : '',
 					endDate       : '',
 					orderState    : '全部', 
-					bookingDate   : ''
-				},
-				pageConfig:{
-					maxDate : '',
-					minDate : '',
+					bookingDate   : '',
+					maxDate       : '',
+					minDate       : '',
+					showOrdAmt    : false
 				},
 				leftPopupData  : {},
 				rightPopupData : {},
@@ -171,15 +165,27 @@
 					this.dailyOrders(this.filterForm);
 				}
 			},
-			getConfig(){
+			getConfig( isInit = true ){
 				this.config.step.status         = [];
 				this.config.filterStatus.status = [];
 				let self = this;
 				this.$request.client.ordersManage.dailyOrdersConfig().then(res=>{
-					self.filterForm.beginDate = res.result.GetOrdersPBeginDate;
-					self.filterForm.endDate   = res.result.GetOrdersPEndDate;
-					self.pageConfig.maxDate   = res.result.GetOrdersPMaxDate;
-					self.pageConfig.minDate   = res.result.GetOrdersPMinDate;
+					if( res.result.WGetCusOrderShowAmt ){
+						self.config.table.columns.splice(2,0,{field: 'OrdAmt', title: '金额', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
+							if( rowData.sstate == '未审核' ){
+								return '<span style="color:#ddd;">' + rowData.OrdAmt + '</span>';
+							}else{
+								return rowData.OrdAmt;
+							}
+						}});
+						self.config.table.showOrdAmt = true;
+					}
+					if( isInit ){
+						self.filterForm.beginDate = res.result.GetOrdersPBeginDate;
+						self.filterForm.endDate   = res.result.GetOrdersPEndDate;
+					}
+					self.filterForm.maxDate   = res.result.GetOrdersPMaxDate;
+					self.filterForm.minDate   = res.result.GetOrdersPMinDate;
 					res.result.daily_order_status.forEach((item,index)=>{
 						if( item != '全部' ){
 							self.config.step.status.push({ title: item, value:item });
@@ -229,14 +235,46 @@
 				let self = this;
 				this.config.field.show = false;
 				this.$request.client.ordersManage.dailyOrders( this.filterForm ).then(res=>{
+					if( res.errorCode != '00000' ){
+						return ;
+					}
 					self.fieldData = res.result;
+					if( self.config.table.showOrdAmt  ){
+						self.fieldData.push({
+							guige :'汇总金额',
+							OrdQty:'----',
+							OrdAmt:0.00,
+							sstate:'----',
+							last  : 1
+						})
+					}
 				}).then(()=>{
 					this.$nextTick(() => {
 					    this.config.field.show = true;
+					    this.config.table.alreadyCalc = false;
 					});
 				});
 			},
 			fieldClick( params ){
+				if( params.type == 'clacAmtOrd' ){
+					if( this.config.table.alreadyCalc ){
+						return ;
+					}
+					var total = 0;
+					this.fieldData.pop();
+					this.fieldData.forEach((item,index)=>{
+						total += parseFloat(item.OrdAmt);
+					});
+					this.fieldData.push({
+						guige :'汇总金额',
+						OrdQty:'----',
+						OrdAmt:total.toFixed(2),
+						sstate:'----',
+						last  : 1
+					});
+					this.config.table.alreadyCalc = true;
+					return ;
+				}
 				this.rightPopupData   = this.fieldData[ params.index ];
 				this.config.step.show = false;
 				this.config.popup.rightPopup.show = true;
@@ -266,8 +304,8 @@
 				this.config.switch.checked = false;
 				this.getConfig();
 			},
-			async filterClick(){
-				await this.optionalDate();
+			filterClick(){
+				this.optionalDate();
 				this.dailyOrders();
 				this.config.popup.rightFilter.show = false;
 			}
@@ -278,10 +316,12 @@
 				let storageData = JSON.parse(sessionStorage.getItem('client-daily/getOrdersP'));
 				this.filterForm = storageData;
 				this.config.switch.checked = true;
+				this.getConfig( false );
+			}else{
+				this.getConfig();
 			}
 		},
 		mounted(){
-			this.getConfig();
 			this.config.table.height  = window.screen.height - 225;
 		},
 		updated(){

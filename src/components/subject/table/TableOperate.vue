@@ -42,8 +42,11 @@
 		</div>
 		<!--外部用户-每日订单-->
 		<div v-if=" field === 'dailyDetail' ">
-			<van-button plain hairline type="primary" @click="dailyDetail()" size="small">
+			<van-button plain hairline type="primary" size="small" @click="dailyDetail()"  v-if=" rowData.last != 1 ">
 				详情
+			</van-button>
+			<van-button plain hairline type="primary" size="small" @click="clacAmtOrd()" v-else>
+				计算汇总金额
 			</van-button>
 		</div>
 	</div>
@@ -140,7 +143,10 @@
 				});
 			},
 			dailyDetail(){
-				this.$emit('on-custom-comp',{index:this.index});
+				this.$emit('on-custom-comp',{type:'detail',index:this.index});
+			},
+			clacAmtOrd(){
+				this.$emit('on-custom-comp',{type:'clacAmtOrd',index:this.index});
 			}
 		},
 		created(){
