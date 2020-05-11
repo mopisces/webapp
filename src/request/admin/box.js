@@ -136,6 +136,9 @@ const box={
 			add_last_price     : data.lastPrice
 		};
 		return post(admin.box.saveQuoBox,postData);
+	},
+	adjustQuoBox(){
+		return post(admin.box.adjustQuoBox);
 	}
 };
 

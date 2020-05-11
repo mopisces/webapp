@@ -44,7 +44,8 @@ const admin = {
 		quoBoxList   : `${base.admin}adminBoxQuoList`,
 		delQuoBox    : `${base.admin}adminBoxQuoDel`,
 		editQuoBox   : `${base.admin}adminBoxQuoEdit`,
-		saveQuoBox   : `${base.admin}adminBoxQuoSave`
+		saveQuoBox   : `${base.admin}adminBoxQuoSave`,
+		adjustQuoBox : `${base.admin}adminBoxQuoAdjust`,
 	},
 	image : {
 		getGroupImg   : `${base.admin}adminGetGroupImg`,   //配置图片显示

@@ -1,5 +1,10 @@
 <template>
 	<div>
+		<el-row :gutter="20">
+			<el-col :span="6">
+				<el-button type="primary" @click="adjustQuoBox()">批量修改</el-button>
+			</el-col>
+		</el-row>
 		<el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
 			<el-table-column prop="Id" label="ID" width="100"></el-table-column>
 			<el-table-column prop="BoardId" label="材质编号" width="150"></el-table-column>
@@ -114,6 +119,22 @@
 					params:{ 
 						id : rowData.Id,
 					} 
+				});
+			},
+			adjustQuoBox(){
+				let self = this;
+				this.$request.admin.box.adjustQuoBox().then(res=>{
+					if( res.errorCode == '00000' ){
+						self.$message({
+							message: '批量修改成功',
+							type: 'success'
+						});
+					}else{
+						self.$message({
+							message: '批量修改失败',
+							type: 'fail'
+						});
+					}
 				});
 			}
 		},
