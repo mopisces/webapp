@@ -97,8 +97,8 @@
 				</template>
 			</el-table-column>
 		</el-table>
-		<div class="footer">
-			<el-pagination background layout="prev, pager, next" :total="config.total"  @current-change="pageChange">
+		<div class="footer" v-if=" config.pagination.show ">
+			<el-pagination background layout="prev, pager, next" :total="config.total"  @current-change="pageChange" :current-page.sync="filterForm.curPage">
 			</el-pagination>
 		</div>
 	</div>
@@ -108,6 +108,9 @@
 		data(){
 			return {
 				config : {
+					pagination : {
+						show : false
+					},
 					flagName : '',
 					total    : 0,
 					curPage  : 1,
@@ -182,11 +185,13 @@
 						self.tableData    = res.result.list;
 						self.config.total = res.result.total;
 					}
+					self.config.pagination.show = true;
 				});
 			},
 			pageChange( curPage ){
 				this.tableData          = [];
 				this.filterForm.curPage = curPage;
+				this.getList();
 			},
 			tableRowClassName({row, rowIndex}){
 				if ( rowIndex%2 == 0 ) {
@@ -230,7 +235,6 @@
 							message: postData.isFlag == 1 ? '标记成功!' : '取消标记成功!',
 							type: 'success'
 						});
-						console.log(self.tableData[ scope.$index ]);
 						self.tableData[ scope.$index ].IsFlag = postData.isFlag;
 					}else{
 						self.$message({
@@ -247,9 +251,10 @@
 				this.$router.push({ 
 					name : 'descr', 
 					params:{ 
-						id    : rowData.Id,
-						descr : rowData.Descr,
-						orderType : rowData.BoardId == null ? 1 : 2
+						id        : rowData.Id,
+						descr     : rowData.Descr,
+						orderType : rowData.BoardId == null ? 1 : 2,
+						pageNum   : this.filterForm.curPage
 					} 
 				});
 			},
@@ -261,19 +266,30 @@
 					name : 'boardEdit', 
 					params:{ 
 						id : rowData.Id,
+						pageNum : this.filterForm.curPage
 					} 
 				});
 			},
 			showImg( rowData ){
-				this.$router.push({ name:'changeImg', params:{ listId:rowData.Id, listType:'board' } });
+				this.$router.push({ 
+					name:'changeImg', 
+					params:{ 
+						listId   : rowData.Id, 
+						listType : 'board' ,
+						pageNum  : this.filterForm.curPage
+					}
+				 });
 			}
 		},
 		created(){
-			
-		},
-		mounted(){
+			if( this.$route.query.curPage && Number(this.$route.query.curPage) > 0 ){
+				this.filterForm.curPage = Number(this.$route.query.curPage);
+			}
 			this.getAddConfig();
 			this.getList();
+		},
+		mounted(){
+			
 		},
 		updated(){
 			
@@ -290,9 +306,6 @@
 			},
 			isFlagChange(){
 				return this.filterForm.isFlag;
-			},
-			curPageChange(){
-				return this.filterForm.curPage;
 			}
 		},
 		watch:{
@@ -304,13 +317,6 @@
 			},
 			isFlagChange( newV,oldV ){
 				this.getList();
-			},
-			curPageChange( newV,oldV ){
-				if( newV > 0 ){
-					this.getList();
-				}else{
-					this.filterForm.curPage = 1;
-				}
 			}
 		}
 	}

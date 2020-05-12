@@ -33,7 +33,8 @@
 				formData:{
 					id      : '',
 					type    : '',
-					picName : ''
+					picName : '',
+					pageNum : 1
 				},
 				pic:[]
 			}
@@ -68,7 +69,13 @@
 				});
 			},
 			goBack(){
-				this.$router.go(-1);
+				let url = '';
+				if( this.formData.type == 'board' ){
+					url = '/admin/board/lists?curPage=';
+				}else{
+					url = '/admin/box/lists?curPage=';
+				}
+				this.$router.push(url + this.formData.pageNum);
 			},
 			onSuccess(response, file, fileList){
 				if( response.errorCode == '00000' ){
@@ -81,7 +88,7 @@
 			}
 		},
 		created(){
-			if( this.$route.params.listId == '' || typeof(this.$route.params.listId) == 'undefined' ){
+			if( this.$route.params.listId == '' || typeof(this.$route.params.listId) == 'undefined' || this.$route.params.pageNum == '' || typeof(this.$route.params.pageNum) == 'undefined'   || this.$route.params.listType == '' || typeof(this.$route.params.listType) == 'undefined' ){
 				this.$alert('请先选择需要修改的记录', '提示', {
 					confirmButtonText : '返回',
 					callback: action => {
@@ -90,6 +97,7 @@
 				});
 				return ;
 			}
+			this.formData.pageNum = this.$route.params.pageNum;
 			this.formData.id   = this.$route.params.listId;
 			this.formData.type = this.$route.params.listType;
 			this.config.upload.data.img_id = this.$route.params.listId;

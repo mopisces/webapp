@@ -102,6 +102,7 @@
 					flagName     : '',   //标签名称
 					isFlag       : '',   //是否是爆款
 				},
+				listPageNum : 1,  //列表页码
 				rules : {
 					matNo : [
 						{ required: true, message: '请选择货品编号', trigger: 'change' }
@@ -186,7 +187,7 @@
 				this.formData.rangePrice.splice( index, 1 );
 			},
 			goBack(){
-				this.$router.push('/admin/box/lists');
+				this.$router.push('/admin/box/lists?curPage=' + this.listPageNum);
 			},
 			editSaveValidate(){
 				this.$refs['editForm'].validate((valid)=>{
@@ -209,7 +210,7 @@
 								for(let key in self.formData){
 									self.formData[key]  = '';
 								}
-								self.$router.push('/admin/box/lists');
+								self.$router.push('/admin/box/lists?curPage=' + self.listPageNum);
 							}
 						});
 					}else{
@@ -227,7 +228,7 @@
 		},
 		mounted(){
 			this.getConfig();
-			if( this.$route.params.id == '' || typeof(this.$route.params.id) == 'undefined' ){
+			if( this.$route.params.id == '' || typeof(this.$route.params.id) == 'undefined' || this.$route.params.pageNum == '' || typeof(this.$route.params.pageNum) == 'undefined' ){
 				this.$alert('请先选择需要修改的记录', '提示', {
 					confirmButtonText : '返回',
 					callback: action => {
@@ -237,6 +238,7 @@
 				return ;
 			}
 			this.formData.id = this.$route.params.id;
+			this.listPageNum = this.$route.params.pageNum;
 			this.editConfig( this.$route.params.id );
 		},
 		updated(){

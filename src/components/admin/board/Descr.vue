@@ -39,7 +39,9 @@
 				formData : {
 					descr     : '',
 					id        : '',
-					orderType : ''
+					orderType : '',
+					//列表页码
+					pageNum : 1,
 				},
 				editorOption : {
 					modules: {
@@ -91,7 +93,13 @@
 							message: '保存成功',
 							type: 'success',
 							onClose:function(){
-								self.$router.go(-1);
+								let url = '';
+								if( self.formData.orderType == 2 ){
+									url = '/admin/board/lists?curPage=';
+								}else{
+									url = '/admin/box/lists?curPage=';
+								}
+								self.$router.push(url + self.formData.pageNum);
 							}
 						});
 					}else{
@@ -104,7 +112,13 @@
 				});
 			},
 			goBack(){
-				this.$router.go(-1);
+				let url = '';
+				if( this.formData.orderType == 2 ){
+					url = '/admin/board/lists?curPage=';
+				}else{
+					url = '/admin/box/lists?curPage=';
+				}
+				this.$router.push(url + this.formData.pageNum);
 			},
 			beforeUpload(){
 				this.config.upload.loading = true;
@@ -127,7 +141,7 @@
 			}
 		},
 		created(){
-			if( this.$route.params.id == '' || typeof(this.$route.params.id) == 'undefined' ){
+			if( this.$route.params.id == '' || typeof(this.$route.params.id) == 'undefined' || this.$route.params.pageNum == '' || typeof(this.$route.params.pageNum) == 'undefined'  || this.$route.params.orderType == '' || typeof(this.$route.params.orderType) == 'undefined' ){
 				this.$alert('请先选择需要修改的记录', '提示', {
 					confirmButtonText : '返回',
 					callback: action => {
@@ -139,6 +153,7 @@
 			this.formData.descr     = this.$route.params.descr;
 			this.formData.id        = this.$route.params.id;
 			this.formData.orderType = this.$route.params.orderType;
+			this.formData.pageNum   = this.$route.params.pageNum;
 			this.config.upload.data.goods_id = this.$route.params.id;
 		},
 		mounted(){

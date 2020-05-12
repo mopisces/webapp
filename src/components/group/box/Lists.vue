@@ -166,6 +166,7 @@
 					boxWMax    : 9999,
 					boxHMin    : 0,
 					boxHMax    : 9999,
+					title      : ''
 				},
 				listData : []
 			}

@@ -1,11 +1,16 @@
 <template>
 	<div>
 		<el-row>
-			排序
-			<el-select v-model="filterForm.orderType" placeholder="请选择">
-				<el-option v-for="item in config.filterOptions.orderType" :key=" 'orderType' + item.value" :label="item.label" :value="item.value">
-				</el-option>
-			</el-select>
+			<el-col :span="6">
+				排序
+				<el-select v-model="filterForm.orderType" placeholder="请选择">
+					<el-option v-for="item in config.filterOptions.orderType" :key=" 'orderType' + item.value" :label="item.label" :value="item.value">
+					</el-option>
+				</el-select>
+			</el-col>
+			<el-col :span="6">
+				 <el-button type="primary" @click="config.dialog.show = true">其他筛选条件</el-button>
+			</el-col>
 		</el-row>
 		<el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
 			<el-table-column prop="Id" label="ID" width="50"></el-table-column>
@@ -15,7 +20,7 @@
 					<span v-if="scope.row.Title">,{{ scope.row.Title }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column label="图片(点击编辑)" width="120">
+			<el-table-column label="图片" width="120">
 				<template slot-scope="scope">
 					<img style="width: 60px;" :src=" $store.state.common.imgUrl + scope.row.Pic[0] " v-if="scope.row.Pic[0]">
 					<span v-if="scope.row.Pic.length > 1">等{{ scope.row.Pic.length }}张</span>
@@ -72,6 +77,46 @@
 			<el-pagination background layout="prev, pager, next" :total="config.total"  @current-change="pageChange">
 			</el-pagination>
 		</div>
+		<el-dialog title="淘宝箱筛选条件" :visible.sync="config.dialog.show">
+			<el-form :model="filterForm">
+				<el-form-item label="标题关键词" label-width="100">
+					<el-col :span="6">
+						<el-input v-model="filterForm.title" placeholder="请输入内容" maxlength="10" show-word-limit></el-input>
+				 	</el-col>
+				</el-form-item>
+				<el-form-item label="长度范围:" label-width="100">
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxLMin" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				 	<el-col style="text-align:center;" :span="2">~</el-col>
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxLMax" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				</el-form-item>
+				<el-form-item label="宽度范围:" label-width="100">
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxWMin" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				 	<el-col style="text-align:center;" :span="2">~</el-col>
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxWMax" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				</el-form-item>
+				<el-form-item label="高度范围:" label-width="100">
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxHMin" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				 	<el-col style="text-align:center;" :span="2">~</el-col>
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxHMax" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				</el-form-item>
+				<el-form-item style="text-align:right;">
+				 	<el-button type="primary" @click="filterClick()">筛选</el-button>
+				 	<el-button type="danger" @click="resetClick()">重置</el-button>
+				</el-form-item>
+			</el-form>
+		</el-dialog>
 	</div>
 </template>
 <script>
@@ -79,6 +124,9 @@
 		data(){
 			return {
 				config:{
+					dialog:{
+						show :false
+					},
 					filterOptions : {
 						orderType : [
 							{
@@ -96,6 +144,13 @@
 				filterForm : {
 					orderType : 1,
 					curPage   : 1,
+					boxLMin   : 0,
+					boxLMax   : 9999,
+					boxWMin   : 0,
+					boxWMax   : 9999,
+					boxHMin   : 0,
+					boxHMax   : 9999,
+					title     : ''
 				},
 				tableData : []
 			}
@@ -144,6 +199,19 @@
 						});
 					}
 				});
+			},
+			resetClick(){
+				this.filterForm.boxLMin = 0;
+				this.filterForm.boxLMax = 9999;
+				this.filterForm.boxWMin = 0;
+				this.filterForm.boxWMax = 9999;
+				this.filterForm.boxHMin = 0;
+				this.filterForm.boxHMax = 9999;
+				this.filterForm.title = '';
+			},
+			filterClick(){
+				this.config.dialog.show = false;
+				this.getList();
 			}
 		},
 		created(){

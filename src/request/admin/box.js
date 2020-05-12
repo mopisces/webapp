@@ -11,7 +11,14 @@ const box={
 			lists_order_state : data.orderState,
 			lists_is_flag     : data.isFlag,
 			cur_page          : data.curPage,
-			lists_is_delete   : 0
+			lists_is_delete   : 0,
+			box_l_min         : data.boxLMin,
+			box_l_max         : data.boxLMax,
+			box_w_min         : data.boxWMin,
+			box_w_max         : data.boxWMax,
+			box_h_min         : data.boxHMin,
+			box_h_max         : data.boxHMax,
+			box_title         : data.title
 		};
 		return post(admin.box.getList,postData);
 	},
@@ -45,7 +52,14 @@ const box={
 			lists_order_state : 0,
 			lists_is_flag     : 0,
 			cur_page          : data.curPage,
-			lists_is_delete   : 1
+			lists_is_delete   : 1,
+			box_l_min         : data.boxLMin,
+			box_l_max         : data.boxLMax,
+			box_w_min         : data.boxWMin,
+			box_w_max         : data.boxWMax,
+			box_h_min         : data.boxHMin,
+			box_h_max         : data.boxHMax,
+			box_title         : data.title
 		};
 		return post(admin.box.getList,postData);
 	},

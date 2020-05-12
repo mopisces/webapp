@@ -22,6 +22,9 @@
 					</el-option>
 				</el-select>
 			</el-col>
+			<el-col :span="6">
+				 <el-button type="primary" @click="config.dialog.show = true">其他筛选条件</el-button>
+			</el-col>
 		</el-row>
 		<el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
 			<el-table-column prop="Id" label="ID" width="50"></el-table-column>
@@ -97,10 +100,50 @@
 				</template>
 			</el-table-column>
 		</el-table>
-		<div class="footer">
-			<el-pagination background layout="prev, pager, next" :total="config.total"  @current-change="pageChange">
+		<div class="footer" v-if=" config.pagination.show ">
+			<el-pagination background layout="prev, pager, next" :total="config.total"  @current-change="pageChange" :current-page.sync="filterForm.curPage">
 			</el-pagination>
 		</div>
+		<el-dialog title="淘宝箱筛选条件" :visible.sync="config.dialog.show">
+			<el-form :model="filterForm">
+				<el-form-item label="标题关键词" label-width="100">
+					<el-col :span="6">
+						<el-input v-model="filterForm.title" placeholder="请输入内容" maxlength="10" show-word-limit></el-input>
+				 	</el-col>
+				</el-form-item>
+				<el-form-item label="长度范围:" label-width="100">
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxLMin" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				 	<el-col style="text-align:center;" :span="2">~</el-col>
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxLMax" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				</el-form-item>
+				<el-form-item label="宽度范围:" label-width="100">
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxWMin" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				 	<el-col style="text-align:center;" :span="2">~</el-col>
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxWMax" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				</el-form-item>
+				<el-form-item label="高度范围:" label-width="100">
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxHMin" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				 	<el-col style="text-align:center;" :span="2">~</el-col>
+				 	<el-col :span="6">
+						<el-input v-model="filterForm.boxHMax" placeholder="请输入内容" type="number"></el-input>
+				 	</el-col>
+				</el-form-item>
+				<el-form-item style="text-align:right;">
+				 	<el-button type="primary" @click="filterClick()">筛选</el-button>
+				 	<el-button type="danger" @click="resetClick()">重置</el-button>
+				</el-form-item>
+			</el-form>
+		</el-dialog>
 	</div>
 </template>
 <script>
@@ -108,6 +151,12 @@
 		data(){
 			return {
 				config : {
+					pagination:{
+						show : false
+					},
+					dialog:{
+						show :false
+					},
 					flagName : '',
 					total : 0,
 					curPage : 1,
@@ -161,6 +210,13 @@
 					orderState : 0,
 					isFlag     : 0,
 					curPage    : 1,
+					boxLMin    : 0,
+					boxLMax    : 9999,
+					boxWMin    : 0,
+					boxWMax    : 9999,
+					boxHMin    : 0,
+					boxHMax    : 9999,
+					title      : ''
 				},
 				tableData:[],
 			}
@@ -182,11 +238,13 @@
 						self.tableData    = res.result.list;
 						self.config.total = res.result.total;
 					}
+					self.config.pagination.show = true;
 				});
 			},
 			pageChange( curPage ){
 				this.tableData          = [];
 				this.filterForm.curPage = curPage;
+				this.getList();
 			},
 			tableRowClassName({row, rowIndex}){
 				if ( rowIndex%2 == 0 ) {
@@ -247,7 +305,8 @@
 					params:{ 
 						id    : rowData.Id,
 						descr : rowData.Descr,
-						orderType : rowData.BoardId == null ? 1 : 2
+						orderType : rowData.BoardId == null ? 1 : 2,
+						pageNum : this.filterForm.curPage
 					} 
 				});
 			},
@@ -259,19 +318,43 @@
 					name : 'boxEdit', 
 					params:{ 
 						id : rowData.Id,
+						pageNum : this.filterForm.curPage
 					} 
 				});
 			},
 			showImg( rowData ){
-				this.$router.push({ name:'changeImg', params:{ listId:rowData.Id, listType:'box' } });
+				this.$router.push({ 
+					name:'changeImg', 
+					params:{ 
+						listId:rowData.Id, 
+						listType:'box' ,
+						pageNum : this.filterForm.curPage
+					} 
+				});
+			},
+			resetClick(){
+				this.filterForm.boxLMin = 0;
+				this.filterForm.boxLMax = 9999;
+				this.filterForm.boxWMin = 0;
+				this.filterForm.boxWMax = 9999;
+				this.filterForm.boxHMin = 0;
+				this.filterForm.boxHMax = 9999;
+				this.filterForm.title = '';
+			},
+			filterClick(){
+				this.config.dialog.show = false;
+				this.getList();
 			}
 		},
 		created(){
-			
-		},
-		mounted(){
+			if( this.$route.query.curPage && Number(this.$route.query.curPage) > 0 ){
+				this.filterForm.curPage = Number(this.$route.query.curPage);
+			}
 			this.getList();
 			this.getConfig();
+		},
+		mounted(){
+
 		},
 		updated(){
 			
@@ -288,9 +371,6 @@
 			},
 			isFlagChange(){
 				return this.filterForm.isFlag;
-			},
-			curPageChange(){
-				return this.filterForm.curPage;
 			}
 		},
 		watch:{
@@ -302,13 +382,6 @@
 			},
 			isFlagChange( newV,oldV ){
 				this.getList();
-			},
-			curPageChange( newV,oldV ){
-				if( newV > 0 ){
-					this.getList();
-				}else{
-					this.filterForm.curPage = 1;
-				}
 			}
 		}
 	}

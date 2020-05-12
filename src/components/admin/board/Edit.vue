@@ -80,6 +80,7 @@
 					},
 					isFinishLoad : false
 				},
+				listPageNum : 1,
 				formData : {
 					id           : '',   //id
 					boardId      : '',   //材质
@@ -187,7 +188,7 @@
 				this.formData.rangePrice.splice( index, 1 );
 			},
 			goBack(){
-				this.$router.push('/admin/board/lists');
+				this.$router.push('/admin/board/lists?curPage=' + this.listPageNum);
 			},
 			editSaveValidate(){
 				this.$refs['editForm'].validate((valid)=>{
@@ -210,7 +211,7 @@
 								for(let key in self.formData){
 									self.formData[key]  = '';
 								}
-								self.$router.push('/admin//board/lists');
+								self.$router.push('/admin/board/lists?curPage=' + self.listPageNum);
 							}
 						});
 					}else{
@@ -225,7 +226,7 @@
 		},
 		created(){
 			this.getBoardId();
-			if( this.$route.params.id == '' || typeof(this.$route.params.id) == 'undefined' ){
+			if( this.$route.params.id == '' || typeof(this.$route.params.id) == 'undefined' || this.$route.params.pageNum == '' || typeof(this.$route.params.pageNum) == 'undefined' ){
 				this.$alert('请先选择需要修改的记录', '提示', {
 					confirmButtonText : '返回',
 					callback: action => {
@@ -234,6 +235,7 @@
 				});
 				return ;
 			}
+			this.listPageNum = this.$route.params.pageNum;
 			this.formData.id = this.$route.params.id;
 			this.editConfig( this.$route.params.id );
 		},
