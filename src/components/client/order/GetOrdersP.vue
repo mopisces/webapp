@@ -170,7 +170,7 @@
 				this.config.filterStatus.status = [];
 				let self = this;
 				this.$request.client.ordersManage.dailyOrdersConfig().then(res=>{
-					if( res.result.WGetCusOrderShowAmt ){
+					if( res.result.WGetCusOrderShowAmt == '1' ){
 						self.config.table.columns.splice(2,0,{field: 'OrdAmt', title: '金额', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
 							if( rowData.sstate == '未审核' ){
 								return '<span style="color:#ddd;">' + rowData.OrdAmt + '</span>';

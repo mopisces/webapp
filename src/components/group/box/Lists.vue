@@ -1,9 +1,10 @@
 <template>
 	<div>
 		<van-sticky :offset-top="46">
-		<van-dropdown-menu>
+		<!-- <van-dropdown-menu>
 			<van-dropdown-item v-model="formData.filterName" :options="config.filterOptions" />
-		</van-dropdown-menu>
+		</van-dropdown-menu> -->
+		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 		<van-tabs v-model="formData.state">
 			<van-tab name="1">
 				<div slot="title">
@@ -59,17 +60,66 @@
 				</van-card>
 			</van-list>
 		</van-pull-refresh>
+		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
+			<div slot="filter-field-1">
+				<radio-cell :radioInfo.sync="formData.filterName" :radioColumns="config.radio.filterName.options" :title="config.radio.filterName.title" v-if="config.radio.filterName.show">
+				</radio-cell>
+				<van-field label="长度(mm)">
+					<div class="van-row van-row--flex van-row--justify-center" slot="input">
+						<div class="van-col van-col--11">
+							<input type="number" v-model="formData.boxLMin" class="van-field__control van-field__control--center"/>
+						</div>
+						<div class="van-col van-col--2" style="text-align:center;">
+							~ 
+						</div>
+						<div class="van-col van-col--11">
+							<input type="number" v-model="formData.boxLMax" class="van-field__control van-field__control--center"/>
+						</div>
+					</div>
+				</van-field>
+				<van-field label="宽度(mm)">
+					<div class="van-row van-row--flex van-row--justify-center" slot="input">
+						<div class="van-col van-col--11">
+							<input type="number" v-model="formData.boxWMin" class="van-field__control van-field__control--center"/>
+						</div>
+						<div class="van-col van-col--2" style="text-align:center;">
+							~ 
+						</div>
+						<div class="van-col van-col--11">
+							<input type="number" v-model="formData.boxWMax" class="van-field__control van-field__control--center"/>
+						</div>
+					</div>
+				</van-field>
+				<van-field label="高度(mm)">
+					<div class="van-row van-row--flex van-row--justify-center" slot="input">
+						<div class="van-col van-col--11">
+							<input type="number" v-model="formData.boxHMin" class="van-field__control van-field__control--center"/>
+						</div>
+						<div class="van-col van-col--2" style="text-align:center;">
+							~ 
+						</div>
+						<div class="van-col van-col--11">
+							<input type="number" v-model="formData.boxHMax" class="van-field__control van-field__control--center"/>
+						</div>
+					</div>
+				</van-field>
+			</div>
+		</popup-filter>
 	</div>
 </template>
 <script>
-	import { Icon, Image, DropdownMenu, DropdownItem, PullRefresh, CountDown, List, Sticky, Tag, Tab, Tabs, Card } from 'vant';
+	import { Button, Icon, Image, Field, PullRefresh, Toast, CountDown, List, Sticky, Tag, Tab, Tabs, Card } from 'vant';
+	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import RadioCell from '@/components/subject/RadioCell.vue';
+	import schema from 'async-validator';
 	export default {
 		components:{
+			[Button.name]: Button,
 			[Icon.name]: Icon,
 			[Image.name]: Image,
-			[DropdownMenu.name]: DropdownMenu,
-			[DropdownItem.name]: DropdownItem,
+			[Field.name]: Field,
 			[PullRefresh.name]: PullRefresh,
+			[Toast.name]: Toast,
 			[CountDown.name]: CountDown,
 			[List.name]: List,
 			[Sticky.name]: Sticky,
@@ -77,6 +127,9 @@
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 			[Card.name]: Card,
+
+			PopupFilter,
+			RadioCell
 		},
 		data(){
 			return {
@@ -90,14 +143,29 @@
 							loading  : false
 						}
 					},
-					filterOptions:[],
-					flagName:''
+					flagName:'',
+					popup:{
+						filterShow:false
+					},
+					radio:{
+						filterName:{
+							title   : '筛选条件',
+							show    : false,
+							options : [],
+						}
+					}
 				},
 				formData:{
 					state      : '1',
 					isTaoBao   : 1,
 					filterName : '全部',
 					curPage    : 1,
+					boxLMin    : 0,
+					boxLMax    : 9999,
+					boxWMin    : 0,
+					boxWMax    : 9999,
+					boxHMin    : 0,
+					boxHMax    : 9999,
 				},
 				listData : []
 			}
@@ -143,11 +211,13 @@
 				let self = this;
 				this.$request.client.groupBuying.groupBuyFilter( this.formData ).then(res=>{
 					if( res.errorCode != '00000' ){
-						self.config.filterOptions.push({ text:'暂无数据',value:'暂无数据' });
+						self.config.radio.filterName.options.push({ title:'暂无数据',value:'暂无数据'});
 					}else{
+						self.config.radio.filterName.options = [];
 						res.result.forEach((item)=>{
-							self.config.filterOptions.push({text:item,value:item});
+							self.config.radio.filterName.options.push({title:item,value:item})
 						});
+						self.config.radio.filterName.show = true;
 					}
 				});
 			},
@@ -162,6 +232,23 @@
 						self.config.flagName = res.result;
 					}
 				});
+			},
+			resetClick(){
+				this.formData = {
+					state      : this.formData.state,
+					isTaoBao   : 1,
+					filterName : '全部',
+					curPage    : 1,
+					boxLMin    : 0,
+					boxLMax    : 9999,
+					boxWMin    : 0,
+					boxWMax    : 9999,
+					boxHMin    : 0,
+					boxHMax    : 9999,
+				};
+			},
+			filterClick(){
+				this.pullOnRefresh();		
 			}
 		},
 		created(){
@@ -183,19 +270,19 @@
 		computed:{
 			stateChange(){
 				return this.formData.state;
-			},
+			}/*,
 			filterNameChange(){
 				return this.formData.filterName;
-			}
+			}*/
 		},
 		watch:{
 			stateChange( newV,oldV ){
 				this.pullOnRefresh();
 				this.getFilterName();
-			},
+			}/*,
 			filterNameChange( newV,oldV ){
 				this.pullOnRefresh();
-			}
+			}*/
 		}
 	}
 </script>

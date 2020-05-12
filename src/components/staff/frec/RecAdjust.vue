@@ -48,7 +48,10 @@
 						columns:[
 							{field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'Checked', title: '审核', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,formatter: (rowData,rowIndex,pagingIndex,field)=>{
-								return rowData.Checked === '1' ? '<span class="van-icon van-icon-success" style="color:#1aad19;"></span>' : '<span class="van-icon van-icon-fail"></span>';
+								if( rowData.last == 1 ){
+									return '';
+								}
+								return rowData.Checked === '1'  ? '<span class="van-icon van-icon-success" style="color:#1aad19;"></span>' : '<span class="van-icon van-icon-fail"></span>';
 							}},
 							{field: 'PayId', title: '单号', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'OpDate', title: '操作日期', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
@@ -56,6 +59,9 @@
 							{field: 'Amount', title: '金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'Remark', title: '备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'NeedInv', title: '需开票', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true, formatter:(rowData,rowIndex,pagingIndex,field)=>{
+								if( rowData.last == 1 ){
+									return '';
+								}
 								return rowData.NeedInv === '1' ? '<span class="van-icon van-icon-success" style="color:#1aad19;"></span>' : '<span class="van-icon van-icon-fail"></span>';
 							}},
 							{field: 'ShortName', title: '科目', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},

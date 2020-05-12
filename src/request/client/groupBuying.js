@@ -169,6 +169,14 @@ const groupBuying = {
 			cur_page    : data.curPage,
 			is_taobao   : data.isTaoBao
 		};
+		if( data.isTaoBao == 1 ){
+			postData.box_l_min = data.boxLMin;
+			postData.box_l_max = data.boxLMax;
+			postData.box_w_min = data.boxWMin;
+			postData.box_w_max = data.boxWMax;
+			postData.box_h_min = data.boxHMin;
+			postData.box_h_max = data.boxHMax;
+		}
 		return post(client.groupBuying.groupBuyList, postData);
 	},
 	groupBuyFilter( data ){
