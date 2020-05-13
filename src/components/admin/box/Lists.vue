@@ -108,10 +108,10 @@
 			<el-form :model="filterForm">
 				<el-form-item label="标题关键词" label-width="100">
 					<el-col :span="6">
-						<el-input v-model="filterForm.title" placeholder="请输入内容" maxlength="10" show-word-limit></el-input>
+						<el-input v-model="filterForm.title" placeholder="请输入内容" maxlength="50" show-word-limit></el-input>
 				 	</el-col>
 				</el-form-item>
-				<el-form-item label="长度范围:" label-width="100">
+				<el-form-item label="长度范围(毫米):" label-width="100">
 				 	<el-col :span="6">
 						<el-input v-model="filterForm.boxLMin" placeholder="请输入内容" type="number"></el-input>
 				 	</el-col>
@@ -120,7 +120,7 @@
 						<el-input v-model="filterForm.boxLMax" placeholder="请输入内容" type="number"></el-input>
 				 	</el-col>
 				</el-form-item>
-				<el-form-item label="宽度范围:" label-width="100">
+				<el-form-item label="宽度范围(毫米):" label-width="100">
 				 	<el-col :span="6">
 						<el-input v-model="filterForm.boxWMin" placeholder="请输入内容" type="number"></el-input>
 				 	</el-col>
@@ -129,7 +129,7 @@
 						<el-input v-model="filterForm.boxWMax" placeholder="请输入内容" type="number"></el-input>
 				 	</el-col>
 				</el-form-item>
-				<el-form-item label="高度范围:" label-width="100">
+				<el-form-item label="高度范围(毫米):" label-width="100">
 				 	<el-col :span="6">
 						<el-input v-model="filterForm.boxHMin" placeholder="请输入内容" type="number"></el-input>
 				 	</el-col>

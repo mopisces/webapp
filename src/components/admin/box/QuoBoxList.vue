@@ -122,19 +122,30 @@
 				});
 			},
 			adjustQuoBox(){
-				let self = this;
-				this.$request.admin.box.adjustQuoBox().then(res=>{
-					if( res.errorCode == '00000' ){
-						self.$message({
-							message: '批量修改成功',
-							type: 'success'
-						});
-					}else{
-						self.$message({
-							message: '批量修改失败',
-							type: 'fail'
-						});
-					}
+				this.$confirm('确认是否按淘宝箱报价更新淘宝箱列表价格?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let self = this;
+					this.$request.admin.box.adjustQuoBox().then(res=>{
+						if( res.errorCode == '00000' ){
+							self.$message({
+								message: '批量修改成功',
+								type: 'success'
+							});
+						}else{
+							self.$message({
+								message: '批量修改失败',
+								type: 'fail'
+							});
+						}
+					});
+				}).catch(()=>{
+					this.$message({
+			            type: 'info',
+			            message: '已取消'
+			         });    
 				});
 			}
 		},
