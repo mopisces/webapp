@@ -153,6 +153,7 @@ const staff = {
 	wx:{
 		scanWxConfig : `${base.staff}staffGetWxConfig`,
 		portValuable : `${base.staff}staffPortValuable`,
+		scanQrCode   : `${base.staff}staffScanCode`
 	},
 	login:{
 		getSF       : `${base.staff}getSF`,

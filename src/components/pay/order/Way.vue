@@ -43,6 +43,7 @@
 	import { Button, Cell, Icon, Popup, Dialog, Toast, CountDown } from 'vant';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import QRCode from 'qrcodejs2';
+	import { submitForm } from '@/util';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -158,6 +159,9 @@
 				let self = this;
 				this.$request.payAll.payAll.wechatPay( data ).then(res=>{
 					if( res.errorCode == '00000' ){
+						/*console.log(res.result)
+						return false;
+						submitForm(res.server_url,{code_info:res.result});*/
 						let url = 'http://' + res.result.server_info.Frp80PortDomain + '/getCode.html?token=' + res.result.token + '&oriDomain=' + res.result.server_info.OriDomain + '&backstagePort=' + res.result.server_info.OriPort + '&type=pay';
 						window.location.href = url;
 					}

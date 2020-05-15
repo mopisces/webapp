@@ -32,7 +32,7 @@
 		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
 			<div slot="top" style="font-size:1rem;text-align:center;" >
 				<template v-if="formData.isRangePrice">
-				当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/㎡</span>
+				当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/个</span>
 					<van-tag mark type="danger">最低价</van-tag><br/>
 					<template v-for="(item,index) in helpInfo">
 						订单数满<span style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" @click="maxOrderQty( item.qty )">{{ item.qty }}</span>价格减至 <span style="color: rgb(224, 24, 53);">¥{{ item.price }}/个</span><br/>

@@ -79,7 +79,8 @@
 			getWxAuth(){
 				this.$request.wechat.config.serverInfo().then((res)=>{
 					if( res.errorCode == '00000' ){
-						window.location.href = 'http://' + res.result.Frp80PortDomain + '/getCode.html?oriDomain=' + res.result.OriDomain + '&backstagePort=' + res.result.OriPort + '&type=auth&token=auth';
+						console.log(res)
+						//window.location.href = 'http://' + res.result.Frp80PortDomain + '/getCode.html?oriDomain=' + res.result.OriDomain + '&backstagePort=' + res.result.OriPort + '&type=auth&token=auth';
 					}
 				});
 			},

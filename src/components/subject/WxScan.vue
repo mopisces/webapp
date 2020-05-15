@@ -5,6 +5,7 @@
 </template>
 <script>
 	import { Icon, Field, Toast  } from 'vant';
+	import { submitForm } from '@/util';
 	export default {
 		components:{
 			[Icon.name]: Icon,
@@ -35,7 +36,21 @@
 						}
 					}
 				});
-			}
+			},
+			/*scanQRCode(){
+				let self = this;
+				this.$request.staff.wx.scanQrCode( this.urlType ).then(res=>{
+					if( res.errorCode == '00000' ){
+						submitForm(res.server_url, { scan_info:res.result } );
+					}
+				});
+			},
+			isWX(){
+				let ua = window.navigator.userAgent.toLowerCase();
+				if( ua.match(/MicroMessenger/i) == 'micromessenger' ){
+					this.scanValuable   = true;
+				}
+			}*/
 		},
 		created(){
 			this.isWX();

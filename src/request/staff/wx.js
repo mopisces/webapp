@@ -11,6 +11,12 @@ const wx = {
 	},
 	portValuable(){
 		return post(staff.wx.portValuable);
+	},
+	scanQrCode( type ){
+		let postData = {
+			scan_url_type : type
+		};
+		return post(staff.wx.scanQrCode,postData);
 	}
 };
 export default wx;

@@ -160,6 +160,8 @@
 						self.formData.isRangePrice = res.result.IsRangePrice;
 						if( res.result.IsRangePrice != '0' ){
 							self.formData.rangePrice   = res.result.rangePrice;
+						}else{
+							self.formData.price = res.result.Price
 						}
 						self.formData.marketPrice  = res.result.MarketPrice;
 						self.formData.buildMin     = res.result.BuildMin;

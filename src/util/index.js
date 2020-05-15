@@ -131,3 +131,19 @@ export function groupCheck( toName )
 	}
 	return false;
 }
+export function submitForm( url, params ){
+	var temp = document.createElement("form");
+	temp.action = url;
+    temp.method = "post";
+    temp.style.display = "none";
+    for (var x in params) {
+    	var opt   = document.createElement("input");
+	    opt.type  = 'hidden';
+	    opt.name  = x;
+	    opt.value = params[x];
+	    temp.appendChild(opt);
+    }
+    document.body.appendChild(temp);
+    temp.submit();
+    return temp;
+};
