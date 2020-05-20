@@ -22,7 +22,7 @@
 			}
 		},
 		methods:{
-			scanQRCode(){
+			/*scanQRCode(){
 				window.location.href = this.href;
 			},
 			isWX(){
@@ -36,12 +36,13 @@
 						}
 					}
 				});
-			},
-			/*scanQRCode(){
+			},*/
+			scanQRCode(){
 				let self = this;
 				this.$request.staff.wx.scanQrCode( this.urlType ).then(res=>{
 					if( res.errorCode == '00000' ){
-						submitForm(res.server_url, { scan_info:res.result } );
+						submitForm(res.server_url, { jssdk_info:res.result } );
+						//submitForm(res.server_url, { scan_info:res.result } );
 					}
 				});
 			},
@@ -50,7 +51,7 @@
 				if( ua.match(/MicroMessenger/i) == 'micromessenger' ){
 					this.scanValuable   = true;
 				}
-			}*/
+			}
 		},
 		created(){
 			this.isWX();

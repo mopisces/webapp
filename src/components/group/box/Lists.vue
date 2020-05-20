@@ -45,10 +45,10 @@
 						</van-count-down>
 					</div>
 					<div slot="price" style="font-size:1rem;">
-						¥{{ item.Price }}/㎡
+						¥{{ item.Price }}/个
 					</div>
 					<div slot="origin-price" style="font-size:0.8rem;">
-						¥{{ item.MarketPrice }}/㎡
+						¥{{ item.MarketPrice }}/个
 					</div>
 					<van-tag mark type="danger" slot="tag" v-if="item.IsFlag == 1 ">{{ config.flagName }}</van-tag>
 					<div slot="tags">

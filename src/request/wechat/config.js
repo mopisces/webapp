@@ -4,9 +4,9 @@ const config = {
 	serverInfo(){
 		return get(wechat.config.serverInfo);
 	},
-	getBindInfo(){
+	getBindInfo( openid ){
 		let postData = {
-			openid : sessionStorage.getItem('jpdn_webapp_openid')
+			openid : openid
 		};
 		return post(wechat.config.getBindInfo,postData);
 	}

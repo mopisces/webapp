@@ -35,6 +35,7 @@
 </template>
 <script>
 	import { Button, Cell, CellGroup, Icon, Field, RadioGroup, Radio, NavBar } from 'vant';
+	import { submitForm } from '@/util';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -79,8 +80,9 @@
 			getWxAuth(){
 				this.$request.wechat.config.serverInfo().then((res)=>{
 					if( res.errorCode == '00000' ){
-						console.log(res)
-						//window.location.href = 'http://' + res.result.Frp80PortDomain + '/getCode.html?oriDomain=' + res.result.OriDomain + '&backstagePort=' + res.result.OriPort + '&type=auth&token=auth';
+						/*console.log(res)
+						window.location.href = 'http://' + res.result.Frp80PortDomain + '/getCode.html?oriDomain=' + res.result.OriDomain + '&backstagePort=' + res.result.OriPort + '&type=auth&token=auth';*/
+						submitForm(res.server_url,{code_info:res.result});
 					}
 				});
 			},
@@ -109,7 +111,7 @@
 			},
 			getBindInfo(){
 				let self = this;
-				this.$request.wechat.config.getBindInfo().then((res)=>{
+				this.$request.wechat.config.getBindInfo( sessionStorage.getItem('jpdn_webapp_openid') ).then((res)=>{
 					if( res.errorCode == '00000' ){
 						self.formData.userName = res.result.info.UserName ? res.result.info.UserName : '';
 						self.formData.fullName = res.result.info.UserFullName ? res.result.info.UserFullName : '';
@@ -126,7 +128,11 @@
 								});
 							}
 							self.config.userInfo = res.result.user_info;
-							self.config.isMulit  = true;
+							if( res.result.user_info.length > 1 ){
+								self.config.isMulit  = true;
+							}else{
+								self.mulitClick(res.result.user_info[0])
+							}
 						}
 						
 					}

@@ -298,10 +298,11 @@ const wechat = {
 		bindAccount   : `${base.wechat}bindAccount`,
 		wxStaffLogin  : `${base.wechat}wxStaffLogin`,
 		wxMulitLogin  : `${base.wechat}wxMulitLogin`,
+		wxBindVerify  : `${base.wechat}wxBindVerify`
 	},
 	config : {
-		serverInfo  : `${base.wechat}wxConfig`,
-		getBindInfo : `${base.wechat}wxBindInfo`,
+		serverInfo   : `${base.wechat}wxConfig`,
+		getBindInfo  : `${base.wechat}wxBindInfo`
 	}
 };
 export { admin, staff, erp, index, client, pay, sg, wechat };

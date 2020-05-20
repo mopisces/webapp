@@ -8,9 +8,10 @@ import { groupCheck } from '@/util';
 Vue.use(VueRouter);
 //404
 const error404 = () => import('@/components/common/404');
-const wxScan   = () => import('@/components/common/WxScanRes');
+//const wxScan   = () => import('@/components/common/WxScanRes');
 const wxQrCode = () => import('@/components/login/WxQrCode');
 const login    = () => import('@/components/login/Login');
+const test    = () => import('@/components/common/Test');
 let routes = [
     {
         path : '/login/index',
@@ -23,10 +24,15 @@ let routes = [
         meta:{ title: '微信授权生成二维码登陆' }
     },
     {
+        path:'/common/verify',
+        component:test,
+        meta:{ title: '审核绑定' }
+    },
+    /*{
         path : '/common/wxscan',
         component: wxScan,
         meta:{ title: '微信扫一扫' }
-    },
+    },*/
     {
         path:'*',
         component : error404,

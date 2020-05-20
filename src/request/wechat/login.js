@@ -29,6 +29,12 @@ const login = {
 			user_type : data.userType
 		};
 		return post(wechat.login.wxMulitLogin,postData);
+	},
+	wxBindVerify(openid){
+		let postData = {
+			openid : openid,
+		};
+		return post(wechat.login.wxBindVerify,postData);
 	}
 };
 export default login;

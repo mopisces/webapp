@@ -17,13 +17,13 @@
 								<el-input v-model="form.FactoryName" style="width: 300px;"></el-input>
 							</td>
 						</tr>
-						<!-- <tr>
-							<td style="width:150px;">ERP端口</td>
+						<tr>
+							<td style="width:150px;">微信模板消息ID</td>
 							<td>
-								<el-input v-model="form.ErpPort" style="width: 160px;"></el-input>
-								<p class="info">作用于：内部直接入库，内部库存修改，内部订单试算，内部扫描装货</p>
+								<el-input v-model="form.WxVerifyTempId" style="width: 400px;"></el-input>
+								<p class="info">作用于：验证微信授权账号绑定</p>
 							</td>
-						</tr>-->
+						</tr>
 						<tr>
 							<td style="width:150px;">外部80端口</td>
 							<td>
@@ -766,7 +766,7 @@
 					//公共参数
 					FactoryId       : '',
 					FactoryName     : '',
-					ErpPort         : '',
+					WxVerifyTempId  : '',
 					Open80Port      : '',
 					WxAppId         : '',
 					Frp80PortDomain : '',
