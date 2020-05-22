@@ -44,6 +44,7 @@
 				</div>
 			</div>
 		</div>
+		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
 		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
 		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="clickQuestion(2)"/>
 		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/>
@@ -98,6 +99,10 @@
 							label       : '封箱调整(U)',
 							placeholder : '选择封箱调整'
 						},
+						lineBall:{
+							label       : '压型名称',    //压线名称
+							placeholder : '选择压型名称'  //选择压线名称
+						},
 						address : {
 							label       : '送货公司',
 							placeholder : '选择送货公司'
@@ -108,6 +113,7 @@
 						boxType  : [],
 						tonLen   : [],
 						uLen     : [],
+						lineBall : [],
 						address  : []
 					},
 					popup : {
@@ -142,6 +148,7 @@
 					bdMultiple       : '',   //张数
 					ordQty           : 0,    //订单数
 					bdQty            : '',   //纸板数
+					lineBallInfo     : '',   //压型名称
 					area             : '',   //下单面积
 					address          : '',   //送货地址
 					date             : '',   //交货日期
@@ -225,6 +232,9 @@
 						],
 						bdQty  : [
 							{ required : true , message:'请填写相关信息获取纸板数' }
+						],
+						lineBallInfo:[
+							{ required : true , message:'请选择压型' }
 						],
 						area : [
 							{ validator: (rule, value, callback, source, options)=>{
@@ -326,6 +336,10 @@
 							self.config.radioData.material.push({ value : item.BoardId , text: item.BoardName, tag:item.IsUsedBoard });
 						}
 					});
+					res.result.line_ball_config.forEach((item,index)=>{
+						self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
+					});
+					self.formData.lineBallInfo = self.config.radioData.lineBall[0].value;
 					res.result.cus_info.forEach((item,index)=>{
 						if( item.DefAddress == 1 ){
 							self.formData.address = item.CusSubNo;

@@ -60,6 +60,7 @@
 			</div>
 		</van-field>
 		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
+		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
 		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="$toast('正数:几个纸板=>1个纸箱\n负数:1个纸板=>几个纸箱' )"/>
 		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()" ref="orderQuantitiesField"/>
 		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly/>
@@ -126,6 +127,10 @@
 							label       : '封箱调整(U)',
 							placeholder : '选择封箱调整'
 						},
+						lineBall : {
+							label       : '压型名称',    //压线名称
+							placeholder : '选择压型名称'  //选择压线名称
+						},
 						address : {
 							label       : '送货公司',
 							placeholder : '选择送货公司'
@@ -135,6 +140,7 @@
 						boxType : [],
 						tonLen  : [],
 						uLen    : [],
+						lineBall: [],
 						address : [],
 					},
 					popup:{
@@ -179,6 +185,7 @@
 					bdMultiple       : '',  //张数
 					ordQty           : '',  //订单数
 					bdQty            : '',  //纸板数
+					lineBallInfo     : '',  //压型名称
 					area             : '',
 					address          : '',
 					date             : '',
@@ -261,6 +268,9 @@
 					bdQty : [
 						{ required:true, message : '请填写相关信息获取纸板数'  }
 					],
+					lineBallInfo:[
+						{ required : true , message:'请选择压型' }
+					],
 					area : [
 						{ required:true, message : '请填写相关信息获取下单面积'  },
 						{ validator: (rule, value, callback, source, options)=>{
@@ -332,6 +342,10 @@
 					res.result.box_type_available.forEach((item,index)=>{
 						self.config.radioData.boxType.push({ value : item.BoxId, text:item.BoxName, lengthF:item.LengthF, widthF:item.WidthF });
 					});
+					res.result.page_config.line_ball_config.forEach((item,index)=>{
+						self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
+					});
+					self.formData.lineBallInfo = self.config.radioData.lineBall[0].value;
 					res.result.cus_info.forEach((item,index)=>{
 						self.config.radioData.address.push({ value : item.CusSubNo, text:item.SubDNAddress})
 					});

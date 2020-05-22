@@ -22,6 +22,9 @@
 							<td>
 								<el-input v-model="form.WxVerifyTempId" style="width: 400px;"></el-input>
 								<p class="info">作用于：验证微信授权账号绑定</p>
+								<div style="width:100%;height:10px;"></div>
+								<el-input v-model="form.WxVerifyPassTempId" style="width: 400px;"></el-input>
+								<p class="info">作用于：审核通过后发送给用户</p>
 							</td>
 						</tr>
 						<tr>
@@ -767,6 +770,7 @@
 					FactoryId       : '',
 					FactoryName     : '',
 					WxVerifyTempId  : '',
+					WxVerifyPassTempId:'',
 					Open80Port      : '',
 					WxAppId         : '',
 					Frp80PortDomain : '',

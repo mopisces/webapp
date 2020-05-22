@@ -91,8 +91,8 @@
 				config : {
 					fieldConfig: {
 						lineBall : {
-							label       : '压线名称',
-							placeholder : '选择压线名称'
+							label       : '压型名称', //压线名称
+							placeholder : '选择压型名称' //选择压线名称
 						},
 						cusInfo : {
 							label       : '送货公司',
