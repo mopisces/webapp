@@ -409,17 +409,23 @@
 				});
 			},
 			getSocket( socketUrl ){
-				/*this.socket = io(socketUrl,{
-					timeout:3000
-				});*/
-
-				this.socket = io('http://xzys.leaper.ltd:8888',{
+				//socketUrl = 'http://sclx.leaper.ltd:8888';
+				//socketUrl = 'http://nbhw.leaper.ltd:7000';
+				//socketUrl = 'http://127.0.0.1:7878';
+				this.socket = io(socketUrl,{
 					timeout:3000
 				});
+				/*this.socket = io('http://nbhw.leaper.ltd:7000',{
+					timeout:3000
+				});*/
 
 				this.socket.on('connect',()=>{
 					this.config.notice.text = '链接成功！';
 				});
+				/*this.socket.on('sendMsg', (data)=>{
+					console.log(data)
+				});
+				return ;*/
 				this.socket.on('AnalyUdpData0', (data)=>{
 					/*if( this.config.isnew ){
 						Object.assign(this.updownInfo, JSON.parse(data).data);
@@ -438,9 +444,9 @@
 						this.config.notice.text = '后台udp广播暂未开启';
 					}else{
 						this.config.notice.text = '监控开启成功';
-						if( JSON.parse(data).data ){
+						/*if( JSON.parse(data).data ){
 							console.log('数据不完整');
-						}
+						}*/
 						if( this.config.updown ){
 							Object.assign(this.updownInfo, JSON.parse(data).data);
 						}else{
@@ -462,7 +468,6 @@
 								this.chart.series[0].addPoint([(new Date()).getTime(),this.normalInfo[keyArr[0]][keyArr[1]]],true,true);
 							}
 						}
-						this.chart.series[0].addPoint([(new Date()).getTime(),12],true,true);
 					}
 				});
 				this.socket.on('connect_error',(error)=>{

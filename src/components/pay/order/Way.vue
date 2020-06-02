@@ -22,6 +22,9 @@
 		<van-cell size="large" title="支付宝支付" is-link v-if="info.useAlipay" @click="payClick( 'alipay' )">
 			<van-icon  slot="icon" name="alipay" style="line-height: inherit;" size="40" color="#1989FA"/>
 		</van-cell>
+		<van-cell size="large" title="信用额度支付" is-link v-if="info.useCredit" @click="payClick( 'credit' )">
+			<van-icon  slot="icon" name="gold-coin-o" style="line-height: inherit;" size="40" color="#1989FA"/>
+		</van-cell>
 		<van-popup v-model="wxQrCodeShow" position="top" :style="{ height : '100%', width: '100%'}">
 			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
 				<div class="van-nav-bar__title van-ellipsis">
@@ -64,6 +67,7 @@
 					isOneCent  : false,
 					useAlipay  : false,
 					useWechat  : false,
+					useCredit  : false,
 					orderName  : '',
 					total      : 0,
 					deadTime   : 0,
@@ -83,6 +87,7 @@
 					self.info.isOneCent = res.result.one_cent == '1' ? true : false;
 					self.info.useWechat = res.result.pay_available.UseWxPay == '1' ? true : false;
 					self.info.useAlipay = res.result.pay_available.UseAliPay == '1' ? true : false;
+					self.info.useCredit = res.result.pay_available.UseCreditPay == '1' ? true : false;
 					self.info.orderName = res.result.order_name;
 					self.info.total     = res.result.total;
 					self.info.deadTime  = res.result.dead_time * 1000;
@@ -123,6 +128,9 @@
 				}
 				if( type == 'alipay' ){
 					this.alipay( this.info );
+				}
+				if( type == 'credit' ){
+					this.creditPay( this.info );
 				}
 			},
 			timeFinal(){
@@ -166,6 +174,28 @@
 						window.location.href = url;*/
 					}
 				});
+			},
+			creditPay( data ){
+				if( data.cusOrderId == '' || data.total <= 0 ){
+					Toast.fail('参数不正确');
+					return ;
+				}
+				let self = this;
+				this.$request.payAll.payAll.creditPay( data ).then(res=>{
+					if( res.errorCode == '00000' ){
+						Toast.success({
+							message:'支付成功',
+							onClose:function (){
+								self.$router.push({
+									name:'payDetail',
+									params:{
+										orderId:data.cusOrderId
+									}
+								})
+							}
+						})
+					}
+				})
 			},
 			wxpayMakeQrCode( data ){
 				if( data.cusOrderId == '' || data.tradeType != 1 ){

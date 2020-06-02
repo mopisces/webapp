@@ -11,10 +11,17 @@ const payAll = {
 	},
 	wechatPay( data ){
 		let postData = {
-			trade_type         : data.tradeType,
-			cus_order_id       : data.cusOrderId
+			trade_type   : data.tradeType,
+			cus_order_id : data.cusOrderId
 		};
 		return post(pay.wxpay,postData);
+	},
+	creditPay( data ){
+		let postData = {
+			cus_order_id : data.cusOrderId,
+			total_amount : data.total
+		};
+		return post(pay.creditpay,postData);
 	},
 	wxPayForJsapi( data ){
 		let postData = {
@@ -22,12 +29,6 @@ const payAll = {
 			token : data.token
 		};
 		return post(pay.wxPayForJsapi,postData);
-	},
-	wxPayJwt( data ){
-		let postData = {
-			token : data
-		};
-		return post(pay.wxPayJwt,postData);
 	}
 }
 export default payAll;

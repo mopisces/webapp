@@ -6,7 +6,7 @@
 		<van-field label="姓名" v-model="formData.userFullName" disabled />
 		<van-field label="手机号码" v-model="formData.telNo" disabled />
 		<div style="text-align:center;margin-top:1rem;">
-			<van-button type="primary" style="width:100%;" :loading="config.button.loading" :disabled="config.button.loading" loading-text="已审核" block @click="verify()">审核通过</van-button>
+			<van-button type="primary" style="width:100%;" :disabled="config.button.disabled" block @click="verify()">{{ config.button.text }}</van-button>
 		</div>
 	</div>
 </template>
@@ -22,7 +22,8 @@
 			return {
 				config:{
 					button:{
-						loading : false
+						text : '审核通过',
+						disabled : false,
 					}
 				},
 				openid:'',
@@ -44,7 +45,8 @@
 						self.formData.userFullName = res.result.info.UserFullName;
 						self.formData.telNo        = res.result.info.TelNo;
 						if( res.result.info.Stopped == 0 ){
-							self.config.button.loading = true;
+							self.config.button.disabled = true;
+							self.config.button.text     = '已审核';
 						}
 					}
 				});
@@ -53,7 +55,8 @@
 				let self = this;
 				this.$request.wechat.login.wxBindVerify(this.openid).then(res=>{
 					if( res.errorCode == '00000' ){
-						self.config.button.loading = true;
+						self.config.button.disabled = true;
+						self.config.button.text     = '已审核';
 					}
 				});
 			}
@@ -81,14 +84,4 @@
 
 		}
 	}
-</script>
-<style>
-	.content{
-        width:100%;
-        height:100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-top: 10rem; 
-    }
-</style>
+</script> 

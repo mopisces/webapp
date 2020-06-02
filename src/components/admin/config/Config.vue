@@ -33,13 +33,6 @@
 								<el-checkbox v-model="form.Open80Port" label="是否开放" border true-label="0" false-label="0"></el-checkbox>
 							</td>
 						</tr>
-						<!--<tr v-if=" Number(form.UseScan) || Number(form.UseWxPay)">
-							<td style="width:150px;">微信公众号AppId</td>
-							<td>
-								<el-input style="width: 200px;" v-model="form.WxAppId"></el-input>
-								<p class="info">作用于：内部扫码，团购微信支付</p>
-							</td>
-						</tr> -->
 						<template  v-if="!Number(form.Open80Port) && (Number(form.UseScan) || Number(form.UseWxPay))">
 							<tr>
 								<td style="width:150px;">FRP80端口的域名</td>
@@ -509,7 +502,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="width:150px;">压线名称</td>
+							<td style="width:150px;">压型名称</td>
 							<td>
 								<el-input style="width: 300px;" v-model="form.BuildScoreName"></el-input>
 								<p class="info">用,隔开</p>
@@ -560,7 +553,12 @@
 			<el-tab-pane label="团购" name="group">
 				<table style="width:100%;">
 					<tbody>
-						
+						<tr>
+							<td style="150px;">是否开启信用额度付款</td>
+							<td>
+								<el-checkbox v-model="form.UseCreditPay" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
 						<tr>
 							<td style="150px;">团购纸板销售宽默认值</td>
 							<td>
@@ -664,84 +662,6 @@
 					</tbody>
 				</table>
 			</el-tab-pane>
-			<!-- <el-tab-pane label="微信支付" name="wechat" v-if="(Number(form.UseBoardGroup) || Number(form.UseBoxGroup)) && Number(form.UseWxPay)">
-				<table style="width:100%;">
-					<tbody>
-						<tr>
-							<td style="width:150px;">微信公众号AppSecret</td>
-							<td>
-								<el-input style="width: 300px;" v-model="form.WxAppSecret" ></el-input>
-							</td>
-						</tr>
-						<tr>
-							<td style="width:150px;">微信商户号</td>
-							<td>
-								<el-input style="width: 300px;" v-model="form.WxMchId" ></el-input>
-							</td>
-						</tr>
-						<tr>
-							<td style="width:150px;">微信商户支付密钥</td>
-							<td>
-								<el-input style="width: 300px;" v-model="form.WxKey" ></el-input>
-							</td>
-						</tr>
-						<tr>
-							<td style="width:150px;">微信商户证书 apiclient_cert.pem 绝对路径</td>
-							<td>
-								<el-input style="width: 500px;" v-model="form.WxSslcertPath"></el-input>
-								<p class="info">建议与 htdocs 文件夹平级</p>
-							</td>
-						</tr>
-						<tr>
-							<td style="width:150px;">微信商户证书 apiclient_key.pem 绝对路径</td>
-							<td>
-								<el-input style="width: 500px;" v-model="form.WxSslkeyPath"></el-input>
-								<p class="info">建议与 htdocs 文件夹平级</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<el-button type="primary" @click="saveConfig()">保存</el-button>
-							</td>
-							<td>
-								<el-button type="success" @click="getConfig()">重置</el-button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</el-tab-pane>
-			<el-tab-pane label="支付宝支付" name="ali" v-if="(Number(form.UseBoardGroup) || Number(form.UseBoxGroup)) && Number(form.UseAliPay)">
-				<table style="width:100%;">
-					<tbody>
-						<tr>
-							<td style="width:150px;">支付宝AppId</td>
-							<td>
-								<el-input style="width: 200px;" v-model="form.AliAppId" ></el-input>
-							</td>
-						</tr>
-						<tr>
-							<td style="width:150px;">支付宝公钥</td>
-							<td>
-								<el-input v-model="form.AliPublicKey" type="textarea" rows="5" style="width:500px;"></el-input>
-							</td>
-						</tr>
-						<tr>
-							<td style="width:150px;">支付宝商户私钥</td>
-							<td>
-								<el-input v-model="form.AliRsaPrivateKey" type="textarea" rows="15" style="width:500px;"></el-input>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<el-button type="primary" @click="saveConfig()">保存</el-button>
-							</td>
-							<td>
-								<el-button type="success" @click="getConfig()">重置</el-button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</el-tab-pane> -->
 		</el-tabs>
 		<el-dialog title="提示" :visible="config.dialog.show" width="30%">
 			<span>{{ config.dialog.value }}</span>
@@ -873,7 +793,7 @@
 					BuildMinBoxH              : '',  //箱高范围
 					BuildMaxBoxH              : '',  //箱高范围
 					BuildAutoGetTonLenAndULen : '',  //自动获取默认的箱舌＆封箱调整
-					BuildScoreName            : '',  //压线名称
+					BuildScoreName            : '',  //压型名称
 					BuildMinArea              : '',  //纸板下单面积范围
 					BuildMaxArea              : '',  //纸板下单面积范围
 					BuildMinOrdQty            : '',  //纸箱下单订单数范围
@@ -882,6 +802,7 @@
 					BuildMinDate              : '',  //交货日期(范围)
 					BuildMaxDate              : '',  //交货日期
 					//团购参数
+					UseCreditPay     : '',  //是否开启信用额度付款
 					WebSalesWidth    : '',  //团购纸板销售宽默认值
 					MaxOverTimeOrder : '',  //最大超时未支付订单数量
 					MaxUnPaidOrder   : '',  //最大未支付订单数量
@@ -897,16 +818,6 @@
 					//淘宝箱按面积报价
 					OpenBoxForArea   : '',  //淘宝箱是否按面积报价
 					BoxForAreaDecimals : ''  //保留小数位数
-					/*//支付宝参数
-					AliAppId         : '',
-					AliPublicKey     : '',
-					AliRsaPrivateKey : '',
-					//微信支付参数
-					WxAppSecret   : '',
-					WxMchId       : '',
-					WxKey         : '',
-					WxSslcertPath : '',
-					WxSslkeyPath  : '',*/
 				}
 			}
 		},
