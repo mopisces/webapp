@@ -198,12 +198,18 @@
 						Toast.success({
 							message:'支付成功',
 							onClose:function (){
-								self.$router.push({
-									name:'payDetail',
-									params:{
-										orderId:data.cusOrderId
-									}
-								})
+								if( data.cusOrderId.indexOf(',') >= 0 ){
+									self.$router.push({
+										path:'/client/wxorder/lists'
+									});
+								}else{
+									self.$router.push({
+										name:'payDetail',
+										params:{
+											orderId:data.cusOrderId
+										}
+									});
+								}
 							}
 						});
 					}
