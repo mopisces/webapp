@@ -94,7 +94,6 @@
 					self.info.useAlipay = res.result.pay_available.UseAliPay == '1' ? true : false;
 					self.info.useCredit = res.result.pay_available.UseCreditPay == '1' ? true : false;
 					if( self.info.useCredit ){
-						console.log(res.result.pay_available.LeftMinAmtCond)
 						self.info.leftMinAmtCond = res.result.pay_available.LeftMinAmtCond;
 					}
 					self.info.orderName = res.result.order_name;
