@@ -25,7 +25,7 @@
 		<van-cell size="large" title="信用额度支付" v-if="info.useCredit" @click="payClick( 'credit' )">
 			<van-icon  slot="icon" name="gold-coin-o" style="line-height: inherit;" size="40" color="#1989FA"/>
 			<div slot="right-icon">
-				<span>{{info.minAmtCond}}</span>
+				<span>{{info.leftMinAmtCond}}</span>
 				<van-icon name="arrow" />
 			</div>
 		</van-cell>
@@ -72,7 +72,7 @@
 					useAlipay  : false,
 					useWechat  : false,
 					useCredit  : false,
-					minAmtCond : 0,
+					leftMinAmtCond:'',
 					orderName  : '',
 					total      : 0,
 					deadTime   : 0,
@@ -94,7 +94,8 @@
 					self.info.useAlipay = res.result.pay_available.UseAliPay == '1' ? true : false;
 					self.info.useCredit = res.result.pay_available.UseCreditPay == '1' ? true : false;
 					if( self.info.useCredit ){
-						self.info.minAmtCond = res.result.pay_available.MinAmtCond;
+						console.log(res.result.pay_available.LeftMinAmtCond)
+						self.info.leftMinAmtCond = res.result.pay_available.LeftMinAmtCond;
 					}
 					self.info.orderName = res.result.order_name;
 					self.info.total     = res.result.total;
@@ -186,6 +187,10 @@
 			creditPay( data ){
 				if( data.cusOrderId == '' || data.total <= 0 ){
 					Toast.fail('参数不正确');
+					return ;
+				}
+				if( data.leftMinAmtCond < data.total ){
+					Toast.fail('信用余额低于支付金额');
 					return ;
 				}
 				let self = this;
