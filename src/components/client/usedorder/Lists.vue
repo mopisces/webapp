@@ -115,7 +115,9 @@
 						self.config.list.pushLoading.finished = true;
 					}
 					self.config.list.pushLoading.loading = false;
-					self.panelData = res.result;
+					res.result.forEach((item,index)=>{
+						self.panelData.push(item);
+					});
 				});
 			},
 			cancelClick( orderId ){

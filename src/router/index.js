@@ -11,7 +11,7 @@ const error404 = () => import('@/components/common/404');
 //const wxScan   = () => import('@/components/common/WxScanRes');
 const wxQrCode = () => import('@/components/login/WxQrCode');
 const login    = () => import('@/components/login/Login');
-const test    = () => import('@/components/common/Test');
+const check    = () => import('@/components/common/Check');
 let routes = [
     {
         path : '/login/index',
@@ -25,7 +25,7 @@ let routes = [
     },
     {
         path:'/common/verify',
-        component:test,
+        component:check,
         meta:{ title: '审核绑定' }
     },
     /*{

@@ -3,7 +3,8 @@
 		<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
 			<div class="van-nav-bar__title van-ellipsis">生管监控登陆</div>
 		</div>
-		<div :style="pageInfo.bg">
+		<div style="width:100%;height:2.875rem;"></div>
+		<div>
 			<div style="padding-top: 0.875rem;  height: 100%;text-align:center;">
 				{{ pageInfo.factoryName }}
 			</div>
@@ -15,6 +16,7 @@
 				<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
 				<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
 			</div>
+			<div style="height:3.125rem;width:100%;"></div> 
 		</div>
 		<copy-right></copy-right>
 	</div>
@@ -42,7 +44,7 @@
 				pageInfo:{
 					factoryName : '123',
 					factoryLogo : '',
-					bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'
+					/*bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'*/
 				},
 				formData:{
 					userName : '',
@@ -80,9 +82,9 @@
 				this.$request.sg.login.login( this.formData ).then(res=>{
 					if( res.errorCode == '00000' ){
 						sessionStorage.setItem('jpdn-sg-token',res.result.access_token);
-						self.$router.push('/sg/menu');
 						sessionStorage.setItem('jpdn-sg-root',res.result.root);
 						self.$store.dispatch('sg/permission');
+						self.$router.push('/sg/menu');
 					}
 				});
 			}

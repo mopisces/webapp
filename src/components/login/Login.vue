@@ -13,7 +13,13 @@
 		<template v-if=" formData.stopped == 0 ">
 			<template v-if=" config.isMulit ">
 				<van-cell-group title="请选择账号">
-					<van-cell :title="user.UserName" is-link @click=" mulitClick(user) " v-for="(user,key) in config.userInfo" :key="key" />
+					<van-cell is-link @click=" mulitClick(user) " v-for="(user,key) in config.userInfo" :key="key" >
+						<template slot="title">
+							<span class="custom-title">{{ user.UserName }}</span>
+							<van-tag type="danger" v-if="user.UserType == 1">内部用户</van-tag>
+							<van-tag type="warning" v-else>外部用户</van-tag>
+						</template>
+					</van-cell>
 				</van-cell-group>
 			</template>
 			<template v-if=" !config.isMulit && config.showSubFact ">
@@ -34,7 +40,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Icon, Field, RadioGroup, Radio, NavBar } from 'vant';
+	import { Button, Cell, CellGroup, Icon, Field, RadioGroup, Radio, Tag, NavBar } from 'vant';
 	import { submitForm } from '@/util';
 	export default {
 		components:{
@@ -45,6 +51,7 @@
 			[Field.name]: Field,
 			[RadioGroup.name]: RadioGroup,
 			[Radio.name]: Radio,
+			[Tag.name]: Tag,
 			[NavBar.name]: NavBar,
 		},
 		data(){
@@ -116,7 +123,7 @@
 						self.formData.userName = res.result.info.UserName ? res.result.info.UserName : '';
 						self.formData.fullName = res.result.info.UserFullName ? res.result.info.UserFullName : '';
 						self.formData.phone    = res.result.info.TelNo ? res.result.info.TelNo : '';
-						self.formData.stopped  = res.result.info.Stopped ? res.result.info.Stopped : 1 ;
+						self.formData.stopped  = res.result.info.Stopped;
 						if( self.formData.stopped == 0 ){
 							if( res.result.bind_type == 1 && res.result.factory_info.length > 1){
 								self.config.radioInfo  = [];
