@@ -1,4 +1,5 @@
 import { asyncAdminRouterMap } from '@/router/admin';
+import { deepCopy } from '@/util/index';
 const admin = {
 	namespaced: true,
 	state: {
@@ -10,7 +11,8 @@ const admin = {
 		}
 	},
 	actions: {
-		permission : ({commit})=>{
+		permission : ({commit}, isAdmin)=>{
+			let routeArr  = deepCopy(asyncAdminRouterMap);
 			commit('setNavList', asyncAdminRouterMap);
 		}
 	},

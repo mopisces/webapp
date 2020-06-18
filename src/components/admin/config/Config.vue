@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-if="config.isAdmin">
 		<el-tabs v-model="config.tabPane.activeName" type="card">
 			<el-tab-pane label="公共" name="common">
 				<table style="width:100%;">
@@ -683,7 +683,8 @@
 						value : '',
 						show : false
 					},
-					openBoxForAreaShow : false
+					openBoxForAreaShow : false,
+					isAdmin:false
 				},
 				form : {
 					//公共参数
@@ -827,6 +828,7 @@
 				this.$request.admin.config.getConfig().then((res)=>{
 					Object.assign(self.form,res.result);
 					self.form.Open80Port = 0;
+					self.config.isAdmin  = res.result.IsAdmin == 1 ? true : false;
 				});
 			},
 			saveConfig(){
