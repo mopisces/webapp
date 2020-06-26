@@ -801,7 +801,9 @@
 					BuildMaxOrdQty            : '',  //纸箱下单订单数范围
 					BuildDeliveryDate         : '',  //交货日期(默认)
 					BuildMinDate              : '',  //交货日期(范围)
-					BuildMaxDate              : '',  //交货日期
+					BuildMaxDate              : '',  //交货日期,
+					BuildTonLen               : '',  //箱舌
+					BuildULen                 : '',  //封箱调整
 					//团购参数
 					UseCreditPay     : '',  //是否开启信用额度付款
 					WebSalesWidth    : '',  //团购纸板销售宽默认值

@@ -18,6 +18,56 @@ const webSocket = () => import('@/components/sg/monitor/WebSocket');
 //修改
 const alter    = () => import('@/components/sg/alter/Index');
 export const asyncSgRouterMap = [
+    /*{
+        path:'/sg',
+        component: sgLayout,
+        meta: { title: '生管监控', role:'生管监控' },
+        children:[
+            {
+                path : 'menu',
+                meta : { title: '菜单页面', role:'菜单页面' },
+                component: menu,
+            },
+            {
+                path : 'select/bl',
+                meta : { title: '备料', role:'备料' },
+                component: bl,
+            },
+            {
+                path : 'select/blms',
+                meta : { title: '备料查看', role:'备料查看' },
+                component: blms,
+            },
+            {
+                path : 'select/scdd',
+                meta : { title: '生产订单', role:'生产订单' },
+                component: scdd,
+            },
+            {
+                path : 'select/wgdd',
+                meta : { title: '完工订单', role:'完工订单' },
+                component: wgdd,
+            },
+            {
+                path : 'monitor/websocket',
+                meta : { title: '生管监控', role:'生管监控' },
+                component: webSocket,
+            },
+            {
+                path : 'alter/index',
+                meta : { title: '修改', role:'修改' },
+                component: alter,
+            }
+        ]
+    }*/
+];
+
+const sg = [
+    {
+        path:'/sg/login',
+        component: sgLogin,
+        meta: { title: '生管监控登陆' }
+    },
     {
         path:'/sg',
         component: sgLayout,
@@ -59,14 +109,6 @@ export const asyncSgRouterMap = [
                 component: alter,
             }
         ]
-    }
-];
-
-const sg = [
-    {
-        path:'/sg/login',
-        component: sgLogin,
-        meta: { title: '生管监控登陆' }
     }
 ]; 
 export default sg;
