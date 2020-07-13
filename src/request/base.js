@@ -9,6 +9,7 @@ const base = {
 	//sg        : `${backStage}public/v1/sg/`,      //后台生管地址
 	//sg : 'http://pjhs.leaper.ltd:8003/v1/sg/',
 	sg:'http://localhost:8050/v1/sg/',
+	amap      : `${backStage}public/v1/amap/`,     //导航模块
 	imgDomain : `${backStage}upload/`,            //图片存放地址
 	erp       : erpDomain,                    //erp接口地址
 	wxRediect : pageDomain                    //前端页面地址

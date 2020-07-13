@@ -6,6 +6,7 @@ import payAll from './pay/index';
 import admin from './admin/index';
 import wechat from './wechat/index';
 import sg from './sg/index';
+import amap from './amap/index';
 export default {
 	adminRequest,
 	staff,
@@ -14,5 +15,6 @@ export default {
 	payAll,
 	admin,
 	wechat,
-	sg
+	sg,
+	amap
 }

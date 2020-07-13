@@ -305,4 +305,20 @@ const wechat = {
 		getBindInfo  : `${base.wechat}wxBindInfo`
 	}
 };
-export { admin, staff, erp, index, client, pay, sg, wechat };
+const amap = {
+	tableInfo : {
+		getTableInfo  : `${base.amap}tableData/getTableData`,
+		getUnPackList : `${base.amap}tableData/getUnPackList`,
+		getPDNCus     : `${base.amap}tableData/getPDNCus`,
+		getPackDetail : `${base.amap}tableData/getSelSchPackDetail`,
+		getDistance   : `${base.amap}distanceInfo/getDistance`,
+	},
+	getLocation : {
+		getCustomerDN   : `${base.amap}getLocation/getCustomerDN`,
+		saveMapPosition : `${base.amap}getLocation/saveMapPosition`,
+	},
+	getArea:{
+		areaData:`${base.amap}getArea/areaData`
+	}
+};
+export { admin, staff, erp, index, client, pay, sg, wechat, amap };

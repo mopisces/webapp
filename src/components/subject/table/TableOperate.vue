@@ -49,13 +49,30 @@
 				计算汇总金额
 			</van-button>
 		</div>
+		<!--导航模块-->
+		<div v-if=" field === 'amapPDNCus' ">
+			<van-button plain hairline type="primary" size="small" @click="amapPDNCusOperate('detail')">
+				详情
+			</van-button>
+			<van-button plain hairline type="primary" size="small" @click="amapPDNCusOperate('refresh')">
+				刷新
+			</van-button>
+		</div>
+		<!-- 导航模块 单选
+		<div v-if=" field === 'amapPDNCusRadio' ">
+			<van-radio-group v-model="selectNo">
+				<van-radio name="1" shape="square">{{rowData.PListNo}}</van-radio>
+			</van-radio-group>
+		</div> -->
 	</div>
 </template>
 <script>
-	import { Button, Dialog, Toast  } from 'vant';
+	import { Button, RadioGroup, Radio, Dialog, Toast  } from 'vant';
 	export default {
 		components:{
 			[Button.name]: Button,
+			[RadioGroup.name]: RadioGroup,
+			[Radio.name]: Radio,
 			[Toast.name]: Toast,
 		},
 		props:['rowData','field','index'],
@@ -64,7 +81,8 @@
 				userInfo:{
 					strFactoryId : '',
 					strUserId    : '',
-				}
+				},
+				selectNo:this.rowData.PListNo
 			}
 		},
 		methods:{
@@ -147,6 +165,9 @@
 			},
 			clacAmtOrd(){
 				this.$emit('on-custom-comp',{type:'clacAmtOrd',index:this.index});
+			},
+			amapPDNCusOperate(type){
+				this.$emit('on-custom-comp',{type:type,index:this.index,rowData:this.rowData});
 			}
 		},
 		created(){
@@ -162,10 +183,17 @@
 			
 		},
 		computed:{
-			
+			rowDataNo(){
+				return this.rowData.PListNo;
+			}
 		},
 		watch:{
-
+			rowDataNo(newV,oldV){
+				this.selectNo = newV;
+			},
+			selectNo(newV,oldV){
+				this.$emit("update:rowDataNo", newV);
+			}
 		}
 	}
 </script>

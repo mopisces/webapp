@@ -27,7 +27,8 @@ module.exports = {
       'axios':'axios',
       'vue-router':'VueRouter',
       'element-ui':'ElementUI',
-      'vant':'vant'
+      'vant':'vant',
+      'echarts':'echarts',
     }
   },
   devServer: {
