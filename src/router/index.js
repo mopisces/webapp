@@ -4,6 +4,7 @@ import client from './client';
 import admin from './admin';
 import sg from './sg';
 import group from './group';
+import amap from './amap';
 import { groupCheck } from '@/util';
 Vue.use(VueRouter);
 //404
@@ -12,42 +13,12 @@ const error404 = () => import('@/components/common/404');
 const wxQrCode = () => import('@/components/login/WxQrCode');
 const login    = () => import('@/components/login/Login');
 const check    = () => import('@/components/common/Check');
-const amap     = () => import('@/components/amap/Index');
-const getLocation  = () => import('@/components/amap/GetLocation');
-const tableAmap    = () => import('@/components/amap/TableAmap');
-const distance     = () => import('@/components/amap/DistanceTest');
-const discharge    = () => import('@/components/amap/DischargeAmap');
 const areaChart    = () => import('@/components/echart/Area');
 let routes = [
     {
         path:'/echart/area',
         component: areaChart,
         meta:{ title: '库区剩余' }
-    },
-    {
-        path : '/amap/discharge',
-        component: discharge,
-        meta:{ title: '排货地图功能' }
-    },
-    {
-        path : '/amap/distance',
-        component: distance,
-        meta:{ title: '获取目标位置距离' }
-    },
-    {
-        path : '/amap/table',
-        component: tableAmap,
-        meta:{ title: '高德地图&新表格插件' }
-    },
-    {
-        path : '/amap/GetLocation',
-        component: getLocation,
-        meta:{ title: '高德地图灵活点标记' }
-    },
-    {
-        path : '/amap/index',
-        component: amap,
-        meta:{ title: '高德地图' }
     },
     {
         path : '/login/index',
@@ -64,11 +35,6 @@ let routes = [
         component:check,
         meta:{ title: '审核绑定' }
     },
-    /*{
-        path : '/common/wxscan',
-        component: wxScan,
-        meta:{ title: '微信扫一扫' }
-    },*/
     {
         path:'*',
         component : error404,
@@ -78,7 +44,8 @@ let routes = [
     ...client,
     ...admin,
     ...sg,
-    ...group
+    ...group,
+    ...amap
 ];
 
 
