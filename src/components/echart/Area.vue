@@ -16,7 +16,7 @@
 		methods:{
 			init(){
 				this.$request.amap.getLocation.getAreaData().then(res=>{
-					this.chartInit(res);
+					this.chartInit(res.result);
 				});
 			},
 			chartInit(data){
@@ -25,7 +25,7 @@
 				let formatUtil = echarts.format;
 				let option = {
 					title:{
-						text:'标题',
+						text:'库区面积统计',
 						left:'center'
 					},
 					tooltip:{
@@ -38,13 +38,13 @@
                 			}
                 			return [
                     			'<div class="tooltip-title">' + formatUtil.encodeHTML(treePath.join('/')) + '</div>',
-                    			'Disk Usage: ' + formatUtil.addCommas(value) + ' KB',
+                    			'库区' + info.data.name + '面积: ' + formatUtil.addCommas(value) + ' 平方米',
                 			].join('');
 						}
 					},
 					series:[
 						{
-							name:'标题',
+							name:'全部库区',
 							type:'treemap',
 							visibleMin:300,
 							lable:{
