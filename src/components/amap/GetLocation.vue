@@ -22,7 +22,8 @@
 </template>
 
 <script>
-	import { mapLoader } from '@/util'
+	import { Toast, Dialog } from 'vant';
+	import { mapLoader } from '@/util';
 	export default {
 		data(){
 			return {
@@ -109,7 +110,7 @@
 						draggable:true,
 						label:{
 							offset:new AMap.Pixel(0, -10),
-							content:"<div class='marker'>自定义地址</div>",
+							content:"<div class='marker'>" + self.config.address + "</div>",
 							direction :'top',
 						},
 						map: self.map,
@@ -144,7 +145,7 @@
 			},
 			getLocation(position){
 				this.formData.lnglat = [position.lng, position.lat];
-				this.$confirm('将该点经纬度设置为该公司地址？', '提示', {
+				/*this.$confirm('将该点经纬度设置为该公司地址？', '提示', {
 					confirmButtonText : '确定',
 					cancelButtonText  : '取消',
 					type:'warning'
@@ -157,6 +158,18 @@
 							})
 						}
 					});
+				});*/
+				Dialog.confirm({
+					title:'提示',
+					message:'将该点经纬度设置为该公司地址？'
+				}).then(()=>{
+					this.$request.amap.getLocation.saveMapPosition(this.formData).then(res=>{
+						if(res.errorCode == '00000'){
+							Toast.success('保存成功!');
+						}
+					});
+				}).catch(()=>{
+					Dialog.close();
 				});
 			},
 			querySearch(queryString,cb){

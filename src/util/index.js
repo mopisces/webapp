@@ -147,8 +147,8 @@ export function submitForm( url, params ){
     temp.submit();
     return temp;
 };
-export function mapLoader (){
-
+export function mapLoader ()
+{
 	return new Promise((resolve, reject) => {
 		if (window.AMap) {
 			resolve(window.AMap);
@@ -165,3 +165,7 @@ export function mapLoader (){
 		}
 	});
 };
+export function echartLoader()
+{
+
+}

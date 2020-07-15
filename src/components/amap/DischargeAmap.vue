@@ -33,7 +33,6 @@
 			</div>
 			<div id="rightButtom">
 				<vxe-table :data.sync="config.table.buttom.list" ref="buttomXTable" :max-height="config.table.buttom.maxHeight" border highlight-current-row size="mini" :show-footer="true" :footer-method="footerMethod" :footer-cell-class-name="footerCellClassName">
-					<!-- <vxe-table-column type="checkbox" width="60" fixed="left"></vxe-table-column> -->
 					<vxe-table-column prop="CusSubName" label="送货公司" width="120" show-overflow fixed="left"></vxe-table-column>
 					<vxe-table-column prop="TVolume" label="体积" width="100"></vxe-table-column>
 					<vxe-table-column prop="To5Area" label="折五面积" width="100"></vxe-table-column>
