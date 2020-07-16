@@ -308,12 +308,12 @@
 			},
 			getAreaCost(){
 				this.beforeGetAreaCost();
-				if( this.formData.boardLength && ( this.formData.boardLength < this.pageConfig.minLength || this.formData.boardLength > this.pageConfig.maxLength )){
+				if( Number(this.formData.boardLength) && ( Number(this.formData.boardLength) < Number(this.pageConfig.minLength) || Number(this.formData.boardLength) > Number(this.pageConfig.maxLength) )){
 					this.formData.boardLength = 0;
 					Toast.fail('板长范围' + this.pageConfig.minLength + 'mm~' + this.pageConfig.maxLength + 'mm');
 					return ;
 				}
-				if( this.formData.boardWidth && ( this.formData.boardWidth < this.pageConfig.minWidth || this.formData.boardWidth > this.pageConfig.maxWidth ) ){
+				if( Number(this.formData.boardWidth) && ( Number(this.formData.boardWidth) < Number(this.pageConfig.minWidth) || Number(this.formData.boardWidth) > Number(this.pageConfig.maxWidth) ) ){
 					this.formData.boardWidth = 0;
 					Toast.fail('板宽范围' + this.pageConfig.minWidth + 'mm~' + this.pageConfig.maxWidth + 'mm');
 					return ;

@@ -417,15 +417,15 @@
 				this.getConfig( this.formData.productId );
 			},
 			calcBdLW(){
-				if(this.formData.boxLength && (this.formData.boxLength < this.pageConfig.minBoxL || this.formData.boxLength > this.pageConfig.maxBoxL)){
+				if( Number(this.formData.boxLength) && ( Number(this.formData.boxLength) <  Number(this.pageConfig.minBoxL) ||  Number(this.formData.boxLength) >  Number(this.pageConfig.maxBoxL)) ){
                     this.formData.boxLength = '';
                     Toast('箱长范围:' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm');
                 }
-                if(this.formData.boxWidth && (this.formData.boxWidth < this.pageConfig.minBoxW || this.formData.boxWidth > this.pageConfig.maxBoxW)){
+                if(  Number(this.formData.boxWidth) && (  Number(this.formData.boxWidth) <  Number(this.pageConfig.minBoxW) ||  Number(this.formData.boxWidth) >  Number(this.pageConfig.maxBoxW) )){
                     this.formData.boxWidth = '';
                     Toast('箱宽范围:' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm');
                 }
-                if(this.formData.boxHeight && (this.formData.boxHeight < this.pageConfig.minBoxH || this.formData.boxHeight > this.pageConfig.maxBoxH)){
+                if( Number(this.formData.boxHeight) && ( Number(this.formData.boxHeight) <  Number(this.pageConfig.minBoxH) ||  Number(this.formData.boxHeight) >  Number(this.pageConfig.maxBoxH ) )){
                     this.formData.boxHeight = '';
                     Toast('箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm');
                 }

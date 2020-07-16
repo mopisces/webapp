@@ -131,7 +131,8 @@ export function groupCheck( toName )
 	}
 	return false;
 }
-export function submitForm( url, params ){
+export function submitForm( url, params )
+{
 	var temp = document.createElement("form");
 	temp.action = url;
     temp.method = "post";
@@ -167,5 +168,5 @@ export function mapLoader ()
 };
 export function echartLoader()
 {
-
+	
 }
