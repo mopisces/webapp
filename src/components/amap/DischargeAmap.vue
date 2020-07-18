@@ -97,6 +97,7 @@
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.initTopTable();
+						this.getPackDetail();
 					});
 				});
 			},
@@ -194,11 +195,25 @@
 								countCell += XEUtils.sum(topList,column.property);
 							}
 							if( !XEUtils.isEmpty(self.$refs.buttomXTable.getTableData().tableData) ){
-								countCell += XEUtils.sum(self.$refs.buttomXTable.getTableData().tableData,column.property);
+								countCell += sumCell;
 							}
 						}else{
 							sumCell = '--';
 							countCell = '--'
+						}
+						if( typeof(countCell) == 'number' ){
+							if( column.property == 'TVolume' ){
+								countCell = countCell.toFixed(3);
+							}else if( column.property == 'TWeight' || column.property == 'To5Area' ){
+								countCell = countCell.toFixed(2);
+							}
+						}
+						if( typeof(sumCell) == 'number' ){
+							if( column.property == 'TVolume' ){
+								sumCell = sumCell.toFixed(3);
+							}else if( column.property == 'TWeight' || column.property == 'To5Area' ){
+								sumCell = sumCell.toFixed(2);
+							}
 						}
 						sums.push(sumCell);
 						count.push(countCell);
@@ -218,6 +233,7 @@
 			radioChange({ row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }){
 				this.$refs.buttomXTable.updateFooter();
 				this.getPDNCus(row.PListNo);
+				this.topPListNo = row.PListNo;
 			},
 			/*刷新时触发(保持顶部表格选中)*/
 			initTopTable(){
@@ -247,7 +263,7 @@
 					lnglat:[120.307257,30.137186]
 				});
 				let newPath = this.searchFilter();
-				if( !XEUtils.isEmpty(newPath) ){
+							if( !XEUtils.isEmpty(newPath) ){
 					newPath.forEach((item,index)=>{
 						let lnglat = JSON.parse(JSON.stringify(item.MapPosition)).map(Number);
 						path.push({lnglat:lnglat});
@@ -288,7 +304,7 @@
 						if( a.Distance == b.Distance ){
 							return a.TVolume - b.TVolume;
 						}
-						return a.Distance == b.Distance
+						return a.Distance - b.Distance
 					});
 				}else{
 					return this.$refs.middleXTable.getTableData().tableData;
@@ -300,7 +316,7 @@
 		},
 		mounted(){
 			this.setElementSize();
-			Promise.all([this.getUnPackList(),this.getPackDetail(),this.amapInit()]);
+			Promise.all([this.getUnPackList(),this.amapInit()]);
 		},
 		updated(){
 			
