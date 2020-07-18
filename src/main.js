@@ -3,6 +3,7 @@ import router from './router';
 import store from './store';
 import request from './request';
 import 'vue-easytable/libs/themes-base/index.css';
+import 'normalize.css/normalize.css';
 import './assets/icon/icon.css';
 import './assets/icon/my.css';
 import TableOperate from '@/components/subject/table/TableOperate.vue'; 

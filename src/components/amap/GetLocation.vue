@@ -5,7 +5,7 @@
 			<label style='color:grey'>地理编码，根据地址获取经纬度坐标</label>
 			<div class="input-item">
 				<div class="input-item-prepend"><span class="input-item-text">客户名称</span></div>
-				<el-autocomplete v-model="formData.cusSubChiName" :fetch-suggestions="querySearch" placeholder="请输入地址" :trigger-on-foucus="false" @select="handleSelect"></el-autocomplete>
+				<el-autocomplete v-model="formData.cusSubChiName" :fetch-suggestions="querySearch" placeholder="请输入地址" :trigger-on-foucus="false" @select="handleSelect" clearable @clear="handleClear"></el-autocomplete>
 			</div>
 			<div class="input-item">
 				<div class="input-item-prepend"><span class="input-item-text">地址</span></div>
@@ -15,7 +15,8 @@
 				<div class="input-item-prepend"><span class="input-item-text">经纬度</span></div>
 				<input id='lnglat' disabled type="text" :value="formData.lnglat.join(',')">
 			</div>
-			<input id="search" type="button" class="btn" value="搜索" @click="goSearch()"/>
+			<el-button type="primary" @click="goSearch()">搜索</el-button>
+			<!-- <input id="search" type="button" class="btn" value="搜索" @click="goSearch()"/> -->
 		</div>
 		<div id="info"></div>
 	</div>
@@ -30,6 +31,8 @@
 				config:{
 					amap:{
 						height:0,
+						center:[119.949216,30.046985],
+						zoom:13,
 					},
 					address:'',
 					addressOptions:[],
@@ -55,8 +58,8 @@
 				let self = this;
 				mapLoader().then(AMap => {
 					self.map = new AMap.Map('container', {
-						zoom:13,
-						center: [119.949216,30.046985],
+						zoom: self.config.amap.zoom,
+						center: self.config.amap.center,
 						resizeEnable:true,
 						viewMode: '3D',
 						pinch: 45
@@ -129,7 +132,7 @@
 			goSearch(){
 				let self = this;
 				AMap.service(["AMap.PlaceSearch"],function(){
-					let placeSearch = new AMap.PlaceSearch({
+					self.placeSearch = new AMap.PlaceSearch({
 						pageSize: 5,
 						pageIndex: 1,
 						city:'杭州',
@@ -137,28 +140,14 @@
 						panel:'info',
 						autoFitView:true,
 					});
-					placeSearch.search(self.config.address);
-					placeSearch.on('markerClick',function(e){
+					self.placeSearch.search(self.config.address);
+					self.placeSearch.on('markerClick',function(e){
 						self.getLocation(e.data.location);
 					});
 				});
 			},
 			getLocation(position){
 				this.formData.lnglat = [position.lng, position.lat];
-				/*this.$confirm('将该点经纬度设置为该公司地址？', '提示', {
-					confirmButtonText : '确定',
-					cancelButtonText  : '取消',
-					type:'warning'
-				}).then(()=>{
-					this.$request.amap.getLocation.saveMapPosition(this.formData).then(res=>{
-						if(res.errorCode == '00000'){
-							this.$message({
-								type: 'success',
-								message: '保存成功!'
-							})
-						}
-					});
-				});*/
 				Dialog.confirm({
 					title:'提示',
 					message:'将该点经纬度设置为该公司地址？'
@@ -186,7 +175,17 @@
 				this.formData.lnglat = [];
 				this.config.address    = item.SubDNAddress;
 				this.formData.cusId    = item.CusId;
-				this.formData.cusSubNo = item.CusSubNo
+				this.formData.cusSubNo = item.CusSubNo;
+			},
+			handleClear(){
+				this.formData.lnglat = [];
+				this.config.address    = '';
+				this.formData.cusId    = '';
+				this.formData.cusSubNo = '';
+				if( this.placeSearch ){
+					this.placeSearch.clear();
+					this.map.setZoomAndCenter(this.config.amap.zoom, this.config.amap.center);
+				}
 			}
 		},
 		created(){
@@ -226,56 +225,3 @@
         margin-top: 0.8rem; 
     }
 </style>
-<style type="text/css">
-    #panel {
-        position: fixed;
-        background-color: white;
-        max-height: 90%;
-        overflow-y: auto;
-        top: 20rem;
-        right: 1rem;
-        width: 20rem;
-    }
-    #panel .amap-call {
-        background-color: #009cf9;
-        border-top-left-radius: 4px;
-	        border-top-right-radius: 4px;
-    }
-    #panel .amap-lib-driving {
-        border-bottom-left-radius: 4px;
-	        border-bottom-right-radius: 4px;
-        overflow: hidden;
-    }
-    #info {
-        position: fixed;
-        background-color: white;
-        max-height: 90%;
-        overflow-y: auto;
-        top: 1rem;
-        left: 1rem;
-        width: 20rem;
-    }
-    #info .amap-call {
-        background-color: #009cf9;
-        border-top-left-radius: 4px;
-	        border-top-right-radius: 4px;
-    }
-    #info .amap-lib-driving {
-        border-bottom-left-radius: 4px;
-	        border-bottom-right-radius: 4px;
-        overflow: hidden;
-    }
-    .marker {
-		position: absolute;
-		top: -1.25rem;
-		right: -7.375rem;
-		color: #fff;
-		padding: 0.25rem 0.625rem;
-		box-shadow: 0.0625rem 0.0625rem 0.0625rem rgba(10, 10, 10, .2);
-		white-space: nowrap;
-		font-size: 1rem;
-		font-family: "";
-		background-color: #25A5F7;
-		border-radius: 0.1875rem;
-	}
-	</style>
