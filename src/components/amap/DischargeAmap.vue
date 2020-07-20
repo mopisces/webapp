@@ -3,7 +3,7 @@
 		<div id="amapContainer" :style="'width:' + config.amap.containerWidth + 'px;height:' + config.amap.containerHeight + 'px;'"></div>
 		<div id="rightTab">
 			<div id="rightTop">
-				<vxe-toolbar refresh :refresh="{query: getUnPackList}" size="mini">
+				<vxe-toolbar refresh :refresh="{query: refreshClick}" size="mini">
 					<template v-slot:buttons>
 						<vxe-button @click="amapSearch()" :disabled="config.amap.disableSearch">绘制路线图</vxe-button>
 					</template>
@@ -20,7 +20,7 @@
 				</vxe-table>
 			</div>
 			<div id="rightMiddle">
-				<vxe-table :data.sync="config.table.middle.list" ref="middleXTable" :max-height="config.table.middle.maxHeight" border highlight-current-row size="mini">
+				<vxe-table :data.sync="config.table.middle.list" ref="middleXTable" :max-height="config.table.middle.maxHeight" border highlight-current-row size="mini" @current-change="middleCurrentChange">
 					<vxe-table-column prop="CusSubName" label="送货公司" width="120" show-overflow fixed="left"></vxe-table-column>
 					<vxe-table-column prop="TVolume" label="体积" width="100"></vxe-table-column>
 					<vxe-table-column prop="To5Area" label="折五面积" width="100"></vxe-table-column>
@@ -32,7 +32,7 @@
 				</vxe-table>
 			</div>
 			<div id="rightButtom">
-				<vxe-table :data.sync="config.table.buttom.list" ref="buttomXTable" :max-height="config.table.buttom.maxHeight" border highlight-current-row size="mini" :show-footer="true" :footer-method="footerMethod" :footer-cell-class-name="footerCellClassName">
+				<vxe-table :data.sync="config.table.buttom.list" ref="buttomXTable" :max-height="config.table.buttom.maxHeight" border highlight-current-row size="mini" :show-footer="true" :footer-method="footerMethod" :footer-cell-class-name="footerCellClassName" @current-change="bottomCurrentChange">
 					<vxe-table-column prop="CusSubName" label="送货公司" width="120" show-overflow fixed="left"></vxe-table-column>
 					<vxe-table-column prop="TVolume" label="体积" width="100"></vxe-table-column>
 					<vxe-table-column prop="To5Area" label="折五面积" width="100"></vxe-table-column>
@@ -62,6 +62,9 @@
 						containerHeight:0,
 						containerWidth:0,
 						disableSearch:true,
+						infoWindowShow:false,
+						zoom: 15,
+						center: [119.949216,30.046985]
 					},
 					table:{
 						top:{
@@ -83,6 +86,7 @@
 				topPListNo:'', //顶部表单选装货单号
 				map:{},        //地图实例
 				truck:{},      //货车规划实例
+				infoWindow:{}  //弹窗实例
 			}
 		},
 		methods:{
@@ -108,6 +112,8 @@
 				this.$request.amap.tableInfo.getPDNCus(pListNo).then((res)=>{
 					if(res.errorCode == '00000'){
 						self.config.table.middle.list = res.result;
+					}else{
+						self.config.table.middle.list = [];
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -135,8 +141,8 @@
 				let self = this;
 				mapLoader().then(Amap=>{
 					self.map = new AMap.Map('amapContainer', {
-						zoom:15,
-						center: [119.949216,30.046985],
+						zoom: self.config.amap.zoom,
+						center: self.config.amap.center,
 						resizeEnable:true,
 						viewMode: '3D',
 						pinch: 45
@@ -161,6 +167,12 @@
 						number      : '88888',    //车牌号
 					};
 					self.truck = new AMap.TruckDriving(drivingOption);
+					self.infoWindow = new AMap.InfoWindow({
+						autoMove: true,
+						retainWhenClose:true,
+						anchor:'top-left',
+						showShadow: true
+					});
 				},e=>{
 					console.log('地图加载失败' ,e);
 				});
@@ -231,6 +243,10 @@
 			},
 			/*顶部表格单选改变后触发*/
 			radioChange({ row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }){
+				if(!XEUtils.isEmpty(this.truck)){
+					this.truck.clear();
+				}
+				this.map.setZoomAndCenter(this.config.amap.zoom, this.config.amap.center);
 				this.$refs.buttomXTable.updateFooter();
 				this.getPDNCus(row.PListNo);
 				this.topPListNo = row.PListNo;
@@ -257,26 +273,34 @@
 				if(!XEUtils.isEmpty(this.truck)){
 					this.truck.clear();
 				}
-				let path = [];
+				var path = [];
 				/*起始点*/
 				path.push({
-					lnglat:[120.307257,30.137186]
+					lnglat:this.config.amap.center
 				});
-				let newPath = this.searchFilter();
+				var newPath = this.searchFilter();
 				if( !XEUtils.isEmpty(newPath) ){
 					newPath.forEach((item,index)=>{
 						let lnglat = JSON.parse(JSON.stringify(item.MapPosition)).map(Number);
-						path.push({lnglat:lnglat});
+						path.push({lnglat:lnglat,cusSubName:item.CusSubName});
 					});
 				}
+				let self = this;
 				this.truck.search(path,function(status,result){
 	            		if (status === 'complete') {
-				            console.log('绘制驾车路线完成')
+	            			console.log(result.waypoints)
+	            			self.config.amap.infoWindowShow = true;
+				            console.log('绘制驾车路线完成');
 				        } else {
-				            console.log('获取驾车数据失败：' + result)
+				            console.log('获取驾车数据失败：' + result);
 				        }
             		}
             	);
+			},
+			refreshClick(){
+				this.config.amap.infoWindowShow = false;
+				this.getUnPackList();
+				this.amapSearch();
 			},
 			/*对中间和底部表去重排序*/
 			searchFilter(){
@@ -309,6 +333,26 @@
 				}else{
 					return this.$refs.middleXTable.getTableData().tableData;
 				}
+			},
+			/*弹窗信息*/
+			infoWindowShow( rowData ){
+				if( !this.config.amap.infoWindowShow ){
+					return 
+				}
+				this.infoWindow.setContent(rowData.CusSubName);
+				this.infoWindow.open(this.map,JSON.parse(JSON.stringify(rowData.MapPosition)).map(Number));
+			},
+			bottomCurrentChange({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event}){
+				if(this.$refs.middleXTable){
+					this.$refs.middleXTable.setCurrentRow(-1);
+				}
+				this.infoWindowShow( row );
+			},
+			middleCurrentChange({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event}){
+				if(this.$refs.bottomXTable){
+					this.$refs.bottomXTable.setCurrentRow(-1);
+				} 
+				this.infoWindowShow( row );
 			}
 		},
 		created(){
