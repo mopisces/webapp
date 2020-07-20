@@ -247,6 +247,8 @@
 					this.truck.clear();
 				}
 				this.map.setZoomAndCenter(this.config.amap.zoom, this.config.amap.center);
+				this.config.amap.infoWindowShow = false;
+				this.infoWindow.close();
 				this.$refs.buttomXTable.updateFooter();
 				this.getPDNCus(row.PListNo);
 				this.topPListNo = row.PListNo;
@@ -288,7 +290,6 @@
 				let self = this;
 				this.truck.search(path,function(status,result){
 	            		if (status === 'complete') {
-	            			console.log(result.waypoints)
 	            			self.config.amap.infoWindowShow = true;
 				            console.log('绘制驾车路线完成');
 				        } else {
@@ -297,6 +298,7 @@
             		}
             	);
 			},
+			/*顶部刷新按钮*/
 			refreshClick(){
 				this.config.amap.infoWindowShow = false;
 				this.getUnPackList();
@@ -349,8 +351,8 @@
 				this.infoWindowShow( row );
 			},
 			middleCurrentChange({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event}){
-				if(this.$refs.bottomXTable){
-					this.$refs.bottomXTable.setCurrentRow(-1);
+				if(this.$refs.buttomXTable){
+					this.$refs.buttomXTable.setCurrentRow(-1);
 				} 
 				this.infoWindowShow( row );
 			}
