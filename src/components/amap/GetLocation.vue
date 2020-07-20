@@ -15,8 +15,8 @@
 				<div class="input-item-prepend"><span class="input-item-text">经纬度</span></div>
 				<input id='lnglat' disabled type="text" :value="formData.lnglat.join(',')">
 			</div>
-			<el-button type="primary" @click="goSearch()">搜索</el-button>
-			<!-- <input id="search" type="button" class="btn" value="搜索" @click="goSearch()"/> -->
+			<el-button type="primary" @click="goSearch()" v-if="config.button.showSearch">搜索</el-button>
+			<el-button type="warning" @click="goLocation()" v-else>定位</el-button>
 		</div>
 		<div id="info"></div>
 	</div>
@@ -36,20 +36,20 @@
 					},
 					address:'',
 					addressOptions:[],
+					button:{
+						showSearch:true
+					}
 				},
-				address:'',
 				map:null,
-				geocoder:null,
 				marker:null,
 				placeSearch:null,
-				mouseTool:null,
 				contextMenuPositon:null,
 				menu:null,
 				formData:{
 					cusId:'',
 					cusSubNo:'',
 					cusSubChiName:'',
-					lnglat:['',''],
+					lnglat:[],
 				}
 			}
 		},
@@ -64,28 +64,32 @@
 						viewMode: '3D',
 						pinch: 45
 					});
-
-					//罗盘
+					/*地图罗盘*/
 					AMap.plugin([
 						'AMap.ControlBar',
 	    			], function(){
 	        			self.map.addControl(new AMap.ControlBar());
 	    			});
-					var auto = new AMap.Autocomplete({
-				        input: "address"
-				    });
-
-					self.geocoder = new AMap.Geocoder();
-
-					self.marker = new AMap.Marker();
-
-					this.menu = new AMap.ContextMenu();
+					/*地图标记对象*/
+					self.marker = new AMap.Marker({
+						map: self.map,
+						clickable:true,
+						draggable:true,
+						visible:false
+					});
+					/*标记拖动监听方法*/
+					self.marker.on('dragging', function(){
+						let position = self.marker.getPosition();
+						self.formData.lnglat = [position.lng, position.lat];
+					});
+					/*地图右键菜单*/
+					this.menu = new AMap.ContextMenu({isCustom: true});
 					this.contextMenu();
-
 				},e=>{
 					console.log('地图加载失败' ,e)
 				});
 			},
+			/*获取客户信息*/
 			getAddressOptions(){
 				let self = this;
 				this.$request.amap.getLocation.getCustomerDN().then(res=>{
@@ -96,7 +100,7 @@
 					this.init();
 				});
 			},
-			//右键菜单
+			/*右键菜单*/
 			contextMenu(){
 				let self = this;
 				self.menu.addItem("放大一级", function () {
@@ -106,21 +110,9 @@
 					self.map.zoomOut();
 				}, 1);
 				self.menu.addItem("添加标记", function (e) {
-					self.map.remove(self.marker);
-					self.marker = new AMap.Marker({
-						title:'1234',
-						clickable:true,
-						draggable:true,
-						label:{
-							offset:new AMap.Pixel(0, -10),
-							content:"<div class='marker'>" + self.config.address + "</div>",
-							direction :'top',
-						},
-						map: self.map,
-						position: self.contextMenuPositon //基点位置
-					});
-					self.marker.on("dblclick",function(e){
-						self.getLocation(self.marker.getPosition());
+					self.setMarker( self.contextMenuPositon );
+					self.marker.on("dblclick", function(e){
+						self.getLocation( self.marker.getPosition() );
 					});
 				}, 3);
 				self.map.on('rightclick', function (e) {
@@ -128,7 +120,17 @@
 					self.contextMenuPositon = e.lnglat;
 				});
 			},
-			//搜索
+			/*设置地图标记并显示*/
+			setMarker( position ){
+				this.marker.setPosition( position );
+				this.marker.setLabel({
+					content:"<div class='marker'>" + this.formData.cusSubChiName + "</div>",
+				});
+				if( this.formData.cusSubChiName ){
+					this.marker.show();
+				}
+			},
+			/*地图搜索*/
 			goSearch(){
 				let self = this;
 				AMap.service(["AMap.PlaceSearch"],function(){
@@ -146,6 +148,13 @@
 					});
 				});
 			},
+			/*设置已有用户地址*/
+			goLocation(){
+				let lnglat = JSON.parse(JSON.stringify(this.formData.lnglat));
+				this.map.setCenter( new AMap.LngLat(lnglat[0], lnglat[1]) );
+				this.setMarker( new AMap.LngLat(lnglat[0], lnglat[1]) );
+			},
+			/*保存用户地址api*/
 			getLocation(position){
 				this.formData.lnglat = [position.lng, position.lat];
 				Dialog.confirm({
@@ -161,6 +170,7 @@
 					Dialog.close();
 				});
 			},
+			/*选择当前用户*/
 			querySearch(queryString,cb){
 				let addressOptions = this.config.addressOptions;
 				let results = queryString ? this.config.addressOptions.filter( this.createFilter(queryString) ) : addressOptions;
@@ -171,12 +181,20 @@
 					return ( item.value.toLowerCase().indexOf( queryString.toLowerCase() ) === 0 );
 				}
 			},
+			/*用户选中后触发函数*/
 			handleSelect(item){
 				this.formData.lnglat = [];
 				this.config.address    = item.SubDNAddress;
 				this.formData.cusId    = item.CusId;
 				this.formData.cusSubNo = item.CusSubNo;
+				if( item.MapPosition ){
+					this.config.button.showSearch = false;
+					this.formData.lnglat = JSON.parse(JSON.stringify(item.MapPosition.split(','))).map(Number);
+				}else{
+					this.config.button.showSearch = true;
+				}
 			},
+			/*用户点击清除按钮后触发*/
 			handleClear(){
 				this.formData.lnglat = [];
 				this.config.address    = '';
@@ -184,8 +202,10 @@
 				this.formData.cusSubNo = '';
 				if( this.placeSearch ){
 					this.placeSearch.clear();
-					this.map.setZoomAndCenter(this.config.amap.zoom, this.config.amap.center);
 				}
+				this.marker.hide();
+				this.map.setZoomAndCenter(this.config.amap.zoom, this.config.amap.center);
+				this.config.button.showSearch = true;
 			}
 		},
 		created(){
@@ -202,10 +222,16 @@
 			
 		},
 		computed:{
-			
+			changeChiName(){
+				return this.formData.cusSubChiName;
+			}
 		},
 		watch:{
-
+			changeChiName( newV, oldV ){
+				if( newV == '' ){
+					this.handleClear();
+				}
+			}
 		}
 	}
 </script>

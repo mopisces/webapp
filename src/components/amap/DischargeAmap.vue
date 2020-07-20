@@ -263,7 +263,7 @@
 					lnglat:[120.307257,30.137186]
 				});
 				let newPath = this.searchFilter();
-							if( !XEUtils.isEmpty(newPath) ){
+				if( !XEUtils.isEmpty(newPath) ){
 					newPath.forEach((item,index)=>{
 						let lnglat = JSON.parse(JSON.stringify(item.MapPosition)).map(Number);
 						path.push({lnglat:lnglat});

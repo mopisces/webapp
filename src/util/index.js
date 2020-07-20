@@ -157,7 +157,7 @@ export function mapLoader ()
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
 			script.async = true;
-			script.src = 'http://webapi.amap.com/maps?v=1.4.5&key=83ca63ae8f018bc0424e0f3f38eee0f0&plugin=AMap.TruckDriving,AMap.Driving,AMap.Geocoder,AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch,AMap.GeometryUtil,ElasticMarker,Map3D,AMap.MouseTool&callback=initAMap';
+			script.src = 'http://webapi.amap.com/maps?v=1.4.14&key=83ca63ae8f018bc0424e0f3f38eee0f0&plugin=AMap.TruckDriving,AMap.Driving,AMap.Geocoder,AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch,AMap.GeometryUtil,ElasticMarker,Map3D,AMap.MouseTool&callback=initAMap';
 			script.onerror = reject;
 			document.head.appendChild(script);
 		}
