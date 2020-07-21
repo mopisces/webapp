@@ -129,6 +129,8 @@
 				this.$request.amap.tableInfo.getPackDetail().then((res)=>{
 					if(res.errorCode == '00000'){
 						self.config.table.buttom.list = res.result;
+					}else{
+						self.config.table.buttom.list = [];
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -289,6 +291,7 @@
 				}
 				let self = this;
 				this.truck.search(path,function(status,result){
+						console.log(2)
 	            		if (status === 'complete') {
 	            			self.config.amap.infoWindowShow = true;
 				            console.log('绘制驾车路线完成');
@@ -297,6 +300,7 @@
 				        }
             		}
             	);
+
 			},
 			/*顶部刷新按钮*/
 			refreshClick(){
