@@ -27,8 +27,6 @@ const sBuild           = () => import('@/components/client/build/S');
 const cBuild           = () => import('@/components/client/build/C');
 //纸箱下单
 const xBuild           = () => import('@/components/client/build/X');
-
-
 //支付方式
 const payWay           = () => import('@/components/pay/order/Way');
 //支付详细信息

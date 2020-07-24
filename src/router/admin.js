@@ -1,11 +1,8 @@
 //布局页面
-const adminLayout  = () => import('@/components/admin/AdminLayout');//r => require.ensure([], () => r(require('@/components/admin/AdminLayout')), 'adminLayout');
+const adminLayout  = () => import('@/components/admin/AdminLayout');
 //登陆页面
-const adminLogin   = () => import('@/components/admin/login/AdminLogin');//r => require.ensure([], () => r(require('@/components/admin/login/AdminLogin')), 'adminLogin');
-
-
+const adminLogin   = () => import('@/components/admin/login/AdminLogin');
 //纸板列表
-//const boardLists  = r => require.ensure([], () => r(require('@/components/admin/board/Lists')), 'boardLists');
 const boardLists   = () => import('@/components/admin/board/Lists');
 //纸板产品描述
 const boardDescr   = () => import('@/components/admin/board/Descr');

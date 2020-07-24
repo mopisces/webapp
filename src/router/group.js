@@ -27,9 +27,6 @@ const groupBoxLists    = () => import('@/components/group/box/Lists');
 const groupBoxDetail   = () => import('@/components/group/box/Detail');
 //淘宝箱下单(需要登陆)
 const buildT           = () => import('@/components/group/buildbox/T');
-//404
-const error404         = () => import('@/components/common/404');
-const wxScan           = () => import('@/components/common/WxScanRes');
 const group = [
 	{
         path : '/group',

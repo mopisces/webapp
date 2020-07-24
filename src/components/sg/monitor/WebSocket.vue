@@ -421,7 +421,7 @@
 						this.config.notice.text = '后台udp广播暂未开启';
 					}else{
 						this.config.notice.text = '监控开启成功';
-						if( JSON.parse(data).data ){
+						if( !JSON.parse(data).data ){
 							this.config.notice.text = '数据不完整';
 						}
 						if( this.config.updown ){

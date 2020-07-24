@@ -5,15 +5,17 @@ import admin from './admin';
 import sg from './sg';
 import group from './group';
 import amap from './amap';
-import { groupCheck } from '@/util';
 Vue.use(VueRouter);
 //404
-const error404 = () => import('@/components/common/404');
-//const wxScan   = () => import('@/components/common/WxScanRes');
-const wxQrCode = () => import('@/components/login/WxQrCode');
-const login    = () => import('@/components/login/Login');
-const check    = () => import('@/components/common/Check');
-const areaChart    = () => import('@/components/echart/Area');
+const error404  = () => import('@/components/common/404');
+/*微信授权生成二维码*/
+const wxQrCode  = () => import('@/components/login/WxQrCode');
+/*授权登陆界面*/
+const login     = () => import('@/components/login/Login');
+/*审核绑定页面*/
+const check     = () => import('@/components/common/Check');
+/*库区剩余米娜及*/
+const areaChart = () => import('@/components/echart/Area');
 let routes = [
     {
         path:'/echart/area',
