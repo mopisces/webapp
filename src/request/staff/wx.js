@@ -12,10 +12,15 @@ const wx = {
 	portValuable(){
 		return post(staff.wx.portValuable);
 	},
-	scanQrCode( type ){
+	scanQrCode( data ){
 		let postData = {
-			scan_url_type : type
+			scan_url_type : data.urlType
 		};
+		if( data.urlType == '3' ){
+			postData.listNo = this.$route.query.listNo;
+			postData.isEdit = this.$route.query.isEdit;
+			postData.orderType = this.$route.query.orderType;
+		}
 		return post(staff.wx.scanQrCode,postData);
 	}
 };

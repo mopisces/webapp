@@ -4,7 +4,7 @@ import client from './client';
 import admin from './admin';
 import sg from './sg';
 import group from './group';
-import amap from './amap';
+/*import amap from './amap';*/
 Vue.use(VueRouter);
 //404
 const error404  = () => import('@/components/common/404');
@@ -14,10 +14,10 @@ const wxQrCode  = () => import('@/components/login/WxQrCode');
 const login     = () => import('@/components/login/Login');
 /*审核绑定页面*/
 const check     = () => import('@/components/common/Check');
-/*库区剩余米娜及*/
+/*库区剩余面积*/
 const areaChart = () => import('@/components/echart/Area');
 let routes = [
-    {
+    /*{
         path:'/echart/area',
         component: areaChart,
         meta:{ title: '库区剩余' }
@@ -26,17 +26,17 @@ let routes = [
         path : '/login/index',
         component: login,
         meta:{ title: '新登陆接口' }
-    },
+    },*/
     {
         path : '/login/wxQrCode',
         component: wxQrCode,
         meta:{ title: '微信授权生成二维码登陆' }
     },
-    {
+    /*{
         path:'/common/verify',
         component:check,
         meta:{ title: '审核绑定' }
-    },
+    },*/
     {
         path:'*',
         component : error404,
@@ -47,7 +47,7 @@ let routes = [
     ...admin,
     ...sg,
     ...group,
-    ...amap
+    //...amap
 ];
 
 

@@ -39,6 +39,14 @@
 			},*/
 			scanQRCode(){
 				let self = this;
+				let postData = {
+					urlType:this.urlType
+				}
+				if( this.urlType == '3' ){
+					postData.listNo = this.$route.query.listNo;
+					postData.isEdit = this.$route.query.isEdit;
+					postData.orderType = this.$route.query.orderType;
+				}
 				this.$request.staff.wx.scanQrCode( this.urlType ).then(res=>{
 					if( res.errorCode == '00000' ){
 						submitForm(res.server_url, { jssdk_info:res.result } );
