@@ -4,7 +4,7 @@ import client from './client';
 import admin from './admin';
 import sg from './sg';
 import group from './group';
-/*import amap from './amap';*/
+//import amap from './amap';
 Vue.use(VueRouter);
 //404
 const error404  = () => import('@/components/common/404');
@@ -14,7 +14,7 @@ const wxQrCode  = () => import('@/components/login/WxQrCode');
 const login     = () => import('@/components/login/Login');
 /*审核绑定页面*/
 const check     = () => import('@/components/common/Check');
-/*库区剩余面积*/
+/*库区剩余*/
 const areaChart = () => import('@/components/echart/Area');
 let routes = [
     /*{

@@ -22,21 +22,6 @@
 			}
 		},
 		methods:{
-			/*scanQRCode(){
-				window.location.href = this.href;
-			},
-			isWX(){
-				let self = this;
-				this.$request.staff.wx.portValuable().then(res=>{
-					if( res.errorCode == '00000' ){
-						let ua = window.navigator.userAgent.toLowerCase();
-						if( ua.match(/MicroMessenger/i) == 'micromessenger' ){
-							self.scanValuable   = true;
-							self.href = 'http://' + res.result.main_domain + '/WxScanResult.html?urlType=' + self.urlType + '&redirectDomain=' + res.result.ori_domain + '&backPort=' + res.result.ori_back_port;
-						}
-					}
-				});
-			},*/
 			scanQRCode(){
 				let self = this;
 				let postData = {
@@ -47,10 +32,9 @@
 					postData.isEdit = this.$route.query.isEdit;
 					postData.orderType = this.$route.query.orderType;
 				}
-				this.$request.staff.wx.scanQrCode( this.urlType ).then(res=>{
+				this.$request.staff.wx.scanQrCode( postData ).then(res=>{
 					if( res.errorCode == '00000' ){
 						submitForm(res.server_url, { jssdk_info:res.result } );
-						//submitForm(res.server_url, { scan_info:res.result } );
 					}
 				});
 			},

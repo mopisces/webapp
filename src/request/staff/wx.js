@@ -17,9 +17,9 @@ const wx = {
 			scan_url_type : data.urlType
 		};
 		if( data.urlType == '3' ){
-			postData.listNo = this.$route.query.listNo;
-			postData.isEdit = this.$route.query.isEdit;
-			postData.orderType = this.$route.query.orderType;
+			postData.list_no = data.listNo;
+			postData.is_edit = data.isEdit;
+			postData.order_type = data.orderType;
 		}
 		return post(staff.wx.scanQrCode,postData);
 	}
