@@ -4,7 +4,7 @@
 		<van-field input-align="center" label="订单信息" v-model="pageInfo.strOrderInfo" type="textarea" :rows="1" autosize placeholder="订单信息" readonly class="field-readonly"></van-field>
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
-				<field-label-variable :value.sync="formData.iQty" label="入库数" placeholder="入库数" maxlength="3" :onFocus.sync="config.field.iQtyOnFocus"></field-label-variable>
+				<field-label-variable :value.sync="formData.iQty" label="入库数" placeholder="入库数" maxlength="5" :onFocus.sync="config.field.iQtyOnFocus"></field-label-variable>
 			</div>
 			<div class="van-col van-col--12">
 				<op-class-field :opClass.sync="formData.strWorkGorup"></op-class-field>
@@ -12,7 +12,7 @@
 		</div>
 		<div class="van-row" style="text-align:left;">
 			<div class="van-col van-col--12">
-				<field-label-variable :value.sync="pageInfo.iFinishedQty" label="已入库数" placeholder="已入库数" maxlength="3" type="number" readonly="readonly"></field-label-variable>
+				<field-label-variable :value.sync="pageInfo.iFinishedQty" label="已入库数" placeholder="已入库数" maxlength="10" type="number" readonly="readonly"></field-label-variable>
 			</div>
 			<div class="van-col van-col--12">
 				<field-label-variable :value.sync="formData.strSchArea" label="传单库区" placeholder="传单库区" maxlength="10" readonly="readonly"></field-label-variable>
