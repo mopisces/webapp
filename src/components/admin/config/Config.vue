@@ -64,6 +64,11 @@
 							</tr>
 						</template>
 						<tr>
+							<td style="width:150px;">erp接口地址</td>
+							<el-input style="width: 200px;" v-model="form.ErpApiPrefix"></el-input>
+							<p class="info">调用ERP接口使用</p>
+						</tr>
+						<tr>
 							<td>
 								<el-button type="primary" @click="saveConfig()">保存</el-button>
 							</td>
@@ -698,6 +703,7 @@
 					OriDomain       : '',  //项目域名(不带http:// 及 / )
 					OriPagePort     : '',  //项目前端页面端口
 					OriPort         : '',  //项目后台端口
+					ErpApiPrefix    : '',  //erp接口地址
 					//内部参数
 					Wap1Right                : '',  //用户权限
 					WGetCusOrderBeginDate    : '',  //客户每日订单(默认日期)

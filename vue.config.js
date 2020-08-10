@@ -29,7 +29,8 @@ module.exports = {
       'element-ui':'ElementUI',
       'vant':'vant',
       'echarts':'echarts',
-      'XEUtils':'XEUtils'
+      'XEUtils':'XEUtils',
+      'VTable':'VTable'
     }
   },
   devServer: {

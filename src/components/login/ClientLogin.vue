@@ -163,7 +163,7 @@
 			
 		},
 		destroyed(){
-			'http://luodangfrp2.leaper.ltd/getCode.html?token=test&oriDomain=test.leaper.ltd&backstagePort=1110&type=auth'
+			
 		},
 		computed:{
 			usernameChange(){

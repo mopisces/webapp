@@ -101,6 +101,11 @@ export const asyncClientRouterMap = [
                 meta: { title: '纸箱下单', role:'纸箱下单' },
                 component: xBuild,
             },
+            {
+                path:'wxorder/lists',
+                meta: { title: '微信订单', role:'微信订单' },
+                component: wxList,
+            },
         ]
     }
 ];
@@ -115,11 +120,6 @@ const client = [
                 path:'index/menu',
                 meta: { title: '菜单页面', role: '菜单页面' },
                 component: menu,
-            },
-            {
-                path:'wxorder/lists',
-                meta: { title: '微信订单', role:'微信订单' },
-                component: wxList,
             },
             {
                 path:'pay/way',
