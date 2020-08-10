@@ -11,8 +11,13 @@ Vue.component("TableOperate",TableOperate);
 
 Vue.config.productionTip = false;//生产提示
 Vue.prototype.$request   = request;
-new Vue({
-	router,
-	store,
-	render: h => h(App),
-}).$mount('#app');
+
+import config from '@/request/config.js';
+
+config.requestRemoteIp().finally(res => {
+	new Vue({
+		router,
+		store,
+		render: h => h(App),
+	}).$mount('#app');
+});
