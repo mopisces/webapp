@@ -106,21 +106,6 @@
 			}
 		},
 		methods:{
-			/*detailAll( cusOrderId ){
-				let self = this;
-				this.$request.client.ordersManage.detailAll( cusOrderId ).then((acct, perms)=>{
-					if( acct[0].errorCode == '00000' ){
-						self.orderDetail   = acct[0].result;
-					}
-					if( acct[1].errorCode == '00000' ){
-						self.groupInfo        = acct[1].result;
-						self.groupInfo['pic'] = require('@/assets/groupImg/' + acct[1].result.FirstPic);
-						self.isGroup          = true;
-					}else{
-						self.isGroup = false;
-					}
-				});
-			},*/
 			cTypeName( cType ){
 				return cTypeChange( cType );
 			},

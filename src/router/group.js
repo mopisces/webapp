@@ -1,12 +1,4 @@
 const indexLayout      = () => import('@/components/common/ClientLayout');
-//注册页面
-const register         = () => import('@/components/client/index/Register');
-//员工登陆
-const loginStaff       = () => import('@/components/login/StaffLogin');
-//客户登陆
-const loginClient      = () => import('@/components/login/ClientLogin');
-//联系我们
-const contact          = () => import('@/components/client/index/Contact');
 //团购分类页面
 const groupIndex       = () => import('@/components/group/Index');
 //纸板爆款团购列表
@@ -33,29 +25,6 @@ const group = [
         component : indexLayout,
         meta: { title: '团购及未登录' },
         children : [
-            {
-                path : 'register',
-                meta : { title: '注册页面', isGroup:true },
-                component: register,
-            },
-            {
-                path : 'staff/login',
-                alias: 'staff/login?token=:token',
-                meta: { title: '员工登录', role:'员工登录', isGroup:true },
-                component: loginStaff,
-            },
-            {
-                path : 'client/login',
-                alias: 'client/login?token=:token',
-                name : 'clientLogin',
-                meta: { title: '客户登录', role:'客户登录', isGroup:true },
-                component: loginClient,
-            },
-            {
-                path:'contact',
-                meta: { title: '联系我们', role:'联系我们', isGroup:true },
-                component: contact,
-            },
             {
                 path: 'index',
                 meta: { title: '团购分类', role:'团购分类', isGroup:true },
