@@ -1,5 +1,4 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
 
 const cred = {
 	wGetCusAmt( data ){
@@ -8,10 +7,10 @@ const cred = {
 			is_stopped: data.isStopped,
 			is_settle_day:data.isSettleDay
 		};
-		return post(staff.cred.wGetCusAmt,postData);
+		return post( window.jpdn_domain_staff + 'wGetCusAmt',postData);
 	},
 	cusAmtDetail( data ){
-		return post(staff.cred.cusAmtDetail,{detail_cus_id:data.cusId});
+		return post( window.jpdn_domain_staff + 'cusAmtDetail', {detail_cus_id:data.cusId} );
 	}
 }
 export default cred;

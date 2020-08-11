@@ -1,12 +1,12 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
 
 const login = {
 	getSF(){
-		return get(staff.login.getSF);
+		return get( window.jpdn_domain_staff + 'getSF' );
 	},
 	isOpenGroup(){
-		return get(staff.login.isOpenGroup);
+		return get( window.jpdn_domain_staff + 'isOpenGroup' );
 	}
-}
+};
+
 export default login;

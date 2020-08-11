@@ -1,9 +1,8 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
 
 const daily = {
 	dailyConfig(){
-		return post(staff.daily.dailyConfig);
+		return post( window.jpdn_domain_staff + 'staffDailyConfig');
 	},
 	getDailyOrder( data ){
 		let addUserId = data.addUserId === true ? 1 : 0;
@@ -13,7 +12,7 @@ const daily = {
 			daily_add_user_id  : addUserId,
 			daily_order_cus_id : data.cusName
 		};
-		return post(staff.daily.staffDaily,postData);
+		return post( window.jpdn_domain_staff + 'staffDaily', postData );
 	},
 	getCusInfo( data ){
 		let postData = {
@@ -21,7 +20,7 @@ const daily = {
 			daily_begin_date : data.beginDate,
 			daily_end_date   : data.endDate,
 		};
-		return post(staff.daily.getCusDateInfo,postData);
+		return post( window.jpdn_domain_staff + 'staffGetCusInfo', postData );
 	},
 	getOrderDeatil( data ){
 		let postData = {
@@ -35,7 +34,7 @@ const daily = {
 			daily_order_quantity : data.orderQuantity,
 			daily_score_info     : data.scoreInfo
 		};
-		return post(staff.daily.dailyDetail,postData);
+		return post( window.jpdn_domain_staff + 'staffDailyDetail', postData );
 	},
 	getCountOrder( data ){
 		let postData = {
@@ -44,7 +43,7 @@ const daily = {
 			daily_end_date   : data.endDate,
 			daily_s_state    : data.sState
 		};
-		return post(staff.daily.countOrder,postData);
+		return post( window.jpdn_domain_staff + 'staffCountOrder', postData );
 	},
 	getDailyUser( data ){
 		let postData = {
@@ -52,7 +51,7 @@ const daily = {
 			daily_end_date    : data.endDate,
 			daily_add_user_id : data.addUserId ? 1 : 0
 		};
-		return post(staff.daily.getDailyUser,postData);
+		return post( window.jpdn_domain_staff + 'staffDailyUser', postData );
 	}
 }
 export default daily;

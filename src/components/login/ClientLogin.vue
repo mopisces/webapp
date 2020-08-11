@@ -18,6 +18,7 @@
 	</div>
 </template>
 <script>
+	import login from '@/request/staff/login';
 	import { Button, Image, Field, Toast, Divider } from 'vant';
 	import schema from 'async-validator';
 	import CopyRight from '@/components/subject/footer/CopyRight';
@@ -53,7 +54,6 @@
 					factoryId:'',
 					factoryLogo:'',
 					factoryName:'',
-					/*bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') rgb(42,144,223) top no-repeat;background-size:cover;width:100%;height:100%;'*/
 				},
 				validator:{},
 				rules:{
@@ -128,7 +128,7 @@
 				let self = this;
 				this.$request.staff.login.getSF().then(res=>{
 					self.config.groupOpen = res.result.group_open == 1 ? true : false;
-					self.pageInfo.factoryLogo = this.$store.state.common.imgUrl + res.result.factory_info.FactoryLogo;
+					self.pageInfo.factoryLogo = window.jpdn_domain_imgDomain + res.result.factory_info.FactoryLogo;
 					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
 				});
 			}

@@ -68,7 +68,7 @@
 					}
 					let arr = res.result.BoardDefaultPic.split(",");
 					arr.forEach((item,index)=>{
-						self.fileList.push({name:item,url:this.$store.state.common.imgUrl + item})
+						self.fileList.push({name:item,url: window.jpdn_domain_imgDomain + item})
 					})
 				});
 			}

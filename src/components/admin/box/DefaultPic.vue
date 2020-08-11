@@ -69,7 +69,7 @@
 				this.$request.admin.config.getConfig().then((res)=>{
 					let arr = res.result.BoxDefaultPic.split(",");
 					arr.forEach((item,index)=>{
-						self.fileList.push({name:item,url:this.$store.state.common.imgUrl + item})
+						self.fileList.push({name:item,url:window.jpdn_domain_imgDomain + item})
 					})
 				});
 			}

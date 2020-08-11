@@ -1,5 +1,4 @@
 import { get, post } from '../request';
-import { client } from '../urlMap';
 
 const orderBooking = {
 	/**
@@ -11,7 +10,7 @@ const orderBooking = {
 		let postData = {
 			fast_order_id : fastOrderId
 		};
-		return post(client.orderBooking.simplePaperBoardConfig, postData);
+		return post( window.jpdn_domain_client + 'simpleConfig', postData);
 	},
 	/**
 	 * [sBuildCheck 简单纸板下单前校验参数]
@@ -33,7 +32,7 @@ const orderBooking = {
 			simple_delivery_remark   : data.deliveryRemark,
 			simple_production_remark : data.productionRemark
 		};
-		return post(client.orderBooking.checkBuild, postData);
+		return post( window.jpdn_domain_client + 'checkBuildData', postData);
 	},
 	/**
 	 * [sBuildSave 简单纸板下单]
@@ -54,7 +53,7 @@ const orderBooking = {
 			simple_delivery_remark   : data.deliveryRemark,
 			simple_production_remark : data.productionRemark
 		};
-		return post(client.orderBooking.simplePaperBoardSave, postData)
+		return post( window.jpdn_domain_client + 'simpleSave', postData)
 	},
 
 	/**
@@ -66,7 +65,7 @@ const orderBooking = {
 		let postData = {
 			fast_order_id : fastOrderId
 		};
-		return post(client.orderBooking.boxOrderConfig, postData);
+		return post( window.jpdn_domain_client + 'boxConfig', postData);
 	},
 	/**
 	 * [xBuildCheck 纸箱下单数据校验]
@@ -85,7 +84,7 @@ const orderBooking = {
 			delivery_remark   : data.deliveryRemark,
 			production_remark : data.productionRemark
 		};
-		return post(client.orderBooking.checkBuild, postData);
+		return post( window.jpdn_domain_client + 'checkBuildData', postData);
 	},
 	/**
 	 * [xBuildSave 纸箱下单保存]
@@ -103,14 +102,14 @@ const orderBooking = {
 			delivery_remark   : data.deliveryRemark,
 			production_remark : data.productionRemark
 		};
-		return post(client.orderBooking.boxOrderSave, postData);
+		return post( window.jpdn_domain_client + 'boxSave', postData);
 	},
 	//纸箱纸板下单
 	cBuildConfig( fastOrderId ){
 		let postData = {
 			fast_order_id : fastOrderId
 		};
-		return post(client.orderBooking.boxPaperConfig, postData);
+		return post( window.jpdn_domain_client + 'boxPaperConfig', postData);
 	},
 	cBuildCheck( data ){
 		let postData = {
@@ -134,7 +133,7 @@ const orderBooking = {
 			delivery_remark       : data.deliveryRemark,
 			production_remark     : data.productionRemark
 		};
-		return post(client.orderBooking.checkBuild, postData);
+		return post( window.jpdn_domain_client + 'checkBuildData', postData);
 	},
 	cBuildSave( data ){
 		let postData = {
@@ -157,19 +156,19 @@ const orderBooking = {
 			delivery_remark       : data.deliveryRemark,
 			production_remark     : data.productionRemark
 		};
-		return post(client.orderBooking.boxPaperSave, postData);
+		return post( window.jpdn_domain_client + 'boxPaperSave', postData);
 	},
 	getBoxFormula( boxType ){
 		let postData = {
 			box_type : boxType
 		};
-		return post(client.orderBooking.getBoxFormula, postData);
+		return post( window.jpdn_domain_client + 'getBoxFormula', postData);
 	},
-	getClackAdjust( materialType = '001' ){
+	getClackAdjust( materialType ){
 		let postData = {
 			material_type : materialType
 		};
-		return post(client.orderBooking.getClackAdjust, postData);
+		return post( window.jpdn_domain_client + 'getClackAdjust', postData);
 	},
 	getCalcArea( data ){
 		let postData = {
@@ -178,7 +177,7 @@ const orderBooking = {
 			area_bd_qty  : data.areaBdQty,
 			area_ord_qty : data.areaOrdQty
 		};
-		return post(client.orderBooking.getCalcArea, postData);
+		return post( window.jpdn_domain_client + 'getClacArea', postData);
 	}
 };
 export default orderBooking;

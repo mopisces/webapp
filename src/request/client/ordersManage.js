@@ -1,9 +1,8 @@
 import { get, post } from '../request';
-import { client } from '../urlMap';
 
 const ordersManage = {
 	erpOrdersConfig(){
-		return get(client.ordersManage.erpOrdersConfig);
+		return get( window.jpdn_domain_client + 'erpOrdersConfig');
 	},
 	erpOrders( data ){
 		let postData = {
@@ -22,17 +21,17 @@ const ordersManage = {
 			cur_page         : data.curPage
 
 		};
-		return post(client.ordersManage.erpOrders,postData);
+		return post( window.jpdn_domain_client + 'erpOrders',postData);
 	},
 	dailyOrdersConfig(){
-		return get(client.ordersManage.dailyOrdersConfig);
+		return get( window.jpdn_domain_client + 'dailyOrdersConfig');
 	},
 	dailyOrdersCusInfo( data ){
 		let postData = {
 			daily_begin_date : data.beginDate,
 			daily_end_date   : data.endDate
 		};
-		return post(client.ordersManage.cusInfo,postData);
+		return post( window.jpdn_domain_client + 'cusInfo',postData);
 	},
 	dailyOrderOptionalDate( data ){
 		let postData = {
@@ -46,29 +45,29 @@ const ordersManage = {
 			order_quantities : data.orderQuantities,
 			daily_order_state: data.orderState
 		};
-		return post(client.ordersManage.optionalDate,postData);
+		return post( window.jpdn_domain_client + 'optionalDate',postData);
 	},
 	dailyOrders( data ){
 		let postData = {
 			daily_order_state  : data.orderState,
 			daily_booking_date : data.bookingDate
 		};
-		return post(client.ordersManage.dailyOrders,postData);
+		return post( window.jpdn_domain_client + 'dailyOrders',postData);
 	},
 	commonOrders( data ){
 		let postData = {
 			common_order_type : data.orderType,
 			cur_page          : data.curPage
 		};
-		return post(client.ordersManage.commonOrders, postData);
+		return post( window.jpdn_domain_client + 'commonOrders', postData);
 	},
 	cancelCommon( orderId ){
-		return post(client.ordersManage.cancelCommon, { cancel_order_id : orderId });
+		return post( window.jpdn_domain_client + 'cancelCommon', { cancel_order_id : orderId });
 	},
 
 	//微信订单页面参数
 	wechatOrdersConfig(){
-		return get(client.ordersManage.wechatOrdersConfig);
+		return get( window.jpdn_domain_client + 'wxConfig');
 	},
 	wechatOrders( data ){
 		let postData = {
@@ -80,13 +79,13 @@ const ordersManage = {
 			wechat_order_state : data.orderState,
 			cur_page           : data.curPage
 		};
-		return post(client.ordersManage.wechatOrders,postData);
+		return post( window.jpdn_domain_client + 'wechatOrders',postData);
 	},
 	wechatBaseDetail( cusOrderId ){
-		return post(client.ordersManage.wechatBaseDetail,{ wechat_cus_order_id : cusOrderId });
+		return post( window.jpdn_domain_client + 'wechatBaseDetail',{ wechat_cus_order_id : cusOrderId });
 	},
 	wechatGroupDetail( cusOrderId ){
-		return post(client.ordersManage.wechatGroupDetail,{ wechat_cus_order_id : cusOrderId });
+		return post( window.jpdn_domain_client + 'wechatGroupDetail',{ wechat_cus_order_id : cusOrderId });
 	},
 	detailAll( cusOrderId ){
 		return axios.all([
@@ -99,17 +98,17 @@ const ordersManage = {
 			wechat_cus_order_id : data.cusOrderId,
 			wechat_del_remak    : data.delRemak
 		};
-		return post(client.ordersManage.wechatDelete,postData);
+		return post( window.jpdn_domain_client + 'wechatDelete', postData);
 	},
 	wechatSetCommon( data ){
 		let postData = {
 			wechat_card_flag    : data.cardFlag,
 			wechat_cus_order_id : data.orderId
 		};
-		return post(client.ordersManage.wechatSetCommon,postData);
+		return post( window.jpdn_domain_client + 'wechatCommon', postData);
 	},
 	wechatCancel( orderId ){
-		return post(client.ordersManage.wechatCancel,{ cancel_order_id:orderId } );
+		return post( window.jpdn_domain_client + 'cancelCommon',{ cancel_order_id:orderId } );
 	}
 };
 export default ordersManage;

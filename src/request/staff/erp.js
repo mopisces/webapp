@@ -1,5 +1,4 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
 
 const erp = {
 	ordersDetail( data ){
@@ -7,10 +6,10 @@ const erp = {
 			detail_order_id   : data.orderId,
 			detail_order_type : data.orderType
 		};
-		return post(staff.erp.ordersDetail,postData);
+		return post( window.jpdn_domain_staff + 'staffOrdersDetail', postData );
 	},
 	erpConfig(){
-		return post(staff.erp.erpConfig);
+		return post( window.jpdn_domain_staff + 'staffErpConfig');
 	},
 	erpOrders( data ){
 		let postData={
@@ -29,7 +28,8 @@ const erp = {
 			erp_order_id       : data.orderId
 		};
 
-		return post(staff.erp.erpOrders,postData);
+		return post( window.jpdn_domain_staff + 'staffErp', postData );
 	}
-}
+};
+
 export default erp;

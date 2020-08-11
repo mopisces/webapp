@@ -90,7 +90,7 @@
 						{text:'ERP订单', role:'ERP订单', iconName:'erp',         url:'/client/order/getOrders'},
 						{text:'常用材质', role:'纸板下单', iconName:'caizhi',      url:'/client/usedboard/lists'},
 						{text:'常用订单', role:'纸板下单', iconName:'dingdan1',    url:'/client/usedorder/lists'},
-						{text:'微信订单', role:'微信订单', iconName:'shouji',      url:'/client/wxorder/lists'},
+						{text:'微信订单', role:'基础权限', iconName:'shouji',      url:'/client/wxorder/lists'},
 						{text:'纸箱下单', role:'纸箱下单', iconName:'zhixiang1',   url:'/client/build/x'},
 						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang',    url:'/client/build/c'},
 						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s'},

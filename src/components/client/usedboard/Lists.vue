@@ -93,6 +93,7 @@
 					self.config.list.returnType = res.result;
 				}).then(()=>{
 					this.$nextTick(()=>{
+						this.checkBoxResult = [];
 						this.commonMaterial( this.filterForm );
 					});
 				});

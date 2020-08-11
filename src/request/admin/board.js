@@ -1,6 +1,6 @@
 import { get, post } from '../request';
-import { admin } from '../urlMap';
 import { dateTimeFormat } from '@/util/index';
+
 const board={
 	getList( data ){
 		let postData = {
@@ -10,14 +10,14 @@ const board={
 			cur_page          : data.curPage,
 			lists_is_delete   : 0
 		};
-		return post(admin.board.getList,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardLists', postData);
 	},
 	del( data ){
 		let postData = {
 			order_id   : data.Id,
 			order_type : data.BoardId == null ? 1 : 2
 		};
-		return post(admin.board.del,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardDel', postData);
 	},
 	changeFlag( data ){
 		let postData = {
@@ -25,7 +25,7 @@ const board={
 			order_type     : data.orderType,
 			change_is_flag : data.isFlag
 		};
-		return post(admin.board.changeFlag,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardFlag', postData);
 	},
 	saveDescr( data ){
 		let postData = {
@@ -33,17 +33,17 @@ const board={
 			order_type    : data.orderType,
 			descr_content : data.descr
 		};
-		return post(admin.board.saveDescr,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardDescr', postData);
 	},
 	boardIdSelect(){
-		return post(admin.board.boardIdSelect);
+		return post( window.jpdn_domain_admin + 'adminBoardCode');
 	},
 	editConfig( data ){
 		let postData = {
 			edit_order_id : data.id,
 			edit_type     : data.type
 		};
-		return post(admin.board.editConfig,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardEdit', postData);
 	},
 	editSave( data ){
 		let postData = {
@@ -67,10 +67,10 @@ const board={
 			save_last_from      : data.lastFrom,
 			save_last_price     : data.lastPrice
 		};
-		return post(admin.board.editSave,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardEsave', postData);
 	},
 	addConfig(){
-		return post(admin.board.addConfig);
+		return post( window.jpdn_domain_admin + 'adminBoardConfig' );
 	},
 	addSave( data ){
 		let postData = {
@@ -93,7 +93,7 @@ const board={
 			add_last_from      : data.lastFrom,
 			add_last_price     : data.lastPrice,
 		};
-		return post(admin.board.addSave,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardAdd',postData);
 	},
 	getDelList( data ){
 		let postData = {
@@ -103,21 +103,21 @@ const board={
 			cur_page          : data.curPage,
 			lists_is_delete   : 1
 		};
-		return post(admin.board.getList,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardLists',postData);
 	},
 	undel( data ){
 		let postData = {
 			undel_order_type : data.MatNo == null ? '1' : '2',
 			order_id         : data.Id
 		};
-		return post(admin.board.undel,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardUndel',postData);
 	},
 	delPic( data ){
 		let postData = {
 			default_pic_type : data.type,
 			pic_name         : data.picName
 		};
-		return post(admin.board.delPic,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardPicDel',postData);
 	}
 };
 export default board;

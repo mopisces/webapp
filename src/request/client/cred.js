@@ -1,11 +1,11 @@
 import { get, post } from '../request';
-import { client } from '../urlMap';
+
 const cred = {
 	creditBalanceAmt(){
-		return get(client.cred.creditBalanceAmt);
+		return get(window.jpdn_domain_client + 'creditBalanceAmt');
 	},
 	statementAccountConfig(){
-		return get(client.cred.statementAccountConfig);
+		return get(window.jpdn_domain_client + 'statementAccountConfig');
 	},
 	statementAccount( data ){
 		let postData = {
@@ -13,7 +13,7 @@ const cred = {
 			statement_end_date     : data.endDate,
 			statement_account_type : data.type
 		};
-		return post(client.cred.statementAccount, postData);
+		return post(window.jpdn_domain_client + 'statementAccount', postData);
 	}
 };
 export default cred;

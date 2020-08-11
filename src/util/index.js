@@ -99,7 +99,7 @@ export function urlWhiteList( roleName, type )
 		whiteList = [
 			'外部人员使用',
 			'菜单页面',
-			/*'微信订单',*/
+			'微信订单',
 			'支付方式',
 			'支付完成',
 			'申请退款',

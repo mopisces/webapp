@@ -1,15 +1,14 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
 
 const frec = {
 	cusPicker( keyword ){
-		return post(staff.frec.cusPicker,{cus_key_word:keyword});
+		return post( window.jpdn_domain_staff + 'frecCusPicker', {cus_key_word:keyword} );
 	},
 	cusContact( data ){
-		return post(staff.frec.cusContact,{cus_id:data.cusName,task_id:data.taskId});
+		return post( window.jpdn_domain_staff + 'frecCusContact', {cus_id:data.cusName,task_id:data.taskId} );
 	},
 	recAdjustConfig(){
-		return post(staff.frec.recAdjustConfig);
+		return post( window.jpdn_domain_staff + 'frecAdjustConfig' );
 	},
 	recAdjustMain( result ){
 		let postData = {
@@ -21,7 +20,7 @@ const frec = {
 			frec_end_date: result.endDate,
 			pay_type: result.payType
 		};
-		return post(staff.frec.recAdjustMain,postData);
+		return post( window.jpdn_domain_staff + 'frecAdjustMain', postData );
 	},
 }
 export default frec;

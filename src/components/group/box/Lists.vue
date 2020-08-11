@@ -1,9 +1,6 @@
 <template>
 	<div>
 		<van-sticky :offset-top="46">
-		<!-- <van-dropdown-menu>
-			<van-dropdown-item v-model="formData.filterName" :options="config.filterOptions" />
-		</van-dropdown-menu> -->
 		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 		<van-tabs v-model="formData.state">
 			<van-tab name="1">
@@ -198,9 +195,9 @@
 					res.result.forEach((item,index)=>{
 						item.time  = ( Number(item.EndTime) - Number(item.CurTime) ) * 1000;
 						if( item.Pic ){
-							item.thumb = this.$store.state.common.imgUrl + item.Pic;
+							item.thumb = window.jpdn_domain_imgDomain + item.Pic;
 						}else{
-							item.thumb = this.$store.state.common.imgUrl + 'zwtp.png';
+							item.thumb = window.jpdn_domain_imgDomain + 'zwtp.png';
 						}
 						self.listData.push(item);
 					});
@@ -271,19 +268,13 @@
 		computed:{
 			stateChange(){
 				return this.formData.state;
-			}/*,
-			filterNameChange(){
-				return this.formData.filterName;
-			}*/
+			}
 		},
 		watch:{
 			stateChange( newV,oldV ){
 				this.pullOnRefresh();
 				this.getFilterName();
-			}/*,
-			filterNameChange( newV,oldV ){
-				this.pullOnRefresh();
-			}*/
+			}
 		}
 	}
 </script>

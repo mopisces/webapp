@@ -1,5 +1,4 @@
 import { get, post } from '../request';
-import { index } from '../urlMap';
 
 const login = {
 	login( data ){
@@ -9,10 +8,10 @@ const login = {
 			user_type  : data.userType,
 			sub_fac_id : data.subFactoryId
 		};
-		return post(index.index.index,postData);
+		return post(window.jpdn_domain_index + 'login',postData);
 	},
 	quickLogin( data ){
-		return get(index.index.index,{ get_user_secret : data } );
+		return get(window.jpdn_domain_index + 'login',{ get_user_secret : data } );
 	}
 }
 export default login;

@@ -1,5 +1,5 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
+
 const wx = {
 	getScanConfig( data ){
 		let postData = {
@@ -7,10 +7,10 @@ const wx = {
 			redirect_domain : data.domain,
 			redirect_port   : data.port
 		};
-		return post(staff.wx.scanWxConfig,postData);
+		return post( window.jpdn_domain_staff + 'staffGetWxConfig', postData );
 	},
 	portValuable(){
-		return post(staff.wx.portValuable);
+		return post( window.jpdn_domain_staff + 'staffPortValuable' );
 	},
 	scanQrCode( data ){
 		let postData = {
@@ -21,7 +21,8 @@ const wx = {
 			postData.is_edit = data.isEdit;
 			postData.order_type = data.orderType;
 		}
-		return post(staff.wx.scanQrCode,postData);
+		return post( window.jpdn_domain_staff + 'staffScanCode', postData );
 	}
 };
+
 export default wx;

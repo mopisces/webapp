@@ -59,7 +59,6 @@
 </template>
 <script>
 	import { Image, Tag, Grid, GridItem } from 'vant';
-	import base from '@/request/base';
 	import CopyRight from '@/components/subject/footer/CopyRight';
 	export default {
 		components:{
@@ -103,14 +102,14 @@
 				let self = this;
 				this.$request.client.other.getIndexConfig().then(res=>{
 					if( res.result.UseBoardGroup == '1' ){
-						self.config.grid.groupBoard.img      = base.imgDomain + res.result.BoardGroupPic;
-						self.config.grid.groupBoardFlag.img  = base.imgDomain + res.result.FlagBoardGroupPic;
+						self.config.grid.groupBoard.img      = window.jpdn_domain_imgDomain + res.result.BoardGroupPic;
+						self.config.grid.groupBoardFlag.img  = window.jpdn_domain_imgDomain + res.result.FlagBoardGroupPic;
 						self.config.grid.groupBoardFlag.flag = res.result.BoardFlag;
 						self.boardGroupOpen = true;
 					}
 					if( res.result.UseBoxGroup == '1' ){
-						self.config.grid.groupBox.img      = base.imgDomain  + res.result.BoxGroupPic;
-						self.config.grid.groupBoxFlag.img  = base.imgDomain  +  res.result.FlagBoxGroupPic;
+						self.config.grid.groupBox.img      = window.jpdn_domain_imgDomain  + res.result.BoxGroupPic;
+						self.config.grid.groupBoxFlag.img  = window.jpdn_domain_imgDomain  +  res.result.FlagBoxGroupPic;
 						self.config.grid.groupBoxFlag.flag = res.result.BoxFlag;
 						self.boxGroupOpen = true;
 					}

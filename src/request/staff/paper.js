@@ -1,5 +1,4 @@
 import { get, post } from '../request';
-import { staff,erp } from '../urlMap';
 
 const paper = {
 	staffPaperSafe( data ){
@@ -11,26 +10,26 @@ const paper = {
 			safe_paper_name  : data.safePaperName,
 			safe_s_remark    : data.safeSRemark,
 		};
-		return post(staff.paper.staffPaperSafe,postData);
+		return post( window.jpdn_domain_staff + 'staffPaperSafe', postData );
 	},
 	paperConfig( url ){
-		return post(staff.paper.paperConfig);
+		return post( window.jpdn_domain_staff + 'staffPaperConfig' );
 	},
 	stockConfig(){
-		return post(staff.paper.stockConfig);
+		return post( window.jpdn_domain_staff + 'staffSStockConfig' );
 	},
 	stockMain( data ){
 		let postData = {
 			search_paper_data : data.searchData,
 			search_paper_type : data.dataType
 		};
-		return post(staff.paper.stockMain,postData);
+		return post( window.jpdn_domain_staff + 'staffSStock', postData );
 	},
 	paperGetInInfo( inNo ){
 		let postData = {
 			stock_in_info_no : inNo
 		};
-		return post(staff.paper.paperGetInInfo,postData);
+		return post( window.jpdn_domain_staff + 'staffPaperGetInInfo', postData );
 	},
 	paperDoRStockIn( data ){
 		let postData = {
@@ -38,13 +37,13 @@ const paper = {
 			stock_in_op_time : data.inOpTime,
 			stock_in_weight  : data.inWeight
 		};
-		return post(staff.paper.paperDoRStockIn,postData);
+		return post( window.jpdn_domain_staff + 'staffPaperDoRStockIn', postData );
 	},
 	paperGetOutInfo( outNo ){
 		let postData = {
 			stock_out_info_no : outNo
 		};
-		return post(staff.paper.paperGetOutInfo,postData);
+		return post( window.jpdn_domain_staff + 'staffPaperGetOutInfo', postData );
 	},
 	paperOutMain( data ){
 		let postData = {
@@ -54,33 +53,20 @@ const paper = {
 			stock_out_s_flute  : data.stockOutSFlute,
 			stock_out_bzwt     : data.stockOutBzwt
 		};
-		return post(staff.paper.paperOutMain,postData);
+		return post( window.jpdn_domain_staff + 'staffPaperOutMain', postData );
 	},
 	directInConfig(){
-		return post(staff.paper.directInConfig);
+		return post( window.jpdn_domain_staff + 'staffPaperDirectInConfig' );
 	},
 	getLastSchArea( orderId ){
-		return post(staff.paper.getLastSchArea,{ direct_in_order_id : orderId });
+		return post( window.jpdn_domain_staff + 'staffPaperGetLastSchArea', { direct_in_order_id : orderId } );
 	},
 	getOrdSchArea( orderId ){
-		return post(staff.paper.getOrdSchArea,{ direct_in_order_id : orderId });
+		return post( window.jpdn_domain_staff + 'staffPaperGetOrdSchArea', { direct_in_order_id : orderId } );
 	},
 	getOrdInInfo( orderId ){
-		return post(staff.paper.getOrdInInfo,{ direct_in_order_id : orderId });
-	}/*,
-	directInStock( data ){
-		let postData = {
-			iQty         : data.iQty,
-			dInDate      : data.iQty,
-			strOrderId   : data.strOrderId,
-			strRemark    : data.strRemark,
-			strWorkGorup : data.strWorkGorup,
-			strStockArea : data.strStockArea,
-			strSchArea   : data.strSchArea,
-			strFactoryId : data.strFactoryId,
-			strUserId    : data.strUserId
-		};
-		return post(erp.directInStock,postData);
-	}*/
-}
+		return post( window.jpdn_domain_staff + 'staffPapergetOrdInInfo', { direct_in_order_id : orderId } );
+	}
+};
+
 export default paper;

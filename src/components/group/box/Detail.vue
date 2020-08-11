@@ -148,9 +148,9 @@
 					self.descInfo   = res.result.desc_info;
 					res.result.goods_detail.Pic.forEach((item,index)=>{
 						if( item != '' ){
-							self.imagesList.push( this.$store.state.common.imgUrl + item );
+							self.imagesList.push( window.jpdn_domain_imgDomain + item );
 						}else{
-							self.imagesList.push( this.$store.state.common.imgUrl + 'zwtp.png' );
+							self.imagesList.push( window.jpdn_domain_imgDomain + 'zwtp.png' );
 						}
 					});
 				}).then(()=>{

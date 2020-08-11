@@ -1,9 +1,6 @@
 import { get, post } from '../request';
-import { wechat } from '../urlMap';
+
 const login = {
-	/*checkUserInfo( openid ){
-		return post(wechat.login.checkUserInfo,{openid:openid});
-	},*/
 	bindAccount( data ){
 		let postData = {
 			openid    : sessionStorage.getItem('jpdn_webapp_openid'),
@@ -12,15 +9,8 @@ const login = {
 			full_name : data.fullName,
 			tel_no    : data.phone
 		};
-		return post(wechat.login.bindAccount,postData);
+		return post( window.jpdn_domain_wechat + 'bindAccount', postData );
 	},
-	/*wxStaffLogin( data ){
-		let postData = {
-			openid   : sessionStorage.getItem('jpdn_webapp_openid'),
-			sub_fact : data.subFacId
-		};
-		return post(wechat.login.wxStaffLogin,postData);
-	},*/
 	wxMulitLogin( data ){
 		let postData = {
 			openid    : sessionStorage.getItem('jpdn_webapp_openid'),
@@ -28,13 +18,14 @@ const login = {
 			acc_name  : data.userName,
 			user_type : data.userType
 		};
-		return post(wechat.login.wxMulitLogin,postData);
+		return post( window.jpdn_domain_wechat + 'wxMulitLogin', postData );
 	},
 	wxBindVerify(openid){
 		let postData = {
 			openid : openid,
 		};
-		return post(wechat.login.wxBindVerify,postData);
+		return post( window.jpdn_domain_wechat + 'wxBindVerify', postData );
 	}
 };
+
 export default login;

@@ -1,4 +1,3 @@
-import { erp } from '../urlMap';
 import QS from 'qs';
 import { Dialog, Toast } from 'vant';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
@@ -38,7 +37,7 @@ const connecterp = {
 			strCusId     : data.cusName,
 			strBoardId   : data.texName
 		};
-		return axios.post(erp.calBdQuotaInfo,QS.stringify(postData));
+		return axios.post( window.jpdn_domain_erp + 'CalBdQuotaInfo', QS.stringify(postData) );
 	},
 	/**
 	 * [calBdPriceInfo 订单试算获取报价]
@@ -48,7 +47,7 @@ const connecterp = {
 	calBdPriceInfo( data,type ){
 		let postData = data;
 		let postfix  = type == '0' ? 's' : 'c'; 
-		return axios.post( erp.calBdPriceInfo + '/' + postfix ,QS.stringify(postData));
+		return axios.post( window.jpdn_domain_erp + 'CalBdPriceInfo/' + postfix, QS.stringify(postData) );
 	},
 	/**
 	 * [erpDelDNDetail 库存修改删除库]
@@ -62,7 +61,7 @@ const connecterp = {
 			strFactoryId : data.strFactoryId,
 			strUserId    : data.strUserId
 		};
-		return axios.post(erp.delDNDetail,QS.stringify(postData));
+		return axios.post( window.jpdn_domain_erp + 'WebCommon/DelDNDetail', QS.stringify(postData) );
 	},
 	/**
 	 * [erpAddDNDetail 存修改修改]
@@ -88,7 +87,7 @@ const connecterp = {
             strFactoryId : data.strFactoryId,
             strUserId    : data.strUserId
 		};
-		return axios.post(erp.addDNDetail,QS.stringify(postData));
+		return axios.post( window.jpdn_domain_erp + 'WebAddDNDetail', QS.stringify(postData) );
 	},
 	/**
 	 * [preparePack 扫描装货准备]
@@ -101,7 +100,7 @@ const connecterp = {
 			strFactoryId : data.strFactoryId,
 			strUserId    : data.strUserId
 		};
-		return axios.post(erp.preparePack,QS.stringify(postData));
+		return axios.post( window.jpdn_domain_erp + 'WebCommon/PreparePack', QS.stringify(postData) );
 	},
 	/**
 	 * [unPreparePack 扫描装货取消准备]
@@ -114,7 +113,7 @@ const connecterp = {
 			strFactoryId : data.strFactoryId,
 			strUserId    : data.strUserId
 		};
-		return axios.post(erp.unPreparePack,QS.stringify(postData));
+		return axios.post( window.jpdn_domain_erp + 'WebCommon/UnPreparePack', QS.stringify(postData) );
 	},
 	/**
 	 * [erpModify 扫描装货修改]
@@ -133,7 +132,7 @@ const connecterp = {
             strFactoryId : data.strFactoryId,
             strUserId    : data.strUserId,
 		};
-		return axios.post(erp.mStockDetailR,QS.stringify(postData));
+		return axios.post( window.jpdn_domain_erp + 'WebCommon/MStockDetailR', QS.stringify(postData) );
 	},
 	/**
 	 * [directInStock 直接入库]
@@ -152,7 +151,7 @@ const connecterp = {
 			strFactoryId : data.strFactoryId,
 			strUserId    : data.strUserId
 		};
-		return axios.post(erp.directInStock,QS.stringify(postData));
+		return axios.post( window.jpdn_domain_erp + 'WebCommon/DirectInStock', QS.stringify(postData) );
 	}
 };
 export default connecterp;

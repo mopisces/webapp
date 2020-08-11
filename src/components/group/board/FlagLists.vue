@@ -57,9 +57,9 @@
 					res.result.forEach((item,index)=>{
 						item.time  = ( Number(item.EndTime) - Number(item.CurTime) ) * 1000;
 						if( item.Pic ){
-							item.thumb = this.$store.state.common.imgUrl + item.Pic;
+							item.thumb = window.jpdn_domain_imgDomain + item.Pic;
 						}else{
-							item.thumb = this.$store.state.common.imgUrl + 'zwtp.png';
+							item.thumb = window.jpdn_domain_imgDomain + 'zwtp.png';
 						}
 					});
 					self.listData = res.result;

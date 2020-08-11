@@ -1,12 +1,11 @@
 import { get, post } from '../request';
-import { client } from '../urlMap';
 
 const other = {
 	contactWay(){
-		return get(client.index.contactWay);
+		return get( window.jpdn_domain_client + 'contactWay');
 	},
 	getIndexConfig(){
-		return get(client.index.indexConfig);
+		return get( window.jpdn_domain_client + 'getIndexConfig');
 	},
 	register( data ){
 		let postData = {
@@ -21,7 +20,7 @@ const other = {
 			reg_contact_phone  : data.contactPhone,
 			reg_fax_no         : data.faxNo,
 		};
-		return post(client.index.register, postData);
+		return post( window.jpdn_domain_client + 'register', postData);
 	},
 	changePass( data ){
 		let postData = {
@@ -29,13 +28,13 @@ const other = {
 			change_new_pass     : data.newPass,
 			change_confirm_pass : data.confirmPass
 		};
-		return post(client.index.clientPwd, postData);
+		return post( window.jpdn_domain_client + 'changePwd', postData);
 	},
 	getAuthUrl(){
-		return post(client.index.authUrl);
+		return post( window.jpdn_domain_client + 'getMenuUrl');
 	},
 	getMenuUserName(){
-		return post(client.index.menuName);
+		return post( window.jpdn_domain_client + 'getClientUserName');
 	}
 };
 

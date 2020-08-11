@@ -1,21 +1,20 @@
 import { get, post } from '../request';
-import { amap } from '../urlMap';
 
 const tableInfo = {
 	getTableInfo(){
-		return get(amap.tableInfo.getTableInfo);
+		return get( window.jpdn_domain_amap + 'tableData/getTableData' );
 	},
 	getUnPackList(){
-		return get(amap.tableInfo.getUnPackList);
+		return get( window.jpdn_domain_amap + 'tableData/getUnPackList' );
 	},
 	getPDNCus( pListNo ){
-		return post(amap.tableInfo.getPDNCus,{p_list_no:pListNo});
+		return post( window.jpdn_domain_amap + 'tableData/getPDNCus', {p_list_no:pListNo} );
 	},
 	getPackDetail(){
-		return post(amap.tableInfo.getPackDetail);
+		return post( window.jpdn_domain_amap + 'tableData/getSelSchPackDetail' );
 	},
 	getDistance(){
-		return post(amap.tableInfo.getDistance)
+		return post( window.jpdn_domain_amap + 'distanceInfo/getDistance')
 	}
 };
 

@@ -1,5 +1,4 @@
 import { get, post } from '../request';
-import { admin } from '../urlMap';
 
 const login={
 	login( data ){
@@ -7,14 +6,14 @@ const login={
 			login_user_name : data.adminName,
 			login_user_pass : data.adminPass
 		};
-		return post(admin.login.login,postData);
+		return post( window.jpdn_domain_admin + 'login', postData);
 	},
 	refreshToken(){
 		let postData = {
 			access_token  : '',
 			refresh_token : ''
 		};
-		return post(admin.login.refresh,postData);
+		return post( window.jpdn_domain_admin + 'refresh',postData);
 	}
 };
 export default login;

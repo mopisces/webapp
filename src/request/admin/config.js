@@ -1,15 +1,14 @@
 import { get, post } from '../request';
-import { admin } from '../urlMap';
 
 const config={
 	getConfig(){
-		return post(admin.config.getConfig);
+		return post( window.jpdn_domain_admin + 'adminConfig' );
 	},
 	saveConfig( jsonData ){
 		let postData = {
 			config_json : jsonData
 		};
-		return post(admin.config.saveConfig,postData);
+		return post( window.jpdn_domain_admin + 'adminSaveConfig', postData);
 	}
 };
 export default config;

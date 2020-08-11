@@ -1,7 +1,5 @@
 import { Dialog, Toast } from 'vant';
-import { index } from './urlMap';
-import store from '@/store';
-
+/*import { index } from './urlMap';*/
 
 var httpServer = axios.create();
 httpServer.defaults.timeout = 15000;
@@ -67,7 +65,7 @@ const errorHandle = {
 				break;
 			case '20215':
 				if( sessionStorage.getItem('jpdn-staff-token') !== null && sessionStorage.getItem('jpdn-staff-refresh') !== null ){
-					let postData = {
+					/*let postData = {
 						access_token  : sessionStorage.getItem('jpdn-staff-token'),
 						refresh_token : sessionStorage.getItem('jpdn-staff-refresh')
 					};
@@ -75,10 +73,13 @@ const errorHandle = {
 						sessionStorage.setItem('jpdn-staff-token',res.data.result.access_token);
 						sessionStorage.setItem('jpdn-staff-refresh',res.data.result.refresh_token);
 						sessionStorage.setItem('jpdn-staff-username',res.data.result.user_name);
+					});*/
+					Dialog({ message: '登录过期,请重新登录' }).then(()=>{
+						router.push('/group/staff/login')
 					});
 				}
 				if( sessionStorage.getItem('jpdn-client-token') !== null && sessionStorage.getItem('jpdn-client-refresh') !== null ){
-					let postData = {
+					/*let postData = {
 						access_token  : sessionStorage.getItem('jpdn-client-token'),
 						refresh_token : sessionStorage.getItem('jpdn-client-refresh')
 					};
@@ -86,6 +87,9 @@ const errorHandle = {
 						sessionStorage.setItem('jpdn-client-token',res.data.result.access_token);
 						sessionStorage.setItem('jpdn-client-refresh',res.data.result.refresh_token);
 						sessionStorage.setItem('jpdn-client-username',res.data.result.user_name);
+					});*/
+					Dialog({ message: '登录过期,请重新登录' }).then(()=>{
+						router.push('/group/client/login')
 					});
 				}
 				break;

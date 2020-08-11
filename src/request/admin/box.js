@@ -1,9 +1,9 @@
 import { get, post } from '../request';
-import { admin } from '../urlMap';
 import { dateTimeFormat } from '@/util/index';
+
 const box={
 	getConfig(){
-		return post(admin.box.getConfig);
+		return post( window.jpdn_domain_admin + 'adminBoxConfig' );
 	},
 	getList( data ){
 		let postData = {
@@ -20,7 +20,7 @@ const box={
 			box_h_max         : data.boxHMax,
 			box_title         : data.title
 		};
-		return post(admin.box.getList,postData);
+		return post( window.jpdn_domain_admin + 'adminBoxLists', postData );
 	},
 	editSave( data ){
 		let postData = {
@@ -44,7 +44,7 @@ const box={
 			save_last_from      : data.lastFrom,
 			save_last_price     : data.lastPrice
 		};
-		return post(admin.board.editSave,postData);
+		return post( window.jpdn_domain_admin + 'adminBoardEsave', postData );
 	},
 	getDelList( data ){
 		let postData = {
@@ -61,7 +61,7 @@ const box={
 			box_h_max         : data.boxHMax,
 			box_title         : data.title
 		};
-		return post(admin.box.getList,postData);
+		return post( window.jpdn_domain_admin + 'adminBoxLists', postData );
 	},
 	addSave( data ){
 		let postData = {
@@ -84,10 +84,10 @@ const box={
 			add_last_from      : data.lastFrom,
 			add_last_price     : data.lastPrice
 		};
-		return post(admin.box.addSave,postData);
+		return post( window.jpdn_domain_admin + 'adminBoxAdd', postData );
 	},
 	quoAddConfig(){
-		return post(admin.box.quoAddConfig);
+		return post( window.jpdn_domain_admin + 'adminBoxQuoAddConfig');
 	},
 	quoAdd( data ){
 		let postData = {
@@ -109,24 +109,24 @@ const box={
 			add_last_from      : data.lastFrom,
 			add_last_price     : data.lastPrice
 		};
-		return post(admin.box.quoAdd,postData);
+		return post( window.jpdn_domain_admin + 'adminBoxQuoAdd', postData );
 	},
 	quoBoxList( data ){
 		let postData = {
 			lists_order_type : data.orderType,
 			cur_page         : data.curPage
 		};
-		return post(admin.box.quoBoxList,postData);
+		return post(  window.jpdn_domain_admin + 'adminBoxQuoList', postData );
 	},
 	delQuoBox( data ){
 		let postData = {
 			del_quo_board_id : data.BoardId,
 			del_quo_id       : data.Id
 		};
-		return post(admin.box.delQuoBox,postData);
+		return post( window.jpdn_domain_admin + 'adminBoxQuoDel', postData );
 	},
 	editQuoBox(data){
-		return post(admin.box.editQuoBox,{edit_id:data.id});
+		return post( window.jpdn_domain_admin + 'adminBoxQuoEdit', {edit_id:data.id} );
 	},
 	saveQuoBox( data ){
 		let postData = {
@@ -149,10 +149,10 @@ const box={
 			add_last_from      : data.lastFrom,
 			add_last_price     : data.lastPrice
 		};
-		return post(admin.box.saveQuoBox,postData);
+		return post( window.jpdn_domain_admin + 'adminBoxQuoSave', postData );
 	},
 	adjustQuoBox(){
-		return post(admin.box.adjustQuoBox);
+		return post( window.jpdn_domain_admin + 'adminBoxQuoAdjust' );
 	}
 };
 

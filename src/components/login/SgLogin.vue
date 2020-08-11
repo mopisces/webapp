@@ -65,7 +65,7 @@
 			getLogo(){
 				let self = this;
 				this.$request.staff.login.getSF().then(res=>{
-					self.pageInfo.factoryLogo = this.$store.state.common.imgUrl + res.result.factory_info.FactoryLogo;
+					self.pageInfo.factoryLogo = window.jpdn_domain_imgDomain + res.result.factory_info.FactoryLogo;
 					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
 				});
 			},

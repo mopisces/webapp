@@ -346,7 +346,7 @@
 					self.config.list.pushLoading.loading = false;
 					res.result.order_data.forEach((item,index)=>{
 						if( item['FirstPic'] != null ){
-							item['pic'] = this.$store.state.common.imgUrl + item.FirstPic;
+							item['pic'] = window.jpdn_domain_imgDomain + item.FirstPic;
 						}
 						self.wxOrdersList.push(item);
 					});
@@ -358,7 +358,7 @@
 								title   : item.Title,
 								cost    : item.Cost,
 								id      : item.Id,
-								pic     : item.FirstPic == null ? '' : this.$store.state.common.imgUrl + item.FirstPic,
+								pic     : item.FirstPic == null ? '' : window.jpdn_domain_imgDomain + item.FirstPic,
 								isover  : item.PayDeadlineTime*1000 > self.config.floatNav.now ? false : true,
 								cusPoNo : item.CusPoNo
 							});

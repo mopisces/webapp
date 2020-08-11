@@ -1,17 +1,17 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
+
 const user = {
 	getUserInfo(){
-		return post(staff.user.staffUserInfo);
+		return post( window.jpdn_domain_staff + 'staffUserInfo' );
 	},
 	getUserManageType(){
-		return post(staff.user.getUserManageType);
+		return post( window.jpdn_domain_staff + 'staffUserManageType' );
 	},
 	getWebUserClient(){
-		return post(staff.user.getWebUserClient);
+		return post( window.jpdn_domain_staff + 'staffWebUserClient' );
 	},
 	getWebUserStaff(){
-		return post(staff.user.getWebUserStaff);
+		return post( window.jpdn_domain_staff + 'staffWebUserStaff' );
 	},
 	getCommonQrCode( data ){
 		let postData = {
@@ -19,13 +19,13 @@ const user = {
 			user_pass : data.PassWord,
 			user_type : data.UserType
 		};
-		return post(staff.user.getCommonQrCode,postData);
+		return post( window.jpdn_domain_staff + 'staffGetCommonQrcode', postData );
 	},
 	getAuthName( data ){
-		return post(staff.user.getAuthName);
+		return post( window.jpdn_domain_staff + 'staffGetAuthName' );
 	},
 	getCommonAuth( data ){
-		return post(staff.user.getCommonAuth,{user_name:data.UserName});
+		return post( window.jpdn_domain_staff + 'staffCommonAuth', {user_name:data.UserName} );
 	},
 	saveAuthName( data ){
 		let postData = {
@@ -34,20 +34,21 @@ const user = {
 			user_type     : data.userType,
 			auth_url_name : data.authName			
 		};
-		return post(staff.user.saveAuthName,postData);
+		return post( window.jpdn_domain_staff + 'staffSaveAuthUrl', postData );
 	},
 	getQrcode(){
-		return post(staff.user.userGetQrcode);
+		return post( window.jpdn_domain_staff + 'staffUserGetQrcode' );
 	},
 	changePass( data ){
 		let postData = {
 			old_pass  : data.oldPass,
 			new_pass  : data.newPass,
 		};
-		return post(staff.user.changePass,postData);
+		return post( window.jpdn_domain_staff + 'staffChangePwd', postData );
 	},
 	getMenuUserName(){
-		return post(staff.user.menuName);
+		return post( window.jpdn_domain_staff + 'getStaffUserName' );
 	}
-}
+};
+
 export default user;

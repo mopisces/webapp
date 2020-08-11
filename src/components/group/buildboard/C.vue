@@ -163,7 +163,7 @@
 					title        : '',
 					productPrice : '',
 					marketPrice  : '',
-					pic          : this.$store.state.common.imgUrl + 'zwtp.png',
+					pic          : window.jpdn_domain_imgDomain + 'zwtp.png',
 					countDown    :{
 						time : 0,
 						show : false,
@@ -326,7 +326,7 @@
 					self.formData.tonLen  = res.result.adjust_info.TonLen;
 					self.formData.uLen    = res.result.adjust_info.ULen;
 					if( res.result.product_info.Pic[0] ){
-						self.cardInfo.pic = this.$store.state.common.imgUrl + res.result.product_info.Pic[0];
+						self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];
 					}
 					if( res.result.product_info.BeginTime * 1000 < (new Date()).valueOf()  ){
 						self.cardInfo.countDown.time = res.result.product_info.EndTime * 1000 - (new Date()).valueOf();

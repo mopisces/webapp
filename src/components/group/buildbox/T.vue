@@ -118,7 +118,7 @@
 					title        : '',
 					productPrice : '',
 					marketPrice  : '',
-					pic          : this.$store.state.common.imgUrl + 'zwtp.png',
+					pic          : window.jpdn_domain_imgDomain + 'zwtp.png',
 				},
 				pageConfig : {
 					minQty  : 0,
@@ -173,7 +173,7 @@
 						self.cardInfo.productPrice = res.result.product_info.Price;
 						self.cardInfo.marketPrice  = res.result.product_info.MarketPrice;
 						if( res.result.product_info.Pic[0] ){
-							self.cardInfo.pic = this.$store.state.common.imgUrl + res.result.product_info.Pic[0];
+							self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];
 						}
 						self.pageConfig.minQty = parseInt(res.result.product_info.BuildMin);
 						self.pageConfig.maxQty = parseInt(res.result.product_info.BuildMax);

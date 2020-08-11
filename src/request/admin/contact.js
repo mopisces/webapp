@@ -1,12 +1,11 @@
 import { get, post } from '../request';
-import { admin } from '../urlMap';
 
 const contact={
 	contactLists( curPage ){
-		return post(admin.contact.lists,{ cur_page : curPage });
+		return post( window.jpdn_domain_admin + 'adminContactList', { cur_page : curPage });
 	},
 	contactDel( id ){
-		return post(admin.contact.del,{ del_id : id });
+		return post( window.jpdn_domain_admin + 'adminContactDel', { del_id : id });
 	},
 	contactAdd( data ){
 		let postData = {
@@ -14,10 +13,10 @@ const contact={
 			add_name    : data.name,
 			add_content : data.content
 		};
-		return post(admin.contact.add,postData);
+		return post( window.jpdn_domain_admin + 'adminContactAddMain', postData);
 	},
 	contactAddConfig(){
-		return post(admin.contact.addConfig);
+		return post( window.jpdn_domain_admin + 'adminContactAddConfig');
 	},
 	contactEditSave( data ){
 		let postData = {
@@ -26,10 +25,10 @@ const contact={
 			edit_save_contact : data.contact,
 			edit_save_icon    : data.iconName
 		};
-		return post(admin.contact.edit, postData);
+		return post( window.jpdn_domain_admin + 'adminContactEditSave', postData);
 	},
 	contactEditConfig( contactId ){
-		return post(admin.contact.editConfig,{ edit_id:contactId });
+		return post( window.jpdn_domain_admin + 'adminContactEditConfig', { edit_id:contactId });
 	},
 };
 export default contact;

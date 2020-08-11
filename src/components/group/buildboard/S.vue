@@ -150,7 +150,7 @@
 					maxWidth  : 0,
 					minArea   : 0,
 					maxArea   : 0,
-					pic       : this.$store.state.common.imgUrl + 'zwtp.png',
+					pic       : window.jpdn_domain_imgDomain + 'zwtp.png',
 					productPrice : '',
 					marketPrice  : '',
 					title        : '',
@@ -282,7 +282,7 @@
 						self.config.countDown.time = ( res.result.product_info.EndTime - res.result.product_info.BeginTime ) * 1000;
 					}
 					if( res.result.product_info.Pic[0] ){
-						self.pageConfig.pic = this.$store.state.common.imgUrl +res.result.product_info.Pic[0];
+						self.pageConfig.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];
 					}
 					self.pageConfig.productPrice = res.result.product_info.Price;
 					self.pageConfig.marketPrice  = res.result.product_info.MarketPrice;

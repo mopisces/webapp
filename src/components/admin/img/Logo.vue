@@ -130,11 +130,11 @@
 					if( res.errorCode == '00000' ){
 						self.config.flagName.board = res.result.BoardFlag;
 						self.config.flagName.box   = res.result.BoxFlag;
-						self.imgUrl.logoUrl        = this.$store.state.common.imgUrl + res.result.FactoryLogo;
-						self.imgUrl.boardUrl       = this.$store.state.common.imgUrl + res.result.BoardGroupPic;
-						self.imgUrl.boardFlagUrl   = this.$store.state.common.imgUrl + res.result.FlagBoardGroupPic;
-						self.imgUrl.boxUrl         = this.$store.state.common.imgUrl + res.result.BoxGroupPic;
-						self.imgUrl.boxFlagUrl     = this.$store.state.common.imgUrl + res.result.FlagBoxGroupPic;
+						self.imgUrl.logoUrl        = window.jpdn_domain_imgDomain + res.result.FactoryLogo;
+						self.imgUrl.boardUrl       = window.jpdn_domain_imgDomain + res.result.BoardGroupPic;
+						self.imgUrl.boardFlagUrl   = window.jpdn_domain_imgDomain + res.result.FlagBoardGroupPic;
+						self.imgUrl.boxUrl         = window.jpdn_domain_imgDomain + res.result.BoxGroupPic;
+						self.imgUrl.boxFlagUrl     = window.jpdn_domain_imgDomain + res.result.FlagBoxGroupPic;
 					}
 				});
 			},

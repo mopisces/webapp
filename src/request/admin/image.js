@@ -1,20 +1,18 @@
 import { get, post } from '../request';
-import { admin } from '../urlMap';
-
 
 const image={
 	getGroupImg(){
-		return post( admin.image.getGroupImg );
+		return post( window.jpdn_domain_admin + 'adminGetGroupImg' );
 	},
 	defaultImgDel( data ){
 		let postData = {
 			default_pic_type : data.type,
 			pic_name         : data.picName
 		};
-		return post( admin.image.defaultImgDel, postData );
+		return post( window.jpdn_domain_admin + 'adminDefaultImgDel', postData );
 	},
 	showListImg( id ){
-		return post( admin.image.showListImg, { group_list_id : id} );
+		return post( window.jpdn_domain_admin + 'adminShowListImg', { group_list_id : id} );
 	},
 	delListImg( data ){
 		let postData = {
@@ -22,7 +20,7 @@ const image={
 			pic_name : data.picName,
 			pic_type : data.type
 		};
-		return post( admin.image.delListImg, postData );
+		return post( window.jpdn_domain_admin + 'admiListImgDel', postData );
 	}
 };
 

@@ -1,5 +1,4 @@
 import { get, post } from '../request';
-import { staff } from '../urlMap';
 
 const statis = {
 	getProInfo( data ){
@@ -7,13 +6,13 @@ const statis = {
 			info_begin_date : data.beginDate,
 			info_end_date   : data.endDate
 		}
-		return post(staff.statis.getProInfo,postData);
+		return post( window.jpdn_domain_staff + 'getProInfo', postData );
 	},
 	getProInfoConfig(){
-		return post(staff.statis.getProInfoConfig);
+		return post( window.jpdn_domain_staff + 'getProInfoConfig' );
 	},
 	getOrdStockConfig(){
-		return post(staff.statis.getOrdStockConfig);
+		return post( window.jpdn_domain_staff + 'getOrdStockConfig' );
 	},
 	getOrdStock( data ){
 		let postData = {
@@ -24,7 +23,7 @@ const statis = {
 			stock_remain_day   : data.remainDay,
 			stock_diff_day     : data.diffDay,
 		}
-		return post(staff.statis.getOrdStock,postData);
+		return post( window.jpdn_domain_staff + 'getOrdStock', postData );
 	},
 	statisDetail( data ){
 		let postData = {
@@ -60,10 +59,10 @@ const statis = {
 			}
 			
 		}
-		return post(staff.statis.statisDetail,postData);
+		return post( window.jpdn_domain_staff + 'statisDetail', postData );
 	},
 	getOrderSumConfig(){
-		return post(staff.statis.getOrderSumConfig);
+		return post( window.jpdn_domain_staff + 'getOrderSumConfig' );
 	},
 	getOrderSum( data ){
 		let postData = {
@@ -72,10 +71,10 @@ const statis = {
 			order_statis_type : data.statisState,
 			order_date_type   : data.dateType
 		};
-		return post(staff.statis.getOrderSum,postData);
+		return post( window.jpdn_domain_staff + 'getOrderSum', postData );
 	},
 	getOrdReturnSumConfig(){
-		return post(staff.statis.getOrdReturnSumConfig);
+		return post( window.jpdn_domain_staff + 'getOrdReturnConfig' );
 	},
 	getOrdReturnSum( data ){
 		let postData={
@@ -84,10 +83,10 @@ const statis = {
 			return_statis_state : data.statisState,
 			return_date_type    : data.dateType,   
 		};
-		return post(staff.statis.getOrdReturnSum,postData);
+		return post( window.jpdn_domain_staff + 'getOrdReturnSum', postData );
 	},
 	getSchSumConfig(){
-		return post(staff.statis.getSchSumConfig);
+		return post( window.jpdn_domain_staff + 'getSchSumConfig' );
 	},
 	getSchSum( data ){
 		let postData = {
@@ -97,8 +96,9 @@ const statis = {
 			sch_s_state     : data.sState,
 			sch_statis_type : data.statisType,
 		};
-		return post(staff.statis.getSchSum,postData);
+		return post( window.jpdn_domain_staff + 'getSchSum', postData );
 	}
 
-}
+};
+
 export default statis;

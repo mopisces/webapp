@@ -1,14 +1,15 @@
 import { get, post } from '../request';
-import { wechat } from '../urlMap';
+
 const config = {
 	serverInfo(){
-		return get(wechat.config.serverInfo);
+		return get( window.jpdn_domain_wechat + 'wxConfig' );
 	},
 	getBindInfo( openid ){
 		let postData = {
 			openid : openid
 		};
-		return post(wechat.config.getBindInfo,postData);
+		return post( window.jpdn_domain_wechat + 'wxBindInfo', postData );
 	}
 };
+
 export default config;

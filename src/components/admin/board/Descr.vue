@@ -131,7 +131,7 @@
 				let quill = this.$refs.myQuillEditor.quill;
 				if ( response.errorCode === '00000' ) {
 					let length = quill.getSelection().index;
-					quill.insertEmbed(length, 'image', this.$store.state.common.imgUrl + response.result);
+					quill.insertEmbed(length, 'image', window.jpdn_domain_imgDomain + response.result);
 					quill.setSelection(length + 1);
 				}else{
 					this.$message.error('图片插入失败');
