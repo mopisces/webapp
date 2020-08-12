@@ -79,7 +79,6 @@
 </template>
 <script>
 	import { Button, CellGroup, Cell, Icon, Row, Col, Checkbox, CheckboxGroup, SwitchCell, Toast, Panel, Tab, Tabs } from 'vant';
-	import base from '@/request/base';
 	import QRCode from 'qrcodejs2';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
@@ -167,9 +166,9 @@
 						document.getElementById('qrcode').innerHTML = '';
 						let url = '';
 						if( data.UserType == 1 ){
-							url = base.wxRediect + 'group/staff/login?token=' + res.result; 
+							url = window.jpdn_domain_wxRediect + 'group/staff/login?token=' + res.result; 
 						}else{
-							url = base.wxRediect + 'group/client/login?token=' + res.result; 
+							url = window.jpdn_domain_wxRediect + 'group/client/login?token=' + res.result; 
 						}
 						this.creatQrCode(url);
 					});

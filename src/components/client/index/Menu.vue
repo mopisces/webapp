@@ -63,7 +63,6 @@
 	import { urlWhiteList } from '@/util';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
-	import base from '@/request/base';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -145,7 +144,7 @@
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = base.wxRediect + 'group/client/login?token=' + res.result;
+					self.loginUrl = window.jpdn_domain_wxRediect + 'group/client/login?token=' + res.result;
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{
