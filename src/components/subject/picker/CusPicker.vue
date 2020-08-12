@@ -11,13 +11,13 @@
 	</div>
 </template>
 <script>
-	import { Icon, Popup, Field, Picker, Search } from 'vant';
+	import { Icon, Popup, Picker, Field, Search } from 'vant';
 	export default {
 		components:{
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
-			[Field.name]: Field,
 			[Picker.name]: Picker,
+			[Field.name]: Field,
 			[Search.name]: Search
 		},
 		props:['cusName'],

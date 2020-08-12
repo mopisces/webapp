@@ -71,7 +71,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, CellGroup, Icon, Popup, Field, Picker, Search, SwitchCell, Dialog, Toast, Tab, Tabs} from 'vant';
+	import { Button, Cell, CellGroup, Icon, Popup, Picker, Field, Search, SwitchCell, Dialog, Toast, Tab, Tabs} from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import schema from 'async-validator';
@@ -82,8 +82,8 @@
 			[CellGroup.name]: CellGroup,
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
-			[Field.name]: Field,
 			[Picker.name]: Picker,
+			[Field.name]: Field,
 			[Search.name]: Search,
 			[SwitchCell.name]: SwitchCell,
 			[Toast.name]: Toast,

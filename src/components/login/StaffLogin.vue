@@ -24,7 +24,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Icon, Image, Row, Col, Popup, Field, Picker, Toast, Tab, Tabs } from 'vant';
+	import { Button, Icon, Image, Row, Col, Popup, Picker, Field, Toast, Tab, Tabs } from 'vant';
 	import schema from 'async-validator';
 	import CopyRight from '@/components/subject/footer/CopyRight';
 	export default {
@@ -35,8 +35,8 @@
 			[Row.name]: Row,
 			[Col.name]: Col,
 			[Popup.name]: Popup,
-			[Field.name]: Field,
 			[Picker.name]: Picker,
+			[Field.name]: Field,
 			[Toast.name]: Toast,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,

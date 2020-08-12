@@ -10,13 +10,13 @@
 	</div>
 </template>
 <script>
-	import { Icon , Popup, Field, Picker } from 'vant';
+	import { Icon , Popup, Picker, Field } from 'vant';
 	export default {
 		components:{
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
-			[Field.name]: Field,
 			[Picker.name]: Picker,
+			[Field.name]: Field,
 		},
 		props:['sFlute'],
 		data(){

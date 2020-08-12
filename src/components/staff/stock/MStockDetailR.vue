@@ -23,7 +23,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Icon, Popup, Field, Picker, Dialog, Toast } from 'vant';
+	import { Button, Icon, Popup, Picker, Field, Dialog, Toast } from 'vant';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import schema from 'async-validator';
 	export default {
@@ -31,8 +31,8 @@
 			[Button.name]: Button,
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
-			[Field.name]: Field,
 			[Picker.name]: Picker,
+			[Field.name]: Field,
 			[Toast.name]: Toast,
 
 			WxScan

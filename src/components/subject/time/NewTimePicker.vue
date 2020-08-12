@@ -10,14 +10,14 @@
 	</div>
 </template>
 <script>
-	import { Icon, Popup, Field, DatetimePicker  } from 'vant';
+	import { Icon, Popup, DatetimePicker, Field } from 'vant';
 	import { dateTimeFormat } from '@/util/index';
 	export default {
 		components:{
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
-			[Field.name]: Field,
 			[DatetimePicker.name]: DatetimePicker,
+			[Field.name]: Field,
 		},
 		props:['dateTime','minDate','maxDate','label'],
 		data(){
