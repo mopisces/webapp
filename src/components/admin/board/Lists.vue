@@ -33,7 +33,7 @@
 			</el-table-column>
 			<el-table-column label="图片(点击编辑)" width="120">
 				<template slot-scope="scope">
-					<img style="width: 60px;" :src=" window.jpdn_domain_imgDomain + scope.row.Pic[0] " v-if="scope.row.Pic[0]" @click="showImg(scope.row)">
+					<img style="width: 60px;" :src=" config.picSrc + scope.row.Pic[0] " v-if="scope.row.Pic[0]" @click="showImg(scope.row)">
 					<span v-if="scope.row.Pic.length > 1">等{{ scope.row.Pic.length }}张</span>
 				</template>
 			</el-table-column>
@@ -157,7 +157,8 @@
 								label : '否'
 							}
 						]
-					} 
+					},
+					picSrc: window.jpdn_domain_imgDomain
 				},
 				filterForm : {
 					orderType  : 1,
