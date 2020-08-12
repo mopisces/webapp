@@ -10,14 +10,12 @@
 	</div>
 </template>
 <script>
-	import { admin } from '@/request/urlMap';
-	import base from '@/request/base';
 	export default {
 		data(){
 			return {
 				config:{
 					upload:{
-						action:admin.image.addListImg,
+						action:window.jpdn_domain_admin + 'admiListImgAdd',
 						header:{
 							Authentication : sessionStorage.getItem('jpdn-admin-token')
 						},
@@ -46,7 +44,7 @@
 				this.$request.admin.image.showListImg( this.formData.id ).then(res=>{
 					if( res.errorCode == '00000' ){
 						res.result.forEach((item,index)=>{
-							self.pic.push( {name:item,url:base.imgDomain + item});
+							self.pic.push( {name:item,url:window.jpdn_domain_imgDomain + item});
 						});
 					}
 				});

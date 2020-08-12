@@ -1,5 +1,4 @@
 import { Dialog, Toast } from 'vant';
-/*import { index } from './urlMap';*/
 
 var httpServer = axios.create();
 httpServer.defaults.timeout = 15000;

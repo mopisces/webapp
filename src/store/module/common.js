@@ -1,4 +1,3 @@
-import base from '@/request/base';
 const common = {
 	namespaced: true,
 	state: {
@@ -6,7 +5,6 @@ const common = {
 		activeItem : '',
 		useType    : '',
 		indexActive: '',
-		imgUrl     : base.imgDomain
 	},
 	mutations:{
 		setTitle( state, title ){

@@ -1,12 +1,11 @@
 import { get, post } from '../request';
-import { sg } from '../urlMap';
 
 const alter = {
 	getValue( data ){
 		let postData = {
 			alter_config_index : data.configIndex
 		};
-		return post(sg.alter.getValue,postData);
+		return post( window.jpdn_domain_sg + 'alertGetValue', postData );
 	},
 	changeVal( data ){
 		let postData = {
@@ -14,19 +13,20 @@ const alter = {
 			change_id           : data.id,
 			change_value        : data.sliderValue
 		};
-		return post(sg.alter.changeVal,postData);
+		return post( window.jpdn_domain_sg + 'alertChangeValue', postData );
 	},
 	getRecord( data ){
 		let postData = {
 			alter_config_index : data.configIndex
 		};
-		return post(sg.alter.getRecord,postData);
+		return post( window.jpdn_domain_sg + 'alertGetRecord', postData );
 	},
 	clearRecord( data ){
 		let postData = {
 			alter_config_index : data.configIndex
 		};
-		return post(sg.alter.clearRecord,postData);
+		return post( window.jpdn_domain_sg + 'alertClearRecord', postData );
 	}
-}
+};
+
 export default alter;

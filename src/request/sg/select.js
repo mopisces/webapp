@@ -1,22 +1,21 @@
 import { get, post } from '../request';
-import { sg } from '../urlMap';
 
 const select = {
 	getConfig( data ){
-		return get(sg.select.getConfig);
+		return get( window.jpdn_domain_sg + 'selectConfig' );
 	},
 	getBl( data ){
 		let postData = {
 			bl_config_index : data.selectItem
 		};
-		return post(sg.select.getBl,postData);
+		return post( window.jpdn_domain_sg + 'selectGetBl', postData );
 	},
 	getBlms( data ){
 		let postData = {
 			blms_active_type  : data.active,
 			blms_config_index : data.index
 		};
-		return post(sg.select.getBlms,postData);
+		return post( window.jpdn_domain_sg + 'selectBlms', postData );
 	},
 	getScdd( data ){
 		let postData = {
@@ -29,10 +28,10 @@ const select = {
 			scdd_config_index : data.activeItem,
 			cur_page          : data.curPage
 		};
-		return post(sg.select.getScdd,postData);
+		return post( window.jpdn_domain_sg + 'selectGetScdd', postData );
 	},
 	getWgddConfig(){
-		return get(sg.select.getWgddConfig);
+		return get( window.jpdn_domain_sg + 'selectGetWgddConfig' );
 	},
 	getWgdd( data ){
 		let postData = {
@@ -47,7 +46,8 @@ const select = {
 			wgdd_config_index : data.activeItem,
 			cur_page          : data.curPage,
 		};
-		return post(sg.select.getWgdd, postData);
+		return post( window.jpdn_domain_sg + 'selectGetWgdd', postData );
 	}
-}
+};
+
 export default select;

@@ -1,5 +1,4 @@
 import { get, post } from '../request';
-import { sg } from '../urlMap';
 
 const login = {
 	login( data ){
@@ -7,7 +6,8 @@ const login = {
 			user_name : data.userName,
 			user_pass : data.userPass
 		};
-		return post(sg.login.login,postData);
+		return post( window.jpdn_domain_sg + 'login', postData );
 	}
 };
+
 export default login;

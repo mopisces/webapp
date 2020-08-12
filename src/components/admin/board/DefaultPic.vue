@@ -9,7 +9,6 @@
 	</div>
 </template>
 <script>
-	import { admin } from '@/request/urlMap.js';
 	export default {
 		data(){
 			return {
@@ -17,7 +16,7 @@
 					header:{
 						Authentication : sessionStorage.getItem('jpdn-admin-token')
 					},
-					action:admin.image.defaultImgAdd,
+					action:window.jpdn_domain_admin + 'adminDefaultImgAdd',
 					data:{
 						default_pic_type:'board'
 					}

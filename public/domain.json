@@ -1,5 +1,5 @@
 {
-	"backStage":"http://wyrc.leaper.ltd:8001/",
-	"pageDomain":"http://wyrc.leaper.ltd:8002/",
-	"erpDomain":"http://wyrc.leaper.ltd:38081/datasnap/rest/TServerMethods1/"
+	"backStage":"http://test.leaper.ltd:1110/",
+	"pageDomain":"http://test.leaper.ltd:1103/",
+	"erpDomain":"http://test.leaper.ltd:38081/datasnap/rest/TServerMethods1/"
 }

@@ -1,9 +1,8 @@
 import { get, post } from '../request';
-import { sg } from '../urlMap';
 
 const monitor = {
 	getSocketUrl(){
-		return post(sg.monitor.getSocketUrl);
+		return post( window.jpdn_domain_sg + 'socketUrl' );
 	}
 };
 export default monitor;

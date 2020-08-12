@@ -17,7 +17,6 @@
 
 <script>
 	import { quillEditor } from 'vue-quill-editor';
-	import { admin } from '@/request/urlMap';
 	export default {
 		components:{
 			quillEditor,
@@ -26,7 +25,7 @@
 			return {
 				config:{
 					upload:{
-						action : admin.image.descrImg,
+						action : window.jpdn_domain_admin + 'addDescrImage',
 						header:{
 							Authentication : sessionStorage.getItem('jpdn-admin-token')
 						},

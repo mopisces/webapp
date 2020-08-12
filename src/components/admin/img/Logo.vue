@@ -62,7 +62,6 @@
 	</div>
 </template>
 <script>
-	import { admin } from '@/request/urlMap';
 	export default {
 		data(){
 			return {
@@ -71,7 +70,7 @@
 						active : 'logo'
 					},
 					upload:{
-						action:admin.image.setDefaultImg,
+						action:window.jpdn_domain_admin + 'adminSetDefaultImg',
 						header:{
 							Authentication : sessionStorage.getItem('jpdn-admin-token')
 						},

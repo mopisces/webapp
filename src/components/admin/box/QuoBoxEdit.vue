@@ -59,12 +59,6 @@
 			<el-form-item label="团购时间" prop="dateTime" v-if=" config.isFinishLoad ">
 				<el-date-picker v-model="formData.dateTime" type="datetimerange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
 			</el-form-item>
-			<!-- <el-form-item label="默认图片" prop="isDefaultPic">
-				<el-checkbox v-model="formData.isDefaultPic" label="是否为默认图片" border true-label="1" false-label="0"></el-checkbox>
-			</el-form-item>
-			<el-form-item :label="formData.flagName" prop="isFlag">
-				<el-checkbox v-model="formData.isFlag" label="是否为指定标签" border true-label="1" false-label="0"></el-checkbox>
-			</el-form-item> -->
 		</el-form>
 		<el-button type="primary" @click="editSaveValidate()">保存修改</el-button>
 	</div>
