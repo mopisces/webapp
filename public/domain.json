@@ -1,5 +1,6 @@
 {
 	"backStage":"http://test.leaper.ltd:1110/",
 	"pageDomain":"http://test.leaper.ltd:1103/",
-	"erpDomain":"http://test.leaper.ltd:38081/datasnap/rest/TServerMethods1/"
+	"erpDomain":"http://test.leaper.ltd:38081/datasnap/rest/TServerMethods1/",
+	"demandType":""
 }

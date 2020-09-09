@@ -2,7 +2,7 @@
 	<div>
 		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
 		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material"></popup-select>
-		<van-field clearable label="纸板规格(mm)" right-icon="question-o" @click-right-icon="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth +'mm~' + pageConfig.maxWidth + 'mm' )">
+		<!-- <van-field clearable label="纸板规格(mm)" right-icon="question-o" @click-right-icon="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth +'mm~' + pageConfig.maxWidth + 'mm' )">
 			<div class="van-row van-row--flex van-row--justify-center" slot="input">
 				<div class="van-col van-col--12">
 					<input type="number" placeholder="板长" v-model="formData.boardLength" class="van-field__control van-field__control--center"  @blur=" calcArea() "/>
@@ -13,8 +13,17 @@
 				<div class="van-col van-col--11">
 					<input type="number" placeholder="板宽" v-model="formData.boardWidth" class="van-field__control van-field__control--center" @blur=" calcArea() "/>
 				</div>
-			</div>
+			</div> -->
 		</van-field>
+		<div class="van-cell" style="display: flex;align-items: center;">
+			<div class="van-cell__title van-field__label">纸板规格(mm)</div>
+			<input type="number" class="karry-input" placeholder="长" v-model="formData.boardLength" @blur=" calcArea() "/>
+			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+			<input type="number" class="karry-input" placeholder="宽" v-model="formData.boardWidth" @blur=" calcArea() "/>
+			<div class="van-field__right-icon">
+				<van-icon name="question-o" @click="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth +'mm~' + pageConfig.maxWidth + 'mm' )"/>
+			</div>
+		</div>
 		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
 		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="压线和=板宽(格式:x+x+x)"/>
 		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数" @blur=" calcArea() "/>
@@ -43,7 +52,6 @@
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
-			/*[Dialog.Component.name]: Dialog.Component,*/
 			[Toast.name]: Toast,
 
 			NewTimePicker,

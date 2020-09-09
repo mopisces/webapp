@@ -32,19 +32,25 @@
 					nickName     : '',
 					userFullName : '',
 					telNo        : '',
+					openid : ''
+				},
+				postData:{
+					openid:'',
+					userName:''
 				}
 			}
 		},
 		methods:{
-			getBindInfo(){
+			getVerifyInfo(){
 				let self = this;
-				this.$request.wechat.config.getBindInfo(this.openid).then(res=>{
+				this.$request.wechat.config.getVerifyInfo(this.postData).then(res=>{
 					if( res.errorCode == '00000' ){
-						self.formData.userName     = res.result.info.UserName;
-						self.formData.nickName     = res.result.info.NickName;
-						self.formData.userFullName = res.result.info.UserFullName;
-						self.formData.telNo        = res.result.info.TelNo;
-						if( res.result.info.Stopped == 0 ){
+						self.formData.userName     = res.result.UserName;
+						self.formData.nickName     = res.result.NickName;
+						self.formData.userFullName = res.result.UserFullName;
+						self.formData.telNo        = res.result.TelNo;
+						self.formData.openid       = res.result.OpenID
+						if( res.result.Stopped == 0 ){
 							self.config.button.disabled = true;
 							self.config.button.text     = '已审核';
 						}
@@ -53,7 +59,7 @@
 			},
 			verify(){
 				let self = this;
-				this.$request.wechat.login.wxBindVerify(this.openid).then(res=>{
+				this.$request.wechat.login.wxBindVerify(this.formData).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.config.button.disabled = true;
 						self.config.button.text     = '已审核';
@@ -65,8 +71,9 @@
 			if( typeof( this.$route.query.verifyInfo ) == 'undefined' ){
 				return false;
 			}
-			this.openid = this.$route.query.verifyInfo;
-			this.getBindInfo();
+			this.postData.openid = this.$route.query.verifyInfo;
+			this.postData.userName = this.$route.query.userName;
+			this.getVerifyInfo();
 		},
 		mounted(){
 

@@ -202,3 +202,20 @@
 	border-bottom-right-radius: 0;
 	border-top-right-radius: 0;
 }
+.karry-cell-value{
+	display: flex;
+    flex-flow: wrap;
+}
+.karry-cell-value_div{
+	align-self:center;
+}
+.karry-input{
+	line-height: 1.5rem;
+	font-size:0.875rem;
+	text-align:center;
+	width:45%;
+	outline:none;
+    background:#ede9e9;
+    border:none;
+    -webkit-text-fill-color:red;/*#f30b0b*/
+}

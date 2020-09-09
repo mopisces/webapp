@@ -21,6 +21,7 @@ const config = {
 				window.jpdn_domain_imgDomain = response.data.backStage + 'upload/';
 				window.jpdn_domain_erp       = response.data.erpDomain;
 				window.jpdn_domain_wxRediect = response.data.pageDomain;
+				window.jpdn_demand_type      = response.data.demandType;
 				resolve();
 			},err =>{
 				reject();

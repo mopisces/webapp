@@ -11,28 +11,42 @@
 					<van-switch-cell v-model="commonForm.bAddArea" title="加面积" />
 					<van-switch-cell v-model="commonForm.bEdge" title="毛片" />
 					<template v-if="config.tabs.active == 0 ">
-						<van-field label="规格(mm)">
+						<!-- <van-field label="规格(mm)">
 							<div slot="input">
 								<input v-model="boardForm.length" type="number" placeholder="板长" class="cell-input">
-	                    		x
-	                    		<input v-model="boardForm.width" type="number" placeholder="板宽" class="cell-input">
+							                    		x
+							                    		<input v-model="boardForm.width" type="number" placeholder="板宽" class="cell-input">
 							</div>
-						</van-field>
+						</van-field> -->
+						<div class="van-cell" style="display: flex;align-items: center;">
+							<div class="van-cell__title van-field__label">规格(mm)</div>
+							<input type="number" class="karry-input" placeholder="板长" v-model="boardForm.length" />
+							<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+							<input type="number" class="karry-input" placeholder="板宽" v-model="boardForm.width" />
+						</div>
 						<van-field v-model="boardForm.scoreInfo" placeholder="压线和=板宽(格式：x+x+x)" label="压线" input-align="center"/>
 					</template>
 					<template v-if="config.tabs.active == 1 ">
 						<van-field readonly clickable label="箱型" :value="boxForm.boxId"  placeholder="选择箱型" @click="boxPicker()" required input-align="center">
 							<van-icon name="arrow" slot="right-icon"/>
 						</van-field>
-						<van-field label="规格" >
+						<!-- <van-field label="规格" >
 							<div slot="input">
 								<input type="number" placeholder="箱长(mm)" class="cell-input" v-model="boxForm.boxL">
-	                    		x
-	                    		<input type="number" placeholder="箱宽(mm)" class="cell-input"  v-model="boxForm.boxW">
-	                    		x
-	                    		<input type="number" placeholder="箱高(mm)" class="cell-input"  v-model="boxForm.boxH">
+							                    		x
+							                    		<input type="number" placeholder="箱宽(mm)" class="cell-input"  v-model="boxForm.boxW">
+							                    		x
+							                    		<input type="number" placeholder="箱高(mm)" class="cell-input"  v-model="boxForm.boxH">
 							</div>
-						</van-field>
+						</van-field> -->
+						<div class="van-cell" style="display: flex;align-items: center;">
+							<div class="van-cell__title van-field__label">规格</div>
+							<input type="number" class="karry-input" placeholder="箱长(mm)" v-model="boxForm.boxL" />
+							<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+							<input type="number" class="karry-input" placeholder="箱宽(mm)" v-model="boxForm.boxW" />
+							<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+							<input type="number" class="karry-input" placeholder="箱高(mm)" v-model="boxForm.boxH" />
+						</div>
 						<van-field v-model="boxForm.tonLen" placeholder="输入箱舌(mm)" label="箱舌" input-align="center"/>
 						<van-field v-model="boxForm.uLen" placeholder="输入封箱调整(mm)" label="封箱调整" input-align="center"/>
 					</template>

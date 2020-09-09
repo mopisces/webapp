@@ -4,7 +4,7 @@ import client from './client';
 import admin from './admin';
 import sg from './sg';
 import group from './group';
-//import amap from './amap';
+import amap from './amap';
 Vue.use(VueRouter);
 //404
 const error404    = () => import('@/components/common/404');
@@ -61,22 +61,22 @@ let routes = [
         path:'/echart/area',
         component: areaChart,
         meta:{ title: '库区剩余' }
-    },
+    },*/
     {
         path : '/login/index',
         component: login,
         meta:{ title: '新登陆接口' }
-    },*/
+    },
+    {
+        path:'/common/verify',
+        component:check,
+        meta:{ title: '审核绑定' }
+    },
     {
         path : '/login/wxQrCode',
         component: wxQrCode,
         meta:{ title: '微信授权生成二维码登陆' }
     },
-    /*{
-        path:'/common/verify',
-        component:check,
-        meta:{ title: '审核绑定' }
-    },*/
     {
         path:'*',
         component : error404,
@@ -87,7 +87,7 @@ let routes = [
     ...admin,
     ...sg,
     ...group,
-    //...amap
+    ...amap
 ];
 
 
@@ -98,7 +98,7 @@ let router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     store.commit('client/setIsLogin',sessionStorage.getItem('jpdn-client-isLogin'));
-    window,scrollTo(0,0);
+    window.scrollTo(0,0);
     if( to.meta.title ){
         document.title = to.meta.title;
     }

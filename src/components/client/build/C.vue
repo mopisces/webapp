@@ -3,30 +3,41 @@
 		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
 		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @materialConfirm="getClackAdjust( formData.materialType )"></popup-select>
 		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @boxTypeConfirm="getBoxFormula( formData.boxType )"></popup-select>
-		<van-field label="纸箱规格(mm)" right-icon="question-o" @click-right-icon="clickQuestion(1)">
+		<!-- <van-field label="箱规(mm)" right-icon="question-o" @click-right-icon="clickQuestion(1)">
 			<div class="van-row van-row--flex van-row--justify-center" slot="input">
 				<div class="van-col van-col--7" >
-					<input placeholder="箱长(L)" v-model="formData.boxLength" style="width:100%;" @blur="calcBdLW()"/>
+					<input placeholder="长(L)" v-model="formData.boxLength" style="width:100%;" @blur="calcBdLW()"/>
 				</div>
 				<div class="van-col van-col--1">
-					x
+					*
 				</div>
 				<div class="van-col van-col--7">
-					<input placeholder="箱宽(W)" v-model="formData.boxWidth" style="width:100%;" @blur="calcBdLW()"/>
+					<input placeholder="宽(W)" v-model="formData.boxWidth" style="width:100%;" @blur="calcBdLW()"/>
 				</div>
 				<div class="van-col van-col--1">
-					x
+					*
 				</div>
 				<div class="van-col van-col--8">
-					<input placeholder="箱高(H)" v-model="formData.boxHeight" style="width:100%;" @blur="calcBdLW()"/>
+					<input placeholder="高(H)" v-model="formData.boxHeight" style="width:100%;" @blur="calcBdLW()"/>
 				</div>
-			</div>	
-		</van-field>
+			</div>
+		</van-field> -->
+		<div class="van-cell" style="display: flex;align-items: center;">
+			<div class="van-cell__title van-field__label">箱规(mm)</div>
+			<input type="number" class="karry-input" placeholder="长(L)" v-model="formData.boxLength" @blur=" calcBdLW() "/>
+			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+			<input type="number" class="karry-input" placeholder="宽(W)" v-model="formData.boxWidth" @blur=" calcBdLW() "/>
+			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+			<input type="number" class="karry-input" placeholder="高(H)" v-model="formData.boxHeight" @blur=" calcBdLW() "/>
+			<div class="van-field__right-icon">
+				<van-icon name="question-o" @click="clickQuestion(1)"/>
+			</div>
+		</div>
 		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @lenConfirm="calcBdLW()"></popup-select>
 		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @lenConfirm="calcBdLW()"></popup-select>
 		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
 		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
-		<div class="van-cell van-field">
+		<!-- <div class="van-cell van-field">
 			<div class="van-cell__title" style="width:5.625rem;">
 				<span>纸板规格(mm)</span>
 			</div>
@@ -43,6 +54,12 @@
 					</div>
 				</div>
 			</div>
+		</div> -->
+		<div class="van-cell" style="display: flex;align-items: center;">
+			<div class="van-cell__title van-field__label">纸板规格(mm)</div>
+			<input type="number" class="karry-input" placeholder="板长" v-model="formData.length" readonly/>
+			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+			<input type="number" class="karry-input" placeholder="板宽" v-model="formData.width" readonly/>
 		</div>
 		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
 		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
@@ -62,7 +79,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, Dialog, Toast } from 'vant';
+	import { Button, Icon, Field, Dialog, Toast } from 'vant';
 	import PopupSelect from '@/components/subject/build/PopupSelect.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
@@ -71,6 +88,7 @@
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Icon.name]: Icon,
 			[Field.name]: Field,
 			[Toast.name]: Toast,
 
