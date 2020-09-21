@@ -6,13 +6,29 @@
 				<van-icon slot="icon" class-prefix="iconfont" name="shuaxin" size="16"/>
 			</div>
 		</van-nav-bar>
-		<div style="height:46px;width:100%;"></div>
+		<div style="height:2.875rem;width:100%;"></div>
 		<router-view v-if="isRouterAlive"/>
-		<div style="height:50px;width:100%;"></div>
+		<div style="height:3.125rem;width:100%;"></div>
 		<van-tabbar v-model="config.active">
-			<van-tabbar-item name="sgMenu" to="/sg/menu">
-				<van-icon slot="icon" name="wap-home-o"/>
-				菜单
+			<van-tabbar-item name="monitor" to="/sg/monitor/websocket">
+				<van-icon slot="icon" class-prefix="iconfont" name="shexiangtou" size="18"/>
+				生管监控
+			</van-tabbar-item>
+			<van-tabbar-item name="bl" to="/sg/select/bl">
+				<van-icon slot="icon" name="points" size="18"/>
+				备料
+			</van-tabbar-item>
+			<van-tabbar-item name="blms" to="/sg/select/blms">
+				<van-icon slot="icon" class-prefix="iconfont" name="sousuo" size="18" />
+				备料米数
+			</van-tabbar-item>
+			<van-tabbar-item name="scdd" to="/sg/select/scdd">
+				<van-icon slot="icon" name="records" size="18" />
+				生产订单
+			</van-tabbar-item>
+			<van-tabbar-item name="wgdd" to="/sg/select/wgdd">
+				<van-icon slot="icon" name="completed"/>
+				完工订单
 			</van-tabbar-item>
 			<van-tabbar-item name="sgLogout" @click="logout">
 				<van-icon slot="icon" class-prefix="iconfont" name="tuichu" size="18"/>
@@ -77,11 +93,19 @@
 			setTitle(){
 				return this.$store.state.sg.title;
 			},
+			setTabbar(){
+				return this.$store.state.sg.tabbar;
+			}
 		},
 		watch:{
 			'setTitle':{
 				handler:function(newV,oldV){
 					this.config.headerTitle = newV;
+				}
+			},
+			'setTabbar':{
+				handler:function(newV,oldV){
+					this.config.active = newV;
 				}
 			}
 		}

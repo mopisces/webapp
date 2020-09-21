@@ -3,6 +3,7 @@ const sg = {
 	namespaced: true,
 	state: { 
 		title : '',
+		tabbar:'sgMenu',
 		//socket连接状态
 		isSuccessConnect : false,
 		navList:null
@@ -16,6 +17,9 @@ const sg = {
 		},
 		setNavList( state, navList ){
 			state.navList = navList;
+		},
+		setTabbar( state, value ){
+			state.tabbar = value;
 		}
 	},
 	actions:{

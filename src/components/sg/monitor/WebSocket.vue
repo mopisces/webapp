@@ -404,11 +404,11 @@
 					this.$nextTick(()=>{
 						this.config.updown = this.config.dropDownOption[ this.formData.activeItem ].updown;
 						this.config.isnew = this.config.dropDownOption[ this.formData.activeItem ].isnew;
-						this.getSocket(this.config.dropDownOption[ this.formData.activeItem ].socketUrl)
+						this.getSocket(this.config.dropDownOption[ this.formData.activeItem ].socketUrl,this.formData.activeItem)
 					});
 				});
 			},
-			getSocket( socketUrl ){
+			getSocket( socketUrl, index ){
 				this.socket = io(socketUrl,{
 					timeout:3000
 				});
@@ -416,18 +416,25 @@
 				this.socket.on('connect',()=>{
 					this.config.notice.text = '链接成功！';
 				});
-				this.socket.on('AnalyUdpData0', (data)=>{
+				this.socket.on('AnalyUdpData' + index, (data)=>{
 					if( data == 10060 ){
 						this.config.notice.text = '后台udp广播暂未开启';
 					}else{
 						this.config.notice.text = '监控开启成功';
-						if( !JSON.parse(data).data ){
+						//老版本生管监控
+						/*if( !JSON.parse(data).data ){
 							this.config.notice.text = '数据不完整';
 						}
 						if( this.config.updown ){
 							Object.assign(this.updownInfo, JSON.parse(data).data);
 						}else{
 							Object.assign(this.normalInfo, JSON.parse(data).data);
+						}*/
+						//新版本生管监控
+						if( this.config.updown ){
+							Object.assign(this.updownInfo, data);
+						}else{
+							Object.assign(this.normalInfo, data);
 						}
 						if( !this.config.chart.show ) return;
 						if( this.config.updown ){
@@ -528,6 +535,7 @@
 		},
 		created(){
 			this.$store.commit('sg/setHeaderTitle','生管监控');
+			this.$store.commit('sg/setTabbar','monitor');
 			this.getConfig();
 		},
 		mounted(){
@@ -557,7 +565,7 @@
 				}
 				this.socket.close();
 				this.config.notice.text = '';
-				this.getSocket(this.config.dropDownOption[ newV ].socketUrl);
+				this.getSocket(this.config.dropDownOption[ newV ].socketUrl, newV);
 			}
 		}
 	}

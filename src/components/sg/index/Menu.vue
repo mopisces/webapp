@@ -2,7 +2,7 @@
 	<div>
 		<van-grid square :gutter="10" :column-num="3">
 			<van-grid-item text="生产监控" to="/sg/monitor/websocket">
-				<van-icon slot="icon" class-prefix="iconfont" name="shexiangtou" size="35" color="#eff30c"/>
+				<van-icon slot="icon" class-prefix="iconfont" name="shexiangtou" size="35" color="#1a991d"/>
 			</van-grid-item>
 			<van-grid-item text="备料" to="/sg/select/bl">
 				<van-icon slot="icon" name="points" size="35" color="#1a991d"/>
@@ -16,9 +16,9 @@
 			<van-grid-item text="完工订单" to="/sg/select/wgdd">
 				<van-icon slot="icon" name="completed" size="35" color="#1a991d"/>
 			</van-grid-item>
-			<van-grid-item text="修改" to="/sg/alter/index">
+			<!-- <van-grid-item text="修改" to="/sg/alter/index">
 				<van-icon slot="icon" class-prefix="iconfont" name="xiugai" size="35" color="#eff30c"/>
-			</van-grid-item>
+			</van-grid-item> -->
 		</van-grid>
 	</div>
 </template>

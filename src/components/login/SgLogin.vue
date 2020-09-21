@@ -84,7 +84,7 @@
 						sessionStorage.setItem('jpdn-sg-token',res.result.access_token);
 						sessionStorage.setItem('jpdn-sg-root',res.result.root);
 						self.$store.dispatch('sg/permission');
-						self.$router.push('/sg/menu');
+						self.$router.push('/sg/monitor/websocket');
 					}
 				});
 			}
