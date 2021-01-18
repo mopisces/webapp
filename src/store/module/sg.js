@@ -1,4 +1,3 @@
-import { asyncSgRouterMap } from '@/router/sg';
 const sg = {
 	namespaced: true,
 	state: { 
@@ -6,7 +5,8 @@ const sg = {
 		tabbar:'sgMenu',
 		//socket连接状态
 		isSuccessConnect : false,
-		navList:null
+		navList:null,
+		alterValue:[]
 	},
 	mutations:{ 
 		setHeaderTitle( state, title ){
@@ -20,12 +20,21 @@ const sg = {
 		},
 		setTabbar( state, value ){
 			state.tabbar = value;
+		},
+		setAlertValue( state, value ){
+			if( value.type == 'push' ){
+				if( !state.alterValue[value.configIndex] ){
+					state.alterValue[value.configIndex] = [];
+				}
+				state.alterValue[value.configIndex].push(value.record);
+			}
+			if( value.type == 'clear' ){
+				state.alterValue[value.configIndex] = [];
+			}
 		}
 	},
 	actions:{
-		permission : ( { commit } )=>{
-			commit('setNavList', asyncSgRouterMap);
-		}
+		
 	}
 };
 export default sg;

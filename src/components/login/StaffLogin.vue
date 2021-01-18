@@ -1,15 +1,15 @@
 <template>
 	<div>
 		<div>
-			<div style="padding-top: 0.875rem;  height: 100%;text-align:center;">
+			<div style="padding: 5%;  height: 100%;text-align:center;">
 				{{ pageInfo.factoryName }}
 			</div>
-			<div style="width: 100%; text-align: center;font-size:1.5rem; color: #fff;">
+			<div style="width: 100%; text-align: center;">
 				<van-image :src="pageInfo.factoryLogo" width="40%" height="100%"/>
 			</div>
-			<div style="margin: 0 auto; float:none;width:80%;">
-				<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
-				<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
+			<div style="margin: 0 auto;width:80%;padding-top:5%;">
+				<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required input-align="center"/>
+				<van-field v-model="formData.userPass" :type="config.field.type" label="密码" placeholder="请输入密码" required input-align="center" :right-icon="config.field.passIcon" @click-right-icon="eyeClick"></van-field>
 				<van-field v-model="formData.subFactory" label="分厂" required
 						placeholder="请选择分厂" clickable readonly  @click="config.popup.show = true" v-if="config.field.show">
 					<van-icon name="arrow" slot="right-icon"/>
@@ -17,7 +17,7 @@
 				<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
 			</div>
 			<van-popup v-model="config.popup.show" position="bottom" :style="{ height: '50%' }">
-				<van-picker :columns="config.picker.columns" :default-index="0" show-toolbar @cancel="config.popup.show = false" @confirm="confirm" title="请选择分厂"/>
+				<van-picker :columns="config.picker.columns" :default-index="config.picker.defaultIndex" show-toolbar @cancel="config.popup.show = false" @confirm="confirm" title="请选择分厂"/>
 			</van-popup>
 		</div>
 		<copy-right></copy-right>
@@ -53,11 +53,13 @@
 						show:false
 					},
 					picker:{
-						columns:[]
+						columns:[],
+						defaultIndex:0
 					},
 					field:{
 						show:false,
-
+						type:"text",
+						passIcon:"eye-o"
 					}
 				},
 				formData:{
@@ -104,14 +106,18 @@
 					if( res.result.sub_factory.length !== 0 ){
 						res.result.sub_factory.forEach((item,index)=>{
 							self.config.picker.columns.push({text:item.SShortName,key:item.SubFacId});
-						});
+
+							if( self.formData.subFactoryId == item.SubFacId ){
+								self.config.picker.defaultIndex = index
+							}
+						});	
 						self.config.field.show = true;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
 						if( this.config.picker.columns.length > 0 ){
-							this.formData.subFactory  = this.config.picker.columns[0].text + '(' + this.config.picker.columns[0].key + ')';
-							this.formData.subFactoryId = this.config.picker.columns[0].key;
+							this.formData.subFactory  = this.config.picker.columns[this.config.picker.defaultIndex].text + '(' + this.config.picker.columns[this.config.picker.defaultIndex].key + ')';
+							this.formData.subFactoryId = this.config.picker.columns[this.config.picker.defaultIndex].key;
 						}else{
 							this.formData.subFactoryId
 						}
@@ -137,6 +143,7 @@
 					sessionStorage.setItem('jpdn-staff-refresh',res.result.refresh_token);
 					sessionStorage.setItem('jpdn-staff-username',res.result.user_name);
 					self.result.userName = res.result.user_name;
+					localStorage.setItem("staff-loginInfo",JSON.stringify( this.formData ));
 				});
 			},
 			quickLogin(){
@@ -162,11 +169,28 @@
 						this.$router.push('/staff/index/menu');
 					});
 				});
+			},
+			eyeClick(){
+				if( this.config.field.passIcon == 'eye-o'  ){
+					this.config.field.passIcon = 'closed-eye';
+					this.config.field.type = 'password';
+				}else{
+					this.config.field.passIcon = 'eye-o';
+					this.config.field.type = 'text';
+				}
 			}
 		},
 		created(){
-			if( sessionStorage.getItem('jpdn-staff-username') !== null ){
+			/*if( sessionStorage.getItem('jpdn-staff-username') !== null ){
 				this.formData.userName = sessionStorage.getItem('jpdn-staff-username')
+			}*/
+			try{
+				let loginInfo = JSON.parse(localStorage.getItem("staff-loginInfo"));
+				if( loginInfo != null ){
+					this.formData = loginInfo;
+				}
+			}catch(err){
+				console.log( err )
 			}
 			sessionStorage.clear();
 			this.config.style.div = 'width:100%;height:' + (window.screen.height - 96 ) + 'px';

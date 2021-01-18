@@ -47,6 +47,7 @@
 						columns:[
 							{field: 'PaperCode', title: '原纸代码', width: 40, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'PaperWidth', title: '门幅', width: 50, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'PaperName', title: '纸种名称', width: 120, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'PCount', title: '库存件数', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'SafeCount', title: '安全库存', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'MaxCount', title: '上限库存', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true},
@@ -68,7 +69,6 @@
 										return '暂无数据';
 								}
 							} },
-							{field: 'PaperName', title: '纸种名称', width: 120, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'SRemark', title: '生产备注', width: 150, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						],
 						height : 0

@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<van-notice-bar :text="total" left-icon="volume-o" background="#ecf9ff"/>
 		<van-tabs v-model="filterForm.dataType" sticky>
 			<van-tab title="按门幅汇总" name="1">
 				<prev-next @radioConfirm="radioConfirm" :radioData="radioData.widthData"  v-if="config.prevNext.show"></prev-next>
@@ -19,14 +20,14 @@
 	</div>
 </template>
 <script>
-	import { Button, Tab, Tabs } from 'vant';
+	import { Button, Tab, Tabs, NoticeBar } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
-
+			[NoticeBar.name]: NoticeBar,
 			PrevNext
 		},
 		data(){
@@ -68,7 +69,8 @@
 				filterForm:{
 					dataType:1,
 					searchData:''
-				}
+				},
+				total:''
 			}
 		},
 		methods:{
@@ -81,21 +83,27 @@
 				this.$request.staff.paper.stockConfig().then(res=>{
 					self.radioData.widthData = res.result.width_select;
 					self.radioData.codeData = res.result.code_select;
-
-					self.radioData.widthData.forEach((item,index)=>{
-						item['prevNext'] = item.PaperWidth;
-					});
-					self.radioData.codeData.forEach((item,index)=>{
-						item['prevNext'] = item.PaperCode;
-					});
+					if( res.result.width_select.length > 0 ){
+						self.radioData.widthData.forEach((item,index)=>{
+							item['prevNext'] = item.PaperWidth;
+						});
+						self.filterForm.searchData = self.radioData.widthData[0].PaperWidth;
+					}
+					if( res.result.code_select.length > 0 ){
+						self.radioData.codeData.forEach((item,index)=>{
+							item['prevNext'] = item.PaperCode;
+						});
+					}
 					self.filterForm.dataType = 1;
-					self.filterForm.searchData = self.radioData.widthData[0].PaperWidth;
+					self.total = '原纸总库存:  ' + res.result.total;
 				}).then(()=>{
 					this.$nextTick(() => {
 					    this.config.prevNext.show = true;
 					});
 				}).then(()=>{
-					this.getData(this.filterForm);
+					if( this.filterForm.searchData ){
+						this.getData(this.filterForm);
+					}
 				});
 			},
 			getData( data ){

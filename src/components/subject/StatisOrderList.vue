@@ -24,8 +24,8 @@
 			</van-sticky>
 			<van-pull-refresh v-model="pullRefresh.reloading" @refresh="pullOnRefresh">
 				<van-list v-model="pushLoading.loading" :finished="pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
-					<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
-						<div slot="default">
+					<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
+						<div slot="default" style="padding:0.5rem;">
 							<van-row type="flex" justify="center">
 								<van-col span="20"  style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">货品名称:{{ item.MatName }}</van-col>
 							</van-row>
@@ -56,7 +56,7 @@
 							</van-row>
 						</div>
 						<div slot="footer" style="text-align: right;">
-							<van-button size="small" type="info" @click="detailOnClick(item)">详情</van-button>
+							<van-button size="mini" type="info" @click="detailOnClick(item)">详情</van-button>
 						</div>
 					</van-panel>
 				</van-list>
@@ -129,12 +129,11 @@
 					if( res.result == null || res.result.length != 6 ){
 						self.pushLoading.finished = true;
 					}
-				}).then(()=>{
-					
 				});
 			},
 			pullOnRefresh(){
 				this.formData.curPage = 1;
+				this.listInfo = [];
 				this.statisDetail();
 				this.pullRefresh.reloading = false;
 			},

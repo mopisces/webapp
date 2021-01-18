@@ -42,12 +42,12 @@
 					修改密码
 				</div>
 			</div>
-			<div style="margin-top:2.875rem;"></div>
-			<van-field v-model="formData.account" label="账号" input-align="center"  readonly />
-			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  type="password" required/>
-			<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" required/>
-			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6" required/>
-			<div style="text-align:center;">
+			<div style="height:2.875rem;width:100%;"></div>
+			<van-field v-model="formData.account" label="账号" input-align="center"  readonly required/>
+			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  required />
+			<van-field v-model="formData.newPass" label="新密码" input-align="center"  maxlength="6" required/>
+			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" maxlength="6" required/>
+			<div style="text-align:center;padding-top:2rem;">
 				<van-button type="primary" size="normal" style="width:40%;" @click="changeClick()">
 					提交
 				</van-button>&nbsp;&nbsp;&nbsp;&nbsp;

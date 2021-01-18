@@ -70,12 +70,15 @@
 							self.config.dropDown.indexOption.push({text:item.DB_FLAG,value:index,isnew:item.isnew});
 						});
 						self.config.isnew = self.config.dropDown.indexOption[0].isnew == 0 ? false : true;
-					}
-				}).then(()=>{
-					this.getTableData();
-					this.$nextTick(()=>{
-						if( this.config.isnew ){
-							this.config.dropDown.activeOption = [
+						if( res.weight == 0 ){
+							self.config.dropDown.activeOption = [
+								{
+									text  : '按长度',
+									value : 0
+								}
+							];
+						}else{
+							self.config.dropDown.activeOption = [
 								{
 									text  : '按长度',
 									value : 0
@@ -85,15 +88,10 @@
 									value : 1
 								}
 							];
-						}else{
-							this.config.dropDown.activeOption = [
-								{
-									text  : '按长度',
-									value : 0
-								}
-							];
 						}
-					});
+					}
+				}).then(()=>{
+					this.getTableData();
 				});
 			},
 			getTableData(){

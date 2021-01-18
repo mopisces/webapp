@@ -20,9 +20,10 @@ const login = {
 		};
 		return post( window.jpdn_domain_wechat + 'wxMulitLogin', postData );
 	},
-	wxBindVerify(openid){
+	wxBindVerify(data){
 		let postData = {
-			openid : openid,
+			openid    : data.openid,
+			user_name : data.userName
 		};
 		return post( window.jpdn_domain_wechat + 'wxBindVerify', postData );
 	}

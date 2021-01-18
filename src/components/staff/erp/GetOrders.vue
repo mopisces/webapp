@@ -14,8 +14,8 @@
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<van-panel v-for="(item,index) in info.panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
-					<div slot="default">
+				<van-panel v-for="(item,index) in info.panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
+					<div slot="default" style="padding:0.5rem;">
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--20">货品名称:{{ item.MatName }}</div>
 						</div>
@@ -43,7 +43,7 @@
 						</div>
 					</div>
 					<div slot="footer" style="text-align: right;">
-						<van-button size="small" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>
+						<van-button size="mini" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>
 					</div>
 				</van-panel>
 			</van-list>

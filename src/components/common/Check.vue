@@ -59,7 +59,7 @@
 			},
 			verify(){
 				let self = this;
-				this.$request.wechat.login.wxBindVerify(this.postData.openid).then(res=>{
+				this.$request.wechat.login.wxBindVerify( this.postData ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.config.button.disabled = true;
 						self.config.button.text     = '已审核';

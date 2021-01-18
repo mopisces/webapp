@@ -5,11 +5,10 @@
 				<van-dropdown-item v-model="formData.configIndex" :options="config.dropDownOption" />
 			</van-dropdown-menu>
 		</van-sticky>
-		<van-divider :style="{color: '#1989fa', borderColor: '#1989fa', padding: '0 16px'}">
+		<van-divider :style="{color: '#1989fa', borderColor: '#1989fa', padding: '0 16px'}" v-if="formData.id">
 			ID&nbsp;[&nbsp;{{ formData.id }}&nbsp;]
 		</van-divider>
-		<div style="width:100%;height:0.5rem;"></div>
-		<div style="width:100%;height:3rem;text-align:center;padding:1rem;">
+		<div style="width:100%;height:10rem;text-align:center;padding:5rem 0.7rem 0.7rem 0.7rem;">
 			<van-slider v-model="formData.sliderValue"  bar-height="5px" :max="10000"/>
 		</div>
 		<div style="width:100%;height:1rem;"></div>
@@ -42,6 +41,7 @@
 </template>
 <script>
 	import { Button, Cell, Icon, Slider, Stepper, Dialog, DropdownMenu, DropdownItem, Toast, Divider, Sticky } from 'vant';
+	import axios from 'axios';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -96,7 +96,7 @@
 				Dialog.confirm({
 					message: '确认要修改吗?'
 				}).then(()=>{
-					self.changeVal();
+					this.changeVal();
 				}).catch(()=>{
 					Dialog.close();
 				});
@@ -105,7 +105,7 @@
 				Dialog.confirm({
 					message: '确认要清空记录吗?'
 				}).then(()=>{
-					self.clearRecord();
+					this.clearRecord();
 				}).catch(()=>{
 					Dialog.close();
 				});
@@ -119,48 +119,42 @@
 			getValue(){
 				let self = this;
 				this.$request.sg.alter.getValue( this.formData ).then(res=>{
-					console.log(res)
 					if( res.errorCode != '00000' ){
 						return ;
 					}
 					if( !self.config.dropDownOption[ self.formData.configIndex ].isnew ){
-						self.formData.id
+						self.formData.id = res.result.id;
+						self.value = res.result.value;
+					}else{
+						self.value = res.result;
 					}
-					this.value = '';
 				});
 			},
 			changeVal(){
 				let self = this;
 				this.$request.sg.alter.changeVal( this.formData ).then(res=>{
-					console.log(res)
 					if( res.errorCode == '00000' ){
-						self.recordList.push(res.result);
+						let record = {
+							configIndex:self.formData.configIndex,
+							type:'push',
+							record:res.result
+						};
+						self.$store.commit('sg/setAlertValue',record);
 					}
+				}).then(()=>{
+					this.getRecord();
 				});
 			},
 			getRecord(){
-				let self = this;
-				this.$request.sg.alter.getRecord( this.formData ).then(res=>{
-					console.log(res)
-					if( res.errorCode == '00000' ){
-						res.result.forEach((item,index)=>{
-							self.recordList.push(item);
-						});
-					}
-				});
+				let alterValue = this.$store.state.sg.alterValue;
+				if( alterValue && alterValue[this.formData.configIndex] ){
+					this.recordList = alterValue[this.formData.configIndex];
+				}
 			},
 			clearRecord(){
-				let self = this;
-				this.$request.sg.alter.clearRecord( this.formData ).then(res=>{
-					console.log(res)
-					if( res.errorCode == '00000' ){
-						Toast.success('清除成功！');
-					}
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.getRecord();
-					});
-				});
+				this.$store.commit('sg/setAlertValue',{configIndex:this.formData.configIndex,type:'clear'});
+				this.getRecord();
+				Toast.success('清除成功！');
 			},
 			init(){
 				this.getConfig();
@@ -194,7 +188,9 @@
 				this.value = Number( newV );
 			},
 			configIndexChange( newV, oldV ){
+				this.recordList = [];
 				this.config.isnew = this.config.dropDownOption[ newV ].isnew;
+				this.getRecord();
 			}
 		}
 	}

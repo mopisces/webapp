@@ -54,7 +54,8 @@ const dailyWGetCusOrder      = () => import('@/components/staff/daily/WGetCusOrd
 const dailyGetOrdersP        = () => import('@/components/staff/daily/GetOrdersP');
 //用户管理
 const userManage             = () => import('@/components/staff/user/Manage');
-
+//接单统计
+const saleStatis             = () => import('@/components/staff/hide/SaleStatis');
 export const asyncStaffRouterMap = [
     {
         path:'/staff',
@@ -181,6 +182,11 @@ export const asyncStaffRouterMap = [
                 path:'user/manage',
                 meta: { title: '用户管理', role:'用户管理' },
                 component: userManage,
+            },
+            {
+                path:'statis/saleStatis',
+                meta: { title: '接单统计', role:'接单统计' },
+                component:saleStatis
             }
         ]
     }

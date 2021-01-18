@@ -3,8 +3,8 @@ import staff from './staff';
 import client from './client';
 import admin from './admin';
 import sg from './sg';
-/*import group from './group';
-import amap from './amap';*/
+import group from './group';
+/*import amap from './amap';*/
 Vue.use(VueRouter);
 //404
 const error404    = () => import('@/components/common/404');
@@ -57,11 +57,11 @@ let routes = [
             }
         ]
     },
-    /*{
+    {
         path:'/echart/area',
         component: areaChart,
         meta:{ title: '库区剩余' }
-    },*/
+    },
     {
         path : '/login/index',
         component: login,
@@ -77,17 +77,17 @@ let routes = [
         component: wxQrCode,
         meta:{ title: '微信授权生成二维码登陆' }
     },
+    ...staff,
+    ...client,
+    ...admin,
+    ...sg,
+    ...group,
+    /*...amap,*/
     {
         path:'*',
         component : error404,
         meta : { title:'您访问的页面不存在' }
     },
-    ...staff,
-    ...client,
-    ...admin,
-    ...sg,
-    /*...group,
-    ...amap*/
 ];
 
 
@@ -107,6 +107,12 @@ router.beforeEach((to, from, next) => {
     }else{
         store.commit('client/setTabbarActive','menu');
     }
+    if( to.meta.sgLogin && ( !sessionStorage.getItem('jpdn-sg-token') ) ){
+        next({
+            replace:true,
+            name:'sgLogin',
+        });
+    }
     if( to.meta.needLogin && ( !sessionStorage.getItem('jpdn-client-isLogin') && to.params ) ){
         next({
             replace:true,
@@ -124,10 +130,6 @@ router.beforeEach((to, from, next) => {
     }else if( sessionStorage.getItem('jpdn-admin-token') && store.state.admin.navList == null ){
         store.dispatch('admin/permission');
         router.addRoutes(store.state.admin.navList);
-        next({ ...to, replace: true });
-    }else if( sessionStorage.getItem('jpdn-sg-token') && store.state.sg.navList == null ){
-        store.dispatch('sg/permission');
-        router.addRoutes(store.state.sg.navList);
         next({ ...to, replace: true });
     }else{
         next();

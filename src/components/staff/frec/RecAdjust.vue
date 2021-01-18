@@ -21,7 +21,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Tab, Tabs, Field, SwitchCell } from 'vant';
+	import { Button, Field, Tab, Tabs, SwitchCell } from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';

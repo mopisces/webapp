@@ -126,6 +126,20 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">接单统计</td>
+							<td>
+								默认日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.OrderTakeBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.OrderTakeEndDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.OrderTakeMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.OrderTakeMaxDate"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">订单统计</td>
 							<td>
 								默认日期&nbsp;&nbsp;&nbsp;
@@ -898,3 +912,5 @@
 		background:#FFF;
 	}
 </style>
+
+

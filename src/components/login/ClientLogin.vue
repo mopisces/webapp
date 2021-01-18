@@ -1,15 +1,15 @@
 <template>
 	<div>
 		<div>
-			<div style="padding-top: 0.875rem;  height: 100%;text-align:center;">
+			<div style="padding: 5%;  height: 100%;text-align:center;">
 				{{ pageInfo.factoryName }}
 			</div>
-			<div style="width: 100%; text-align: center;font-size:1.5rem; color: #fff;">
+			<div style="width: 100%; text-align: center;">
 				<van-image :src="pageInfo.factoryLogo" width="40%" height="50%"/>
 			</div>
-			<div style="margin: 0 auto; float:none;width:80%;">
-				<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required/>
-				<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
+			<div style="margin: 0 auto;width:80%;padding-top:5%;">
+				<van-field v-model="nameUpper" label="用户名" placeholder="请输入登录名" required input-align="center"/>
+				<van-field v-model="formData.userPass" :type="config.field.type" label="密码" placeholder="请输入密码" required input-align="center" :right-icon="config.field.passIcon" @click-right-icon="eyeClick"/>
 				<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
 				<van-button type="danger" size="normal" style="width:100%;margin-top:5px;" @click="registerClick()" v-if=" config.groupOpen ">注册</van-button>
 			</div>
@@ -41,6 +41,10 @@
 					redirect:{
 						name   : '',
 						params : ''
+					},
+					field:{
+						passIcon:'eye-o',
+						type:'text'
 					},
 					groupOpen : ''
 				},
@@ -88,6 +92,7 @@
 					sessionStorage.setItem('jpdn-client-refresh',res.result.refresh_token);
 					sessionStorage.setItem('jpdn-client-username',res.result.user_name);
 					self.result.userName = res.result.user_name;
+					localStorage.setItem("client-loginInfo",JSON.stringify( this.formData ));
 				});
 			},
 			quickLogin(){
@@ -131,11 +136,28 @@
 					self.pageInfo.factoryLogo = window.jpdn_domain_imgDomain + res.result.factory_info.FactoryLogo;
 					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
 				});
+			},
+			eyeClick(){
+				if( this.config.field.passIcon == 'eye-o'  ){
+					this.config.field.passIcon = 'closed-eye';
+					this.config.field.type = 'password';
+				}else{
+					this.config.field.passIcon = 'eye-o';
+					this.config.field.type = 'text';
+				}
 			}
 		},
 		created(){
-			if( sessionStorage.getItem('jpdn-client-username') !== null ){
+			/*if( sessionStorage.getItem('jpdn-client-username') !== null ){
 				this.formData.userName = sessionStorage.getItem('jpdn-client-username')
+			}*/
+			try{
+				let loginInfo = JSON.parse(localStorage.getItem("client-loginInfo"));
+				if( loginInfo != null ){
+					this.formData = loginInfo;
+				}
+			}catch(err){
+				console.log( err )
 			}
 			sessionStorage.clear();
 			let height = window.screen.height - 96;

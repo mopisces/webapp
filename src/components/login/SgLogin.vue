@@ -1,22 +1,17 @@
 <template>
 	<div>
 		<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
-			<div class="van-nav-bar__title van-ellipsis">生管监控登陆</div>
+			<div class="van-nav-bar__title van-ellipsis">{{factory}}</div>
 		</div>
-		<div style="width:100%;height:2.875rem;"></div>
 		<div>
-			<div style="padding-top: 0.875rem;  height: 100%;text-align:center;">
-				{{ pageInfo.factoryName }}
+			<div style="width: 100%; text-align: center;padding-top:25%;">
+				<van-image :src="logo" width="80%" height="80%"/>
 			</div>
-			<div style="width: 100%; text-align: center;font-size:1.5rem; color: #fff;">
-				<van-image :src="pageInfo.factoryLogo" width="40%" height="50%"/>
-			</div>
-			<div style="margin: 0 auto; float:none;width:80%;">
+			<div style="margin: 0 auto; float:none;width:80%;padding-top:20%;">
 				<van-field v-model="formData.userName" label="用户名" placeholder="请输入登录名" required/>
 				<van-field v-model="formData.userPass" type="password" label="密码" placeholder="请输入密码" required></van-field>
 				<van-button type="primary" size="normal" style="width:100%;margin-top:5px;" @click="onLogin">登录</van-button>
 			</div>
-			<div style="height:3.125rem;width:100%;"></div> 
 		</div>
 		<copy-right></copy-right>
 	</div>
@@ -41,11 +36,6 @@
 						div:''
 					},
 				},
-				pageInfo:{
-					factoryName : '123',
-					factoryLogo : '',
-					/*bg:'background: url('+ this.$store.state.common.imgUrl + 'bg.png' +') no-repeat;background-size:cover;width:100%;height:100%;'*/
-				},
 				formData:{
 					userName : '',
 					userPass : ''
@@ -58,15 +48,15 @@
 					userPass : [
 						{ type: 'string', required: true, message: '请输入密码'},
 					]
-				}
+				},
+				logo: require( '../../assets/image/jplogo.png'),
+				factory:''
 			}
 		},
 		methods:{
 			getLogo(){
-				let self = this;
-				this.$request.staff.login.getSF().then(res=>{
-					self.pageInfo.factoryLogo = window.jpdn_domain_imgDomain + res.result.factory_info.FactoryLogo;
-					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
+				this.$request.sg.login.getFactoryName().then(res=>{
+					this.factory = res.result;
 				});
 			},
 			onLogin(){
@@ -83,14 +73,22 @@
 					if( res.errorCode == '00000' ){
 						sessionStorage.setItem('jpdn-sg-token',res.result.access_token);
 						sessionStorage.setItem('jpdn-sg-root',res.result.root);
-						self.$store.dispatch('sg/permission');
+						self.$store.dispatch('sg/permission',res.result.root);
 						self.$router.push('/sg/monitor/websocket');
+						localStorage.setItem("sg-loginInfo",JSON.stringify( this.formData ));
 					}
 				});
 			}
 		},
 		created(){
 			sessionStorage.clear();
+			try{
+				let loginInfo = JSON.parse(localStorage.getItem("sg-loginInfo"));
+				this.formData.userName = loginInfo.userName;
+				this.formData.userPass = loginInfo.userPass;
+			}catch(err){
+				console.log( err )
+			}
 			let height = window.screen.height;
 			this.config.style.div = 'width:100%;height:' + height + 'px';
 			this.getLogo();

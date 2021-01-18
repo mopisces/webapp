@@ -97,6 +97,16 @@ const statis = {
 			sch_statis_type : data.statisType,
 		};
 		return post( window.jpdn_domain_staff + 'getSchSum', postData );
+	},
+	getSaleStatisConfig(){
+		return post( window.jpdn_domain_staff + 'saleSConfig' );
+	},
+	getSaleStatisData( data ){
+		let postData = {
+			hide_begin_date: data.beginDate,
+			hide_end_date: data.endDate
+		};
+		return post( window.jpdn_domain_staff + 'saleStatis', postData);
 	}
 
 };

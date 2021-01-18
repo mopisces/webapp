@@ -9,45 +9,45 @@
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="到底了" @load="onLoad" :offset="100">
-				<van-panel v-for="(item,index) in panelData" :key="index" style="font-size:0.8125rem;">
-					<div slot="header">
+				<van-panel v-for="(item,index) in panelData" :key="index" style="font-size:0.8125rem;margin-top:0.8rem;background-color:#f5f5f5;">
+					<div slot="header" style="padding:0.5rem;">
 						<van-tag plain type="success" style="margin-left:1rem;margin-top:0.3125‬rem;font-size:0.75rem;">标识:{{ item.CardFlag }}</van-tag>
 					</div>
-					<div slot="default">
+					<div slot="default" style="padding-left:1.5rem;padding-bottom:0.5rem;">
 						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">客订单号:&nbsp;{{ item.CusPoNo }}</div>
+							<div class="van-col van-col--24">客订单号:&nbsp;{{ item.CusPoNo }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center"  v-if=" filterForm.orderType === 's' || filterForm.orderType === 'c' ">
-							<div class="van-col van-col--20">材质&nbsp;&nbsp;:&nbsp;{{ item.BoardId }}</div>
+							<div class="van-col van-col--24">材质&nbsp;&nbsp;:&nbsp;{{ item.BoardId }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center" v-if=" filterForm.orderType === 'c' ">
-							<div class="van-col van-col--20">箱型:&nbsp;{{ item.BoxName }}</div>
+							<div class="van-col van-col--24">箱型:&nbsp;{{ item.BoxName }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center"  v-if=" filterForm.orderType === 'c' ">
-							<div class="van-col van-col--20">
+							<div class="van-col van-col--24">
 								纸箱规格:&nbsp;{{ item.BoxL }}&nbsp;x&nbsp;{{ item.BoxW }}&nbsp;x&nbsp;{{ item.BoxH }}
 							</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center" v-if=" filterForm.orderType === 's' || filterForm.orderType === 'c' ">
-							<div class="van-col van-col--20">纸板规格:&nbsp;{{ item.Length }}&nbsp;x&nbsp;{{ item.Width }}</div>
+							<div class="van-col van-col--24">纸板规格:&nbsp;{{ item.Length }}&nbsp;x&nbsp;{{ item.Width }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center" v-if=" filterForm.orderType === 'x' ">
-							<div class="van-col van-col--20">套件:&nbsp;{{ item.ProductName }}</div>
+							<div class="van-col van-col--24">套件:&nbsp;{{ item.ProductName }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">订单总数:&nbsp;{{ item.OrdQty }}</div>
+							<div class="van-col van-col--24">订单总数:&nbsp;{{ item.OrdQty }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">送货地址:&nbsp;{{ item.SubDNAddress }}</div>
+							<div class="van-col van-col--24">送货地址:&nbsp;{{ item.SubDNAddress }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">下单日期:&nbsp;{{ item.BuildDate }}</div>
-							<div class="van-col van-col--10">交货日期:&nbsp;{{ item.DeliveryDate }}</div>
+							<div class="van-col van-col--12">下单日期:&nbsp;{{ item.BuildDate }}</div>
+							<div class="van-col van-col--12">交货日期:&nbsp;{{ item.DeliveryDate }}</div>
 						</div>
 					</div>
 					<div slot="footer" style="text-align:right;">
-						<van-button size="small" plain type="danger" style="margin-right:15px;" @click="cancelClick( item.CusPoNo )">取消常用</van-button>
-						<van-button size="small" plain type="primary" @click="fastBuild( item.CusPoNo, item.CType )">快速下单</van-button>
+						<van-button size="mini" plain type="danger" style="margin-right:15px;" @click="cancelClick( item.CusPoNo )">取消常用</van-button>
+						<van-button size="mini" plain type="primary" @click="fastBuild( item.CusPoNo, item.CType )">快速下单</van-button>
 					</div>
 				</van-panel>
 			</van-list>
@@ -115,6 +115,9 @@
 						self.config.list.pushLoading.finished = true;
 					}
 					self.config.list.pushLoading.loading = false;
+					if( res.errorCode != '00000' ){
+						return false;
+					}
 					res.result.forEach((item,index)=>{
 						self.panelData.push(item);
 					});

@@ -1,6 +1,6 @@
 <template>
 	<div style="font-size:0.8125rem;">
-		<van-notice-bar :text="config.notice.text" left-icon="volume-o" />
+		<!-- <van-notice-bar :text="config.notice.text" left-icon="volume-o" /> -->
 		<van-dropdown-menu>
 			<van-dropdown-item v-model="formData.activeItem" :options="config.dropDownOption" />
 		</van-dropdown-menu>
@@ -416,25 +416,18 @@
 				this.socket.on('connect',()=>{
 					this.config.notice.text = '链接成功！';
 				});
-				this.socket.on('AnalyUdpData' + index, (data)=>{
+				this.socket.on('AnalyUdpData' + 0, (data)=>{
 					if( data == 10060 ){
 						this.config.notice.text = '后台udp广播暂未开启';
 					}else{
 						this.config.notice.text = '监控开启成功';
-						//老版本生管监控
-						/*if( !JSON.parse(data).data ){
+						if( !JSON.parse(data).data || JSON.parse(data).ret == 0){
 							this.config.notice.text = '数据不完整';
 						}
 						if( this.config.updown ){
 							Object.assign(this.updownInfo, JSON.parse(data).data);
 						}else{
 							Object.assign(this.normalInfo, JSON.parse(data).data);
-						}*/
-						//新版本生管监控
-						if( this.config.updown ){
-							Object.assign(this.updownInfo, data);
-						}else{
-							Object.assign(this.normalInfo, data);
 						}
 						if( !this.config.chart.show ) return;
 						if( this.config.updown ){
@@ -580,5 +573,6 @@
         border: 1px solid #e0e0e0;
         border-top: none;
         text-align: center;
+        padding:10px 0;
     }
 </style>

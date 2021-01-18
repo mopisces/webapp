@@ -1,5 +1,5 @@
 <template>
-	<div style="width:100%;text-align: center;padding-top:0.5rem;font-size:0.875rem;">
+	<div style="width:100%;text-align: center;font-size:0.875rem;padding-top:10%;">
 		<van-divider dashed>
 			<a href="http://www.beian.miit.gov.cn"> 浙ICP备16024747号-1</a>
 		</van-divider>

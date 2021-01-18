@@ -1,5 +1,5 @@
 import { Dialog, Toast } from 'vant';
-
+import router from '@/router';
 var httpServer = axios.create();
 httpServer.defaults.timeout = 15000;
 httpServer.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
@@ -95,6 +95,12 @@ const errorHandle = {
 			case '20216':
 				Dialog({ message: '登录过期,请重新登录' }).then(()=>{
 					router.push('/group/index')
+				});
+				break;
+			//生管权限异常,包含登陆过期
+			case '11000':
+				Dialog({ message: '登录异常,请重新登陆' }).then(()=>{
+					router.push('/sg/login')
 				});
 				break;
 			default :

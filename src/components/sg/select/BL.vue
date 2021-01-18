@@ -3,11 +3,9 @@
 		<van-dropdown-menu active-color="#1aad19">
 			<van-dropdown-item v-model="formData.selectItem" :options="config.dropDownOption" />
 		</van-dropdown-menu>
-		<!-- <v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff"  :height="config.table.height" even-bg-color="#fafafa">
-		</v-table> -->
 		<el-table :data="tableData" stripe :height="config.table.height" v-if="config.table.height">
-			<el-table-column prop="sn" label="序号" width="50" fixed></el-table-column>
-			<el-table-column prop="width" label="门幅" width="100" ></el-table-column>
+			<el-table-column prop="sn" label="序号" width="50"></el-table-column>
+			<el-table-column prop="width" label="门幅" width="100"></el-table-column>
 			<el-table-column prop="paper_code" label="生产纸质" width="100"></el-table-column>
 			<el-table-column prop="flute_type" label="楞别" width="50" ></el-table-column>
 			<el-table-column prop="total_len" label="总长" width="100" ></el-table-column>
@@ -76,7 +74,7 @@
 			this.getConfig();
 		},
 		mounted(){
-			this.config.table.height = window.screen.height - 150;
+			this.config.table.height = window.screen.height - 160;
 		},
 		updated(){
 			

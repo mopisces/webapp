@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
+		<van-button plain hairline type="info" size="small" style="width:100%;height:40px;" @click="config.popup.filterShow = true">筛选</van-button>
 		<popup-filter :filterShow.sync="config.popup.filterShow"  @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<cus-picker :cusName.sync="filterForm.cusName" ></cus-picker>
@@ -90,7 +90,7 @@
 		},
 		mounted(){
 			this.cusContact( this.filterForm );
-			this.config.table.height  = window.screen.height - 126;
+			this.config.table.height  = window.screen.height - 136;
 		},
 		destroyed(){
 			if( this.pageConfig.switchChecked ){

@@ -13,8 +13,8 @@
 			</div>
 		</van-sticky>
 		<div v-if="!config.chart.show">
-			<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
-				<div slot="default">
+			<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
+				<div slot="default" style="padding:0.5rem;">
 					<div class="van-row van-row--flex van-row--justify-center">
 						<div class="van-col van-col--10">
 							坑型:    
@@ -137,7 +137,7 @@
 					</div>
 				</div>
 				<div slot="footer" style="text-align: right;">
-					<van-button size="small" type="info" @click="detailShowClick( item )">订单</van-button>
+					<van-button size="mini" type="info" @click="detailShowClick( item )">订单</van-button>
 				</div>
 			</van-panel>
 			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">

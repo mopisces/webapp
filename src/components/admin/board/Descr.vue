@@ -72,9 +72,6 @@
 								} 
 							}
               				
-            			},
-            			syntax: {
-              				highlight: text => hljs.highlightAuto(text).value
             			}
           			},
           			placeholder:'请输入描述信息~',

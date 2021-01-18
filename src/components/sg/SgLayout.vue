@@ -30,6 +30,10 @@
 				<van-icon slot="icon" name="completed"/>
 				完工订单
 			</van-tabbar-item>
+			<van-tabbar-item name="menu" to="/sg/menu/index" v-if="config.haveMenu">
+				<van-icon slot="icon" name="wap-home-o"/>
+				菜单
+			</van-tabbar-item>
 			<van-tabbar-item name="sgLogout" @click="logout">
 				<van-icon slot="icon" class-prefix="iconfont" name="tuichu" size="18"/>
 				退出
@@ -52,7 +56,8 @@
 				config:{
 					headerTitle : '',
 					active      : 'sgMenu',
-				},
+					haveMenu    : false,
+ 				},
 				isRouterAlive : true
 			}
 		},
@@ -81,7 +86,9 @@
 			this.$store.commit('sg/setHeaderTitle','首页');
 		},
 		mounted(){
-
+			if( sessionStorage.getItem('jpdn-sg-root') == 0 || sessionStorage.getItem('jpdn-sg-root') == 1 ){
+				this.config.haveMenu = true;
+			}
 		},
 		updated(){
 			

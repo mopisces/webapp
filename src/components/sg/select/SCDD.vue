@@ -1,7 +1,6 @@
 <template>
 	<div>
 		<van-sticky :offset-top="46">
-			<!-- <van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button> -->
 			<van-dropdown-menu>
 				<van-dropdown-item v-model="formData.activeItem" :options="config.dropDownOption" />
 				<van-dropdown-item title="筛选" ref="filter">
@@ -26,130 +25,120 @@
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :immediate-check="false" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<!-- <van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;">
-					<div slot="default" :style=" index%2 == 1 ? 'background-color:#f0f0f0;' : '' ">
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20" v-if="config.updown">
-								<van-tag type="danger" mark size="large" v-if=" item.tag === '1' ">上刀</van-tag>
-								<van-tag type="primary" mark size="large" v-if=" item.tag === '-1' ">下刀</van-tag>
-							</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">序号:{{ item.sn }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">订单号:{{ item.order_number }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center" v-if="root != 2">
-							<div class="van-col van-col--20">客户名称:{{ item.company_name }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">订单数:{{ item.quantity }}</div>
-							<div class="van-col van-col--10">门幅:{{ item.width }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">纸质:
-								<span v-if=" config.isnew ">{{ item.paper_code }}</span>
-								<span v-else>{{ item.paper }}</span>
-							</div>
-							<div class="van-col van-col--10">坑型:{{ item.flute_type }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">纸宽:{{ item.paper_w }}</div>
-							<div class="van-col van-col--10">纸长:{{ item.paper_len }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">切刀数:{{ item.cutting_qty }}</div>
-							<div class="van-col van-col--10">总长:{{ item.total_len }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">剖1:
-								<span v-if="config.isnew">{{ item.slitting }}</span>
-								<span v-else>{{ item.slitting1 }}</span>
-							</div>
-							<div class="van-col van-col--10">压型:{{ item.pressing_type }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">捆数:
-								<span v-if="config.isnew">{{ item.bundling_qty }}</span>
-								<span v-else>{{ item.bundle_qty }}</span>
-							</div>
-							<div class="van-col van-col--10">修边:{{ item.trimming }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">压线资料1:
-								<span v-if="config.isnew">{{ item.slitting_data }}</span>
-								<span v-else>{{ item.slitting_data1 }}</span>
-							</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">
-								预计完成时间:{{ item.pre_finishtime }}
-							</div>
-						</div>
-					</div>
-				</van-panel> -->
 				<el-card class="box-card" v-for="(item,index) in listInfo" :key="index" :style=" index%2 == 1 ? 'background-color:#f5f7fa;' : '' " :body-style="{ padding: '10px' }">
-					<div class="text item" v-show="config.updown">
+					<div class="item" v-show="config.updown">
 						<van-tag type="danger" mark size="large" v-show=" item.tag === '1' ">上刀</van-tag>
 						<van-tag type="primary" mark size="large" v-show=" item.tag === '-1' ">下刀</van-tag>
 					</div>
-					<div class="text item">
-						<div class="flex-box">序号:{{ item.sn }}</div>
-						<div class="flex-box">订单号:{{ item.order_number }}</div>
+					<div class="item">
+						<div class="flex-box">
+							<span class="text">
+								序号:<span class="text-color">{{ item.sn }}</span>
+							</span>
+						</div>
+						<div class="flex-box">
+							<span class="text">
+								订单号:<span class="text-color">{{ item.order_number }}</span>
+							</span>
+						</div>
 					</div>
-					<div class="text item">
-						客户名称:{{ item.company_name }}
+					<div class="item" v-if=" root != 2 ">
+						<span class="text">
+							客户名称:<span  class="text-color">{{ item.company_name }}</span>
+						</span>
 					</div>
-					<div class="text item">
-						<div class="flex-box">订单数:{{ item.quantity }}</div>
-						<div class="flex-box">门幅:{{ item.width }}</div>
-						<div class="flex-box" v-show=" config.isnew ">纸质:{{ item.paper_code }}</div>
-						<div class="flex-box" v-show=" !config.isnew ">纸质:{{ item.paper }}</div>
+					<div class="item">
+						<div class="flex-box">
+							<span class="text">
+								订单数:<span class="text-color">{{ item.quantity }}</span>
+							</span>
+						</div>
+						<div class="flex-box">
+							<span class="text">
+								门幅:<span class="text-color">{{ item.width }}</span>
+							</span>
+						</div>
+						<div class="flex-box" v-show=" config.isnew ">
+							<span class="text">
+								纸质:<span class="text-color" v-if=" config.isnew ">{{ item.paper_code }}</span>
+								<span class="text-color" v-else>{{ item.paper }}</span>
+							</span>
+						</div>
 					</div>
-					<div class="text item">
-						<div class="flex-box">坑型:{{ item.flute_type }}</div>
-						<div class="flex-box">纸宽:{{ item.paper_w }}</div>
-						<div class="flex-box">纸长:{{ item.paper_len }}</div>
+					<div class="item">
+						<div class="flex-box">
+							<span class="text">
+								坑型:<span class="text-color">{{ item.flute_type }}</span>
+							</span>
+						</div>
+						<div class="flex-box">
+							<span class="text">
+								纸宽:<span class="text-color">{{ item.paper_w }}</span>
+							</span>
+						</div>
+						<div class="flex-box">
+							<span class="text">
+								纸长:<span class="text-color">{{ item.paper_len }}</span>
+							</span>
+						</div>
 					</div>
-					<div class="text item">
-						<div class="flex-box">切刀数:{{ item.cutting_qty }}</div>
-						<div class="flex-box">总长:{{ item.total_len }}</div>
-						<div class="flex-box" v-show=" config.isnew ">剖1:{{ item.slitting }}</div>
-						<div class="flex-box" v-show=" !config.isnew ">剖1:{{ item.slitting1 }}</div>
+					<div class="item">
+						<div class="flex-box">
+							<span class="text">
+								切刀数:<span class="text-color">{{ item.cutting_qty }}</span>
+							</span>
+						</div>
+						<div class="flex-box">
+							<span class="text">
+								总长:<span class="text-color">{{ item.total_len }}</span>
+							</span>
+						</div>
+						<div class="flex-box" v-show=" config.isnew ">
+							<span class="text">
+								剖1:<span class="text-color" v-if="config.isnew">{{ item.slitting }}</span>
+								<span class="text-color" v-else>{{ item.slitting1 }}</span>
+							</span>
+						</div>
 					</div>
-					<div class="text item">
-						<div class="flex-box">压型:{{ item.pressing_type }}</div>
-						<div class="flex-box" v-show=" config.isnew ">捆数:{{ item.bundling_qty }}</div>
-						<div class="flex-box" v-show=" !config.isnew ">捆数:{{ item.bundle_qty }}</div>
-						<div class="flex-box">修边:{{ item.trimming }}</div>
+					<div class="item">
+						<div class="flex-box">
+							<span class="text">
+								压型:<span class="text-color">{{ item.pressing_type }}</span>
+							</span>
+						</div>
+						<div class="flex-box">
+							<span class="text">
+								捆数:<span class="text-color" v-if="config.isnew">{{ item.bundling_qty }}</span>
+								<span class="text-color" v-else>{{ item.bundle_qty }}</span>
+							</span>
+						</div>
+						<div class="flex-box">
+							<span class="text">
+								修边:<span class="text-color">{{ item.trimming }}</span>
+							</span>
+						</div>
 					</div>
-					<div class="text item">
-						<span v-show=" config.isnew ">压线资料1:{{ item.slitting_data }}</span>
-						<span v-show=" !config.isnew ">压线资料1:{{ item.slitting_data1 }}</span>
+					<div class="item">
+						<span v-show=" config.isnew ">
+							<span class="text">
+								压线资料1:<span class="text-color" v-if=" config.isnew ">{{ item.slitting_data }}</span>
+								<span class="text-color" v-else>{{ item.slitting_data1 }}</span>
+							</span>
+						</span>
 					</div>
-					<div class="text item" v-show="item.pre_finishtime">
-						预计完成时间:{{ item.pre_finishtime }}
+					<div class="item" v-show="item.pre_finishtime">
+						<span class="text">
+							预计完成时间:<span class="text-color">{{ item.pre_finishtime }}</span>
+						</span>
 					</div>
 				</el-card>	
 			</van-list>
 		</van-pull-refresh>
-		<!-- <div style="width:100%;height:1rem;"></div> -->
-		<!-- <popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
-			<div slot="filter-field-1">
-				<van-field label="序号" v-model="formData.sn" placeholder="精确查询" input-align="center"/>
-				<van-field label="订单号" v-model="formData.orderNumber" placeholder="精确查询" input-align="center"/>
-				<van-field label="客户名称" v-model="formData.companyName" placeholder="精确查询" input-align="center" v-if=" root != 2 "/>
-				<van-field label="纸质" v-model="formData.paperCode" placeholder="精确查询" input-align="center"/>
-				<van-field label="坑型" v-model="formData.fluteType" placeholder="精确查询" input-align="center"/>
-				<van-field label="门幅" v-model="formData.width" placeholder="精确查询" input-align="center"/>
-			</div>
-		</popup-filter> -->
+		<!-- <div class="oblique-sign-up">上刀</div> -->
 	</div>
 </template>
 <script>
 	import { Button, Col, Row, Field, DropdownMenu, DropdownItem, PullRefresh, List, Panel, Sticky, Tag } from 'vant';
-	/*import PopupFilter from '@/components/subject/PopupFilter.vue';*/
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -164,7 +153,6 @@
 			[Sticky.name]: Sticky,
 			[Tag.name]: Tag,
 
-			/*PopupFilter*/
 		},
 		data(){
 			return {
@@ -179,9 +167,6 @@
 						}
 					},
 					dropDownOption:[],
-					/*popup:{
-						filterShow : false
-					},*/
 					updown : false,
 					isnew  : false
 				},
@@ -285,3 +270,21 @@
 		}
 	}
 </script>
+<style type="text/css">
+	.info-item{
+		position: relative;
+	}
+	.oblique-sign-up {
+	    height: 2rem;
+		width: 5rem;
+		line-height: 1.5rem;
+		font-size: 1rem;
+		text-align: center;
+		color: #fff;
+		transform: rotate(45deg);
+		position: absolute;
+		top: 0;
+		right: -2rem;
+		background-color: #ff4500;
+	}
+</style>

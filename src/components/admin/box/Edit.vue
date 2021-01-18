@@ -182,7 +182,6 @@
 				});
 			},
 			plusClick( index ){
-				console.log(typeof(this.formData.rangePrice))
 				this.formData.rangePrice.splice( index + 1, 0, { From:'', To:'', Price:'' } );
 			},
 			minusClick( index ){

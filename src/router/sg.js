@@ -16,56 +16,61 @@ const wgdd     = () => import('@/components/sg/select/WGDD');
 const webSocket = () => import('@/components/sg/monitor/WebSocket');
 //修改
 const alter    = () => import('@/components/sg/alter/Index');
-export const asyncSgRouterMap = [
-
-];
+//用户管理
+const user     = () => import('@/components/sg/user/Index');
 
 const sg = [
     {
         path:'/sg/login',
         component: sgLogin,
+        name:'sgLogin',
         meta: { title: '生管监控登陆' }
     },
     {
         path:'/sg',
         component: sgLayout,
-        meta: { title: '生管监控', role:'生管监控' },
+        meta: { title: '生管监控', sgLogin:true },
         children:[
             {
-                path : 'menu',
-                meta : { title: '菜单页面', role:'菜单页面' },
-                component: menu,
-            },
-            {
                 path : 'select/bl',
-                meta : { title: '备料', role:'备料' },
+                meta : { title: '备料', sgLogin:true },
                 component: bl,
             },
             {
                 path : 'select/blms',
-                meta : { title: '备料查看', role:'备料查看' },
+                meta : { title: '备料查看', sgLogin:true },
                 component: blms,
             },
             {
                 path : 'select/scdd',
-                meta : { title: '生产订单', role:'生产订单' },
+                meta : { title: '生产订单', sgLogin:true },
                 component: scdd,
             },
             {
                 path : 'select/wgdd',
-                meta : { title: '完工订单', role:'完工订单' },
+                meta : { title: '完工订单', sgLogin:true },
                 component: wgdd,
             },
             {
                 path : 'monitor/websocket',
-                meta : { title: '生管监控', role:'生管监控' },
+                meta : { title: '生管监控', sgLogin:true },
                 component: webSocket,
             },
             {
+                path : 'menu/index',
+                meta : { title: '菜单页面', sgLogin:true },
+                component: menu,
+            },
+            {
+                path : 'user/index',
+                meta : { title: '用户管理', sgLogin:true },
+                component: user,
+            },
+            {
                 path : 'alter/index',
-                meta : { title: '修改', role:'修改' },
+                meta : { title: '菜单页面', sgLogin:true },
                 component: alter,
-            }
+            },
         ]
     }
 ]; 

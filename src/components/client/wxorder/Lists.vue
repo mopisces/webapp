@@ -344,6 +344,9 @@
 						self.config.list.pushLoading.finished = true;
 					}
 					self.config.list.pushLoading.loading = false;
+					if( res.errorCode != '00000' ){
+						return false;
+					}
 					res.result.order_data.forEach((item,index)=>{
 						if( item['FirstPic'] != null ){
 							item['pic'] = window.jpdn_domain_imgDomain + item.FirstPic;
@@ -424,7 +427,7 @@
 					setTimeout(function(){
 						self.config.popup.del.show = false;
 						self.pullOnRefresh();
-					},3000);
+					},1000);
 				});
 			},
 			headerClick( rowData ){

@@ -8,44 +8,44 @@
 		</van-sticky>
 		<high-chart v-if=" config.chart.show " :options="config.chart"></high-chart>
 		<div v-else>
-			<van-panel v-for="(item,index) in info.panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:2px 4px 0 4px;">
-				<div slot="default">
+			<van-panel v-for="(item,index) in info.panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
+				<div slot="default" style="padding:0.5rem;">
 					<div class="van-row van-row--flex van-row--justify-center">
 						<div class="van-col van-col--10">客户编号:
 							<span style="color:#1da02b;">{{ item.CusId }}</span>
 						</div>
-						<div class="van-col van-col--10">
+						<div class="van-col van-col--12">
 							客户简称:
 							<span style="color:#1da02b;">{{ item.CusShortName }}</span>
 						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">
+						<div class="van-col van-col--22">
 							库存数:
 							<span style="color:#1da02b;">{{ item.StockQty }}</span>
 						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">
+						<div class="van-col van-col--22">
 							库存面积:
 							<span style="color:#1da02b;">{{ item.StockArea }}</span>
 						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">
+						<div class="van-col van-col--22">
 							库存金额:
 							<span style="color:#1da02b;">{{ item.StockAmt }}</span>
 						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--20">
+						<div class="van-col van-col--22">
 							总数:
 							<span style="color:#1da02b;">{{ item.sumCount }}</span>
 						</div>
 					</div>
 				</div>
 				<div slot="footer" style="text-align: right;">
-					<van-button size="small" type="info" @click="detailShowClick(item)">订单</van-button>
+					<van-button size="mini" type="info" @click="detailShowClick(item)">订单</van-button>
 				</div>
 			</van-panel>
 			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">

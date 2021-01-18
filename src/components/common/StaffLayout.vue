@@ -1,17 +1,32 @@
 <template>
-	<div>
-		<van-nav-bar :title="config.headerTitle" left-text="返回" right-text="按钮" left-arrow @click-left="onClickLeft" @click-right="reload" :fixed="true" style="z-index:-1">
-			<div slot="right">
-				<span class="van-nav-bar__text">刷新</span>
-				<van-icon class-prefix="iconfont" name="refresh" size="18" class="van-icon van-icon-arrow-right"/>
-			</div>
-		</van-nav-bar>
-		<div style="width:100%;height:2.875rem;"></div>
-		<div class="container">
-			<div style="width:100%;height:0.1rem;"></div>
+	<div id="page">
+		<div class="header">
+			<van-nav-bar :title="config.headerTitle" left-text="返回" right-text="按钮" left-arrow @click-left="onClickLeft" @click-right="reload" :fixed="true" style="z-index:-1">
+				<div slot="right">
+					<span class="van-nav-bar__text">刷新</span>
+					<van-icon class-prefix="iconfont" name="refresh" size="18" class="van-icon van-icon-arrow-right"/>
+				</div>
+			</van-nav-bar>
+		</div>
+		<div class="header-box"></div>
+		<div class="main">
 			<router-view v-if="isRouterAlive" />
-			<!-- <div style="width:100%;height:50px;"></div> -->
-			<!-- <div style="margin-bottom:50px;"></div> -->
+		</div>
+		<div class="footer-box"></div>
+		<div class="footer">
+			<van-tabbar v-model="active">
+				<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>
+				<van-tabbar-item @click="logout">
+					退出
+					<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
+				</van-tabbar-item>
+			</van-tabbar>
+		</div>
+		<!-- <div style="width:100%;height:2.875rem;"></div>
+		<div class="container" :style="'height:' + fullHeight + 'px;width:100%;'">
+			<router-view v-if="isRouterAlive" />
+			<div style="width:100%;height:50px;"></div>
+			<div style="margin-bottom:50px;"></div>
 		</div>
 		<div style="height:3.125rem;width:100%;"></div> 
 		<van-tabbar v-model="active">
@@ -20,7 +35,7 @@
 				退出
 				<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
 			</van-tabbar-item>
-		</van-tabbar>
+		</van-tabbar> -->
 	</div>
 </template>
 <script>
@@ -105,3 +120,20 @@
 		}
 	}
 </script>
+<style>
+	#page{
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.header-box{
+		height:2.875rem;
+		width:100%;
+	}
+
+	.footer-box{
+		height:3.125rem;
+		width:100%;
+	}
+</style>

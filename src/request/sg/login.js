@@ -7,6 +7,9 @@ const login = {
 			user_pass : data.userPass
 		};
 		return post( window.jpdn_domain_sg + 'login', postData );
+	},
+	getFactoryName(){
+		return post( window.jpdn_domain_sg + 'factoryName' );
 	}
 };
 

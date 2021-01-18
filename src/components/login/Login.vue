@@ -134,6 +134,9 @@
 									});
 								});
 							}
+							if( res.result.bind_type == 1 && res.result.factory_info.length == 1 ){
+								self.formData.subFacId = res.result.factory_info[0].SubFacId;
+							}
 							self.config.userInfo = res.result.user_info;
 							if( res.result.user_info.length > 1 ){
 								self.config.isMulit  = true;
