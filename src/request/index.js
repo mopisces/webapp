@@ -7,6 +7,7 @@ import admin from './admin/index';
 import wechat from './wechat/index';
 import sg from './sg/index';
 import amap from './amap/index';
+import common from './common/index';
 export default {
 	adminRequest,
 	staff,
@@ -16,5 +17,6 @@ export default {
 	admin,
 	wechat,
 	sg,
-	amap
+	amap,
+	common
 }

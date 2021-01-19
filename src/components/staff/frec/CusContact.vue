@@ -79,6 +79,11 @@
 			filterClick(){
 				this.config.popup.filterShow = false;
 				this.cusContact( this.filterForm );
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.staff.frec.cusContact;
+				});
 			}
 		},
 		created(){
@@ -90,6 +95,7 @@
 		},
 		mounted(){
 			this.cusContact( this.filterForm );
+			this.getTableConfig();
 			this.config.table.height  = window.screen.height - 136;
 		},
 		destroyed(){

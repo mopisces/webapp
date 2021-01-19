@@ -1,0 +1,11 @@
+{
+	"staff":{
+		"frec":{
+			"cusContact":[
+				{"field":"Cus","title":"客户","width":"140","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+				{"field":"Task","title":"业务员","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+				{"field":"LastMBDate","title":"上次结算时间","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
+			]
+		}
+	}
+}
