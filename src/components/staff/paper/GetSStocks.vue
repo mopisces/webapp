@@ -115,9 +115,16 @@
 						self.tableData.codeData = res.result;
 					}
 				});	
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.widthColumns = res.getSStocksWidth;
+					this.config.table.codeColumns = res.getSStocksCode;
+				});
 			}
 		},
 		mounted(){
+			this.getTableConfig();
 			this.getPageConfig();
 			this.config.table.height = window.screen.height - 210;
 		},

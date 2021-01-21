@@ -43,12 +43,18 @@
 				this.$request.client.makeOffers.makeOffersRule( isCus ).then(res=>{
 					self.tableData = res.result;
 				});
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.getQuoRuleByCus;
+				});
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','报价规则');
 		},
 		mounted(){
+			this.getTableConfig();
 			this.makeOffersRule(this.config.tabs.active);
 			this.config.table.height  = window.screen.height - 140;
 		},

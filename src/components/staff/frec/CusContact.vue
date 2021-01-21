@@ -82,7 +82,7 @@
 			},
 			getTableConfig(){
 				this.$request.common.table.getTableConfig().then(res=>{
-					this.config.table.columns = res.staff.frec.cusContact;
+					this.config.table.columns = res.cusContact;
 				});
 			}
 		},
@@ -94,8 +94,8 @@
 			}
 		},
 		mounted(){
-			this.cusContact( this.filterForm );
 			this.getTableConfig();
+			this.cusContact( this.filterForm );
 			this.config.table.height  = window.screen.height - 136;
 		},
 		destroyed(){

@@ -52,12 +52,18 @@
 				}else{
 					this.tableData.filter = this.tableData.original;
 				}
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.getQuoPriceByCus;
+				});
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','报价价格');
 		},
 		mounted(){
+			this.getTableConfig();
 			this.makeOffersPrice();
 			this.config.table.height  = window.screen.height - 150;
 		},

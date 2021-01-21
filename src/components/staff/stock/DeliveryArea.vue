@@ -27,12 +27,18 @@
 				this.$request.staff.stock.deliveryArea().then(res=>{
 					this.table.data = res.result;
 				});
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.deliveryArea;
+				});
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','库区面积');
 		},
 		mounted(){
+			this.getTableConfig();
 			this.getTableData();
 			this.config.table.height = window.screen.height - 96;
 		},

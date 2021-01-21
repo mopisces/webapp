@@ -169,6 +169,29 @@
 				this.info.switch.checked = false;
 				this.config.getConfig = true;
 				this.recAdjustConfig(true);
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.recAdjust;
+					this.config.table.columns.forEach((item)=>{
+						if(item.field == 'Checked'){
+							item['formatter'] = (rowData,rowIndex,pagingIndex,field)=>{
+								if( rowData.last == 1 ){
+									return '';
+								}
+								return rowData.Checked === '1'  ? '<span class="van-icon van-icon-success" style="color:#1aad19;"></span>' : '<span class="van-icon van-icon-fail"></span>';
+							};
+						}
+						if(item.field == 'NeedInv'){
+							item['formatter'] = (rowData,rowIndex,pagingIndex,field)=>{
+								if( rowData.last == 1 ){
+									return '';
+								}
+								return rowData.NeedInv === '1' ? '<span class="van-icon van-icon-success" style="color:#1aad19;"></span>' : '<span class="van-icon van-icon-fail"></span>';
+							};
+						}
+					});
+				});
 			}
 		},
 		created(){
@@ -181,6 +204,7 @@
 			}
 		},
 		mounted(){
+			this.getTableConfig();
 			this.recAdjustConfig();
 			this.config.table.height = window.screen.height - 170;
 		},

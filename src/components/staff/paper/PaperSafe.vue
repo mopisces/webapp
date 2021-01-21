@@ -126,6 +126,33 @@
 				if( Number(rowData.PCount) < Number(rowData.SafeCount) ){
 					return 'less';
 				}
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.paperSafe;
+					this.config.table.columns.forEach((item)=>{
+						if(item.field == 'PaperType'){
+							item['formatter'] = (rowData)=>{
+								switch( rowData.PaperType ){
+									case '0':
+										return '<span>无</span>';
+										break;
+									case '1':
+										return '<span>牛皮挂面</span>';
+										break;
+									case '2':
+										return '<span>涂布白板</span>';
+										break;
+									case '3':
+										return '<span>瓦纸</span>';
+										break;
+									default : 
+										return '暂无数据';
+								}
+							};
+						}
+					});
+				});
 			}	
 		},
 		created(){
@@ -136,6 +163,7 @@
 			}
 		},
 		mounted(){
+			this.getTableConfig();
 			this.getTableData( this.filterForm );
 			this.config.table.height = window.screen.height - 170;
 		},
