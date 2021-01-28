@@ -81,7 +81,7 @@ let routes = [
     ...client,
     ...admin,
     ...sg,
-    ...group,
+    /*...group,*/
     /*...amap,*/
     {
         path:'*',

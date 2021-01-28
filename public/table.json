@@ -58,6 +58,11 @@
 		{"field":"CurSArea","title":"已用面积","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"LeftArea","title":"剩余面积","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
+	"getOrdersP":[
+		{"field":"guige","title":"规格","width":"110","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"OrdQty","title":"数量","width":"110","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"sstate","title":"状态","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
 
 	"getQuoPriceByCus":[
 		{"field":"BoardId","title":"材质编号","width":"150","titleAlign":"center","columnAlign":"center","isResize":true},

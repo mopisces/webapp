@@ -12,10 +12,8 @@
 		</van-sticky>
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" v-if="config.prevNext.show"></prev-next>
 		<template v-if="config.field.show">
-			<van-field v-for="(item,index) in fieldData" :key="index" :value="item.OrdQty" readonly :label="item.guige" input-align="center" @click="fieldClick(index)">
-				<div slot="right-icon" style="color:#0bf147">{{ item.sstate }}</div>
-				<van-icon name="arrow" slot="button"/>
-			</van-field>
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa" :row-click="rowClick">
+		</v-table>
 		</template>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
 			<div slot="new-popup-1">
@@ -98,6 +96,10 @@
 		data(){
 			return {
 				config:{
+					table:{
+						columns:[],
+						height:0
+					},
 					popup:{
 						leftPopup:{
 							show :false,
@@ -156,7 +158,7 @@
 					endDate   : '',
 					sState    : '全部'
 				},
-				fieldData:[],
+				tableData:[],
 				pageConfig:{
 					maxDate : '',
 					minDate : ''
@@ -174,7 +176,7 @@
 				let self = this;
 				this.config.field.show = false;
 				this.$request.staff.daily.getOrderDeatil( data ).then(res=>{
-					self.fieldData = res.result;
+					self.tableData = res.result;
 				}).then(()=>{
 					this.$nextTick(() => {
 					    this.config.field.show = true;
@@ -206,8 +208,8 @@
 					this.getDailyDetail(this.filterForm);
 				}
 			},
-			fieldClick( index ){
-				this.rightPopupData = this.fieldData[ index ];
+			rowClick(rowIndex,rowData,column){
+				this.rightPopupData = rowData;
 				this.config.step.show = false;
 				this.config.popup.rightPopup.show = true;
 			},
@@ -250,6 +252,18 @@
 					});
 					self.config.filterStatus.show = true;
 				});
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.getOrdersP;
+					this.config.table.columns.forEach((item)=>{
+						if(item.field == 'sstate'){
+							item['formatter'] = (rowData)=>{
+								return '<span style="color:#0bf147">' + rowData.sstate + '</span>';
+							};
+						}
+					});
+				});
 			}
 		},
 		created(){
@@ -269,6 +283,8 @@
 			this.getConfig();
 			this.getCusInfo( this.form );
 			this.getCountOrder( this.filterCount );
+			this.getTableConfig();
+			this.config.table.height = window.screen.height - 200;
 		},
 		destroyed(){
 			

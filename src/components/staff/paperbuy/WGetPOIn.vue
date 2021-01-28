@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" :radioVal="radioVal"  v-if="config.prevNext.show"></prev-next>
+		<van-notice-bar :text="config.notice.text" left-icon="volume-o" />
 		<div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in listData" :key="index" @click="listClick(item)" style="font-size:15px;">
 			<div class="van-cell__title">
 				<span>{{ item.InNo }}</span><br/>
@@ -39,7 +40,7 @@
 	
 </template>
 <script>
-	import { Button, Icon, Popup, Field } from 'vant';
+	import { Button, Icon, Popup, Field, NoticeBar } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	export default {
 		components:{
@@ -47,6 +48,7 @@
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
+			[NoticeBar.name]: NoticeBar,
 
 			PrevNext
 		},
@@ -75,6 +77,10 @@
 							{field: 'InWt', title: '收货重量(kg)', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
 							{field: 'dPrice', title: '单价', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true}, 
 						]
+					},
+					notice:{
+						sumWeight:0,
+						text:''
 					}
 				},
 				filterMain:{
@@ -111,8 +117,13 @@
 			},
 			paperInMain( data ){
 				let self = this;
+				self.config.notice.sumWeight = 0;
 				this.$request.staff.paperbuy.paperInMain( data ).then(res=>{
 					self.listData = res.result;
+					self.listData.forEach((item)=>{
+						self.config.notice.sumWeight += Number(item.SumInWt);
+					});
+					self.config.notice.text = '总重量:' + self.config.notice.sumWeight + 'kg';
 				});
 			},
 			listClick( data ){
