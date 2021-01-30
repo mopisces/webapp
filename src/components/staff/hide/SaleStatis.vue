@@ -70,40 +70,7 @@
 				<div role="button" tabindex="0" style="align:left;line-height:24px;padding:8px 16px;">
 					<div style="text-align:center;">班组排产米数统计</div>
 				</div>
-				<van-row type="flex" justify="center" style="text-align:center;">
-					<van-col span="8">
-						<div style="align:left;line-height:24px;padding:8px 16px;">
-							<div style="text-align:center;">线别</div>
-						</div>
-					</van-col>
-					<van-col span="8">
-						<div style="align:left;line-height:24px;padding:8px 16px;">
-							<div style="text-align:center;">班组名称</div>
-						</div>
-					</van-col>
-					<van-col span="8">
-						<div style="align:left;line-height:24px;padding:8px 16px;">
-							<div style="text-align:center;">米数</div>
-						</div>
-					</van-col>
-				</van-row>
-				<van-row type="flex" justify="center" style="text-align:center;" v-for="(item,index) in config.table.data.planSum" :key="index">
-					<van-col span="8">
-						<div style="align:left;line-height:24px;padding:8px 16px;">
-							<div style="text-align:center;">{{ item.LineId }}</div>
-						</div>
-					</van-col>
-					<van-col span="8">
-						<div style="align:left;line-height:24px;padding:8px 16px;">
-							<div style="text-align:center;">{{ item.WorkGroupN }}</div>
-						</div>
-					</van-col>
-					<van-col span="8">
-						<div style="align:left;line-height:24px;padding:8px 16px;">
-							<div style="text-align:center;">{{ item.PSLength }}</div>
-						</div>
-					</van-col>
-				</van-row>
+				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns.meters" :table-data="config.table.data.planSum"  :height="config.table.meterTableHeight" row-hover-color="#eee" row-click-color="#edf7ff" even-bg-color="#fafafa"></v-table>
 			</van-tab>
 			<van-tab title="客户">
 				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns.cus" :table-data="config.table.data.cus" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa"></v-table>
@@ -151,18 +118,12 @@
 						checked:false
 					},
 					table:{
+						meterTableHeight:0,
 						height:0,
 						columns:{
-							cus:[
-								{field: 'CusShortName', title: '客户', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-			                    {field: 'TLength', title: '米数', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-			                    {field: 'Amt', title: '金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							],
-							task:[
-								{field: 'TaskName', title: '业务员', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-			                    {field: 'TLength', title: '米数', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-			                    {field: 'Amt', title: '金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							]
+							cus:[],
+							task:[],
+							meters:[]
 						},
 						data:{
 							cus:[],
@@ -249,6 +210,13 @@
 			filterClick(){
 				this.config.popup.filterShow = false;
 				this.getSaleStatisData();
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns.cus = res.saleStatisCus;
+					this.config.table.columns.task = res.saleStatisTask;
+					this.config.table.columns.meters = res.saleStatisMeters;
+				});
 			}
 		},
 		created(){
@@ -262,7 +230,9 @@
 		},
 		mounted(){
 			this.getConfig();
+			this.getTableConfig();
 			this.config.table.height  = window.screen.height - 86;
+			this.config.table.meterTableHeight = window.screen.height - 508;
 		},
 		updated(){
 			

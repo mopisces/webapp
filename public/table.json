@@ -39,7 +39,7 @@
 		{"field":"SRemark","title":"生产备注","width":"150","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
 	"getSStocksWidth":[
-		{"field":"PaperCode","title":"纸类","width":"40","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"PaperWidth","title":"纸类","width":"40","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
 		{"field":"ZJWt","title":"整卷重量","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"iZJCount","title":"整卷卷数","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"RWt","title":"残卷重量","width":"70","titleAlign":"center","columnAlign":"center","isResize":true},
@@ -59,10 +59,26 @@
 		{"field":"LeftArea","title":"剩余面积","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
 	"getOrdersP":[
-		{"field":"guige","title":"规格","width":"110","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
-		{"field":"OrdQty","title":"数量","width":"110","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"sstate","title":"状态","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
+		{"field":"guige","title":"规格","width":"130","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"OrdQty","title":"数量","width":"130","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"sstate","title":"状态","width":"115","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
+	"saleStatisCus":[
+		{"field":"CusShortName","title":"客户","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"TLength","title":"米数","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"Amt","title":"金额","width":"135","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
+	"saleStatisTask":[
+		{"field":"TaskName","title":"业务员","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"TLength","title":"米数","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"Amt","title":"金额","width":"135","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
+	"saleStatisMeters":[
+		{"field":"LineId","title":"线别","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"WorkGroupN","title":"班组名称","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"PSLength","title":"米数","width":"135","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
+	
 
 	"getQuoPriceByCus":[
 		{"field":"BoardId","title":"材质编号","width":"150","titleAlign":"center","columnAlign":"center","isResize":true},
