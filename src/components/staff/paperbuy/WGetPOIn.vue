@@ -129,6 +129,11 @@
 			listClick( data ){
 				this.detailData.fieldData = data;
 				this.paperInDetail( data.InNo );
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.wGetPOIn;
+				});
 			}
 		},
 		created(){
@@ -137,6 +142,7 @@
 		mounted(){
 			this.$store.commit('staff/setHeaderTitle','原纸收货');
 			this.config.table.height = window.screen.height - 126;
+			this.getTableConfig();
 		},
 		computed:{
 			
