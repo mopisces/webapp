@@ -125,7 +125,7 @@
 				let self = this;
 				this.$request.client.ordersManage.wechatGroupDetail( cusOrderId ).then(res=>{
 					if( res.errorCode == '00000' ){
-						self.groupInfo['pic']      = this.$store.state.common.imgUrl + res.result.FirstPic;
+						self.groupInfo['pic']      = window.jpdn_domain_imgDomain + res.result.FirstPic;
 						self.isGroup               = true;
 						self.groupInfo.boardId     = res.result.BoardId;
 						self.groupInfo.matNo       = res.result.MatNo;

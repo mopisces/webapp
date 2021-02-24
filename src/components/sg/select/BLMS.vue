@@ -4,9 +4,9 @@
 			<van-dropdown-item v-model="formData.index" :options="config.dropDown.indexOption" />
 			<van-dropdown-item v-model="formData.active" :options="config.dropDown.activeOption" />
 		</van-dropdown-menu>
-		<!-- <v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff"  :height="config.table.height" even-bg-color="#fafafa">
-		</v-table> -->
-		<el-table :data="tableData" stripe :height="config.table.height" v-if="config.table.height">
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff"  :height="config.table.height" even-bg-color="#fafafa">
+		</v-table>
+		<!-- <el-table :data="tableData" stripe :height="config.table.height" v-if="config.table.height">
 			<el-table-column prop="糊机备纸" label="糊机备纸" width="130"></el-table-column>
 			<el-table-column prop="SF1芯纸" label="SF1芯纸" width="130"></el-table-column>
 			<el-table-column prop="SF1面纸" label="SF1面纸" width="130"></el-table-column>
@@ -14,7 +14,7 @@
 			<el-table-column prop="SF2面纸" label="SF2面纸" width="130"></el-table-column>
 			<el-table-column prop="SF3芯纸" label="SF3芯纸" width="130"></el-table-column>
 			<el-table-column prop="SF3面纸" label="SF3面纸" width="130"></el-table-column>
-		</el-table>
+		</el-table> -->
 	</div>
 </template>
 <script>
@@ -102,6 +102,11 @@
 						self.tableData = res.result;
 					}
 				});
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.sgBLMS;
+				});
 			}
 		},
 		created(){
@@ -110,6 +115,7 @@
 			this.getConfig();
 		},
 		mounted(){
+			this.getTableConfig();
 			this.config.table.height = window.screen.height - 126;
 		},
 		updated(){

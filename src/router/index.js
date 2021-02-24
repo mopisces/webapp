@@ -2,7 +2,7 @@ import store from '@/store';
 import staff from './staff';
 import client from './client';
 import admin from './admin';
-import sg from './sg';
+/*import sg from './sg';*/
 import group from './group';
 /*import amap from './amap';*/
 Vue.use(VueRouter);
@@ -80,8 +80,8 @@ let routes = [
     ...staff,
     ...client,
     ...admin,
-    ...sg,
-    /*...group,*/
+    /*...sg,*/
+    ...group,
     /*...amap,*/
     {
         path:'*',
