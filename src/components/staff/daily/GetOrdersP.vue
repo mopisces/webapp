@@ -3,7 +3,7 @@
 		<van-sticky :offset-top="46">
 			<div class="van-row">
 				<div class="van-col van-col--12">
-					<van-button plain hairline type="info" style="width:100%" @click="config.popup.leftPopup.show = true">客户信息信息</van-button>
+					<van-button plain hairline type="info" style="width:100%" @click="config.popup.leftPopup.show = true">客户信息</van-button>
 				</div>
 				<div class="van-col van-col--12">
 					<van-button plain hairline type="info" style="width:100%"  @click="config.popup.rightFilter.show = true">筛选</van-button>
