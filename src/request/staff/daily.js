@@ -36,12 +36,19 @@ const daily = {
 		};
 		return post( window.jpdn_domain_staff + 'staffDailyDetail', postData );
 	},
-	getCountOrder( data ){
+	getCountOrder( data, filter ){
 		let postData = {
 			daily_cus_id     : data.cusId,
 			daily_begin_date : data.beginDate,
 			daily_end_date   : data.endDate,
-			daily_s_state    : data.sState
+			daily_s_state    : data.sState,
+			daily_order_date     : filter.orderDate,
+			daily_board_length   : filter.boardLength,
+			daily_board_width    : filter.boardWidth,
+			daily_cus_po_no      : filter.cusPoNo,
+			daily_order_id       : filter.orderId,
+			daily_order_quantity : filter.orderQuantity,
+			daily_score_info     : filter.scoreInfo
 		};
 		return post( window.jpdn_domain_staff + 'staffCountOrder', postData );
 	},

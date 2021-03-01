@@ -12,6 +12,7 @@ import user from './user';
 import wx from './wx';
 import login from './login';
 import connecterp from './connecterp';
+import delivery from './delivery';
 export default {
 	calc,
 	frec,
@@ -26,5 +27,6 @@ export default {
 	user,
 	wx,
 	login,
-	connecterp
+	connecterp,
+	delivery
 }

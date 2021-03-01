@@ -85,8 +85,40 @@
 		{"field":"InWt","title":"收货重量(kg)","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"dPrice","title":"单价","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
+	"staffDeliveryDaily":[
+		{"field":"GuiGe","title":"规则","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"BoardName","title":"材质名称","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DeliQty","title":"送货数","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TSalesArea","title":"送货面积","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"strPNo","title":"送货单号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrderId","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CusPoNo","title":"客订单号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ScoreInfo","title":"压线","width":"220","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrdQty","title":"订单数","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrdDeliQty","title":"累计送货数","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CarNo","title":"送货车号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CarPName","title":"司机","width":"70","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"Phone","title":"电话","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TimeToGo","title":"送货时间","width":"120","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
 	
 
+	"clientDeliveryDaily":[
+		{"field":"GuiGe","title":"规则","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"BoardName","title":"材质名称","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DeliQty","title":"送货数","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TSalesArea","title":"送货面积","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"strPNo","title":"送货单号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrderId","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CusPoNo","title":"客订单号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ScoreInfo","title":"压线","width":"220","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrdQty","title":"订单数","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrdDeliQty","title":"累计送货数","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CarNo","title":"送货车号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CarPName","title":"司机","width":"70","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"Phone","title":"电话","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TimeToGo","title":"送货时间","width":"120","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
 	"getQuoPriceByCus":[
 		{"field":"BoardId","title":"材质编号","width":"150","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"BoardName","title":"材质名称","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},

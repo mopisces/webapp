@@ -56,6 +56,10 @@ const dailyGetOrdersP        = () => import('@/components/staff/daily/GetOrdersP
 const userManage             = () => import('@/components/staff/user/Manage');
 //接单统计
 const saleStatis             = () => import('@/components/staff/hide/SaleStatis');
+//客户每日送货
+const deliveryDaily          = () => import('@/components/staff/delivery/GetDNMain');
+//客户每日送货信息
+const deliveryOrdersList        = () => import('@/components/staff/delivery/GetCusOrdersList');
 export const asyncStaffRouterMap = [
     {
         path:'/staff',
@@ -187,6 +191,16 @@ export const asyncStaffRouterMap = [
                 path:'statis/saleStatis',
                 meta: { title: '接单统计', role:'接单统计' },
                 component:saleStatis
+            },
+            {
+                path:'delivery/daily',
+                meta: { title: '客户每日送货', role:'客户每日送货' },
+                component:deliveryDaily
+            },
+            {
+                path:'delivery/getCusOrdersList',
+                meta: { title: '客户每日送货详细信息', role:'客户每日送货详细信息' },
+                component:deliveryOrdersList
             }
         ]
     }

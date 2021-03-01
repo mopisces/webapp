@@ -86,6 +86,7 @@
 						{text:'报价价格', role:'报价查询', iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus'},
 						{text:'对账单',   role:'对账单', iconName:'duizhang',    url:'/client/order/getCusFreeMB'},
 						{text:'每日订单', role:'每日订单', iconName:'meiri',       url:'/client/order/getOrdersP'},
+						{text:'每日送货', role:'每日送货', iconName:'chanpin',       url:'/client/delivery/daily'},
 						{text:'ERP订单', role:'ERP订单', iconName:'erp',         url:'/client/order/getOrders'},
 						{text:'常用材质', role:'纸板下单', iconName:'caizhi',      url:'/client/usedboard/lists'},
 						{text:'常用订单', role:'纸板下单', iconName:'dingdan1',    url:'/client/usedorder/lists'},

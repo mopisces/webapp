@@ -12,47 +12,19 @@
 		</van-sticky>
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" v-if="config.prevNext.show"></prev-next>
 		<template v-if="config.field.show">
-			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa" :row-click="rowClick">
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa">
 		</v-table>
 		</template>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
 			<div slot="new-popup-1">
 				<van-field v-model="leftPopupData.CusShortName" readonly label="客户简称" input-align="center"/>
-				<van-field v-model="leftPopupData.Merchandiser" readonly label="跟单员" input-align="center"/>
 				<van-field v-model="leftPopupData.TaskName" readonly label="业务员" input-align="center"/>
 				<van-field v-model="form.beginDate" readonly label="开始日期" input-align="center"/>
 				<van-field v-model="form.endDate" readonly label="结束日期" input-align="center"/>
-				<van-field v-model="leftPopupData.OrdCount" readonly label="下单笔数" input-align="center"/>
-				<van-field v-model="leftPopupData.UnSelCount" readonly label="未排笔数" input-align="center"/>
-				<van-field v-model="leftPopupData.SelCount" readonly label="已排笔数" input-align="center"/>
-				<van-field v-model="leftPopupData.TOrdVol" readonly label="下单立方" input-align="center"/>
-				<van-field v-model="leftPopupData.TProVol" readonly label="生产立方" input-align="center"/>
-				<van-field v-model="leftPopupData.TStockVol" readonly label="库存立方" input-align="center"/>
-				<van-field v-model="leftPopupData.TUnDeliVol" readonly label="未送立方" input-align="center"/>
-			</div>
-		</new-popup>
-		<new-popup :leftShow.sync="config.popup.rightPopup.show" :title="config.popup.rightPopup.title" :position="config.popup.rightPopup.position" :isClose="true">
-			<div slot="new-popup-1">
-				<van-field v-model="rightPopupData.OrderId" readonly label="订单编号" input-align="center"/>
-				<van-field v-model="rightPopupData.CusPoNo" readonly label="客订单号" input-align="center"/>
-				<van-field v-model="rightPopupData.guige" readonly label="规格" input-align="center"/>
-				<van-field v-model="rightPopupData.ScoreInfo" readonly label="压线" input-align="center"/>
-				<van-field v-model="rightPopupData.BoardName" readonly label="材质名称" input-align="center"/>
-				<van-field v-model="rightPopupData.OrdQty" readonly label="订单数" input-align="center"/>
-				<van-field v-model="rightPopupData.OrderDate" readonly label="下单日期" input-align="center"/>
-				<van-field v-model="rightPopupData.sstate" readonly label="订单状态" input-align="center" @click="statusClick(rightPopupData.sstate)">
-					<van-icon name="arrow-down" slot="right-icon" v-if="!config.step.show"></van-icon>
-					<van-icon name="arrow-up" slot="right-icon" v-if="config.step.show"></van-icon>
-				</van-field>
-				<van-steps :active="config.step.active" v-if="config.step.show" direction="vertical">
-					<van-step v-for="(item,index) in config.step.status" :key="index">{{item.title}}</van-step>
-				</van-steps>
-				<van-field v-model="rightPopupData.InTime" readonly label="完工时间" input-align="center" v-if="rightPopupData.InTime"/>
-				<van-field v-model="rightPopupData.TimeToGo" readonly label="送货时间" input-align="center" v-if="rightPopupData.TimeToGo"/>
-				<van-field v-model="rightPopupData.ConfQty" readonly label="回签数量" input-align="center" v-if="rightPopupData.ConfQty"/>
-				<van-field v-model="rightPopupData.CarPName" readonly label="送货司机" input-align="center" v-if="rightPopupData.CarPName"/>
-				<van-field v-model="rightPopupData.Phone" readonly label="电话" input-align="center" v-if="rightPopupData.Phone"/>
-				<van-field v-model="rightPopupData.CarNo" readonly label="送货车号" input-align="center" v-if="rightPopupData.CarNo" @click="phoneClick(rightPopupData.CarNo)"/>
+				<van-field v-model="leftPopupData.iCount" readonly label="送货单笔数" input-align="center"/>
+				<van-field v-model="leftPopupData.DeliQty" readonly label="送货数" input-align="center"/>
+				<van-field v-model="leftPopupData.TSalesArea" readonly label="销售面积" input-align="center"/>
+				<van-field v-model="leftPopupData.TVolume" readonly label="送货立方" input-align="center"/>
 			</div>
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
@@ -65,7 +37,6 @@
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<new-time-picker :dateTime.sync="filterCount.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker :dateTime.sync="filterCount.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
-				<radio-cell :radioInfo.sync="filterForm.sState" :radioColumns="config.filterStatus.status" title="订单状态" v-if="config.filterStatus.show"></radio-cell>
 			</div>
 		</popup-filter>
 	</div>
@@ -75,7 +46,6 @@
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
-	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	export default {
 		components:{
@@ -89,7 +59,6 @@
 			
 			PopupFilter,
 			NewTimePicker,
-			RadioCell,
 			PrevNext,
 			NewPopup
 		},
@@ -106,11 +75,6 @@
 							title:'客户信息',
 							position:'left'
 						},
-						rightPopup:{
-							show :false,
-							title:'订单详细信息',
-							position:'right'
-						},
 						rightFilter:{
 							show :false,
 						}
@@ -118,21 +82,9 @@
 					prevNext:{
 						show:false
 					},
-					step:{
-						show:false,
-						status:[],
-						active:0
-					},
-					radio:{
-						title : '订单状态'
-					},
 					field:{
 						show : false
 					},
-					filterStatus : {
-						show   : false,
-						status : []
-					}
 				},
 				form:{
 					cusId     : '',
@@ -140,23 +92,21 @@
 					endDate   : ''
 				},
 				leftPopupData:{},
-				rightPopupData:{},
 				radioData:[],
 				filterForm:{
+					cusId         :null,
 					orderId       : '',
 					cusPoNo       : '',
 					boardLength   : '',
 					boardWidth    : '',
 					scoreInfo     : '',
 					orderQuantity : '',
-					orderDate     : '',
-					sState        : '全部',
+					deliveryDate  : '',
 				},
 				filterCount:{
 					cusId     : '',
 					beginDate : '',
 					endDate   : '',
-					sState    : '全部'
 				},
 				tableData:[],
 				pageConfig:{
@@ -168,14 +118,14 @@
 		methods:{
 			getCusInfo( data ){
 				let self = this;
-				this.$request.staff.daily.getCusInfo( data ).then(res=>{
+				this.$request.staff.delivery.cusInfo( data ).then(res=>{
 					self.leftPopupData = res.result;
 				});
 			},
 			getDailyDetail( data ){
 				let self = this;
 				this.config.field.show = false;
-				this.$request.staff.daily.getOrderDeatil( data ).then(res=>{
+				this.$request.staff.delivery.detail( data ).then(res=>{
 					self.tableData = res.result;
 				}).then(()=>{
 					this.$nextTick(() => {
@@ -186,17 +136,12 @@
 			getCountOrder( data, filter ){
 				let self = this;
 				this.config.prevNext.show = false;
-				this.$request.staff.daily.getCountOrder(data,filter).then(res=>{
-					self.radioData = [];
-					if( res.errorCode != '00000' ){
-						return false;
-					}
+				this.$request.staff.delivery.dateInfo(data,filter).then(res=>{
 					self.radioData = res.result;
 					self.radioData.forEach((item,index)=>{
-						item['prevNext'] = item.OrderDate;
-						item['tag']      = 'daily';
+						item['prevNext'] = item.DNDate;
+						item['tag']      = 'delivery';
 					});
-					self.filterForm.orderDate = self.radioData[0].OrderDate;
 				}).then(()=>{
 					this.$nextTick(() => {
 					    this.config.prevNext.show = true;
@@ -209,17 +154,9 @@
 			},
 			radioConfirm( val ){
 				if( this.radioData.length != 0 ){
-					this.filterForm.orderDate = val;
+					this.filterForm.deliveryDate = val;
 					this.getDailyDetail(this.filterForm);
 				}
-			},
-			rowClick(rowIndex,rowData,column){
-				this.rightPopupData = rowData;
-				this.config.step.show = false;
-				this.config.popup.rightPopup.show = true;
-			},
-			phoneClick( tel ){
-				window.location.tel = 'tel://' + tel;
 			},
 			statusClick( status ){
 				for (let i = this.config.step.status.length - 1; i >= 0; i--) {
@@ -235,50 +172,28 @@
 				this.config.step.show = false;
 			},
 			resetClick(){
-				this.filterForm.sState = '全部';
 				Object.keys(this.filterForm).forEach((item) => {
-					if( item != 'sState' ){
+					if( item != 'cusId' ){
 						this.filterForm[item] = null;
 					}
 				});
 			},
 			filterClick(){
 				this.getCountOrder( this.filterCount, this.filterForm );
+				this.filterForm.deliveryDate = this.radioData[0].DNDate;
 				this.getDailyDetail( this.filterForm );
 				this.config.popup.rightFilter.show = false;
 			},
-			getConfig(){
-				let self = this;
-				this.$request.staff.daily.dailyConfig().then(res=>{
-					if( res.errorCode != '00000' ){
-						return ;
-					}
-					res.result.daily_order_status.forEach((item,index)=>{
-						self.config.filterStatus.status.push({ title:item, value:item });
-						if( item != '全部' ){
-							self.config.step.status.push({ title:item, value:item });
-						}
-					});
-					self.config.filterStatus.show = true;
-				});
-			},
 			getTableConfig(){
 				this.$request.common.table.getTableConfig().then(res=>{
-					this.config.table.columns = res.getOrdersP;
-					this.config.table.columns.forEach((item)=>{
-						if(item.field == 'sstate'){
-							item['formatter'] = (rowData)=>{
-								return '<span style="color:#0bf147">' + rowData.sstate + '</span>';
-							};
-						}
-					});
+					this.config.table.columns = res.staffDeliveryDaily;
 				});
 			}
 		},
 		created(){
-			this.$store.commit('staff/setHeaderTitle','每日订单详细信息');
-			if( sessionStorage.getItem('daily/wGetCusOrder/info') !== null ){
-				this.form = JSON.parse(sessionStorage.getItem('daily/wGetCusOrder/info'));
+			this.$store.commit('staff/setHeaderTitle','每日送货详细信息');
+			if( sessionStorage.getItem('delivery/GetDNMain/info') !== null ){
+				this.form = JSON.parse(sessionStorage.getItem('delivery/GetDNMain/info'));
 				this.pageConfig.maxDate    = this.form.maxDate;
 				this.pageConfig.minDate    = this.form.minDate;
 				this.filterCount.cusId     = this.form.CusId;
@@ -289,7 +204,6 @@
 			}
 		},
 		mounted(){
-			this.getConfig();
 			this.getCusInfo( this.form );
 			this.getCountOrder( this.filterCount, this.filterForm );
 			this.getTableConfig();
@@ -299,14 +213,10 @@
 			
 		},
 		computed:{
-			sStateChange(){
-				return this.filterForm.sState;
-			}
+			
 		},
 		watch:{
-			sStateChange( newV, oldV ){
-				this.filterCount.sState = newV;
-			}
+			
 		}
 	}
 </script>

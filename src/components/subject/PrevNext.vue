@@ -81,6 +81,11 @@
 								<span>{{ item.OrderDate }}</span><br/>
 								<span>{{ item.ICount }}笔订单</span>
 							</div>
+							<!-- 每日送货按日期汇总 -->
+							<div :class="[{ active: isActive == index }, 'van-cell__title'] " v-else-if=" item.tag === 'delivery' ">
+								<span>{{ item.DNDate }}</span><br/>
+								<span>{{ item.ICount }}笔订单</span>
+							</div>
 							<van-radio slot="right-icon" :name="item.prevNext"  />
 						</div>
 					</van-cell-group>

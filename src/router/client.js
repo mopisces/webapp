@@ -13,6 +13,8 @@ const getQuoPriceByCus = () => import('@/components/client/quo/GetQuoPriceByCus'
 const getOrders        = () => import('@/components/client/order/GetOrders');
 //每日订单
 const getOrdersP       = () => import('@/components/client/order/GetOrdersP');
+//每日送货
+const deliveryDaily    = () => import('@/components/client/delivery/Index');
 //对账单
 const getCusFreeMB     = () => import('@/components/client/order/GetCusFreeMB');
 //常用材质
@@ -105,6 +107,11 @@ export const asyncClientRouterMap = [
                 path:'wxorder/lists',
                 meta: { title: '微信订单', role:'微信订单' },
                 component: wxList,
+            },
+            {
+                path:'delivery/daily',
+                meta: { title: '每日送货', role:'每日送货' },
+                component: deliveryDaily,
             },
         ]
     }
