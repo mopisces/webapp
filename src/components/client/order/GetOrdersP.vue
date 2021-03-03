@@ -202,10 +202,6 @@
 				});
 			},
 			cusInfoClick(){
-				this.cusInfo();
-				this.config.popup.leftPopup.show = true;
-			},
-			cusInfo(){
 				let self = this;
 				this.$request.client.ordersManage.dailyOrdersCusInfo( this.filterForm ).then(res=>{
 					if( res.errorCode != '00000' ){
@@ -215,7 +211,7 @@
 					self.leftPopupData = res.result;
 				}).then(()=>{
 					this.$nextTick(()=>{
-						
+						this.config.popup.leftPopup.show = true;
 					});
 				});
 			},
