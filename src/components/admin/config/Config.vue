@@ -103,6 +103,20 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">客户每日送货</td>
+							<td>
+								默认日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffDeliveryDailyBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffDeliveryDailyEndDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffDeliveryDailyMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffDeliveryDailyMaxDate"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">ERP订单</td>
 							<td>
 								默认日期&nbsp;&nbsp;&nbsp;
@@ -397,6 +411,20 @@
 								<el-input style="width: 100px;" v-model="form.GetOrdersPMinDate"></el-input>
 								&nbsp;~&nbsp;
 								<el-input style="width: 100px;" v-model="form.GetOrdersPMaxDate"></el-input>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">每日送货</td>
+							<td>
+								默认日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientDeliveryDailyBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientDeliveryDailyEndDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientDeliveryDailyMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientDeliveryDailyMaxDate"></el-input>
 							</td>
 						</tr>
 						<tr>

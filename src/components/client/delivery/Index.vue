@@ -154,8 +154,14 @@
 						item['prevNext'] = item.DNDate;
 						item['tag']      = 'delivery';
 					});
-					self.config.prevNext.show   = true;
-					self.filterForm.deliveryDate = this.radioData[0].DNDate;
+					self.config.prevNext.show = true;
+					self.filterForm.deliveryDate = self.radioData[0].DNDate;
+				}).then(()=>{
+					this.$nextTick(() => {
+						if( this.filterForm.deliveryDate ){
+							this.dailyOrders(this.filterForm.deliveryDate);
+						}
+					});
 				});
 			},
 			dailyOrders( data ){
@@ -189,7 +195,6 @@
 			},
 			filterClick(){
 				this.optionalDate();
-				this.dailyOrders();
 				this.config.popup.rightFilter.show = false;
 			},
 			getTableConfig(){
