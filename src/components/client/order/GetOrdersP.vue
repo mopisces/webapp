@@ -213,6 +213,10 @@
 						return ;
 					}
 					self.leftPopupData = res.result;
+				}).then(()=>{
+					this.$nextTick(()=>{
+						
+					});
 				});
 			},
 			optionalDate(){
