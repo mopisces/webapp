@@ -66,6 +66,7 @@
 				this.isRouterAlive = false;
 				this.$nextTick(()=>{
 					this.isRouterAlive = true;
+					location.reload();
 				});
 			},
 			onClickLeft(){

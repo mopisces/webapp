@@ -4,17 +4,10 @@
 			<van-dropdown-item v-model="formData.index" :options="config.dropDown.indexOption" />
 			<van-dropdown-item v-model="formData.active" :options="config.dropDown.activeOption" />
 		</van-dropdown-menu>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff"  :height="config.table.height" even-bg-color="#fafafa">
-		</v-table>
-		<!-- <el-table :data="tableData" stripe :height="config.table.height" v-if="config.table.height">
-			<el-table-column prop="糊机备纸" label="糊机备纸" width="130"></el-table-column>
-			<el-table-column prop="SF1芯纸" label="SF1芯纸" width="130"></el-table-column>
-			<el-table-column prop="SF1面纸" label="SF1面纸" width="130"></el-table-column>
-			<el-table-column prop="SF2芯纸" label="SF2芯纸" width="130"></el-table-column>
-			<el-table-column prop="SF2面纸" label="SF2面纸" width="130"></el-table-column>
-			<el-table-column prop="SF3芯纸" label="SF3芯纸" width="130"></el-table-column>
-			<el-table-column prop="SF3面纸" label="SF3面纸" width="130"></el-table-column>
-		</el-table> -->
+		<el-table :data="tableData" border stripe :height="config.table.height" v-if="config.table.height">
+			<el-table-column :prop="item.field" :label="item.title" :width="item.width" v-for="(item,index) in config.table.columns" :key="index">
+			</el-table-column>
+		</el-table>
 	</div>
 </template>
 <script>
@@ -41,15 +34,7 @@
 						]
 					},
 					table:{
-						columns:[
-							{field: '糊机备纸', title: '糊机备纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'SF1芯纸', title: 'SF1芯纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'SF1面纸', title: 'SF1面纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'SF2芯纸', title: 'SF2芯纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'SF2面纸', title: 'SF2面纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'SF3芯纸', title: 'SF3芯纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'SF3面纸', title: 'SF3面纸', width:130 , titleAlign: 'center', columnAlign: 'center',isResize:true},
-						],
+						columns:[],
 						height : 0
 					},
 					isnew : false
@@ -116,7 +101,7 @@
 		},
 		mounted(){
 			this.getTableConfig();
-			this.config.table.height = window.screen.height - 126;
+			this.config.table.height = window.screen.height - 96;
 		},
 		updated(){
 			

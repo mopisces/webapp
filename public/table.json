@@ -135,19 +135,19 @@
 	],
 
 	"sgBL":[
-		{"field":"sn","title":"序号","width":"50","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
-		{"field":"width","title":"门幅","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"paperMaterial","title":"生产纸质","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"flute_type","title":"楞别","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"total_len","title":"总长","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
+		{"field":"sn","title":"序号","width":"50","isFrozen":true},
+		{"field":"width","title":"门幅","width":"100","isFrozen":false},
+		{"field":"paperMaterial","title":"生产纸质","width":"100","isFrozen":false},
+		{"field":"flute_type","title":"楞别","width":"50","isFrozen":false},
+		{"field":"total_len","title":"总长","width":"100","isFrozen":false}
 	],
 	"sgBLMS":[
-		{"field":"糊机备纸","title":"糊机备纸","width":"130","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"SF1芯纸","title":"SF1芯纸","width":"130","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"SF1面纸","title":"SF1面纸","width":"130","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"SF2芯纸","title":"SF2芯纸","width":"130","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"SF2面纸","title":"SF2面纸","width":"130","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"SF3芯纸","title":"SF3芯纸","width":"130","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"SF3面纸","title":"SF3面纸","width":"130","titleAlign":"center","columnAlign":"center","isResize":true}
+		{"field":"糊机备纸","title":"糊机备纸","width":"150","isFrozen":true},
+		{"field":"SF1芯纸","title":"SF1芯纸","width":"150","isFrozen":false},
+		{"field":"SF1面纸","title":"SF1面纸","width":"150","isFrozen":false},
+		{"field":"SF2芯纸","title":"SF2芯纸","width":"150","isFrozen":false},
+		{"field":"SF2面纸","title":"SF2面纸","width":"150","isFrozen":false},
+		{"field":"SF3芯纸","title":"SF3芯纸","width":"150","isFrozen":false},
+		{"field":"SF3面纸","title":"SF3面纸","width":"150","isFrozen":false}
 	]
 }
