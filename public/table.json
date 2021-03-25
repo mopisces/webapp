@@ -136,7 +136,7 @@
 
 	"sgBL":[
 		{"field":"sn","title":"序号","width":"50","isFrozen":true},
-		{"field":"width","title":"门幅","width":"100","isFrozen":false},
+		{"field":"width","title":"门幅","width":"75","isFrozen":false},
 		{"field":"paperMaterial","title":"生产纸质","width":"100","isFrozen":false},
 		{"field":"flute_type","title":"楞别","width":"50","isFrozen":false},
 		{"field":"total_len","title":"总长","width":"100","isFrozen":false}

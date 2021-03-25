@@ -58,7 +58,7 @@
 								门幅:<span class="text-color">{{ item.width }}</span>
 							</span>
 						</div>
-						<div class="flex-box" v-show=" config.isnew ">
+						<div class="flex-box">
 							<span class="text">
 								纸质:<span class="text-color" v-if=" config.isnew ">{{ item.paper_code }}</span>
 								<span class="text-color" v-else>{{ item.paper }}</span>

@@ -3,7 +3,7 @@
 		<van-dropdown-menu active-color="#1aad19">
 			<van-dropdown-item v-model="formData.selectItem" :options="config.dropDownOption" />
 		</van-dropdown-menu>
-		<el-table :data="tableData" border stripe :height="config.table.height" v-if="config.table.height">
+		<el-table :data="tableData" border stripe :height="config.table.height" :header-row-style="{color:'#1aad19'}" :row-style="{height:'1rem', fontSize:'0.8rem'}" v-if="config.table.height" >
 			<el-table-column  :label="item.title" :width="item.width" v-for="(item,index) in config.table.columns" :key="index">
 				<template slot-scope="scope">
 					<span  v-if="item.field == 'paperMaterial'">
@@ -21,7 +21,7 @@
 			</el-table-column>
 		</el-table>
 	</div>
-</template>
+</template>	
 <script>
 	import { DropdownMenu, DropdownItem } from 'vant';
 	export default {

@@ -4,7 +4,7 @@
 			<van-dropdown-item v-model="formData.index" :options="config.dropDown.indexOption" />
 			<van-dropdown-item v-model="formData.active" :options="config.dropDown.activeOption" />
 		</van-dropdown-menu>
-		<el-table :data="tableData" border stripe :height="config.table.height" v-if="config.table.height">
+		<el-table :data="tableData" border stripe :height="config.table.height" :header-row-style="{color:'#1aad19'}" :row-style="{height:'1rem', fontSize:'0.8rem'}" v-if="config.table.height">
 			<el-table-column :prop="item.field" :label="item.title" :width="item.width" v-for="(item,index) in config.table.columns" :key="index">
 			</el-table-column>
 		</el-table>

@@ -31,7 +31,7 @@
 						</span>
 					</div>
 					<div class="text item">
-						<div class="flex-box" v-show=" config.isnew ">
+						<div class="flex-box">
 							<span class="text">
 								纸质:<span class="text-color" v-if="config.isnew">{{ item.paper_code }}</span>
 								<span class="text-color" v-else>{{ item.paper }}</span>

@@ -49,7 +49,7 @@
 			<table>
 				<tr>
 					<td>订单</td>
-					<td>A班</td>
+					<td>{{ className }}班</td>
 					<td>本笔</td>
 				</tr>
 				<tr>
@@ -126,22 +126,24 @@
 				不良刀数<br/>
 				<van-button plain type="info" size="small" @click="buildChart('不良刀数','刀数','blds')">{{ normalInfo.blds }}</van-button>
 			</div>
-			<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
-				剩余(m)<br/>
-				<van-button plain type="info" size="small" @click="buildChart('订单剩余','米(m)','ddsy')">{{ normalInfo.ddsy }}</van-button>
-			</div>
-			<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
-				订单长(m)<br/>
-				<van-button plain type="info" size="small" @click="buildChart('订单长','米(m)','ddc')">{{ normalInfo.ddc }}</van-button>
-			</div>
-			<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
-				切长(mm)<br/>
-				<van-button plain type="info" size="small"  @click="buildChart('切长','毫米(mm)','qc')">{{ normalInfo.qc }}</van-button>
-			</div>
-			<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
-				车速<br/>
-				<van-button plain type="info" size="small"  @click="buildChart('车速','','cs')">{{ normalInfo.cs }}</van-button>
-			</div>
+			<template v-if="config.isnew">
+				<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
+					剩余(m)<br/>
+					<van-button plain type="info" size="small" @click="buildChart('订单剩余','米(m)','ddsy')">{{ normalInfo.ddsy }}</van-button>
+				</div>
+				<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
+					订单长(m)<br/>
+					<van-button plain type="info" size="small" @click="buildChart('订单长','米(m)','ddc')">{{ normalInfo.ddc }}</van-button>
+				</div>
+				<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
+					切长(mm)<br/>
+					<van-button plain type="info" size="small"  @click="buildChart('切长','毫米(mm)','qc')">{{ normalInfo.qc }}</van-button>
+				</div>
+				<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
+					车速<br/>
+					<van-button plain type="info" size="small"  @click="buildChart('车速','','cs')">{{ normalInfo.cs }}</van-button>
+				</div>
+			</template>
 			<table>
 				<tr>
 					<td>坑机</td>
@@ -175,7 +177,7 @@
 			<table>
 				<tr>
 					<td>订单</td>
-					<td>A班</td>
+					<td>{{ className }}班</td>
 					<td>本笔</td>
 				</tr>
 				<tr>
@@ -273,6 +275,7 @@
 					activeItem : 0
 				},
 				socket:{},  //socket链接对象
+				className:'',
 				updownInfo:{
 					'qds1'  : 0,
 	                'scds1' : 0,
@@ -424,11 +427,14 @@
 						if( !JSON.parse(data).data || JSON.parse(data).ret == 0){
 							this.config.notice.text = '数据不完整';
 						}
+						let udpData = JSON.parse(data).data
+						this.className = udpData.class
 						if( this.config.updown ){
-							Object.assign(this.updownInfo, JSON.parse(data).data);
+							Object.assign(this.updownInfo, udpData);
 						}else{
-							Object.assign(this.normalInfo, JSON.parse(data).data);
+							Object.assign(this.normalInfo, udpData);
 						}
+
 						if( !this.config.chart.show ) return;
 						if( this.config.updown ){
 							if( this.config.chart.keyName.indexOf('_') === -1 ){
