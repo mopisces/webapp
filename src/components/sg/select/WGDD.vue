@@ -290,6 +290,9 @@
 						res.result.forEach((item,index)=>{
 							self.listInfo.push(item)
 						});
+					}else{
+						self.config.list.pushLoading.loading   = false;
+						self.config.list.pushLoading.finished = true
 					}
 				});
 			}

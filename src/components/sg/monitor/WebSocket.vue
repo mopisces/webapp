@@ -126,10 +126,6 @@
 				不良刀数<br/>
 				<van-button plain type="info" size="small" @click="buildChart('不良刀数','刀数','blds')">{{ normalInfo.blds }}</van-button>
 			</div>
-			<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
-				订单长(m)<br/>
-				<van-button plain type="info" size="small" @click="buildChart('订单长','米(m)','ddc')">{{ normalInfo.ddc }}</van-button>
-			</div>
 			<template v-if="config.isnew">
 				<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
 					剩余(m)<br/>
