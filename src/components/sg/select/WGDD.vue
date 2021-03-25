@@ -80,7 +80,7 @@
 						</div>
 					</div>
 					<div class="text item">
-						<div class="flex-box" v-show=" config.isnew ">
+						<div class="flex-box">
 							<span class="text">
 								剖1:<span class="text-color" v-if="config.isnew">{{ item.slitting }}</span>
 								<span class="text-color" v-else>{{ item.slitting1 }}</span>
@@ -95,7 +95,8 @@
 					<div class="text item">
 						<div class="flex-box">
 							<span class="text">
-								生产数:<span class="text-color">{{ item.prod_qty }}</span>
+								生产刀数:<span class="text-color" v-if="config.updown">{{ item.prod_qty }}</span>
+								<span class="text-color" v-else>{{ item.good_qty }}</span>
 							</span>
 						</div>
 						<div class="flex-box">
@@ -117,7 +118,7 @@
 						</div>
 					</div>
 					<div class="text item">
-						<div class="flex-box" v-show=" config.isnew ">
+						<div class="flex-box">
 							<span class="text">
 								压线资料1:<span class="text-color" v-if="config.isnew">{{ item.slitting_data }}</span>
 								<span class="text-color" v-else>{{ item.slitting_data1 }}</span>

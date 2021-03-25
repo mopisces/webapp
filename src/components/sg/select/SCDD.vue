@@ -93,7 +93,7 @@
 								总长:<span class="text-color">{{ item.total_len }}</span>
 							</span>
 						</div>
-						<div class="flex-box" v-show=" config.isnew ">
+						<div class="flex-box">
 							<span class="text">
 								剖1:<span class="text-color" v-if="config.isnew">{{ item.slitting }}</span>
 								<span class="text-color" v-else>{{ item.slitting1 }}</span>
@@ -119,7 +119,7 @@
 						</div>
 					</div>
 					<div class="item">
-						<span v-show=" config.isnew ">
+						<span>
 							<span class="text">
 								压线资料1:<span class="text-color" v-if=" config.isnew ">{{ item.slitting_data }}</span>
 								<span class="text-color" v-else>{{ item.slitting_data1 }}</span>
