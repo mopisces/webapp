@@ -114,7 +114,7 @@
 					materialType     : '',    //材质
 					boardLength      : '',    //板长
 					boardWidth       : '',    //板宽
-					lineBallInfo     : '',    //压线名称
+					lineBallInfo     : '',    //压型名称
 					lineBallFormula  : '',    //压线信息
 					orderQuantities  : '',    //订单数
 					area             : '',    //下单面积

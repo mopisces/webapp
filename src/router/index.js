@@ -1,9 +1,9 @@
 import store from '@/store';
-/*import staff from './staff';
+import staff from './staff';
 import client from './client';
-import admin from './admin';*/
+import admin from './admin';
 import sg from './sg';
-/*import group from './group';*/
+import group from './group';
 /*import amap from './amap';*/
 Vue.use(VueRouter);
 //404
@@ -77,11 +77,11 @@ let routes = [
         component: wxQrCode,
         meta:{ title: '微信授权生成二维码登陆' }
     },
-    /*...staff,
+    ...staff,
     ...client,
-    ...admin,*/
+    ...admin,
     ...sg,
-    //...group,
+    ...group,
     /*...amap,*/
     {
         path:'*',

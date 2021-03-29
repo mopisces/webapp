@@ -13,6 +13,7 @@
 		<template v-if=" orderType == 'c' ">
 			<van-field :value="orderInfo.boxType" label="箱型" readonly/>
 			<van-field :value="orderInfo.boxLength + 'x' +  orderInfo.boxWidth + 'x' + orderInfo.boxHeight" label="纸箱规格(mm)" readonly/>
+			<van-field :value="orderInfo.lineBallInfo" label="压型名称" readonly/>
 			<van-field :value="orderInfo.tonLen" label="箱舌(mm)" readonly/>
 			<van-field :value="orderInfo.uLen" label="封箱调整(mm)" readonly/>
 			<van-field :value="orderInfo.length + 'x' + orderInfo.width" label="纸板规格(mm)" readonly/>
@@ -22,7 +23,7 @@
 			<van-field :value="orderInfo.boardLength + 'x' + orderInfo.boardWidth" label="纸板规格(mm)" readonly/>
 			<!-- <van-field :value="orderInfo.boardLength" label="板长" readonly/>
 			<van-field :value="orderInfo.boardWidth" label="板宽" readonly/> -->
-			<van-field :value="orderInfo.lineBallInfo" label="压线名称" readonly/>
+			<van-field :value="orderInfo.lineBallInfo" label="压型名称" readonly/>
 			<van-field :value="orderInfo.lineBallFormula" label="压线信息" readonly/>
 		</template>
 		<template v-if=" orderType == 'x' ">
