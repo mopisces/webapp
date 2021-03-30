@@ -95,6 +95,7 @@
 						{text:'直接入库',iconName:'ruku2',url:'/staff/paper/directInStock'},
 						{text:'原纸入库',iconName:'ruku',url:'/staff/paper/doRStockIn'},
 						{text:'原纸出库',iconName:'ccgl-chukucaozuo-5',url:'/staff/paper/doStockOut'},
+						{text:'原纸日用量',iconName:'rili1',url:'/staff/paper/dailyUsed'},
 						{text:'原纸收货',iconName:'che2',url:'/staff/paperbuy/wGetPOIn'},
 						{text:'原纸采购',iconName:'caigou',url:'/staff/paperbuy/wGetPOMain'},
 						{text:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo'},

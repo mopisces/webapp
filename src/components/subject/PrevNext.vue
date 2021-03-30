@@ -72,6 +72,13 @@
 								<span>残卷卷数:{{ item.CJCount }}</span><br/>
 								<span>重量:{{ item.SRWt }}</span>
 							</div>
+							<!-- 原纸日用量 -->
+							<div :class="[{ active: isActive == index }, 'van-cell__title'] " v-else-if=" item.OutDate">
+								<span>{{ item.OutDate }}</span><br/>
+								<span>整卷卷数:{{ item.ZJCount }}</span><br/>
+								<span>残卷卷数:{{ item.CJCount }}</span><br/>
+								<span>重量:{{ item.SRWt }}</span>
+							</div>
 							<!-- 原纸采购 -->
 							<div :class="[{ active: isActive == index }, 'van-cell__title'] " v-if=" item.tag === 'poMain' ">
 								<span>日期:{{ item.prevNext }}</span><br/>

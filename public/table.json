@@ -101,6 +101,21 @@
 		{"field":"Phone","title":"电话","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"TimeToGo","title":"送货时间","width":"120","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
+	"staffDailyUsedInfo":[
+		{"field":"PaperCode","title":"纸类","width":"40","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"PaperName","title":"纸类名称","width":"90","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ZJCount","title":"整卷件数","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CJCount","title":"残卷件数","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SRWt","title":"使用总重(kg)","width":"80","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
+	"staffDailyUsedDetail":[
+		{"field":"PaperCode","title":"纸类","width":"40","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"PaperWidth","title":"门幅","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"PaperWt","title":"克重","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SRWt","title":"使用总重(kg)","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"strZJ","title":"类型","width":"40","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"StockNo","title":"收货编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
 	
 
 	"clientDeliveryDaily":[

@@ -20,6 +20,8 @@ const stockDeliveryArea      = () => import('@/components/staff/stock/DeliveryAr
 const paperSafe              = () => import('@/components/staff/paper/PaperSafe');
 //原纸出库
 const paperDoStockOut        = () => import('@/components/staff/paper/DoStockOut');
+//原纸日用量
+const paperDailyUsed        = () => import('@/components/staff/paper/DailyUsed');
 //原纸入库
 const paperDoRStockIn        = () => import('@/components/staff/paper/DoRStockIn');
 //直接入库
@@ -100,6 +102,11 @@ export const asyncStaffRouterMap = [
                 path:'paper/doStockOut',
                 meta: { title: '原纸出库', role:'原纸出库' },
                 component: paperDoStockOut,
+            },
+            {
+                path:'paper/dailyUsed',
+                meta: { title: '原纸日用量', role:'原纸日用量' },
+                component: paperDailyUsed,
             },
             {
                 path:'paper/doRStockIn',

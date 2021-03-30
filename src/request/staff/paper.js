@@ -66,7 +66,16 @@ const paper = {
 	},
 	getOrdInInfo( orderId ){
 		return post( window.jpdn_domain_staff + 'staffPapergetOrdInInfo', { direct_in_order_id : orderId } );
-	}
+	},
+	paperDailyUsedConfig(){
+		return post( window.jpdn_domain_staff + 'dailyUsed/config');
+	},
+	paperDailyUsedInfo( date ){
+		return post( window.jpdn_domain_staff + 'dailyUsed/info',{ paper_daily_used_date : date });
+	},
+	paperDailyUsedDetail( data ){
+		return post( window.jpdn_domain_staff + 'dailyUsed/detail',{ paper_daily_used_date : data.OutDate, paper_daily_used_code:data.PaperCode });
+	},
 };
 
 export default paper;
