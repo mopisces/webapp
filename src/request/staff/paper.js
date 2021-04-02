@@ -78,8 +78,8 @@ const paper = {
 	},
 	paperDailyUsedDateInfo(data){
 		let postData = {
-			paepr_daily_used_beigin_date: data.beginDate,
-			paepr_daily_used_end_date:data.endDate
+			paper_daily_used_beigin_date: data.beginDate,
+			paper_daily_used_end_date:data.endDate
 		};
 		return post( window.jpdn_domain_staff + 'dailyUsed/dateInfo', postData);
 	}
