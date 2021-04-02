@@ -209,8 +209,12 @@
 			this.controllerPrevNext();
 		},
 		created(){
-			if( this.radioData[0].prevNext ){
-				this.radio = this.radioData[0].prevNext;
+			if( this.radioData.length == 0 ){
+				this.radio = null;
+			}else{
+				if( this.radioData[0].prevNext ){
+					this.radio = this.radioData[0].prevNext;
+				}
 			}
 		},
 		computed:{

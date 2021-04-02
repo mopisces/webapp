@@ -76,6 +76,13 @@ const paper = {
 	paperDailyUsedDetail( data ){
 		return post( window.jpdn_domain_staff + 'dailyUsed/detail',{ paper_daily_used_date : data.OutDate, paper_daily_used_code:data.PaperCode });
 	},
+	paperDailyUsedDateInfo(data){
+		let postData = {
+			paepr_daily_used_beigin_date: data.beginDate,
+			paepr_daily_used_end_date:data.endDate
+		};
+		return post( window.jpdn_domain_staff + 'dailyUsed/dateInfo', postData);
+	}
 };
 
 export default paper;
