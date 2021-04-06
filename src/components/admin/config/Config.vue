@@ -253,8 +253,15 @@
 						<tr>
 							<td style="width:150px;">原纸日用量</td>
 							<td>
-								日期起始范围&nbsp;&nbsp;&nbsp;
-								<el-input style="width: 100px;" v-model="form.PaperDailyUsedDate"></el-input>
+								默认日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.PaperDailyUsedBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.PaperDailyUsedEndDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.PaperDailyUsedMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.PaperDailyUsedMaxDate"></el-input>
 							</td>
 						</tr>
 						<tr v-if="!Number(form.Open80Port)">
