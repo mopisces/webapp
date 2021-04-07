@@ -772,6 +772,10 @@
 					Wap1GetOrdersMaxDate     : '',  //ERP订单
 					StatisGetOrdersMinDate   : '',  //统计下的ERP订单(日期范围)
 					StatisGetOrdersMaxDate   : '',  //统计下的ERP订单
+					OrderTakeBeginDate       : '',  //接单统计默认开始日期
+					OrderTakeEndDate         : '',  //接单统计默认结束日期
+					OrderTakeMinDate         : '',  //接单统计开始日期
+					OrderTakeMaxDate         : '',  //接单统计结束日期
 					GetOrderSumBeginDate     : '',  //订单统计(默认日期)
 					GetOrderSumEndDate       : '',  //订单统计
 					GetOrderSumMinDate       : '',  //订单统计(日期范围)

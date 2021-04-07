@@ -1,7 +1,7 @@
 {
-	"backStage":"http://xzys.leaper.ltd:46000/",
-	"pageDomain":"http://xzys.leaper.ltd:45000/",
-	"sgDomain":"http://xzys.leaper.ltd:42000/",
-	"erpDomain":"http://xzys.leaper.ltd:38081/datasnap/rest/TServerMethods1/",
+	"backStage":"http://localhost:1110/",
+	"pageDomain":"http://localhost:8080/",
+	"sgDomain":"http://localhost:8050/",
+	"erpDomain":"http://localhost:38081/datasnap/rest/TServerMethods1/",
 	"demandType":""
 }
