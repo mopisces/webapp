@@ -120,11 +120,6 @@
 			getPaperDailyUsedConfig( isReset = false ){
 				let self = this;
 				this.$request.staff.paper.paperDailyUsedConfig().then(res=>{
-					/*self.radioVal  = res.result[0].OutDate;
-					self.radioData = res.result;
-					self.radioData.forEach((item,index)=>{
-						item['prevNext'] = item.OutDate; 
-					});*/
 					if( self.config.getConfig ){
 						self.filterForm.beginDate = res.result.PaperDailyUsedBeginDate;
 						self.filterForm.endDate = res.result.PaperDailyUsedEndDate;
@@ -136,9 +131,6 @@
 						this.config.popup.timePicker.isFinishLoad = true;
 					});
 				}).then(()=>{
-					/*this.$nextTick(() => {
-					    this.config.prevNext.show = true;
-					});*/
 					this.paperDailyUsedDateInfo();
 				});
 			},
@@ -188,10 +180,6 @@
 					}
 				});
 			},
-			/*listClick( data ){
-				this.detailData.fieldData = data;
-				this.paperInDetail( data.InNo );
-			},*/
 			getTableConfig(){
 				this.$request.common.table.getTableConfig().then(res=>{
 					this.config.table.info.columns = res.staffDailyUsedInfo;
