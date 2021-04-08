@@ -175,13 +175,17 @@
 			},
 			paperDailyUsedInfo( data ){
 				let self = this;
-				self.config.notice.sumWeight = 0;
+				this.config.notice.sumWeight = 0;
+				this.config.notice.text = '暂无数据';
+				this.listData = [];
 				this.$request.staff.paper.paperDailyUsedInfo( data, this.config.tabActive ).then(res=>{
-					self.listData = res.result;
-					self.listData.forEach((item)=>{
-						self.config.notice.sumWeight += Number(item.SRWt);
-					});
-					self.config.notice.text = '总重量:' + self.config.notice.sumWeight + 'kg';
+					if( res.errorCode == '00000' ){
+						self.listData = res.result;
+						self.listData.forEach((item)=>{
+							self.config.notice.sumWeight += Number(item.SRWt);
+						});
+						self.config.notice.text = '总重量:' + self.config.notice.sumWeight + 'kg';
+					}
 				});
 			},
 			/*listClick( data ){
