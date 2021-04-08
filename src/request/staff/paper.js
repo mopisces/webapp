@@ -70,8 +70,21 @@ const paper = {
 	paperDailyUsedConfig(){
 		return post( window.jpdn_domain_staff + 'dailyUsed/config');
 	},
-	paperDailyUsedInfo( date ){
-		return post( window.jpdn_domain_staff + 'dailyUsed/info',{ paper_daily_used_date : date });
+	paperDailyUsedInfo( date, type ){
+		let postData;
+		if( type == 0 ){
+			postData = {
+				paper_daily_used_type : type,
+				paper_daily_used_info_date : date
+			};
+		}else{
+			postData = {
+				paper_daily_used_type : type,
+				paper_daily_used_info_begin_date : date.beginDate,
+				paper_daily_used_info_end_date : date.endDate
+			};
+		}
+		return post( window.jpdn_domain_staff + 'dailyUsed/info',postData);
 	},
 	paperDailyUsedDetail( data ){
 		return post( window.jpdn_domain_staff + 'dailyUsed/detail',{ paper_daily_used_date : data.OutDate, paper_daily_used_code:data.PaperCode });

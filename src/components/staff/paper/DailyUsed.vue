@@ -1,23 +1,15 @@
 <template>
 	<div>
 		<van-button plain hairline type="info" size="normal" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" :radioVal="radioVal"  v-if="config.prevNext.show"></prev-next>
-		<van-notice-bar :text="config.notice.text" left-icon="volume-o" />
-		<!-- <div role="button" tabindex="0" class="van-cell van-cell--clickable" v-for="(item,index) in listData" :key="index" @click="listClick(item)" style="font-size:15px;">
-			<div class="van-cell__title">
-				<span>{{ item.InNo }}</span><br/>
-				<span>{{ item.PONo }}</span>
-			</div>
-			<div class="van-cell__title">
-				<span>{{ item.InQty }}&nbsp;件</span><br/>
-				<span>{{ item.SumPaper }}</span>
-			</div>
-			<div class="van-cell__title">
-				<span>{{ item.SumInWt }}&nbsp;kg</span><br/>
-				<span>{{ item.ShortName }}</span>
-			</div>
-			<van-icon name="arrow" color="#ddd" size="24" style="margin-top:9px"/>
-		</div> -->
+		<van-tabs v-model="config.tabActive" @change="tabsChange">
+			<van-tab title="日明细" name="0">
+				<prev-next @radioConfirm="radioConfirm" :radioData="radioData" :radioVal="radioVal"  v-if="config.prevNext.show"></prev-next>
+				<van-notice-bar :text="config.notice.text" left-icon="volume-o" />
+			</van-tab>
+  			<van-tab title="汇总" name="1">
+				<van-notice-bar :text="config.notice.text" left-icon="volume-o" />
+  			</van-tab>
+		</van-tabs>
 		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.info.columns" :table-data="listData" row-hover-color="#eee" row-click-color="#edf7ff" even-bg-color="#fafafa" :height="config.table.info.height" :row-click="detailClick">
 		</v-table>
 		<van-popup v-model="config.popup.show" position="top" :style="{ height:'100%' }" v-if="config.popup.show">
@@ -29,9 +21,6 @@
 				</div>
 			</div>
 			<div class="content" style="width:100%;margin-top:46px;">
-				<!-- <van-field center input-align="right" label="收货日期" v-model="detailData.fieldData.RecDate"></van-field>
-				<van-field center input-align="right" label="收货单号" v-model="detailData.fieldData.InNo"></van-field>
-				<van-field center input-align="right" label="供应商" v-model="detailData.fieldData.ShortName"></van-field> -->
 				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.detail.columns" :table-data="detailData.tableData" row-hover-color="#eee" row-click-color="#edf7ff" even-bg-color="#fafafa" :height="config.table.detail.height" >
 				</v-table>
 			</div>	
@@ -50,7 +39,7 @@
 	
 </template>
 <script>
-	import { Button, Icon, Popup, Field, NoticeBar, SwitchCell } from 'vant';
+	import { Button, Icon, Popup, Field, NoticeBar, SwitchCell, Tab, Tabs } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
@@ -62,6 +51,8 @@
 			[Field.name]: Field,
 			[NoticeBar.name]: NoticeBar,
 			[SwitchCell.name]: SwitchCell,
+			[Tab.name]: Tab,
+			[Tabs.name]: Tabs,
 
 			PrevNext,
 			PopupFilter,
@@ -77,6 +68,7 @@
 					tableData:{}
 				},
 				config:{
+					tabActive:0,
 					getConfig:true,
 					prevNext:{
 						show:false
@@ -184,7 +176,7 @@
 			paperDailyUsedInfo( data ){
 				let self = this;
 				self.config.notice.sumWeight = 0;
-				this.$request.staff.paper.paperDailyUsedInfo( data ).then(res=>{
+				this.$request.staff.paper.paperDailyUsedInfo( data, this.config.tabActive ).then(res=>{
 					self.listData = res.result;
 					self.listData.forEach((item)=>{
 						self.config.notice.sumWeight += Number(item.SRWt);
@@ -203,8 +195,10 @@
 				});
 			},
 			detailClick(rowIndex,rowData,column){
-				this.detailData.fieldData = rowData;
-				this.paperDailyUsedDetail(rowData);
+				if( this.config.tabActive == 0 ){
+					this.detailData.fieldData = rowData;
+					this.paperDailyUsedDetail(rowData);
+				}
 			},
 			resetClick(){
 				this.filterForm = {
@@ -217,7 +211,18 @@
 			},
 			filterClick(){
 				this.config.popup.filterShow = false;
-				this.paperDailyUsedDateInfo();
+				if( this.config.tabActive == 0 ){
+					this.paperDailyUsedDateInfo();
+				}else{
+					this.paperDailyUsedInfo( this.filterForm );
+				}
+			},
+			tabsChange(name,title){
+				if( name == 0 ){
+					this.paperDailyUsedDateInfo();
+				}else{
+					this.paperDailyUsedInfo( this.filterForm );
+				}
 			}
 		},
 		created(){
