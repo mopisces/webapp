@@ -159,7 +159,7 @@
 			},
 			paperDailyUsedDetail( data ){
 				let self = this;
-				this.$request.staff.paper.paperDailyUsedDetail( data ).then(res=>{
+				this.$request.staff.paper.paperDailyUsedDetail( data, this.config.tabActive ).then(res=>{
 					self.detailData.tableData = res.result;
 				}).then(()=>{
 					this.config.popup.show = true;
@@ -187,9 +187,13 @@
 				});
 			},
 			detailClick(rowIndex,rowData,column){
+				this.detailData.fieldData = rowData;
 				if( this.config.tabActive == 0 ){
-					this.detailData.fieldData = rowData;
 					this.paperDailyUsedDetail(rowData);
+				}
+				if( this.config.tabActive == 1 ){
+					let postData = Object.assign({},rowData,this.filterForm);
+					this.paperDailyUsedDetail(postData);
 				}
 			},
 			resetClick(){
@@ -229,7 +233,7 @@
 		mounted(){
 			this.$store.commit('staff/setHeaderTitle','原纸日用量');
 			this.config.table.info.height = window.screen.height - 126;
-			this.config.table.detail.height = window.screen.height - 140;
+			this.config.table.detail.height = window.screen.height - 100;
 			this.getTableConfig();
 		},
 		destroyed(){
