@@ -2,18 +2,6 @@
 	<div>
 		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
 		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material"></popup-select>
-		<!-- <van-field clearable label="纸板规格(mm)" right-icon="question-o" @click-right-icon="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth +'mm~' + pageConfig.maxWidth + 'mm' )">
-			<div class="van-row van-row--flex van-row--justify-center" slot="input">
-				<div class="van-col van-col--12">
-					<input type="number" placeholder="板长" v-model="formData.boardLength" class="van-field__control van-field__control--center"  @blur=" calcArea() "/>
-				</div>
-				<div class="van-col van-col--1">
-					x 
-				</div>
-				<div class="van-col van-col--11">
-					<input type="number" placeholder="板宽" v-model="formData.boardWidth" class="van-field__control van-field__control--center" @blur=" calcArea() "/>
-				</div>
-			</div> -->
 		</van-field>
 		<div class="van-cell" style="display: flex;align-items: center;">
 			<div class="van-cell__title van-field__label">纸板规格(mm)</div>

@@ -22,5 +22,50 @@ const frec = {
 		};
 		return post( window.jpdn_domain_staff + 'frecAdjustMain', postData );
 	},
+	getFrecPayType( type ){
+		return post( window.jpdn_domain_staff + 'frec/getPayType', { frec_pay_type: type } );
+	},
+	frecDoDel( data ){
+		let postData = {
+			frec_factory_id : data.FactoryId,
+			frec_type       : data.type,
+			frec_pay_id     : data.PayId,
+			frec_del_remark : data.delRemark
+		};
+		return post( window.jpdn_domain_staff + 'frec/doDel', postData );
+	},
+	frecDoModify( data ){
+		let postData = {
+			frec_factory_id  : data.FactoryId,
+			frec_pay_id      : data.PayId,
+			frec_cus_id      : data.CusId,
+			frec_op_date     : data.OpDate,
+			frec_pay_type_id : data.PayTypeId,
+			frec_issue_date  : data.IssueDate,
+			frec_amount      : data.Amount,
+			frec_remark      : data.Remark,
+			frec_receipt_no  : data.ReceiptNo,
+			frec_need_inv    : data.NeedInv,
+			frec_type        : data.type,
+
+		};
+		return post( window.jpdn_domain_staff + 'frec/doModify', postData );
+	},
+	frecDoInsert( data ){
+		let postData = {
+			frec_factory_id  : data.FactoryId,
+			frec_pay_id      : data.PayId,
+			frec_cus_id      : data.CusId,
+			frec_op_date     : data.OpDate,
+			frec_pay_type_id : data.PayTypeId,
+			frec_issue_date  : data.IssueDate,
+			frec_amount      : data.Amount,
+			frec_remark      : data.Remark,
+			frec_receipt_no  : data.ReceiptNo,
+			frec_need_inv    : data.NeedInv,
+			frec_type        : data.type
+		};
+		return post( window.jpdn_domain_staff + 'frec/doInsert', postData );
+	}
 }
 export default frec;

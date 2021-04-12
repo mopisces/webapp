@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-field v-model="cusId" clickable @click="popupShow = true" placeholder="选择客户名称" input-align="center" label="客户名称" readonly >
+		<van-field v-model="cusId" clickable @click="popupShow = true" placeholder="选择客户名称" input-align="center" label="客户名称" readonly :error-message="cusCHN">
 			<van-icon name="arrow" slot="right-icon"/>
 		</van-field>
 		<van-popup v-model="popupShow" position="bottom" @click-overlay="cusPickerOverlay()" get-container="body">
@@ -20,7 +20,7 @@
 			[Field.name]: Field,
 			[Search.name]: Search
 		},
-		props:['cusName'],
+		props:['cusName', 'showCHN'],
 		data(){
 			return {
 				cusId:this.cusName,
@@ -28,13 +28,16 @@
 				columns:[],
 				defaultIndex:-1,
 				searchData:'',
+				cusCHN:'',
 			}
 		},
 		methods:{
 			cusPickerConfirm( value, index ){
 				this.defaultIndex = index;
 				this.cusId = value.key;
-
+				if( this.showCHN ){
+					this.cusCHN = '客户名称：' + value.name;
+				}
 				this.cusPickerOverlay();
 			},
 			cusPickerSearch(){
@@ -45,8 +48,12 @@
 						return 
 					}
 					res.result.forEach((item,index)=>{
-						self.columns.push({text:item.CusName + '--' +item.CusId ,key:item.CusId});
+						self.columns.push({text:item.CusName + '--' +item.CusId ,key:item.CusId, name:item.CusName});
 					});
+				}).then(()=>{
+					if( this.cusName ){
+						this.findCus(this.cusName)
+					}
 				});
 
 			},
@@ -56,21 +63,37 @@
 			cusPickerClean(){
 				this.defaultIndex = -1;
 				this.cusId = '';
+				if( this.showCHN ){
+					this.cusCHN = '';
+				}
 				this.cusPickerOverlay();
+			},
+			findCus( cusId ){
+				if( this.columns.length <= 0 || !cusId ){
+					this.defaultIndex = -1;
+					this.cusCHN = '';
+					return false;
+				}
+				this.columns.forEach((item,index)=>{
+					if( item.key == cusId ){
+						this.cusPickerConfirm(this.columns[index],index);
+					}
+				});
 			}
 		},
 		mounted(){
 			this.cusPickerSearch();
 		},
 		created(){
-			
+
 		},
 		computed:{
-			
+
 		},
 		watch:{
 			cusName(newV,oldV){
 				this.cusId = newV;
+				this.findCus(newV)
 			},
 			cusId(newV,oldV){
 				this.$emit("update:cusName", newV);
