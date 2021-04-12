@@ -352,7 +352,6 @@
 			},
 			addData(){
 				this.config.dialog.type = 0;
-				//this.cleanDialog();
 				this.config.dialog.show = true;
 			},
 			modifyClick( rowIndex,rowData,column ){
@@ -374,7 +373,7 @@
 
 				this.formData.rowIndex  = rowIndex;
 				this.formData.CusId     = rowData.CusId;
-				this.formData.NeedInv   = rowData.NeedInv;
+				this.formData.NeedInv   = Number(rowData.NeedInv);
 				this.formData.OpDate    = rowData.OpDate;
 				this.formData.PayTypeId = rowData.PayTypeId;
 				this.formData.IssueDate = rowData.IssueDate;
@@ -384,7 +383,6 @@
 				//删除或者修改必须
 				this.formData.FactoryId = rowData.FactoryId;
 				this.formData.PayId     = rowData.PayId;
-				///console.log(rowData.PayTypeId)
 				this.amountToCHN();
 				this.config.dialog.show = true;
 			},
@@ -392,14 +390,13 @@
 				Object.keys(this.formData).forEach(key=>{this.formData[key] = null});
 				this.formData.OpDate    = this.pageConfig.defaultDate;
 				this.formData.IssueDate = this.pageConfig.defaultDate;
-				this.formData.Remark    = '';             //备注为空，防止vant field组件统计字数报错
+				this.formData.Remark    = '';                  //备注为空，防止vant field组件统计字数报错
 				this.formData.delRemark = '';
-				this.formData.NeedInv   = 1;  //是否需要开票,默认需要
+				this.formData.NeedInv   = 1;                   //是否需要开票,默认需要
 				this.config.dialog.amountCHN         = '';     //大写提示为空
 				this.config.dialog.delBtn.submit     = false;
 				this.config.dialog.confirmBtn.submit = false;
 				this.config.dialog.negative          = false;
-
 			},
 			setAmount(value){
 				if( value.text.indexOf('退款') >= 0 ){
@@ -454,7 +451,6 @@
 					this.config.dialog.delBtn.submit = true;	
 					this.$request.staff.frec.frecDoDel( postData ).then((res)=>{
 						if( res.errorCode == '00000' ){
-							//this.info.table.data.splice( this.formData.rowIndex, 1 );
 							this.config.dialog.delShow = false;
 							this.config.dialog.show    = false;
 							Toast.success(res.result);
