@@ -355,6 +355,10 @@
 				this.config.dialog.show = true;
 			},
 			modifyClick( rowIndex,rowData,column ){
+				//最后一行不弹框
+				if( this.info.table.data.length <= (rowIndex + 1) ){
+					return false;
+				}
 				if( rowData.State == 0 ){
 					Toast({
 						message:'已删除记录无法修改或删除',
