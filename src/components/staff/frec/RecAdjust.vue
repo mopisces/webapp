@@ -11,7 +11,7 @@
 			<van-tab title="收款" name="1"></van-tab>
 			<van-tab title="调账" name="0"></van-tab>
 		</van-tabs>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" :row-click="modifyClick">
+		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="info.table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" :row-click="rowClick">
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -24,7 +24,7 @@
 				<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>
-		<van-dialog v-model:show="config.dialog.show" :showConfirmButton="false" :close-on-click-overlay="true" @close="cleanDialog()">
+		<van-dialog v-model:show="config.dialog.show" :showConfirmButton="false" :close-on-click-overlay="true" @close="addClose()">
 			<cus-picker :cusName.sync="formData.CusId" :showCHN="true"></cus-picker>
 			<van-switch-cell v-model="formData.NeedInv" :active-value="1" :inactive-value="0" title="受否需要开票" v-show=" filterForm.adjustType == 0 "/>
 			<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="formData.OpDate" :minDate="dialogTime.minDate" :maxDate="dialogTime.maxDate" label="操作日期"></new-time-picker>
@@ -33,14 +33,40 @@
 			<van-field :label="config.dialog.label + '金额'" v-model="formData.Amount" placeholder="请输入金额" input-align="center" :error-message="config.dialog.amountCHN" @blur="amountToCHN"/>
 			<van-field :label="config.dialog.label + '备注'" v-model="formData.Remark" autosize rows="1" maxlength="50" show-word-limit type="textarea" placeholder="请输入备注"/>
 			<van-field label="收据编号" v-model="formData.ReceiptNo" placeholder="请输入收据编号" input-align="center"/>
-			<van-button type="danger" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="config.dialog.delShow = true" v-if="config.dialog.type == 1">删除</van-button>
-			<van-button type="info" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="cancelClick" v-else>取消</van-button>
-			<van-button type="primary" :disabled="config.dialog.confirmBtn.submit" :loading="config.dialog.confirmBtn.submit" loading-text="提交" style="width:45%;margin-left:2.5%;margin-bottom:2%;" @click="confirmClick()">确认</van-button>
+			<!-- <van-button type="danger" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="config.dialog.delShow = true" v-if="config.dialog.type == 1">删除</van-button>
+			<van-button type="info" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="cancelClick" v-else>取消</van-button> -->
+			<van-button type="primary" :disabled="config.dialog.confirmBtn.submit" :loading="config.dialog.confirmBtn.submit" loading-text="提交" style="width:80%;margin-left:10%;margin-bottom:2%;margin-top:2%;" round @click="confirmClick()">确认</van-button>
 		</van-dialog>
-		<van-dialog v-model:show="config.dialog.delShow" title="删除原因" :show-confirm-button="false" :close-on-click-overlay="true" @close="cleanDelDialog()">
+		<van-dialog v-model:show="config.dialog.delShow" title="删除原因" :show-confirm-button="false" :close-on-click-overlay="true" @close="delClose()">
 			<van-field v-model="formData.delRemark" autosize rows="2" maxlength="50" show-word-limit type="textarea" placeholder="请输入删除原因" />
-			<van-button type="info" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="config.dialog.delShow = false">取消</van-button>
+			<van-button type="info" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="config.dialog.delShow = false" >取消</van-button>
 			<van-button type="primary" :disabled="config.dialog.delBtn.submit" :loading="config.dialog.delBtn.submit" loading-text="删除" style="width:45%;margin-left:2.5%;margin-bottom:2%;" @click="delClick()">删除</van-button>
+		</van-dialog>
+		<!-- <van-dialog v-model:show="config.dialog.chooseShow" title="对该条记录进行审核或者修改" :showCancelButton="true" cancelButtonText="审核" confirmButtonText="修改" cancelButtonColor="#21e84f" :close-on-click-overlay="true" @confirm="doModify" @cancel="config.dialog.checkShow = true;">
+		</van-dialog> -->
+		<van-dialog v-model:show="config.dialog.chooseShow" title="请选择操作" :showConfirmButton="false" :close-on-click-overlay="true" @close="cleanDialog()">
+			<van-field label="单号" :value="formData.PayId" readonly />
+			<template v-if="config.checkAuth">
+				<van-button type="info" style="width:30%;margin-left:2.5%;margin-bottom:2%;margin-top:2%;" @click="doModify()" round>修改</van-button>
+				<van-button type="danger" style="width:30%;margin-left:2.5%;margin-bottom:2%;margin-top:2%;" @click="config.dialog.delShow = true" round>删除</van-button>
+				<van-button type="primary" style="width:30%;margin-left:2.5%;margin-bottom:2%;margin-top:2%;" @click="config.dialog.checkShow = true" round>审核</van-button>
+			</template>
+			<template v-else>
+				<van-button type="info" style="width:45%;margin-left:2.5%;margin-bottom:2%;margin-top:2%;" @click="doModify()" round>修改</van-button>
+				<van-button type="danger" style="width:45%;margin-left:2.5%;margin-bottom:2%;margin-top:2%;" @click="config.dialog.delShow = true" round>删除</van-button>
+			</template>
+		</van-dialog>
+		<van-dialog v-model:show="config.dialog.checkShow" :show-confirm-button="false" :close-on-click-overlay="true" @close="checkClose()">
+			<van-field label="客户名称" :value="formData.Cus" readonly />
+			<van-field label="科目" :value="formData.ShortName" readonly />
+			<van-switch-cell v-model="formData.NeedInv" disabled :active-value="1" :inactive-value="0" title="受否需要开票" v-show=" filterForm.adjustType == 0 "/>
+			<van-field label="操作日期" :value="formData.OpDate" readonly />
+			<van-field label="生效日期" :value="formData.IssueDate" readonly />
+			<van-field :label="config.dialog.label + '金额'" :value="formData.Amount" readonly />
+			<van-field :label="config.dialog.label + '备注'" :value="formData.Remark" readonly />
+			<van-field label="收据编号" :value="formData.ReceiptNo" readonly />
+			<van-field label="业务员" :value="formData.Task" readonly />
+			<van-button type="primary" style="width:80%;margin-left:10%;margin-bottom:2%;margin-top:2%;" round @click="doCheck">{{ config.dialog.checkBtnName }}审核</van-button>
 		</van-dialog>
 	</div>
 </template>
@@ -73,6 +99,7 @@
 			return {
 				config:{
 					modifyAuth: false, //收款调账维护权限是否开启
+					checkAuth:false,    //收款调账审核权限是否开启
 					getConfig:true,
 					dialog:{
 						show:false,
@@ -87,7 +114,10 @@
 						confirmBtn:{
 							submit:false,
 						},
-						delShow:false
+						delShow:false,
+						checkShow:false,
+						chooseShow:false,
+						checkBtnName:'确认'
 					},
 					table:{
 						columns:[
@@ -161,6 +191,10 @@
 				},
 				formData:{
 					rowIndex  : null,     //记录rowIndex
+					Cus       : null,     //客户名称
+					Task      : null,     //业务员
+					ShortName : null,     //单号
+					Checked   : 0,        //是否审核
 					CusId     : null,     //客户编号
 					NeedInv   : 1,        //是否开票
 					OpDate    : null,     //操作日期
@@ -266,7 +300,7 @@
 				this.$request.staff.frec.recAdjustConfig().then(res=>{
 					if( this.config.getConfig ){
 						self.filterForm.beginDate = res.result.date.RecAdjustBeginDate;
-						self.filterForm.beginDate = '2020-04-12';
+						self.filterForm.beginDate = '2020-04-17';
 						self.filterForm.endDate = res.result.date.RecAdjustEndDate;
 					}
 					self.pageConfig.maxDate = res.result.date.RecAdjustMaxDate;
@@ -298,7 +332,7 @@
 			},
 			tabsChange(name,title){
 				this.config.dialog.label = this.filterForm.adjustType == 0 ? '调账' : '收款';
-				//this.cleanDialog();
+				this.cleanDialog();
 				this.recAdjustMain(this.filterForm);
 			},
 			cusPickerCancel(){
@@ -354,9 +388,56 @@
 				this.config.dialog.type = 0;
 				this.config.dialog.show = true;
 			},
-			modifyClick( rowIndex,rowData,column ){
-				//最后一行不弹框
+			rowClick( rowIndex,rowData,column ){
 				if( this.info.table.data.length <= (rowIndex + 1) ){
+					return false;
+				}
+				if( rowData.State == 0 ){
+					Toast({
+						message:'已删除记录无法修改或删除',
+						duration:1000
+					});
+					return false;
+				}
+				this.formData.rowIndex  = rowIndex;
+				this.formData.Checked   = rowData.Checked;
+				this.formData.Cus       = rowData.Cus;
+				this.formData.Task      = rowData.Task;
+				this.formData.ShortName = rowData.ShortName;
+				this.formData.CusId     = rowData.CusId;
+				this.formData.NeedInv   = Number(rowData.NeedInv);
+				this.formData.OpDate    = rowData.OpDate;
+				this.formData.PayTypeId = rowData.PayTypeId;
+				this.formData.IssueDate = rowData.IssueDate;
+				this.formData.Amount    = rowData.Amount;
+				this.formData.Remark    = rowData.Remark;
+				this.formData.ReceiptNo = rowData.ReceiptNo;
+				//删除或者修改必须
+				this.formData.FactoryId = rowData.FactoryId;
+				this.formData.PayId     = rowData.PayId;
+				if( this.config.checkAuth ){
+					if( rowData.Checked == 1 ){
+						this.config.dialog.checkBtnName = '取消';
+						this.config.dialog.checkShow = true;
+					}
+					if( rowData.Checked == 0 ){
+						this.config.dialog.checkBtnName = '确认';
+						this.config.dialog.chooseShow = true;
+					}
+				}else{
+					if( rowData.Checked == 1 ){
+						Toast({
+							message:'已审核记录无法修改或删除',
+							duration:1000
+						});
+						return false;
+					}
+					this.config.dialog.chooseShow = true;
+				}
+			},
+			doModify(){
+				//最后一行不弹框
+				/*if( this.info.table.data.length <= (rowIndex + 1) ){
 					return false;
 				}
 				if( rowData.State == 0 ){
@@ -372,10 +453,10 @@
 						duration:1000
 					});
 					return false;
-				}
+				}*/
 				this.config.dialog.type = 1;
 
-				this.formData.rowIndex  = rowIndex;
+				/*this.formData.rowIndex  = rowIndex;
 				this.formData.CusId     = rowData.CusId;
 				this.formData.NeedInv   = Number(rowData.NeedInv);
 				this.formData.OpDate    = rowData.OpDate;
@@ -386,12 +467,15 @@
 				this.formData.ReceiptNo = rowData.ReceiptNo;
 				//删除或者修改必须
 				this.formData.FactoryId = rowData.FactoryId;
-				this.formData.PayId     = rowData.PayId;
+				this.formData.PayId     = rowData.PayId;*/
 				this.amountToCHN();
 				this.config.dialog.show = true;
 			},
 			cleanDialog(){
+				console.log(123)
 				Object.keys(this.formData).forEach(key=>{this.formData[key] = null});
+				this.formData.Checked   = 0;
+				//this.formData.Cus       = null;
 				this.formData.OpDate    = this.pageConfig.defaultDate;
 				this.formData.IssueDate = this.pageConfig.defaultDate;
 				this.formData.Remark    = '';                  //备注为空，防止vant field组件统计字数报错
@@ -410,9 +494,20 @@
 			amountToCHN(){
 				this.config.dialog.amountCHN = digitUppercase(this.formData.Amount);
 			},
-			//取消点击
-			cancelClick(){
-				this.config.dialog.show = false;
+			//审核dialog取消点击
+			checkClose(){
+				if( this.formData.Checked == 1 ){
+					this.cleanDialog();
+				}
+			},
+			//添加时关闭
+			addClose(){
+				if( this.config.dialog.type == 0 ){
+					this.cleanDialog();
+				}
+			},
+			delClose(){
+				this.formData.delRemark = '';
 			},
 			//提交点击
 			confirmClick(){
@@ -423,6 +518,7 @@
 							if( res.errorCode == '00000' ){
 								Toast.success(res.result);
 								this.config.dialog.show = false;
+								this.config.dialog.chooseShow = false;
 								this.recAdjustMain( this.filterForm );
 							}
 						});			
@@ -436,6 +532,7 @@
 							if( res.errorCode == '00000' ){
 								Toast.success(res.result);
 								this.config.dialog.show = false;
+								this.config.dialog.chooseShow = false;
 								this.recAdjustMain( this.filterForm );
 							}
 						});
@@ -445,9 +542,9 @@
 				}
 				
 			},
-			cleanDelDialog(){
+			/*cleanDelDialog(){
 				this.formData.delRemark = '';
-			},
+			},*/
 			//删除确认
 			delClick(){
 				let postData = Object.assign({},this.formData,{type:this.filterForm.adjustType});
@@ -456,7 +553,8 @@
 					this.$request.staff.frec.frecDoDel( postData ).then((res)=>{
 						if( res.errorCode == '00000' ){
 							this.config.dialog.delShow = false;
-							this.config.dialog.show    = false;
+							//this.config.dialog.show    = false;
+							this.config.dialog.chooseShow = false;
 							Toast.success(res.result);
 							this.recAdjustMain( this.filterForm );
 						}
@@ -465,7 +563,24 @@
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
-			}
+			},
+			//点击审核
+			doCheck(){
+				let postData = Object.assign({},this.formData,{type:this.filterForm.adjustType});
+				let check = new schema(this.delBase);
+				check.validate(postData).then(()=>{
+					this.$request.staff.frec.frecDoCheck( postData ).then((res)=>{
+						if( res.errorCode == '00000' ){
+							this.config.dialog.checkShow = false;
+							this.config.dialog.chooseShow = false;
+							Toast.success(res.result);
+							this.recAdjustMain( this.filterForm );
+						}
+					});
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});
+			},
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','收款调账');
@@ -479,6 +594,9 @@
 				let auth = JSON.parse(sessionStorage.getItem('staff-auth-url'));
 				if( auth.indexOf('收款调账维护') >= 0 ){
 					this.config.modifyAuth = true;
+				}
+				if( auth.indexOf('收款调账审核') >= 0 ){
+					this.config.checkAuth = true;
 				}
 			}
 			this.config.dialog.label = this.filterForm.adjustType == 0 ? '调账' : '收款';

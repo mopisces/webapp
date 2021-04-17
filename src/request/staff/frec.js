@@ -66,6 +66,15 @@ const frec = {
 			frec_type        : data.type
 		};
 		return post( window.jpdn_domain_staff + 'frec/doInsert', postData );
-	}
+	},
+	frecDoCheck( data ){
+		let postData = {
+			frec_factory_id  : data.FactoryId,
+			frec_pay_id      : data.PayId,
+			frec_type        : data.type,
+			frec_check_type  : data.Checked
+		};
+		return post( window.jpdn_domain_staff + 'frec/doCheck', postData );
+	},
 }
 export default frec;
