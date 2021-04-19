@@ -300,7 +300,7 @@
 				this.$request.staff.frec.recAdjustConfig().then(res=>{
 					if( this.config.getConfig ){
 						self.filterForm.beginDate = res.result.date.RecAdjustBeginDate;
-						self.filterForm.beginDate = '2020-04-17';
+						//self.filterForm.beginDate = '2020-04-17';
 						self.filterForm.endDate = res.result.date.RecAdjustEndDate;
 					}
 					self.pageConfig.maxDate = res.result.date.RecAdjustMaxDate;
