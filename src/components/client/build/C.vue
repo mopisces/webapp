@@ -357,7 +357,7 @@
 					res.result.line_ball_config.forEach((item,index)=>{
 						self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
 					});
-					self.formData.lineBallInfo = self.config.radioData.lineBall[0].value;
+					self.formData.lineBallInfo = res.result.config.DefaultScoreName ? res.result.config.DefaultScoreName : self.config.radioData.lineBall[0].value;
 					res.result.cus_info.forEach((item,index)=>{
 						if( item.DefAddress == 1 ){
 							self.formData.address = item.CusSubNo;

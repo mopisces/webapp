@@ -472,7 +472,7 @@
 				this.config.dialog.show = true;
 			},
 			cleanDialog(){
-				console.log(123)
+				//console.log(123)
 				Object.keys(this.formData).forEach(key=>{this.formData[key] = null});
 				this.formData.Checked   = 0;
 				//this.formData.Cus       = null;

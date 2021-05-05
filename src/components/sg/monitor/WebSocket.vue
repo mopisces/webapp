@@ -419,7 +419,7 @@
 				this.socket.on('connect',()=>{
 					this.config.notice.text = '链接成功！';
 				});
-				this.socket.on('AnalyUdpData' + 0, (data)=>{
+				this.socket.on('AnalyUdpData' + index, (data)=>{
 					if( data == 10060 ){
 						this.config.notice.text = '后台udp广播暂未开启';
 					}else{

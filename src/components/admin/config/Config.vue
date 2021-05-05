@@ -570,6 +570,13 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">默认名称</td>
+							<td>
+								<el-input style="width: 300px;" v-model="form.DefaultScoreName"></el-input>
+								<p class="info">必须是压型名称中的一个</p>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">纸板下单面积范围</td>
 							<td>
 								<el-input style="width: 100px;" v-model="form.BuildMinArea"></el-input>
@@ -862,6 +869,7 @@
 					BuildMaxBoxH              : '',  //箱高范围
 					BuildAutoGetTonLenAndULen : '',  //自动获取默认的箱舌＆封箱调整
 					BuildScoreName            : '',  //压型名称
+					DefaultScoreName          : '',  //默认压型名称
 					BuildMinArea              : '',  //纸板下单面积范围
 					BuildMaxArea              : '',  //纸板下单面积范围
 					BuildMinOrdQty            : '',  //纸箱下单订单数范围

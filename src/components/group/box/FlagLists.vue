@@ -12,10 +12,10 @@
 				<van-count-down :time="item.time">
 					<template v-slot="timeData">
 						<span style="font-size:0.75rem;">剩余时间:</span>
-						<span class="item">{{ timeData.days }}天</span>
-						<span class="item">{{ timeData.hours }}小时</span>
-						<span class="item">{{ timeData.minutes }}分</span>
-						<span class="item">{{ timeData.seconds }}秒</span>
+						<span class="list-countdown-item">{{ timeData.days }}天</span>
+						<span class="list-countdown-item">{{ timeData.hours }}小时</span>
+						<span class="list-countdown-item">{{ timeData.minutes }}分</span>
+						<span class="list-countdown-item">{{ timeData.seconds }}秒</span>
 					</template>
 				</van-count-down>
 			</div>
@@ -136,4 +136,12 @@
         position: absolute;
         top: 0;
     }
+    .list-countdown-item {
+		width: 2.5625rem;
+		color: #fff;
+		font-size: 0.75rem;
+		text-align: center;
+		background-color: #ee0a24;
+		margin-right: 0.3125rem;
+	}
 </style>
