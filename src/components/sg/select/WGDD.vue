@@ -127,7 +127,7 @@
 					</div>
 					<div class="text item" v-show="item.finish_date">
 						<span class="text">
-							预计完成时间:<span class="text-color">{{ item.finish_date }}</span>
+							完成时间:<span class="text-color">{{ item.finish_date }}</span>
 						</span>
 					</div>
 				</el-card>

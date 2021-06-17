@@ -1,7 +1,7 @@
 {
 	"backStage":"http://localhost:1110/",
 	"pageDomain":"http://localhost:8080/",
-	"sgDomain":"http://localhost:8050/",
-	"erpDomain":"http://localhost:38081/datasnap/rest/TServerMethods1/",
+	"sgDomain":"http://sxdy.leaper.ltd:41000/",
+	"erpDomain":"",
 	"demandType":""
 }

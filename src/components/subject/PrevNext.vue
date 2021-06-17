@@ -5,11 +5,13 @@
 				<div style="padding-top:5px;">
 				<div v-if="!config.header.prev.noData">
 						<van-icon class-prefix="iconfont" size="20" name="zuojiantouxiangzuofanhuimianxing" slot="icon"  color="#1aad19"/>
-						<p style="color:#1aad19">{{ config.header.prev.data }}</p>
+						<!-- <p style="color:#1aad19">{{ config.header.prev.data }}</p> -->
+						<div style="color:#1aad19;line-height:1rem;">{{ config.header.prev.data }}</div>
 					</div>
 					<div v-else>
 						<van-icon class-prefix="iconfont" size="20" name="zuojiantouxiangzuofanhuimianxing" slot="icon"  color="#ddd"/>
-						<p style="color:#ddd">到顶了</p>
+						<!-- <p style="color:#ddd">到顶了</p> -->
+						<div style="color:#1aad19;line-height:1rem;">到顶了</div>
 					</div>
 				</div>
 			</div>
@@ -17,11 +19,13 @@
 				<div style="padding-top:5px;" >
 					<div v-if="!config.header.middle.noData">
 						<van-icon class-prefix="iconfont" size="20" name="gouxuan4" slot="icon"  color="#1aad19"/>
-						<p style="color:#1aad19">{{ config.header.middle.data }}</p>
+						<!-- <p style="color:#1aad19">{{ config.header.middle.data }}</p> -->
+						<div style="color:#1aad19;line-height:1rem;">{{ config.header.middle.data }}</div>
 					</div>
 					<div v-else>
 						<van-icon class-prefix="iconfont" size="20" name="gouxuan4" slot="icon"  color="#ddd"/>
-						<p style="color:#ddd">未选择</p>
+						<!-- <p style="color:#ddd">未选择</p> -->
+						<div style="color:#1aad19;line-height:1rem;">未选择</div>
 					</div>
 				</div>
 			</div>
@@ -29,11 +33,13 @@
 				<div style=" padding-top:5px;" @click="headerChange('next')">
 					<div v-if="!config.header.next.noData">
 						<van-icon class-prefix="iconfont" size="20" name="youjiantouxiangyouqianwangmianxing" slot="icon"  color="#1aad19"/>
-						<p style="color:#1aad19">{{ config.header.next.data }}</p>
+						<!-- <p style="color:#1aad19">{{ config.header.next.data }}</p> -->
+						<div style="color:#1aad19;line-height:1rem;">{{ config.header.next.data }}</div>
 					</div>
 					<div v-else>
 						<van-icon class-prefix="iconfont" size="20" name="youjiantouxiangyouqianwangmianxing" slot="icon"  color="#ddd"/>
-						<p style="color:#ddd">到底了</p>
+						<!-- <p style="color:#ddd">到底了</p> -->
+						<div style="color:#1aad19;line-height:1rem;">到底了</div>
 					</div>
 				</div>
 			</div>

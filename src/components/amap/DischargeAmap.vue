@@ -10,39 +10,40 @@
 				</vxe-toolbar>
 				<vxe-table :data.sync="config.table.top.list" ref="topXTable" :max-height="config.table.top.maxHeight" border :loading="config.table.top.loading" :radio-config="{ trigger: 'row', highlight: true }" size="mini"@radio-change="radioChange" >
 					<vxe-table-column type="radio" title="单选" width="60" fixed="left"></vxe-table-column>
-					<vxe-table-column prop="PListNo" label="装货单号" width="100" fixed="left"></vxe-table-column>
-					<vxe-table-column prop="CarCode" label="车辆编号" width="100"></vxe-table-column>
-					<vxe-table-column prop="CarPId" label="司机编号" width="100"></vxe-table-column>
-					<vxe-table-column prop="TVolume" label="体积" width="100"></vxe-table-column>
-					<vxe-table-column prop="To5Area" label="折五面积" width="100"></vxe-table-column>
-					<vxe-table-column prop="TWeight" label="重量" width="100"></vxe-table-column>
-					<vxe-table-column prop="CusNames" label="拼车客户" width="350" show-overflow></vxe-table-column>
+					<vxe-table-column field="PListNo" title="装货单号" width="100" fixed="left"></vxe-table-column>
+					<vxe-table-column field="CarCode" title="车辆编号" width="100"></vxe-table-column>
+					<vxe-table-column field="CarPId" title="司机编号" width="100"></vxe-table-column>
+					<vxe-table-column field="TVolume" title="体积" width="100"></vxe-table-column>
+					<vxe-table-column field="To5Area" title="折五面积" width="100"></vxe-table-column>
+					<vxe-table-column field="TWeight" title="重量" width="100"></vxe-table-column>
+					<vxe-table-column field="CusNames" title="拼车客户" width="350" show-overflow></vxe-table-column>
 				</vxe-table>
 			</div>
 			<div id="rightMiddle">
 				<vxe-table :data.sync="config.table.middle.list" ref="middleXTable" :max-height="config.table.middle.maxHeight" border highlight-current-row size="mini" @current-change="middleCurrentChange">
-					<vxe-table-column prop="CusSubName" label="送货公司" width="120" show-overflow fixed="left"></vxe-table-column>
-					<vxe-table-column prop="TVolume" label="体积" width="100"></vxe-table-column>
-					<vxe-table-column prop="To5Area" label="折五面积" width="100"></vxe-table-column>
-					<vxe-table-column prop="TWeight" label="重量" width="100"></vxe-table-column>
-					<vxe-table-column prop="TransC" label="运费" width="100"></vxe-table-column>
-					<vxe-table-column prop="RouteName" label="路线" width="100"></vxe-table-column>
-					<vxe-table-column prop="AreaName" label="地区" width="100"></vxe-table-column>
-					<vxe-table-column prop="SubDNAddress" label="送货地址" width="350" show-overflow></vxe-table-column>
+					<vxe-table-column field="CusSubName" title="送货公司" width="120" show-overflow fixed="left"></vxe-table-column>
+					<vxe-table-column field="TVolume" title="体积" width="100"></vxe-table-column>
+					<vxe-table-column field="To5Area" title="折五面积" width="100"></vxe-table-column>
+					<vxe-table-column field="TWeight" title="重量" width="100"></vxe-table-column>
+					<vxe-table-column field="TransC" title="运费" width="100"></vxe-table-column>
+					<vxe-table-column field="RouteName" title="路线" width="100"></vxe-table-column>
+					<vxe-table-column field="AreaName" title="地区" width="100"></vxe-table-column>
+					<vxe-table-column field="SubDNAddress" title="送货地址" width="350" show-overflow></vxe-table-column>
 				</vxe-table>
 			</div>
 			<div id="rightButtom">
 				<vxe-table :data.sync="config.table.buttom.list" ref="buttomXTable" :max-height="config.table.buttom.maxHeight" border highlight-current-row size="mini" :show-footer="true" :footer-method="footerMethod" :footer-cell-class-name="footerCellClassName" @current-change="bottomCurrentChange">
-					<vxe-table-column prop="CusSubName" label="送货公司" width="120" show-overflow fixed="left"></vxe-table-column>
-					<vxe-table-column prop="TVolume" label="体积" width="100"></vxe-table-column>
-					<vxe-table-column prop="To5Area" label="折五面积" width="100"></vxe-table-column>
-					<vxe-table-column prop="TWeight" label="重量" width="100"></vxe-table-column>
-					<vxe-table-column prop="TransC" label="运费" width="100"></vxe-table-column>
-					<vxe-table-column prop="RouteName" label="路线" width="100"></vxe-table-column>
-					<vxe-table-column prop="AreaName" label="地区" width="100"></vxe-table-column>
-					<vxe-table-column prop="SubDNAddress" label="送货地址" width="350" show-overflow></vxe-table-column>
+					<vxe-table-column field="CusSubName" title="送货公司" width="120" show-overflow fixed="left"></vxe-table-column>
+					<vxe-table-column field="TVolume" title="体积" width="100"></vxe-table-column>
+					<vxe-table-column field="To5Area" title="折五面积" width="100"></vxe-table-column>
+					<vxe-table-column field="TWeight" title="重量" width="100"></vxe-table-column>
+					<vxe-table-column field="TransC" title="运费" width="100"></vxe-table-column>
+					<vxe-table-column field="RouteName" title="路线" width="100"></vxe-table-column>
+					<vxe-table-column field="AreaName" title="地区" width="100"></vxe-table-column>
+					<vxe-table-column field="SubDNAddress" title="送货地址" width="350" show-overflow></vxe-table-column>
 				</vxe-table>
 			</div>
+			<!-- <div id="info"></div> -->
 		</div>
 	</div>
 </template>

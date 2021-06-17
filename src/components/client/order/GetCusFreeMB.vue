@@ -40,6 +40,12 @@
 						</div>
 					</div>
 					<div class="van-row van-row--flex van-row--justify-center">
+						<div class="van-col van-col--22">
+							规格:
+							<span style="color:#1da02b;">{{ item.GuiGe }}</span>
+						</div>
+					</div>
+					<div class="van-row van-row--flex van-row--justify-center">
 						<div class="van-col van-col--10">
 							送货数:
 							<span style="color:#1da02b;">{{ item.DeliQty }}</span>
