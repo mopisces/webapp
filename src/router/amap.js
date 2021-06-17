@@ -4,7 +4,8 @@ const getLocation  = () => import('@/components/amap/GetLocation');
 const distance     = () => import('@/components/amap/DistanceTest');
 /*排货地图功能*/
 const discharge    = () => import('@/components/amap/DischargeAmap');
-
+/*司机端获取定位地址*/
+const point    = () => import('@/components/amap/GetPoint');
 let amap = [
     {
         path : '/amap/discharge',
@@ -20,6 +21,11 @@ let amap = [
         path : '/amap/getLocation',
         component: getLocation,
         meta:{ title: '获取客户送货地址经纬度' }
+    },
+    {
+        path : '/amap/getPoint',
+        component: point,
+        meta:{ title: '司机端获取定位地址' }
     }
 ];
 

@@ -9,25 +9,25 @@
 				切刀数
 				<van-button plain type="info" size="small" @click="buildChart('切刀数(上刀)','刀数','qds1')">{{ updownInfo.qds1 }}</van-button>
 				<div style="width:100%;height:0.1rem"></div>
-				<van-button plain type="info" size="small" @click="buildChart('切刀数(上刀)','刀数','qds2')">{{ updownInfo.qds2 }}</van-button>
+				<van-button plain type="info" size="small" @click="buildChart('切刀数(下刀)','刀数','qds2')">{{ updownInfo.qds2 }}</van-button>
 			</div>
 			<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
 				生产刀数
 				<van-button plain type="info" size="small" @click="buildChart('生产刀数(上刀)','刀数','scds1')">{{ updownInfo.scds1 }}</van-button>
 				<div style="width:100%;height:0.1rem"></div>
-				<van-button plain type="info" size="small" @click="buildChart('生产刀数(上刀)','刀数','scds2')">{{ updownInfo.scds2 }}</van-button>
+				<van-button plain type="info" size="small" @click="buildChart('生产刀数(下刀)','刀数','scds2')">{{ updownInfo.scds2 }}</van-button>
 			</div>
 			<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
 				剩余刀数
 				<van-button plain type="info" size="small" @click="buildChart('剩余刀数(上刀)','刀数','syds1')">{{ updownInfo.syds1 }}</van-button>
 				<div style="width:100%;height:0.1rem"></div>
-				<van-button plain type="info" size="small" @click="buildChart('剩余刀数(上刀)','刀数','syds2')">{{ updownInfo.syds2 }}</van-button>
+				<van-button plain type="info" size="small" @click="buildChart('剩余刀数(下刀)','刀数','syds2')">{{ updownInfo.syds2 }}</van-button>
 			</div>
 			<div class="van-col van-col--6" style="text-align:center;border: 1px solid #ddd; ">
 				不良刀数
 				<van-button plain type="info" size="small" @click="buildChart('不良刀数(上刀)','刀数','blds1')">{{ updownInfo.blds1 }}</van-button>
 				<div style="width:100%;height:0.1rem"></div>
-				<van-button plain type="info" size="small" @click="buildChart('不良刀数(上刀)','刀数','blds2')">{{ updownInfo.blds2 }}</van-button>
+				<van-button plain type="info" size="small" @click="buildChart('不良刀数(下刀)','刀数','blds2')">{{ updownInfo.blds2 }}</van-button>
 			</div>
 			<div style="width:100%;height:0.1rem;"></div>
 			<table>
