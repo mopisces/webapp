@@ -58,6 +58,12 @@
 				刷新
 			</van-button>
 		</div>
+		<!--司机点击完成送货单-->
+		<div v-if=" field === 'finishDelivery' ">
+			<van-button plain hairline type="primary" size="small" @click="finishDelivery()">
+				完成送货
+			</van-button>
+		</div>
 		<!-- 导航模块 单选
 		<div v-if=" field === 'amapPDNCusRadio' ">
 			<van-radio-group v-model="selectNo">
@@ -168,6 +174,9 @@
 			},
 			amapPDNCusOperate(type){
 				this.$emit('on-custom-comp',{type:type,index:this.index,rowData:this.rowData});
+			},
+			finishDelivery(){
+				this.$emit('on-custom-comp',{rowData:this.rowData});
 			}
 		},
 		created(){

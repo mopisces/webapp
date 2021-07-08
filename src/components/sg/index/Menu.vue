@@ -7,6 +7,9 @@
 			<van-grid-item text="用户管理" to="/sg/user/index">
 				<van-icon slot="icon" name="friends-o" size="35" color="#1a991d"/>
 			</van-grid-item>
+			<van-grid-item text="生产进度" to="/sg/statistic/index">
+				<van-icon slot="icon" name="chart-trending-o" size="35" color="#1a991d"/>
+			</van-grid-item>
 		</van-grid>
 	</div>
 </template>

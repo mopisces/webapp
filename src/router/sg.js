@@ -18,7 +18,8 @@ const webSocket = () => import('@/components/sg/monitor/WebSocket');
 const alter    = () => import('@/components/sg/alter/Index');
 //用户管理
 const user     = () => import('@/components/sg/user/Index');
-
+//生产进度
+const statistic = () => import('@/components/sg/statistic/Index');
 const sg = [
     {
         path:'/sg/login',
@@ -71,6 +72,11 @@ const sg = [
                 meta : { title: '菜单页面', sgLogin:true },
                 component: alter,
             },
+            {
+                path : 'statistic/index',
+                meta : { title: '生产进度', sgLogin:true },
+                component: statistic,
+            }
         ]
     }
 ]; 

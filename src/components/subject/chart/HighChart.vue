@@ -204,6 +204,65 @@
 							name : '',
 							data : this.lineTimeSeriesData(this.options.data,this.options.categories)
 						}]
+					},
+					sgStatistic:{
+						chart:{
+							type : 'column',
+							panning: true,
+							pinchType: 'x',
+							zoomType:'x',
+							resetZoomButton: {
+								position: {
+									y: -1000
+								}
+							}
+						},
+						title: {
+				            text:this.getSgStatisYAxisTitle( this.options.chartProperties )
+				        },
+				        xAxis: {
+				            categories: this.options.categories,
+				        },
+				        yAxis:{
+							min : 0,
+							title : {
+								text : null
+							},
+							stackLabels: {
+								enabled: false,
+								overflow:'none',
+								verticalAlign:'middle',
+								textAlign:'center',
+								rotation:270,
+								//x:5,
+								color:'#39ed0c'
+							},
+						},
+				        tooltip: {
+							followTouchMove: false,
+							formatter: function () {
+					            var str = '';
+					            this.points.map(function(item,idx){
+					            	if( idx == 0 ){
+					            		str += '<b>' + item.x + '</b><br/>';
+					            		str += '<b>合计:</b>' + item.total + '<br/>';
+					            	}
+					            	str += '<b>' + item.series.name + ':' + item.y + '</b><br/>';
+					            });
+					            return str
+					        },
+					        shared: true
+						},
+				        plotOptions: {
+				        	column: {
+				        		stacking: 'normal',
+				        		dataLabels: {
+				        			enabled: false,
+				        			
+				        		}
+				        	},
+				        },
+				        series:this.options.series
 					}
 				}
 			}
@@ -230,12 +289,24 @@
 					case 'lineTimeSeries' : 
 						chartOptions = this.baseOptions.lineTimeSeries;
 						break;
+					case 'sgStatistic':
+						chartOptions = this.baseOptions.sgStatistic;
+						break;
 					default : 
 						return ;
+				}
+				if( this.options.chartType == 'sgStatistic' ){
+					this.chart = new Highcharts.chart('highcharts-container',chartOptions,function(c){
+						c.xAxis[0].setExtremes(0, 5);
+					});
+					return true;
 				}
 				this.chart = new Highcharts.chart('highcharts-container',chartOptions);
 			},
 			changePieData( data, categories ){
+				if( data == undefined ){
+					return false
+				}
 				let pieData = [];
 				data.forEach((item,index)=>{
 					pieData[ index ] = { name: categories[index], y : item };
@@ -243,6 +314,9 @@
 				return pieData;
 			},
 			changePie3dData( data, categories ){
+				if( data == undefined ){
+					return false
+				}
 				let pie3dData = [];
 				data.forEach((item,index)=>{
 					pie3dData[ index ] = [categories[index], item ];
@@ -250,11 +324,62 @@
 				return pie3dData;
 			},
 			lineTimeSeriesData( data, categories ){
+				if( data == undefined ){
+					return false
+				}
 				let lineTimeSeriesData = [];
 				data.forEach((item,index)=>{
 					lineTimeSeriesData[ index ] = [categories[index], item ];
 				});
 				return lineTimeSeriesData;
+			},
+			getSgStatisYAxisTitle( cate ){
+				if( this.options.chartType != 'sgStatistic' ){
+					return ;
+				}
+				switch( cate ){
+					case 'sumArea':
+				        return '单位:平方米';
+				    	break;
+				   	case 'sumLen':
+				       return '单位:米';
+				    	break;
+				    case 'avgSpeed':
+				        return '平均车速';
+				    	break;
+				    case 'sumLoss':
+				        return '单位:平方米';
+				    	break;
+				    case 'sumStops':
+				        return '单位:次';
+				    	break;
+				    default:
+				    	return '单位:平方米';
+				}
+			},
+			getSgStatisSeries( cate ){
+				if( this.options.chartType != 'sgStatistic' ){
+					return ;
+				}
+				switch( cate ){
+					case 'sumArea':
+				        return '总面积';
+				    	break;
+				   	case 'sumLen':
+				       return '总长度';
+				    	break;
+				    case 'avgSpeed':
+				        return '平均车速';
+				    	break;
+				    case 'sumLoss':
+				        return '损耗面积';
+				    	break;
+				    case 'sumStops':
+				        return '停次';
+				    	break;
+				    default:
+				    	return '总面积';
+				}
 			}
 		},
 		created(){
