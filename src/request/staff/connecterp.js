@@ -1,5 +1,6 @@
 import QS from 'qs';
 import { Dialog, Toast } from 'vant';
+/*import { getDomain } from '@/request/domain';*/
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 axios.interceptors.request.use(
 	config => {
@@ -25,6 +26,19 @@ axios.interceptors.response.use(
 		return Promise.reject(error);
 	}
 );
+
+/*var erpHttp = async function (url,params)
+{
+	if( !window.domainInit ) await getDomain();
+	return new Promise((resolve,reject)=>{
+		axios.post(url,QS.stringify(params)).then(response=>{
+			resolve(response.data);
+		}).catch(error=>{
+			reject(error.data);
+		})
+	})
+}*/
+
 const connecterp = {
 	/**
 	 * [calBdQuotaInfo 订单试算]

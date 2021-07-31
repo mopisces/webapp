@@ -6,6 +6,9 @@ const distance     = () => import('@/components/amap/DistanceTest');
 const discharge    = () => import('@/components/amap/DischargeAmap');
 /*司机端获取定位地址*/
 const point    = () => import('@/components/amap/GetPoint');
+/*排货地图点标记*/
+const mark = () => import('@/components/amap/MarkAmap');
+
 let amap = [
     {
         path : '/amap/discharge',
@@ -26,6 +29,11 @@ let amap = [
         path : '/amap/getPoint',
         component: point,
         meta:{ title: '司机端获取定位地址' }
+    },
+    {
+        path : '/amap/mark',
+        component: mark,
+        meta:{ title: '排货地图点标记' }
     }
 ];
 
