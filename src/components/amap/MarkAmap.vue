@@ -7,6 +7,16 @@
 				<div class="input-item-prepend"><span class="input-item-text">切换图</span></div>
 				<el-button type="success" @click="change">切换</el-button>
 			</div>
+			<label style='color:grey'>绘制线段</label>
+			<div class="input-item">
+				<div class="input-item-prepend"><span class="input-item-text">绘制线段</span></div>
+				<el-button type="success" @click="drawPolyline">绘制线段</el-button>
+			</div>
+			<label style='color:grey'>绘制区域</label>
+			<div class="input-item">
+				<div class="input-item-prepend"><span class="input-item-text">绘制区域</span></div>
+				<el-button type="success" @click="drawArea">绘制</el-button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -37,6 +47,7 @@
 				map:{},        //地图实例
 				heatMap:{},    //热力图实例
 				markMap:{},    //标记图实例
+				mouseTool:null   //鼠标工具实例
 			}
 		},
 		methods:{
@@ -56,7 +67,7 @@
 						}
 					);
 					self.heatMap = new AMap.Heatmap(self.map,{
-						radius: 25,
+						radius: 40,
 						opacity: [0, 0.8]
 					});
 					self.heatMap.setDataSet({
@@ -103,7 +114,12 @@
 			    	marker.setPosition(e.data.lnglat);
 			    	marker.setLabel({content: e.data.name});
 			    });
+
+			    self.markMap.on('dblclick',(e)=>{
+			    	console.log(e)
+			    });
 			},
+
 			setElementSize(){
 				console.log(document.documentElement.clientHeight)
 				console.log(document.documentElement.clientWidth)
@@ -126,6 +142,76 @@
 			},
 			random(){
 				return Math.floor(Math.random() * (3 - 0)) + 0;
+			},
+			drawPolyline(){
+				if( !this.mouseTool ) this.mouseTool = new AMap.MouseTool(this.map);
+				this.mouseTool.polyline({
+			 		strokeColor: "#3366FF", 
+					strokeOpacity: 1,
+					strokeWeight: 6,
+					// 线样式还支持 'dashed'
+					strokeStyle: "solid",
+					// strokeStyle是dashed时有效
+					// strokeDasharray: [10, 5],
+				});
+				this.mouseTool.on('draw', (e)=>{
+					//console.log('覆盖物对象绘制完成');
+					let point = [];
+					let drawPath = e.obj.getPath();
+					drawPath.forEach((item,idx)=>{
+						point.push({lat:item.lat,lng:item.lng})
+					});
+					console.log(point);
+
+					/*let bounds = e.obj.getBounds();
+					console.log(bounds)*/
+				});
+			},
+			drawArea(){
+				let res = [
+					{
+						color:'#FF33FF',
+						data:[
+							[116.453322, 39.920255],
+							[116.460703, 39.897555],
+							[116.452292, 39.892353],
+							[116.439846, 39.891365],
+							[116.453322, 39.920255]
+						]
+					},
+					{
+						color:'green',
+						data:[
+							[116.403322, 39.920255],
+							[116.410703, 39.897555],
+							[116.402292, 39.892353],
+							[116.389846, 39.891365],
+							[116.403322, 39.920255]
+						]
+					},
+					{
+						color:'yellow',
+						data:[
+							[116.353322, 39.820255],
+							[116.360703, 39.797555],
+							[116.352292, 39.792353],
+							[116.339846, 39.791365],
+							[116.353322, 39.820255]
+						]
+					},
+				];
+				let line = [];
+				for(var i = 0; i<res.length; i++){
+					line.push(new AMap.Polyline({
+						path: res[i].data,
+						strokeColor: res[i].color,
+						strokeWeight: 6,
+						strokeOpacity: 0.9,
+						zIndex: 50,
+						bubble: true,
+					}))
+				}
+				this.map.add(line)
 			}
 		},
 		created(){

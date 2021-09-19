@@ -78,6 +78,12 @@
 		{"field":"WorkGroupN","title":"班组名称","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"PSLength","title":"米数","width":"135","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
+	"saleStatisOrder":[
+		{"field":"FluteName","title":"类别","width":"80","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"TLength","title":"总长","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TOrdArea","title":"总面积","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TAmt","title":"总金额","width":"120","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
 	"wGetPOIn":[
 		{"field":"PaperCode","title":"纸类","width":"40","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
 		{"field":"PaperWidth","title":"门幅","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},

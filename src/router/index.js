@@ -2,9 +2,8 @@ import store from '@/store';
 import staff from './staff';
 import client from './client';
 import admin from './admin';
-import sg from './sg';
-import group from './group';
-import amap from './amap';
+/*import group from './group';*/
+/*import amap from './amap';*/
 Vue.use(VueRouter);
 //404
 const error404    = () => import('@/components/common/404');
@@ -80,9 +79,8 @@ let routes = [
     ...staff,
     ...client,
     ...admin,
-    ...sg,
-    ...group,
-    ...amap,
+    /*...group,*/
+    /*...amap,*/
     {
         path:'*',
         component : error404,
@@ -106,12 +104,6 @@ router.beforeEach((to, from, next) => {
         store.commit('client/setTabbarActive','group');
     }else{
         store.commit('client/setTabbarActive','menu');
-    }
-    if( to.meta.sgLogin && ( !sessionStorage.getItem('jpdn-sg-token') ) ){
-        next({
-            replace:true,
-            name:'sgLogin',
-        });
     }
     if( to.meta.needLogin && ( !sessionStorage.getItem('jpdn-client-isLogin') && to.params ) ){
         next({
