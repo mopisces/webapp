@@ -10,7 +10,7 @@
 		<van-field label="剥纸重量" v-model="formData.stockOutBzwt" type="number" input-align="center"></van-field>
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="formData.stockOutOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="出库日期">
 		</new-time-picker>
-		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:55px;" @click="stockOutConfirm()" :disabled="config.button.disabled">
+		<van-button type="primary" size="normal" style="width:100%;" @click="stockOutConfirm()" :disabled="config.button.disabled">
 			出库
 		</van-button>
 	</div>

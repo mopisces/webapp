@@ -247,6 +247,10 @@
 		methods:{
 			getConfig( goodsId ){
 				let self = this;
+				
+				this.config.radioData.lineBall = [];
+				this.config.radioData.cusInfo = [];
+
 				this.$request.client.groupBuying.getSConfig( goodsId ).then(res=>{
 					if( res.errorCode == '20260' ){
 						Dialog.alert({

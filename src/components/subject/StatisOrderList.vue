@@ -116,6 +116,8 @@
 					dateType  : this.filterForm.dateType,
 					beginDate : this.filterForm.beginDate,
 					endDate   : this.filterForm.endDate,
+					remainDay : this.filterForm.remainDay ? this.filterForm.remainDay : '',
+					diffDay   : this.filterForm.diffDay ? this.filterForm.diffDay : ''
 				};
 				if( this.filterForm.limitFactor ){
 					data.limitFactor = this.filterForm.limitFactor;

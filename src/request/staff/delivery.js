@@ -15,7 +15,7 @@ const delivery = {
 		let postData = {
 			delivery_begin_date:data.beginDate,
 			delivery_end_date:data.endDate,
-			delivery_cus_id:data.cusId
+			delivery_cus_id:data.cusName
 		};
 		return post( window.jpdn_domain_staff + 'delivery/listInfo',postData);
 	},

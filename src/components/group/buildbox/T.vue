@@ -158,6 +158,9 @@
 		methods:{
 			getConfig( goodsId ){
 				let self = this;
+
+				this.config.radioData.address = [];
+
 				this.$request.client.groupBuying.getTConfig( goodsId ).then(res=>{
 					if( res.errorCode == '20260' ){
 						Dialog.alert({

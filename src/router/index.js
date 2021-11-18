@@ -2,7 +2,7 @@ import store from '@/store';
 import staff from './staff';
 import client from './client';
 import admin from './admin';
-/*import group from './group';*/
+import group from './group';
 /*import amap from './amap';*/
 Vue.use(VueRouter);
 //404
@@ -79,7 +79,7 @@ let routes = [
     ...staff,
     ...client,
     ...admin,
-    /*...group,*/
+    ...group,
     /*...amap,*/
     {
         path:'*',

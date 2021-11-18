@@ -1,7 +1,7 @@
 {
-	"backStage":"http://localhost:1110/",
-	"pageDomain":"http://localhost:8081/",
+	"backStage":"http://localhost:1105/",
+	"pageDomain":"http://localhost:8080/",
 	"sgDomain":"",
-	"erpDomain":"http://localhost:38081/datasnap/rest/TServerMethods1",
+	"erpDomain":"http://localhost:38081/datasnap/rest/TServerMethods1/",
 	"demandType":""
 }

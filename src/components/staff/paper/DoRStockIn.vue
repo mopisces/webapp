@@ -8,7 +8,7 @@
 		<van-field label="回仓重量" type="number" v-model="formData.inWeight" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error"></van-field>
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="formData.inOpTime" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="入库日期">
 		</new-time-picker>
-		<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:100px;" @click="stockInConfirm()" :disabled="config.button.disabled">入库</van-button>
+		<van-button type="primary" size="normal" style="width:100%;" @click="stockInConfirm()" :disabled="config.button.disabled">入库</van-button>
 	</div>
 </template>
 <script>

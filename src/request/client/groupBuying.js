@@ -149,6 +149,7 @@ const groupBuying = {
 			delivery_date     : data.date,
 			delivery_remark   : data.deliveryRemark,
 			production_remark : data.productionRemark,
+			pon_name          : data.poN
 		};
 		return post( window.jpdn_domain_client + 'taoBaoGroupBooking', postData);
 	},

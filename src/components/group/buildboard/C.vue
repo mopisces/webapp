@@ -293,6 +293,13 @@
 		methods:{
 			getConfig( goodsId ){
 				let self = this;
+				
+				this.config.radioData.boxType = [];
+				this.config.radioData.lineBall = [];
+				this.config.radioData.tonLen = [];
+				this.config.radioData.uLen = [];
+				this.config.radioData.address = [];
+
 				this.$request.client.groupBuying.getCConfig( goodsId ).then(res=>{
 					if( res.errorCode == '20260' ){
 						Dialog.alert({
