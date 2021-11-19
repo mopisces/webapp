@@ -9,3 +9,14 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^(.*)$ index.html [L]
 </IfModule>
+<IfModule mod_headers.c>
+	<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|htc)$">
+		Header set Cache-Control "max-age=2592000, public"
+	</FilesMatch>
+	<FilesMatch "\.(xml|txt)$">
+		Header set Cache-Control "max-age=604800, public"
+	</FilesMatch>
+	<FilesMatch "\.(html|htm|php|shtml)$">
+		Header set Cache-Control "max-age=86400"
+	</FilesMatch>
+</IfModule>

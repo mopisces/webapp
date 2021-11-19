@@ -113,6 +113,8 @@
 		},
 		methods:{
 			getConfig( fastOrderId ){
+				this.config.radioData.address = [];
+				this.config.radioData.productId = [];
 				let self = this;
 				this.$request.client.orderBooking.xBuildConfig( fastOrderId ).then(res=>{
 					res.result.cus_info.forEach((item,index)=>{

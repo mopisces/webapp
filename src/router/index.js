@@ -97,6 +97,9 @@ let router = new VueRouter({
 router.beforeEach((to, from, next) => {
     store.commit('client/setIsLogin',sessionStorage.getItem('jpdn-client-isLogin'));
     window.scrollTo(0,0);
+    if (document.URL.indexOf('?version=') < 0) {
+        window.location.href = to.fullPath + '?version=1.0.0'
+    }
     if( to.meta.title ){
         document.title = to.meta.title;
     }

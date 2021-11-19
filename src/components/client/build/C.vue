@@ -33,8 +33,8 @@
 				<van-icon name="question-o" @click="clickQuestion(1)"/>
 			</div>
 		</div>
-		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @lenConfirm="calcBdLW()"></popup-select>
-		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @lenConfirm="calcBdLW()"></popup-select>
+		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @lenConfirm="calcBdLW()" v-if="config.showTonLen"></popup-select>
+		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @lenConfirm="calcBdLW()" v-if="config.showULen"></popup-select>
 		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
 		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
 		<!-- <div class="van-cell van-field">
@@ -74,7 +74,7 @@
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
 		<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
 		<div style="width:100%;height:3.125rem;"></div>
-		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="false"></build-sku>
+		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="false" :showULen="config.showULen" :showTonLen="config.showTonLen"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
@@ -150,7 +150,9 @@
 					isFastBuild : false,
 					button:{
 						disabled : true
-					}
+					},
+					showTonLen:true,
+					showULen:true,
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -187,7 +189,8 @@
 					minArea     : '',
 					maxArea     : '',
 					lengthFCalc : '',
-					widthFCalc  : ''
+					widthFCalc  : '',
+					buildAutoGetTonLenAndULen:true,
 				},
 				rules:{
 					calcBdLW : {
@@ -334,8 +337,15 @@
 				});
 			},
 			getConfig( fastOrderId ){
+				this.config.radioData.material = [];
+				this.config.radioData.lineBall = [];
+				this.config.radioData.address = [];
+				this.config.radioData.boxType = [];
+				this.config.radioData.tonLen = [];
+				this.config.radioData.uLen = [];
 				let self = this;
 				this.$request.client.orderBooking.cBuildConfig( fastOrderId ).then(res=>{
+					self.pageConfig.buildAutoGetTonLenAndULen = res.result.config.BuildAutoGetTonLenAndULen == 1 ? true : false;
 					self.pageConfig.minBoxH = res.result.config.BuildMinBoxH;
 					self.pageConfig.maxBoxH = res.result.config.BuildMaxBoxH;
 					self.pageConfig.minBoxL = res.result.config.BuildMinBoxL;
@@ -373,6 +383,12 @@
 					res.result.config.BuildULen.forEach((item,index)=>{
 						self.config.radioData.uLen.push({ value: item, text: item });
 					});
+					if( res.result.config.BuildTonLen.length == 1 && res.result.config.BuildTonLen[0] == 0 ){
+						self.config.showTonLen = false;
+					}
+					if( res.result.config.BuildULen.length == 1 && res.result.config.BuildULen[0] == 0 ){
+						self.config.showULen = false;
+					}
 
 					if( self.config.isFastBuild ){
 						self.formData.materialType = res.result.fast_order_booking.BoardId;
@@ -516,6 +532,12 @@
 				}
 			},
 			getClackAdjust( materialType ){
+				if( !this.pageConfig.buildAutoGetTonLenAndULen ){
+					this.formData.tonLen = this.config.radioData.tonLen[0].value;
+					this.formData.uLen = this.config.radioData.uLen[0].value;
+					this.calcBdLW();
+					return true;
+				}
 				let self = this;
 				this.$request.client.orderBooking.getClackAdjust( materialType ).then(res=>{
 					let string = '';

@@ -189,6 +189,9 @@
 		},
 		methods:{
 			getConfig( fastOrderId ){
+				this.config.radioData.material = [];
+				this.config.radioData.lineBall = [];
+				this.config.radioData.cusInfo = [];
 				let self = this;
 				this.$request.client.orderBooking.sBuildConfig( fastOrderId ).then(res=>{
 					if( res.result.board_select_list.length == 0 ){

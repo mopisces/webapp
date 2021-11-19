@@ -42,8 +42,8 @@
 				</div>
 			</div>	
 		</van-field>
-		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @lenConfirm="calcBdLW()"></popup-select>
-		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @lenConfirm="calcBdLW()"></popup-select>
+		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @lenConfirm="calcBdLW()" v-if="config.showTonLen"></popup-select>
+		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @lenConfirm="calcBdLW()" v-if="config.showULen"></popup-select>
 		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
 		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
 		<van-field label="纸板规格(mm)">
@@ -84,7 +84,7 @@
 				</template>
 			</div>
 		</van-submit-bar>
-		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="true"></build-sku>
+		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="true" :showULen="config.showULen" :showTonLen="config.showTonLen"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
 	</div>
 </template>
@@ -156,7 +156,9 @@
 						isSuccess  : false,
 						cusOrderId : '',
 						isGroup    : false
-					}
+					},
+					showTonLen:true,
+					showULen:true
 				},
 				cardInfo:{
 					boardId      : '',
@@ -209,7 +211,8 @@
 					minArea : '',
 					maxArea : '',
 					lengthF : '',
-					widthF  : ''
+					widthF  : '',
+					buildAutoGetTonLenAndULen:true,
 				},
 				helpInfo:{
 					sheetQuantities : '',
@@ -312,6 +315,7 @@
 					if( res.result.page_config.UseAliPay == 1 || res.result.page_config.UseWxPay == 1 ){
 						self.config.result.isGroup = true;
 					}
+					self.pageConfig.buildAutoGetTonLenAndULen = res.result.page_config.BuildAutoGetTonLenAndULen == 1 ? true : false;
 					self.pageConfig.minDate = res.result.page_config.BuildMinDate;
 					self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
 					self.pageConfig.minBoxL = res.result.page_config.BuildMinBoxL;
@@ -346,6 +350,12 @@
 					res.result.page_config.BuildULen.forEach((item,index)=>{
 						self.config.radioData.uLen.push({ value : item, text: '' })
 					});
+					if( res.result.page_config.BuildTonLen.length == 1 && res.result.page_config.BuildTonLen[0] == 0 ){
+						self.config.showTonLen = false;
+					}
+					if( res.result.page_config.BuildULen.length == 1 && res.result.page_config.BuildULen[0] == 0 ){
+						self.config.showULen = false;
+					}
 					res.result.box_type_available.forEach((item,index)=>{
 						self.config.radioData.boxType.push({ value : item.BoxId, text:item.BoxName, lengthF:item.LengthF, widthF:item.WidthF });
 					});
@@ -364,6 +374,10 @@
 				});
 			},
 			getBoxFormula( boxType ){
+				if( !this.pageConfig.buildAutoGetTonLenAndULen ){
+					this.formData.uLen = this.config.radioData.uLen[0].value;
+					this.formData.tonLen = this.config.radioData.tonLen[0].value;
+				}
 				let self = this;
 				this.$request.client.groupBuying.getBoxFormula( boxType ).then(res=>{
 					self.formData.lengthF    = res.result.LengthF;

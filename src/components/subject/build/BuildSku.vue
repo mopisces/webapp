@@ -13,8 +13,8 @@
 		<template v-if=" orderType == 'c' ">
 			<van-field :value="orderInfo.boxType" label="箱型" readonly/>
 			<van-field :value="orderInfo.boxLength + 'x' +  orderInfo.boxWidth + 'x' + orderInfo.boxHeight" label="纸箱规格(mm)" readonly/>
-			<van-field :value="orderInfo.tonLen" label="箱舌(mm)" readonly/>
-			<van-field :value="orderInfo.uLen" label="封箱调整(mm)" readonly/>
+			<van-field :value="orderInfo.tonLen" label="箱舌(mm)" readonly v-if="showTonLen"/>
+			<van-field :value="orderInfo.uLen" label="封箱调整(mm)" readonly v-if="showULen"/>
 			<van-field :value="orderInfo.length + 'x' + orderInfo.width" label="纸板规格(mm)" readonly/>
 			<van-field :value="orderInfo.lineBallInfo" label="压型名称" readonly/>
 			<van-field :value="orderInfo.bdMultiple" label="张数" readonly/>
@@ -60,7 +60,27 @@
 			[Popup.name]: Popup,
 			[Field.name]: Field,
 		},
-		props:['skuShow','orderInfo','orderType','isGroup'],
+		//props:['skuShow','orderInfo','orderType','isGroup'],
+		props:{
+			skuShow:{
+				required:true,
+			},
+			orderInfo:{
+				required:true,
+			},
+			orderType:{
+				required:true,
+			},
+			isGroup:{
+				required:true,
+			},
+			showULen:{
+				default:true
+			},
+			showTonLen:{
+				default:true
+			}
+		},
 		data(){
 			return {
 				show:this.skuShow
