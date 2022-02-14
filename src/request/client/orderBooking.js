@@ -30,7 +30,11 @@ const orderBooking = {
 			simple_delivery_address  : data.address,
 			simple_delivery_date     : data.date,
 			simple_delivery_remark   : data.deliveryRemark,
-			simple_production_remark : data.productionRemark
+			simple_production_remark : data.productionRemark,
+			simple_is_calc : data.isCalc,
+			simple_is_edge : data.isEdge == '净片' ? 0 : 1,
+			simple_dOrdPrice: data.dOrdPrice,
+			simple_dAmt : data.dAmt
 		};
 		return post( window.jpdn_domain_client + 'checkBuildData', postData);
 	},
@@ -51,7 +55,11 @@ const orderBooking = {
 			simple_delivery_address  : data.address,
 			simple_delivery_date     : data.date,
 			simple_delivery_remark   : data.deliveryRemark,
-			simple_production_remark : data.productionRemark
+			simple_production_remark : data.productionRemark,
+			simple_is_calc : data.isCalc,
+			simple_is_edge : data.isEdge == '净片' ? 0 : 1,
+			simple_dOrdPrice: data.dOrdPrice,
+			simple_dAmt : data.dAmt
 		};
 		return post( window.jpdn_domain_client + 'simpleSave', postData)
 	},
@@ -131,7 +139,11 @@ const orderBooking = {
 			delivery_address      : data.address,
 			delivery_date         : data.date,
 			delivery_remark       : data.deliveryRemark,
-			production_remark     : data.productionRemark
+			production_remark     : data.productionRemark,
+			is_calc : data.isCalc,
+			is_edge : data.isEdge == '净片' ? 0 : 1,
+			dOrdPrice: data.dOrdPrice,
+			dAmt : data.dAmt
 		};
 		return post( window.jpdn_domain_client + 'checkBuildData', postData);
 	},
@@ -154,7 +166,11 @@ const orderBooking = {
 			delivery_address      : data.address,
 			delivery_date         : data.date,
 			delivery_remark       : data.deliveryRemark,
-			production_remark     : data.productionRemark
+			production_remark     : data.productionRemark,
+			is_calc : data.isCalc,
+			is_edge : data.isEdge == '净片' ? 0 : 1,
+			dOrdPrice: data.dOrdPrice,
+			dAmt : data.dAmt
 		};
 		return post( window.jpdn_domain_client + 'boxPaperSave', postData);
 	},

@@ -44,7 +44,7 @@
 			</div>
 		</van-submit-bar>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="t" @saveOrder="saveOrder" :isGroup="true"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
+		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
 	</div>
 </template>
 <script>
@@ -96,7 +96,8 @@
 					},
 					result : {
 						show    : false,
-						isGroup :false
+						isGroup :false,
+						failMsg :'下单失败'
 					}
 				},
 				formData:{
@@ -260,6 +261,9 @@
 						Toast.success(res.result.order_id);
 						self.config.result.cusOrderId = res.result.order_id;
 						self.config.result.isSuccess  = true;
+					}else{
+						self.config.result.isSuccess  = false;
+						self.config.result.failMsg = res.msg;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{

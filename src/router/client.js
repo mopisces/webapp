@@ -17,6 +17,8 @@ const getOrdersP       = () => import('@/components/client/order/GetOrdersP');
 const deliveryDaily    = () => import('@/components/client/delivery/Index');
 //对账单
 const getCusFreeMB     = () => import('@/components/client/order/GetCusFreeMB');
+//对账单明细
+//const cusFreeMBTable     = () => import('@/components/client/order/CusFreeMBTable');
 //常用材质
 const lists            = () => import('@/components/client/usedboard/Lists');
 //常用订单
@@ -39,6 +41,10 @@ const payApply         = () => import('@/components/pay/order/Apply');
 const aliPay           = () => import('@/components/pay/order/AliPay');
 //支付宝returnUrl
 const aliReturnUrl     = () => import('@/components/pay/order/AliReturn');
+//简单纸板下单并支付
+const sBuildPay        = () => import('@/components/client/buildpay/S');
+//纸箱纸板下单并支付
+const cBuildPay        = () => import('@/components/client/buildpay/C');
 export const asyncClientRouterMap = [
     {
         path:'/client',
@@ -75,6 +81,11 @@ export const asyncClientRouterMap = [
                 meta: { title: '对账单', role:'对账单' },
                 component: getCusFreeMB,
             },
+            /*{
+                path:'order/cusFreeMBTable',
+                meta: { title: '对账单明细', role:'对账单2' },
+                component: cusFreeMBTable,
+            },*/
             {
                 path:'usedboard/lists',
                 meta: { title: '常用材质', role:'纸板下单' },
@@ -113,6 +124,18 @@ export const asyncClientRouterMap = [
                 meta: { title: '每日送货', role:'每日送货' },
                 component: deliveryDaily,
             },
+            {
+                path:'buildpay/s',
+                name: 'sBuildPay',
+                meta: { title: '简单纸板下单', role:'纸板支付下单' },
+                component: sBuildPay,
+            },
+            {
+                path:'buildpay/c',
+                name: 'cBuildPay',
+                meta: { title: '纸箱纸板下单', role:'纸板支付下单' },
+                component: cBuildPay,
+            }
         ]
     }
 ];

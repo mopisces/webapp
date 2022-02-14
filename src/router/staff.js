@@ -28,6 +28,8 @@ const paperDoRStockIn        = () => import('@/components/staff/paper/DoRStockIn
 const paperDirectInStock     = () => import('@/components/staff/paper/DirectInStock');
 //原纸库存
 const paperGetSStocks        = () => import('@/components/staff/paper/GetSStocks');
+//库存预计
+//const getExpectStock         = () => import('@/components/staff/paper/GetExpectStock');
 //客户信用余额
 const credWGetCusAmt         = () => import('@/components/staff/cred/WGetCusAmt');
 //扫描装货
@@ -123,6 +125,11 @@ export const asyncStaffRouterMap = [
                 meta: { title: '原纸库存', role:'原纸库存' },
                 component: paperGetSStocks,
             },
+            /*{
+                path:'paper/getExpectStock',
+                meta: { title: '库存预计', role:'库存预计' },
+                component: getExpectStock,
+            },*/
             {
                 path:'cred/wGetCusAmt',
                 meta: { title: '客户信用余额', role:'客户信用余额' },

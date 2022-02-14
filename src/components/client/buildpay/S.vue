@@ -39,7 +39,7 @@
 			<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
 		</template>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder" :isGroup="false"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
+		<build-result :resultShow.sync="config.result.show" :isGroup="true" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
 	</div>
 </template>
 <script>
@@ -143,7 +143,14 @@
 					saAreaAddArea    : null,
 					saAreaAddTrim    : null,
 					dOrdPrice        : null,   //计价价格 
+					dOriPrice        : null,   //市场价
 					dAmt             : null,   //金额
+					dSalesArea       : null,   //计价面积
+					dSLength         : null,   //销售长
+					dSWidth          : null,   //销售宽
+					dSquarePrice     : null,   //销售平方单价
+					dUnitPrice       : null,   //单价
+					quotaId          : null,   //
 				},
 				rules : {
 					cusOrderId : [
@@ -220,7 +227,16 @@
 					dOrdPrice:[
 						{ validator:(rule, value, callback, source, options)=>{
 							let errors;
-							if( this.formData.isCalc == 1 && Number(value) <= 0 ){
+							if( Number(value) <= 0 ){
+								errors = '请先试算获取计价价格';
+							}
+							callback(errors);
+						}}
+					],
+					dOriPrice : [
+						{ validator:(rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) <= 0 ){
 								errors = '请先试算获取计价价格';
 							}
 							callback(errors);
@@ -229,8 +245,62 @@
 					dAmt:[
 						{ validator:(rule, value, callback, source, options)=>{
 							let errors;
-							if( this.formData.isCalc == 1 && Number(value) <= 0 ){
+							if( Number(value) <= 0 ){
 								errors = '请先试算获取金额';
+							}
+							callback(errors);
+						}}
+					],
+					dSalesArea:[
+						{ validator:(rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) <= 0 ){
+								errors = '请先试算获取金额dSalesArea';
+							}
+							callback(errors);
+						}}
+					],
+					dSLength:[
+						{ validator:(rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) <= 0 ){
+								errors = '请先试算获取金额dSLength';
+							}
+							callback(errors);
+						}}
+					],
+					dSWidth:[
+						{ validator:(rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) <= 0 ){
+								errors = '请先试算获取金额dSWidth';
+							}
+							callback(errors);
+						}}
+					],
+					dSquarePrice:[
+						{ validator:(rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) <= 0 ){
+								errors = '请先试算获取金额dSquarePrice';
+							}
+							callback(errors);
+						}}
+					],
+					dUnitPrice:[
+						{ validator:(rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) <= 0 ){
+								errors = '请先试算获取金额dUnitPrice';
+							}
+							callback(errors);
+						}}
+					],
+					quotaId:[
+						{ validator:(rule, value, callback, source, options)=>{
+							let errors;
+							if( Number(value) <= 0 ){
+								errors = '请先试算获取金额QuotaId';
 							}
 							callback(errors);
 						}}
@@ -248,7 +318,7 @@
 				this.config.radioData.lineBall = [];
 				this.config.radioData.cusInfo = [];
 				let self = this;
-				this.$request.client.orderBooking.sBuildConfig( fastOrderId ).then(res=>{
+				this.$request.client.orderBookingPay.sBuildConfig( fastOrderId ).then(res=>{
 					if( res.result.board_select_list.length == 0 ){
 						Dialog.alert({
 							title   : '没有可选择的材质',
@@ -282,7 +352,7 @@
 					self.pageConfig.minLength = res.result.page_config.BuildMinLength;
 					self.pageConfig.maxWidth  = res.result.page_config.BuildMaxWidth;
 					self.pageConfig.minWidth  = res.result.page_config.BuildMinWidth;
-					self.formData.isCalc = res.result.page_config.BuildAddCalc;
+					self.formData.isCalc = 1;
 					self.formData.factoryId = res.result.page_config.FactoryId;
 					self.formData.cusId = res.result.page_config.CusId;
 					self.formData.saAreaAddArea = res.result.page_config.SaAreaAddArea == 1 ? true : false;
@@ -324,7 +394,6 @@
 						});
 						self.formData.lineBallInfo = res.result.page_config.DefaultScoreName ? res.result.page_config.DefaultScoreName : self.config.radioData.lineBall[0].value;
 					}
-
 					if( self.config.isFastBuild ){
 						self.formData.materialType    = res.result.fast_order_booking.BoardId;
 						self.formData.boardLength     = res.result.fast_order_booking.Length;
@@ -333,12 +402,6 @@
 						self.formData.address         = res.result.fast_order_booking.CusSubNo;
 						self.formData.deliveryRemark  = res.result.fast_order_booking.DNRemark;
 						self.formData.productionRemark= res.result.fast_order_booking.ProRemark;
-					}
-				}).then(()=>{
-					if( this.formData.isCalc == 0 ){
-						delete this.rules.dOrdPrice
-						delete this.rules.dAmt
-							this.validator = new schema(this.rules);
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -353,17 +416,13 @@
 					if( this.formData.isCalc == 1 ){
 						this.calcPriceInfo(false, true);
 					}
-				}).then(()=>{
-					if( this.formData.isCalc == 0 ){
-						this.checkData();
-					}
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
 			},
 			checkData(){
 				let self = this;
-				this.$request.client.orderBooking.sBuildCheck(this.formData).then(res=>{
+				this.$request.client.orderBookingPay.checkSBuild(this.formData).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.config.popup.sku.show = true;
 					}
@@ -413,10 +472,6 @@
 				}
 			},
 			saveOrder( data ){
-				if( this.formData.isCalc == 0 ){
-					this.buildSave( data );
-					return ;
-				}
 				let postData = {
 					strFactoryId : data.factoryId,
                     strCusId     : data.cusId,
@@ -449,6 +504,15 @@
 						let erpResult = JSON.parse( res.data.result[0] )[0];
 						data.dOrdPrice  = erpResult.dOrdPrice;
 						data.dAmt  = erpResult.dAmt
+						data.dOrdPrice  = erpResult.dOrdPrice;
+						data.dOriPrice = erpResult.dOriPrice;
+						data.dAmt  = erpResult.dAmt;
+						data.dUnitPrice  = erpResult.dUnitPrice;
+						data.dSquarePrice  = erpResult.dSquarePrice;
+						data.dSWidth  = erpResult.dSWidth;
+						data.dSLength  = erpResult.dSLength;
+						data.dSalesArea  = erpResult.dSalesArea;
+						data.quotaId  = erpResult.QuotaId;
 					}
 				}).then(()=>{
 					this.buildSave( data );
@@ -457,7 +521,7 @@
 			},
 			buildSave( data ){
 				let self = this;
-				this.$request.client.orderBooking.sBuildSave( data ).then(res=>{
+				this.$request.client.orderBookingPay.sBuildSave( data ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.config.result.isSuccess  = true;
 						self.config.result.cusOrderId = res.result.order_id;
@@ -483,9 +547,15 @@
 				this.formData.lineBallInfo = data[1];
 			},
 			calcPriceInfo( showToast = true, isCheck = false ){
-				if( this.formData.isCalc == 0 ) return true;
 				delete this.rules.dOrdPrice
+				delete this.rules.dOriPrice
 				delete this.rules.dAmt
+				delete this.rules.dUnitPrice
+				delete this.rules.dSquarePrice
+				delete this.rules.dSWidth
+				delete this.rules.dSLength
+				delete this.rules.dSalesArea
+				delete this.rules.quotaId
 				let calc = new schema(this.rules);
 				new schema(this.rules).validate(this.formData).then(()=>{
 					let data = {
@@ -520,7 +590,14 @@
 							let erpResult = JSON.parse( res.data.result[0] )[0];
 							if( !isCheck ){
 								self.formData.dOrdPrice  = erpResult.dOrdPrice;
+								self.formData.dOriPrice  = erpResult.dOriPrice;
 								self.formData.dAmt  = erpResult.dAmt;
+								self.formData.dUnitPrice  = erpResult.dUnitPrice;
+								self.formData.dSquarePrice  = erpResult.dSquarePrice;
+								self.formData.dSWidth  = erpResult.dSWidth;
+								self.formData.dSLength  = erpResult.dSLength;
+								self.formData.dSalesArea  = erpResult.dSalesArea;
+								self.formData.quotaId  = erpResult.QuotaId;
 								self.config.button.disabled = false;
 							}else{
 								if( self.formData.dOrdPrice != erpResult.dOrdPrice || self.formData.dAmt != erpResult.dAmt ){
@@ -529,7 +606,14 @@
 										message:'计价价格：' + self.formData.dOrdPrice + '=>' + erpResult.dOrdPrice + '\n' + '金额：' + self.formData.dAmt + '=>' + erpResult.dAmt
 									}).then(()=>{
 										self.formData.dOrdPrice  = erpResult.dOrdPrice;
+										self.formData.dOriPrice  = erpResult.dOriPrice;
 										self.formData.dAmt  = erpResult.dAmt;
+										self.formData.dUnitPrice  = erpResult.dUnitPrice;
+										self.formData.dSquarePrice  = erpResult.dSquarePrice;
+										self.formData.dSWidth  = erpResult.dSWidth;
+										self.formData.dSLength  = erpResult.dSLength;
+										self.formData.dSalesArea  = erpResult.dSalesArea;
+										self.formData.quotaId  = erpResult.QuotaId;
 										self.checkData();
 									});
 								}else{

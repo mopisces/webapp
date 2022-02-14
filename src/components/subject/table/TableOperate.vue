@@ -64,6 +64,12 @@
 				完成送货
 			</van-button>
 		</div>
+		<!-- 外部用户-对账单表格 -->
+		<div v-if=" field === 'cusFreeMBTable' ">
+			<van-button plain hairline type="primary" size="small" @click="cusFreeMBDetail()">
+				详细
+			</van-button>
+		</div>
 		<!-- 导航模块 单选
 		<div v-if=" field === 'amapPDNCusRadio' ">
 			<van-radio-group v-model="selectNo">
@@ -176,6 +182,9 @@
 				this.$emit('on-custom-comp',{type:type,index:this.index,rowData:this.rowData});
 			},
 			finishDelivery(){
+				this.$emit('on-custom-comp',{rowData:this.rowData});
+			},
+			cusFreeMBDetail(){
 				this.$emit('on-custom-comp',{rowData:this.rowData});
 			}
 		},

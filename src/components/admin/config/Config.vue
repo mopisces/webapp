@@ -35,7 +35,7 @@
 						</tr>
 						<template  v-if="!Number(form.Open80Port) && (Number(form.UseScan) || Number(form.UseWxPay))">
 							<tr>
-								<td style="width:150px;">FRP80端口的域名</td>
+								<td style="width:150px;">wechat-jssdk域名</td>
 								<td>
 									<el-input style="width: 200px;" v-model="form.Frp80PortDomain"></el-input>
 									<p class="info">作用于：内部扫码，团购微信支付</p>
@@ -67,6 +67,13 @@
 							<td style="width:150px;">erp接口地址</td>
 							<el-input style="width: 200px;" v-model="form.ErpApiPrefix"></el-input>
 							<p class="info">调用ERP接口使用</p>
+						</tr>
+						<tr>
+							<td style="width:150px;">多数据查询</td>
+							<td >
+								<el-checkbox v-model="form.OpenMultiQuery" label="多数据查询" border true-label="1" false-label="0"></el-checkbox>
+								<p class="info">高性能服务可开启</p>
+							</td>
 						</tr>
 						<tr>
 							<td>
@@ -455,6 +462,20 @@
 								<el-input style="width: 100px;" v-model="form.GetCusFreeMBMaxDate"></el-input>
 							</td>
 						</tr>
+						<tr v-if="form.OpenMultiQuery == 1">
+							<td style="width:150px;">对账单2</td>
+							<td>
+								默认日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.CusFreeMBTableBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.CusFreeMBTableEndDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.CusFreeMBTableMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.CusFreeMBTableMaxDate"></el-input>
+							</td>
+						</tr>
 						<tr>
 							<td style="width:150px;">每日订单是否显示金额</td>
 							<td>
@@ -574,6 +595,12 @@
 							<td>
 								<el-input style="width: 300px;" v-model="form.DefaultScoreName"></el-input>
 								<p class="info">必须是压型名称中的一个</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">订单试算</td>
+							<td>
+								<el-checkbox v-model="form.BuildAddCalc" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
 						<tr>
@@ -767,12 +794,17 @@
 					OriPagePort     : '',  //项目前端页面端口
 					OriPort         : '',  //项目后台端口
 					ErpApiPrefix    : '',  //erp接口地址
+					OpenMultiQuery  : '', //是否开启多数据查询
 					//内部参数
 					Wap1Right                : '',  //用户权限
 					WGetCusOrderBeginDate    : '',  //客户每日订单(默认日期)
 					WGetCusOrderEndDate      : '',  //客户每日订单
 					WGetCusOrderMinDate      : '',  //客户每日订单(日期范围)
 					WGetCusOrderMaxDate      : '',  //客户每日订单
+					StaffDeliveryDailyBeginDate : '', //客户每日送货(默认日期)
+					StaffDeliveryDailyEndDate   : '', //客户每日送货
+					StaffDeliveryDailyMinDate   : '', //客户每日送货(日期范围)
+					StaffDeliveryDailyMaxDate   : '', //客户每日送货
 					Wap1GetOrdersBeginDate   : '',  //ERP订单(默认日期)
 					Wap1GetOrdersEndDate     : '',  //ERP订单
 					Wap1GetOrdersMinDate     : '',  //ERP订单(日期范围)
@@ -810,7 +842,10 @@
 					WGetPOMainMinDate        : '',  //原纸采购(日期范围)
 					WGetPOMainMaxDate        : '',  //原纸采购
 					WGetPOInRecDate          : '',  //原纸采购(默认起始范围)
-					PaperDailyUsedDate       : '',  //原纸日用量(默认起始范围)
+					PaperDailyUsedBeginDate  : '',  //原纸日用量(默认日期)
+					PaperDailyUsedEndDate    : '',  //原纸日用量
+					PaperDailyUsedMinDate    : '',  //原纸日用量(日期范围)
+					PaperDailyUsedMaxDate    : '',  //原纸日用量
 					UseScan                  : '',  //扫码功能
 					DoStockOutOpTime         : '',  //原纸出库(默认日期)
 					DoStockOutMinDate        : '',  //原纸出库(日期范围)
@@ -851,10 +886,18 @@
 					GetOrdersPMinDate        : '',  //每日订单(日期范围)
 					GetOrdersPMaxDate        : '',  //每日订单,
 					WGetCusOrderShowAmt      : '',  //每日订单是否显示金额
+					ClientDeliveryDailyBeginDate: '', //每日送货(默认日期)
+					ClientDeliveryDailyEndDate  :'',  //每日送货
+					ClientDeliveryDailyMinDate  : '', //每日送货(日期范围)
+					ClientDeliveryDailyMaxDate  : '', //每日送货
 					GetCusFreeMBBeginDate    : '',  //对账单(默认日期)
 					GetCusFreeMBEndDate      : '',  //对账单
 					GetCusFreeMBMinDate      : '',  //对账单(日期范围)
 					GetCusFreeMBMaxDate      : '',  //对账单
+					CusFreeMBTableBeginDate  : '',  //对账单2(默认日期)
+					CusFreeMBTableEndDate    : '',  //对账单2
+					CusFreeMBTableMinDate    : '',  //对账单2(日期范围)
+					CusFreeMBTableMaxDate    : '',  //对账单2
 					//下单参数
 					UseQuoBoard               : '',  //常用材质使用报价价格材质
 					BuildMinLength            : '',  //板长范围
@@ -879,6 +922,7 @@
 					BuildMaxDate              : '',  //交货日期,
 					BuildTonLen               : '',  //箱舌
 					BuildULen                 : '',  //封箱调整
+					BuildAddCalc              : 0,  //是否开启订单试算
 					//团购参数
 					UseCreditPay     : '',  //是否开启信用额度付款
 					WebSalesWidth    : '',  //团购纸板销售宽默认值

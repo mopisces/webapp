@@ -54,7 +54,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "generate-asset-webpack-plugin": "^0.3.0",
     "postcss-px2rem": "^0.3.0",
-    "stylus": "^0.54.5",
+    "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
     "vue-cli-plugin-cube-ui": "^0.2.5",
     "vue-easytable": "^1.7.2",

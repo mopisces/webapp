@@ -11,7 +11,7 @@
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
 				<van-panel v-for="(item,index) in wxOrdersList" :key="index" style="font-size:0.8125rem;">
-					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if="item.IsGroup === '1'">
+					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if="item.IsGroup === '1' && item.PayDeadlineTime ">
 						<div style="height:3.125rem;width:100%;display: flex;" @click="headerClick(item)">
 							<div style="display: inline-flex;line-height:3.125rem;width:75%;overflow: hidden;">
 								<van-image :src="item.pic" round style="width: 25%; height: 100%;display: inline-flex;" />
@@ -40,6 +40,23 @@
 									已退款
 								</span>
 							</div>
+						</div>
+					</div>
+					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if=" item.IsGroup === '0' && item.PayDeadlineTime ">
+						<div style="line-height:3.125rem;font-size:0.875rem;width:90%;color: #ffa500;text-align:right;">
+							付款状态：
+							<span v-if=" item.UsePay === '1' && item.Paid === '0' ">
+								<span v-if=" item.IsOverTime ">超时</span>未付款
+							</span>
+							<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " style="color: #1a991d;">
+								已付款
+							</span>
+							<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' " style="color: #ff0000;">
+								申请退款中
+							</span>
+							<span v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' " style="color: #666;">
+								已退款
+							</span>
 						</div>
 					</div>
 					<div slot="default">
@@ -353,6 +370,7 @@
 						}
 						self.wxOrdersList.push(item);
 					});
+					res.result.unchecked_order_data = [];
 					if( res.result.unchecked_order_data && res.result.unchecked_order_data.length != 0 ){
 						res.result.unchecked_order_data.forEach((item,index)=>{
 							self.config.floatNav.listData.push({
@@ -472,20 +490,38 @@
 			buildOrder( item ){
 				switch( item.CType ){
 					case 's':
-						this.$router.push({
-							name:'sBuild',
-							params : {
-								orderId : item.CusPoNo
-							}
-						});
+						if( item.PayDeadlineTime ){
+							this.$router.push({
+								name:'sBuildPay',
+								params : {
+									orderId : item.CusPoNo
+								}
+							});
+						}else{
+							this.$router.push({
+								name:'sBuild',
+								params : {
+									orderId : item.CusPoNo
+								}
+							});
+						}
 						break;
 					case 'c':
-						this.$router.push({
-							name:'cBuild',
-							params : {
-								orderId : item.CusPoNo
-							}
-						});
+						if( item.PayDeadlineTime ){
+							this.$router.push({
+								name:'cBuildPay',
+								params : {
+									orderId : item.CusPoNo
+								}
+							});
+						}else{
+							this.$router.push({
+								name:'cBuild',
+								params : {
+									orderId : item.CusPoNo
+								}
+							});
+						}
 						break;
 					case 'x':
 						this.$router.push({

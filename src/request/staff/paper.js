@@ -110,6 +110,16 @@ const paper = {
 			paper_daily_used_end_date:data.endDate
 		};
 		return post( window.jpdn_domain_staff + 'dailyUsed/dateInfo', postData);
+	},
+	expectStockConfig(){
+
+		return post( window.jpdn_domain_staff + 'expectStock/getConfig');
+	},
+	expectStockData(data){
+		let postData = {
+
+		};
+		return post( window.jpdn_domain_staff + 'expectStock/fetchData', postData);
 	}
 };
 

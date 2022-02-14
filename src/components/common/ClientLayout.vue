@@ -64,12 +64,14 @@
 		},
 		methods:{
 			onClickLeft(){
-				this.$router.go(-1);return ;
+				this.$router.push( this.$store.state.client.backPath );
+				this.$store.commit('client/setBackPath','/client/index/menu');
+				/*this.$router.go(-1);return ;
 				if( sessionStorage.getItem('jpdn-client-isLogin') ){
 					this.$router.push(this.$store.state.client.backPath);
 				}else{
 					this.$router.go(-1);
-				}
+				}*/
 			},
 			reload(){
 				this.isRouterAlive = false;

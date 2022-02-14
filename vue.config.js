@@ -1,6 +1,9 @@
+//const TimeStamp = new Date().getTime();
 module.exports = {
   chainWebpack: config =>{
     config.plugins.delete('prefetch');
+    /*config.output.filename('js/[name].?t='+TimeStamp+'.js').end();
+    config.output.chunkFilename('js/[name]?t='+TimeStamp+'.js').end();*/
   },
   css: {
     loaderOptions: {

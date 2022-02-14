@@ -14,6 +14,19 @@ const cred = {
 			statement_account_type : data.type
 		};
 		return post(window.jpdn_domain_client + 'statementAccount', postData);
+	},
+	cusFreeMBTable( data ){
+		let postData = {
+			fmb_table_begin_date   : data.beginDate,
+			fmb_table_end_date     : data.endDate,
+		};
+		return post(window.jpdn_domain_client + 'cusFreeMBTable', postData);
+	},
+	cusFreeMBTableDetail( data ){
+		let postData = {
+			
+		};
+		return post(window.jpdn_domain_client + 'cusFreeMBTableDetail', postData);
 	}
 };
 export default cred;

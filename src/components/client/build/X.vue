@@ -10,7 +10,7 @@
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="x" @saveOrder="saveOrder" :isGroup="false"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId"></build-result>
+		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
 	</div>
 </template>
 <script>
@@ -59,7 +59,8 @@
 					result : {
 						show       : false,
 						isSuccess  : false,
-						cusOrderId : ''
+						cusOrderId : '',
+						failMsg:'下单失败'
 					},
 					isFastBuild : false
 				},
@@ -178,6 +179,7 @@
 						self.config.result.cusOrderId = res.result.order_id;
 					}else{
 						self.config.result.isSuccess = false;
+						self.config.result.failMsg = res.msg;
 					}
 					self.config.result.show = true;
 				});

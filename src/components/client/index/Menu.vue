@@ -85,6 +85,7 @@
 						{text:'报价规则', role:'报价查询', iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus'},
 						{text:'报价价格', role:'报价查询', iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus'},
 						{text:'对账单',   role:'对账单', iconName:'duizhang',    url:'/client/order/getCusFreeMB'},
+						/*{text:'对账单明细',role:'对账单2', iconName:'jiage1',    url:'/client/order/cusFreeMBTable'},*/
 						{text:'每日订单', role:'每日订单', iconName:'meiri',       url:'/client/order/getOrdersP'},
 						{text:'每日送货', role:'每日送货', iconName:'chanpin',       url:'/client/delivery/daily'},
 						{text:'ERP订单', role:'ERP订单', iconName:'erp',         url:'/client/order/getOrders'},
@@ -94,6 +95,8 @@
 						{text:'纸箱下单', role:'纸箱下单', iconName:'zhixiang1',   url:'/client/build/x'},
 						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang',    url:'/client/build/c'},
 						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s'},
+						{text:'纸箱纸板下单', role:'纸板支付下单', iconName:'jiage1',    url:'/client/buildpay/c'},
+						{text:'简单纸板下单', role:'纸板支付下单', iconName:'jiage1', url:'/client/buildpay/s'},
 					],
 					authGrid:[],
 					popup:{

@@ -14,13 +14,13 @@
 		<div style="margin:80px 0;text-align:center;" v-else>
 			<van-icon name="clear" color="hsl(14, 91%, 49%)" size="100" />
 			<div style="font-size:20px;">
-				订单下单面积不符合单客户限量
+				{{ failMsg }}
 			</div>
 		</div>
 		<van-button type="primary" style="width:100%;" v-if=" group && isSuccess " @click="goPay()">去付款</van-button>
 		<van-button plain type="default" style="width:100%;margin-top:10px;" @click="wxOrderClick()
 		">查看微信订单</van-button>
-		<van-button plain type="primary" style="width:100%;margin-top:10px;" @click="continueOrder()" v-if=" isSuccess ">继续下单</van-button>
+		<van-button plain type="primary" style="width:100%;margin-top:10px;" @click="continueOrder()">继续下单</van-button>
 	</van-popup>
 </template>
 <script>
@@ -31,7 +31,7 @@
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 		},
-		props : ['resultShow','isGroup','isSuccess','cusOrderId'],
+		props : ['resultShow','isGroup','isSuccess','cusOrderId','failMsg'],
 		data(){
 			return {
 				show : this.resultShow,

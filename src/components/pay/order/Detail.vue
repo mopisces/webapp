@@ -9,12 +9,12 @@
 			<div slot="price">
 				下单价格:￥{{ cardInfo.price }}
 			</div>
-			<div slot="origin-price">
+			<div slot="origin-price" v-if=" pageInfo.isGroup == 1 ">
 				￥{{ cardInfo.marketPrice }}
 			</div>
 			<div slot="desc">
 				<span>下单金额:￥{{ cardInfo.cost }}</span><br/>
-				<span>节省金额:￥{{ cardInfo.saveCost }}</span>
+				<span v-if=" pageInfo.isGroup == 1 ">节省金额:￥{{ cardInfo.saveCost }}</span>
 			</div>
 			<div slot="footer">
 				<van-button size="mini" @click="onClick()" v-if=" this.config.button.icon == 'shenqingdan' ">
@@ -93,6 +93,7 @@
 					refund      : 0,
 					refundTime  : '',
 					payDeadTime : 0,
+					isGroup : 0,
 				}
 			}
 		},
@@ -108,7 +109,11 @@
 						self.cardInfo.marketPrice = res.result.group.MarketPrice;
 						self.cardInfo.cost        = res.result.group.Cost;
 						self.cardInfo.saveCost    = res.result.group.SaveCost;
-						self.cardInfo.pic         = window.jpdn_domain_imgDomain + res.result.group.FirstPic;
+						if( res.result.order.IsGroup == 1 ){
+							self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.group.FirstPic;
+						}else{
+							self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.group.FirstPic;
+						}
 						self.config.steps.options = res.result.time_line;
 						self.config.steps.active  = res.result.time_line.length - 1;
 
@@ -116,6 +121,8 @@
 						self.pageInfo.isDel       = res.result.order.IsDel;
 						self.pageInfo.checked     = res.result.order.Checked;
 						self.pageInfo.checkTime   = res.result.order.CheckTime;
+						self.pageInfo.isGroup     = res.result.order.IsGroup;
+						console.log(self.pageInfo.isGroup)
 						self.pageInfo.paid        = res.result.pay.Paid;
 						self.pageInfo.paidTime    = res.result.pay.PaidTime;
 						self.pageInfo.apply       = res.result.pay.Apply;

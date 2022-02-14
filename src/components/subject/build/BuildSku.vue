@@ -16,14 +16,24 @@
 			<van-field :value="orderInfo.tonLen" label="箱舌(mm)" readonly v-if="showTonLen"/>
 			<van-field :value="orderInfo.uLen" label="封箱调整(mm)" readonly v-if="showULen"/>
 			<van-field :value="orderInfo.length + 'x' + orderInfo.width" label="纸板规格(mm)" readonly/>
-			<van-field :value="orderInfo.lineBallInfo" label="压型名称" readonly/>
+			<template v-if="orderInfo.isCalc == 1">
+				<van-field :value="orderInfo.isEdge + '-' + orderInfo.lineBallInfo" label="压线压型" readonly/>
+			</template>
+			<template v-else>
+				<van-field :value="orderInfo.lineBallInfo" label="压型名称" readonly/>
+			</template>
 			<van-field :value="orderInfo.bdMultiple" label="张数" readonly/>
 		</template>
 		<template  v-if=" orderType == 's' ">
 			<van-field :value="orderInfo.boardLength + 'x' + orderInfo.boardWidth" label="纸板规格(mm)" readonly/>
 			<!-- <van-field :value="orderInfo.boardLength" label="板长" readonly/>
 			<van-field :value="orderInfo.boardWidth" label="板宽" readonly/> -->
-			<van-field :value="orderInfo.lineBallInfo" label="压型名称" readonly/>
+			<template v-if=" orderInfo.isCalc == 1 ">
+				<van-field :value="orderInfo.isEdge + '-' + orderInfo.lineBallInfo" label="压线压型" readonly/>
+			</template>
+			<template v-else>
+				<van-field :value="orderInfo.lineBallInfo" label="压型名称" readonly/>
+			</template>
 			<van-field :value="orderInfo.lineBallFormula" label="压线信息" readonly/>
 		</template>
 		<template v-if=" orderType == 'x' ">
@@ -39,6 +49,10 @@
 		
 		<template v-if=" orderType == 's' || orderType == 'c' ">
 			<van-field :value="orderInfo.area" label="下单面积(㎡)" readonly/>
+			<template v-if=" orderInfo.isCalc == 1 ">
+				<van-field :value="orderInfo.dOrdPrice" label="计价价格" readonly/>
+				<van-field :value="orderInfo.dAmt" label="金额" readonly/>
+			</template>
 		</template>
 		<van-field :value="orderInfo.address" label="送货公司" readonly/>
 		<van-field :value="orderInfo.date" label="交货日期" readonly/>
