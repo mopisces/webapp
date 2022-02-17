@@ -22,7 +22,7 @@
 				<van-cell-group>
 					<van-cell :clickable=" item.isover " v-for="(item,index) in listData" :key="index"> 
 						<div slot="title" class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--6">
+							<div class="van-col van-col--6"  v-if=" item.isGroup == 1 ">
 								<van-image :src="item.pic" round width="40" height="40"/>
 							</div>
 							<div class="van-col van-col--12">
@@ -124,17 +124,19 @@
 		},
 		watch:{
 			resultChange( newV,oldV ){
-				console.log(newV.length);
-				console.log(this.selectNum)
 				if( newV.length != this.selectNum ){
 					this.config.checkBox.selectAll = false;
 				}else{
 					this.config.checkBox.selectAll = true;
 				}
 				this.config.submitBar.price = 0;
+				let time = new Date();
 				newV.forEach((item,index)=>{
 					this.listData.forEach((col,indexCol)=>{
-						if( item == col.cusPoNo && col.isover == false ){
+						if( col.isover == false ){
+							this.listData[indexCol].isover = col.deadline * 1000 > time ? false : true
+						}
+						if( item == col.cusPoNo && this.listData[indexCol].isover == false ){
 							this.config.submitBar.price += Number(col.cost) * 100;
 						}
 					});

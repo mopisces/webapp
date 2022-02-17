@@ -370,7 +370,7 @@
 						}
 						self.wxOrdersList.push(item);
 					});
-					res.result.unchecked_order_data = [];
+					//res.result.unchecked_order_data = [];
 					if( res.result.unchecked_order_data && res.result.unchecked_order_data.length != 0 ){
 						res.result.unchecked_order_data.forEach((item,index)=>{
 							self.config.floatNav.listData.push({
@@ -380,8 +380,10 @@
 								cost    : item.Cost,
 								id      : item.Id,
 								pic     : item.FirstPic == null ? '' : window.jpdn_domain_imgDomain + item.FirstPic,
-								isover  : item.PayDeadlineTime*1000 > self.config.floatNav.now ? false : true,
-								cusPoNo : item.CusPoNo
+								isover  : item.PayDeadlineTime * 1000 > self.config.floatNav.now ? false : true,
+								cusPoNo : item.CusPoNo,
+								isGroup : item.WebProductId == 0 ? 0 : 1,
+								deadline: item.PayDeadlineTime * 1000
 							});
 							if( item.PayDeadlineTime*1000 > self.config.floatNav.now ){
 								self.config.floatNav.selectNum++;

@@ -141,7 +141,8 @@
 					lineInfo:[],
 					calcDefault:{
 						index:null,
-						name :null
+						name :null,
+						edgeType:'净片'
 					}
 				},
 				formData:{
