@@ -397,12 +397,16 @@
 						if( res.errorCode == '00000' ){
 							self.formData.area = res.result.area;
 							if( res.result.valid_area == '0' ){
-								Toast.fail( '下单面积范围:' + self.pageConfig.minArea + '㎡\n' + self.pageConfig.maxArea + '㎡' );
-								self.formData.area            = '';
-								self.formData.orderQuantities = '';
-								//self.config.button.disabled   = true;
-								self.config.button.calcBtnDis = true;
-								self.checkFormula();
+								Toast.fail({
+									message: '下单面积范围:' + self.pageConfig.minArea + '㎡\n' + self.pageConfig.maxArea + '㎡',
+									onClose:()=>{
+										self.formData.area            = '';
+										self.formData.orderQuantities = '';
+										//self.config.button.disabled   = true;
+										self.config.button.calcBtnDis = true;
+										self.checkFormula();
+									}
+								});
 							}else{
 								//self.config.button.disabled   = false;
 								self.config.button.calcBtnDis = false;

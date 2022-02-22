@@ -122,7 +122,7 @@
 						self.pageInfo.checked     = res.result.order.Checked;
 						self.pageInfo.checkTime   = res.result.order.CheckTime;
 						self.pageInfo.isGroup     = res.result.order.IsGroup;
-						console.log(self.pageInfo.isGroup)
+						//console.log(self.pageInfo.isGroup)
 						self.pageInfo.paid        = res.result.pay.Paid;
 						self.pageInfo.paidTime    = res.result.pay.PaidTime;
 						self.pageInfo.apply       = res.result.pay.Apply;

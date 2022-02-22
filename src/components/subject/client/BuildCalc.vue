@@ -48,7 +48,7 @@
 			}
 		},
 		created(){
-			console.log(this.columns)
+			//console.log(this.columns)
 		},
 		mounted(){
 

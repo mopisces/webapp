@@ -30,7 +30,7 @@
 						<tr>
 							<td style="width:150px;">外部80端口</td>
 							<td>
-								<el-checkbox v-model="form.Open80Port" label="是否开放" border true-label="0" false-label="0"></el-checkbox>
+								<el-checkbox v-model="form.Open80Port" label="是否开放" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
 						<template  v-if="!Number(form.Open80Port) && (Number(form.UseScan) || Number(form.UseWxPay))">
@@ -274,7 +274,7 @@
 						<tr v-if="!Number(form.Open80Port)">
 							<td style="width:150px;">扫码功能</td>
 							<td>
-								<el-checkbox v-model="form.UseScan" label="是否开启" border></el-checkbox>
+								<el-checkbox v-model="form.UseScan" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
 						<tr>
@@ -787,7 +787,7 @@
 					FactoryName     : '',
 					WxVerifyTempId  : '',
 					WxVerifyPassTempId:'',
-					Open80Port      : '',
+					Open80Port      : 0,
 					WxAppId         : '',
 					Frp80PortDomain : '',
 					OriDomain       : '',  //项目域名(不带http:// 及 / )
