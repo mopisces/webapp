@@ -30,7 +30,7 @@
 		<template v-else>
 			<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
 		</template>
-		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
+		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
 		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="clickQuestion(2)"/>
 		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/>
 		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly :disabled=" true " />
@@ -160,6 +160,7 @@
 					ordQty           : 0,    //订单数
 					bdQty            : '',   //纸板数
 					lineBallInfo     : '',   //压型名称
+					lineBallFormula  : null, //压线信息
 					area             : '',   //下单面积
 					address          : '',   //送货地址
 					date             : '',   //交货日期
@@ -527,7 +528,7 @@
 					console.log('fail')
 				});
 			},
-			calcBdQty(){
+			calcBdQty( needCalcArea = true ){
 				if( typeof( this.formData.bdMultiple ) === 'number' && this.formData.ordQty ){
 					if( this.formData.bdMultiple > 0 ){
 						this.formData.bdQty = this.formData.ordQty * this.formData.bdMultiple;
@@ -539,7 +540,9 @@
 				}else{
 					this.formData.bdQty = null;
 				}
-				this.calcArea();
+				if( needCalcArea ){
+					this.calcArea();
+				}
 			},
 			calcArea(){
 				if( this.formData.ordQty && !( /(^[1-9]\d*$)/.test(this.formData.ordQty) ) ){
@@ -554,7 +557,7 @@
 					this.config.button.disabled = true;
 					return ;
 				}
-				if( typeof(this.formData.length) === 'number' && typeof(this.formData.width) === 'number' && this.formData.bdQty != '' ){
+				if( typeof(this.formData.length) === 'number' && typeof(this.formData.width) === 'number' && this.formData.bdQty ){
 					let postData = {
 						areaLength : this.formData.length,
 						areaWidth  : this.formData.width,
@@ -591,7 +594,10 @@
 					this.$request.client.orderBooking.getBoxFormula( boxType ).then(res=>{
 						self.pageConfig.lengthFCalc = res.result.LengthF;
 						self.pageConfig.widthFCalc  = res.result.WidthF;
-						self.formData.bdMultiple    = Number(res.result.Multiple);
+						if( self.formData.bdMultiple != Number(res.result.Multiple) ){
+							self.formData.bdMultiple = Number(res.result.Multiple);
+							self.calcBdQty(false);
+						}
 					}).then(()=>{
 						this.$nextTick(()=>{
 							this.calcBdLW();
@@ -697,7 +703,7 @@
 	                    iLength      : null,
 	                    iWidth       : null,
 	                    strScoreInfo : null,
-	                    iQty         : this.formData.ordQty,
+	                    iQty         : this.formData.bdQty,//this.formData.ordQty,
 	                    strBoxId     : this.formData.boxType,
 	                    iBoxL        : this.formData.boxLength,
 	                    iBoxW        : this.formData.boxWidth,
@@ -720,15 +726,17 @@
 							if( !isCheck ){
 								self.formData.dOrdPrice  = erpResult.dOrdPrice;
 								self.formData.dAmt  = erpResult.dAmt;
+								self.formData.lineBallFormula = erpResult.strScoreInfo;
 								self.config.button.disabled = false;
 							}else{
-								if( self.formData.dOrdPrice != erpResult.dOrdPrice || self.formData.dAmt != erpResult.dAmt ){
+								if( self.formData.dOrdPrice != erpResult.dOrdPrice || self.formData.dAmt != erpResult.dAmt || self.formData.lineBallFormula != erpResult.strScoreInfo ){
 									Dialog.alert({
-										title:'金额变化是否继续下单',
-										message:'计价价格：' + self.formData.dOrdPrice + '=>' + erpResult.dOrdPrice + '\n' + '金额：' + self.formData.dAmt + '=>' + erpResult.dAmt
+										title:'订单变化是否继续下单',
+										message:'计价价格：' + self.formData.dOrdPrice + '=>' + erpResult.dOrdPrice + '\n' + '金额：' + self.formData.dAmt + '=>' + erpResult.dAmt  + '\n' + '压线：' + self.formData.lineBallFormula + '=>' + erpResult.strScoreInfo
 									}).then(()=>{
 										self.formData.dOrdPrice  = erpResult.dOrdPrice;
 										self.formData.dAmt  = erpResult.dAmt;
+										self.formData.lineBallFormula = erpResult.strScoreInfo;
 										self.checkData();
 									});
 								}else{
@@ -775,7 +783,7 @@
 			
 		},
 		watch:{
-			
+
 		}
 	}
 </script>

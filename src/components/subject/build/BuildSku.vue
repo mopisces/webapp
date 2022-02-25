@@ -22,6 +22,9 @@
 			<template v-else>
 				<van-field :value="orderInfo.lineBallInfo" label="压型名称" readonly/>
 			</template>
+			<template v-if=" orderInfo.isCalc == 1 ">
+				<van-field :value="orderInfo.lineBallFormula" label="压线信息" readonly/>
+			</template>
 			<van-field :value="orderInfo.bdMultiple" label="张数" readonly/>
 		</template>
 		<template  v-if=" orderType == 's' ">
