@@ -32,7 +32,17 @@
 		</template>
 		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
 		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="clickQuestion(2)"/>
-		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/>
+		<!-- <van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/> -->
+		<div class="van-cell van-field">
+			<div class="van-cell__title van-field__label" >
+				<span>订单数</span>
+			</div>
+			<div class="van-cell__value">
+				<div class="van-field__body">
+					<input type="text" placeholder="输入订单数" v-model="formData.ordQty" class="van-field__control van-field__control--center karry-input" style="background-color:#f0f0f0;" @blur="calcBdQty()"/>
+				</div>
+			</div>
+		</div>
 		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly :disabled=" true " />
 		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="clickQuestion(3)" :disabled=" true " />
 		<template v-if=" formData.isCalc == 1 ">
@@ -157,7 +167,7 @@
 					length           : '',   //板长
 					width            : '',   //板宽
 					bdMultiple       : '',   //张数
-					ordQty           : 0,    //订单数
+					ordQty           : null,    //订单数
 					bdQty            : '',   //纸板数
 					lineBallInfo     : '',   //压型名称
 					lineBallFormula  : null, //压线信息
