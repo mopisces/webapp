@@ -371,6 +371,7 @@
 						self.wxOrdersList.push(item);
 					});
 					//res.result.unchecked_order_data = [];
+					self.config.floatNav.listData = [];
 					if( res.result.unchecked_order_data && res.result.unchecked_order_data.length != 0 ){
 						res.result.unchecked_order_data.forEach((item,index)=>{
 							self.config.floatNav.listData.push({

@@ -1,5 +1,7 @@
 //const TimeStamp = new Date().getTime();
+let timeStamp = new Date().getTime();
 module.exports = {
+  filenameHashing:false,
   chainWebpack: config =>{
     config.plugins.delete('prefetch');
     /*config.output.filename('js/[name].?t='+TimeStamp+'.js').end();
@@ -13,9 +15,17 @@ module.exports = {
           './src/theme'
         ]
       }
+    },
+    extract:{
+      filename: `css/[name].${timeStamp}.css`,
+      chunkFilename: `css/chunk.[id].${timeStamp}.css`,
     }
   },
   configureWebpack:{
+    output:{
+      filename: `js/js[name].${timeStamp}.js`,
+      chunkFilename: `js/chunk.[id].${timeStamp}.js`,
+    },
     performance:{
       hints:'warning',
       maxEntrypointSize: 50000000,

@@ -19,7 +19,17 @@
 			<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
 		</template>
 		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="压线和=板宽(格式:x+x+x)" @blur=" checkFormula() "/>
-		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数" @blur=" calcArea() "/>
+		<!-- <van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数" @blur=" calcArea() "/> -->
+		<div class="van-cell van-field">
+			<div class="van-cell__title van-field__label" >
+				<span>订单数</span>
+			</div>
+			<div class="van-cell__value">
+				<div class="van-field__body">
+					<input type="text" placeholder="输入订单数" v-model="formData.orderQuantities" class="van-field__control van-field__control--center karry-input" style="background-color:#f0f0f0;" v-on:blur="calcArea()"/>
+				</div>
+			</div>
+		</div>
 		<van-field v-model="formData.area" clearable readonly input-align="center" label="下单面积(㎡)" placeholder="待计算" right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡' ) ">
 		</van-field>
 		<template v-if=" formData.isCalc == 1 ">
@@ -538,7 +548,10 @@
 			},
 			clearFormData(){
 				Object.keys( this.formData ).forEach((item,index)=>{
-					this.formData[item] = '';
+					if( item != 'materialType' ){
+						this.formData[item] = '';
+					}
+					this.formData.isEdge = '净片';
 				});
 				this.getConfig();
 			},

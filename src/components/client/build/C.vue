@@ -39,7 +39,7 @@
 			</div>
 			<div class="van-cell__value">
 				<div class="van-field__body">
-					<input type="text" placeholder="输入订单数" v-model="formData.ordQty" class="van-field__control van-field__control--center karry-input" style="background-color:#f0f0f0;" @blur="calcBdQty()"/>
+					<input type="text" placeholder="输入订单数" v-model="formData.ordQty" class="van-field__control van-field__control--center karry-input" style="background-color:#f0f0f0;" v-on:blur="calcBdQty()"/>
 				</div>
 			</div>
 		</div>
@@ -462,7 +462,7 @@
 						self.formData.boxHeight    = res.result.fast_order_booking.BoxH;
 						self.formData.tonLen       = res.result.fast_order_booking.TonLen;
 						self.formData.uLen         = res.result.fast_order_booking.ULen;
-						self.formData.bdMultiple   = res.result.fast_order_booking.BdMultiple;
+						self.formData.bdMultiple   = Number(res.result.fast_order_booking.BdMultiple) ? Number(res.result.fast_order_booking.BdMultiple) : 0;
 						self.formData.address      = res.result.fast_order_booking.CusSubNo;
 						self.formData.deliveryRemark   = res.result.fast_order_booking.DNRemark;
 						self.formData.productionRemark = res.result.fast_order_booking.ProRemark;
@@ -661,7 +661,10 @@
 			},
 			clearFormData(){
 				Object.keys( this.formData ).forEach((item,index)=>{
-					this.formData[item] = '';
+					if( item != 'materialType' ){
+						this.formData[item] = '';
+					}
+					this.formData.isEdge = '净片';
 				});
 				this.pageConfig.lengthFCalc = '';
 				this.pageConfig.widthFCalc  = '';
