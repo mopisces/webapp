@@ -22,7 +22,7 @@
     "compression-webpack-plugin": "^5.0.1",
     "core-js": "^2.6.5",
     "element-ui": "^2.13.0",
-    "handsontable": "^7.4.2",
+    "handsontable": "^10.0.0",
     "highcharts": "^7.2.0",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
