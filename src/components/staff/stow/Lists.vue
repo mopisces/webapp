@@ -22,6 +22,7 @@
 	import { Button, Cell, Checkbox, Field, SwitchCell, Dialog, Toast } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -143,20 +144,23 @@
 			},
 			switchChange( checked ){
 				if( checked ){
-					sessionStorage.setItem('stow/lists',JSON.stringify(this.filterForm));
+					setStorage('stow/lists',this.filterForm);
 				}else{
-					sessionStorage.removeItem('stow/lists');
+					removeStorage('stow/lists');
 				}
 			},
 			resetClick(){
 				this.config.getConfig = true;
+				this.filterForm.showPack = false;
+				this.filterForm.showSign = false;
+				this.config.switchCell.checked = false;
 				this.getConfig();
 			},
 			filterClick(){
 				this.config.popup.filterShow = false;
 				this.getTableData( this.filterForm );
 			},
-			getConfig( isResize = false ){
+			getConfig( isResize = false ){ 
 				let self = this;	
 				this.$request.staff.stow.stowListConfig().then(res=>{
 					if( self.config.getConfig ){
@@ -181,12 +185,19 @@
 				this.$request.staff.stow.stowList( data ).then(res=>{
 					self.table.data = res.result;
 				});
+			},
+			beforeunloadHandler(){
+				if( this.config.switchCell.checked ){
+					setStorage('stow/lists',this.filterForm);
+				}else{
+					removeStorage('stow/lists');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','扫描装货');
-			if( sessionStorage.getItem('stow/lists') ){
-				let storageData = JSON.parse(sessionStorage.getItem('stow/lists'));
+			if( getStorage('stow/lists') ){
+				let storageData = JSON.parse(getStorage('stow/lists'));
 				this.filterForm                = storageData;
 				this.config.getConfig          = false;
 				this.config.switchCell.checked = true;
@@ -195,13 +206,11 @@
 		mounted(){
 			this.getConfig();
 			this.config.table.height = window.screen.height - 126;
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.config.switchCell.checked ){
-				sessionStorage.setItem('stow/lists',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('stow/lists');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

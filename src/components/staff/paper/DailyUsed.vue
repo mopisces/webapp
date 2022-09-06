@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<van-button plain hairline type="info" size="normal" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		<van-tabs v-model="config.tabActive" @change="tabsChange">
+		<van-tabs v-model="filterForm.tabActive" @change="tabsChange">
 			<van-tab title="日明细" name="0">
 				<prev-next @radioConfirm="radioConfirm" :radioData="radioData" :radioVal="radioVal"  v-if="config.prevNext.show"></prev-next>
 				<van-notice-bar :text="config.notice.text" left-icon="volume-o" />
@@ -43,6 +43,7 @@
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -68,7 +69,6 @@
 					tableData:{}
 				},
 				config:{
-					tabActive:0,
 					getConfig:true,
 					prevNext:{
 						show:false
@@ -109,6 +109,7 @@
 				filterForm:{
 					beginDate:null,
 					endDate:null,
+					tabActive:0
 				}
 			}
 		},
@@ -159,7 +160,7 @@
 			},
 			paperDailyUsedDetail( data ){
 				let self = this;
-				this.$request.staff.paper.paperDailyUsedDetail( data, this.config.tabActive ).then(res=>{
+				this.$request.staff.paper.paperDailyUsedDetail( data, this.filterForm.tabActive ).then(res=>{
 					self.detailData.tableData = res.result;
 				}).then(()=>{
 					this.config.popup.show = true;
@@ -170,7 +171,7 @@
 				this.config.notice.sumWeight = 0;
 				this.config.notice.text = '暂无数据';
 				this.listData = [];
-				this.$request.staff.paper.paperDailyUsedInfo( data, this.config.tabActive ).then(res=>{
+				this.$request.staff.paper.paperDailyUsedInfo( data, this.filterForm.tabActive ).then(res=>{
 					if( res.errorCode == '00000' ){
 						self.listData = res.result;
 						self.listData.forEach((item)=>{
@@ -188,10 +189,10 @@
 			},
 			detailClick(rowIndex,rowData,column){
 				this.detailData.fieldData = rowData;
-				if( this.config.tabActive == 0 ){
+				if( this.filterForm.tabActive == 0 ){
 					this.paperDailyUsedDetail(rowData);
 				}
-				if( this.config.tabActive == 1 ){
+				if( this.filterForm.tabActive == 1 ){
 					let postData = Object.assign({},rowData,this.filterForm);
 					this.paperDailyUsedDetail(postData);
 				}
@@ -207,7 +208,7 @@
 			},
 			filterClick(){
 				this.config.popup.filterShow = false;
-				if( this.config.tabActive == 0 ){
+				if( this.filterForm.tabActive == 0 ){
 					this.paperDailyUsedDateInfo();
 				}else{
 					this.paperDailyUsedInfo( this.filterForm );
@@ -219,12 +220,19 @@
 				}else{
 					this.paperDailyUsedInfo( this.filterForm );
 				}
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('paper/dailyUsed',this.filterForm);
+				}else{
+					removeStorage('paper/dailyUsed');
+				}
 			}
 		},
 		created(){
 			this.getPaperDailyUsedConfig();
-			if( sessionStorage.getItem('paper/dailyUsed') !== null  ){
-				let storageData = JSON.parse(sessionStorage.getItem('paper/dailyUsed'));
+			if( getStorage('paper/dailyUsed') !== null  ){
+				let storageData = JSON.parse(getStorage('paper/dailyUsed'));
 				this.filterForm = storageData;
 				this.config.getConfig = false;
 				this.config.switch.checked = true;
@@ -235,13 +243,11 @@
 			this.config.table.info.height = window.screen.height - 126;
 			this.config.table.detail.height = window.screen.height - 100;
 			this.getTableConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('paper/dailyUsed',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('paper/dailyUsed');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

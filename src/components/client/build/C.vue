@@ -200,6 +200,7 @@
 					lengthFCalc : '',
 					widthFCalc  : '',
 					buildAutoGetTonLenAndULen:true,
+					IsAddTrimArea : 0,
 				},
 				rules:{
 					calcBdLW : {
@@ -391,6 +392,7 @@
 					self.pageConfig.maxArea = res.result.config.BuildMaxArea;
 					self.pageConfig.minDate = res.result.config.BuildMinDate;
 					self.pageConfig.maxDate = res.result.config.BuildMaxDate;
+					self.pageConfig.IsAddTrimArea = res.result.config.IsAddTrimArea;
 					self.formData.date      = res.result.config.BuildDeliveryDate;
 					self.formData.isCalc    = res.result.config.BuildAddCalc;
 					self.formData.factoryId = res.result.config.FactoryId;
@@ -615,7 +617,7 @@
 					});
 				}
 			},
-			getClackAdjust( materialType ){
+			getClackAdjust( materialType, needConfig = false ){
 				if( !this.pageConfig.buildAutoGetTonLenAndULen ){
 					this.formData.tonLen = this.config.radioData.tonLen[0].value;
 					this.formData.uLen = this.config.radioData.uLen[0].value;
@@ -657,6 +659,12 @@
 						Toast.fail(string);
 					}
 					self.calcBdLW();
+				}).then(()=>{
+					if( needConfig ){
+						this.$nextTick(()=>{
+							this.getConfig('');
+						})	
+					}
 				});
 			},
 			clearFormData(){
@@ -668,7 +676,7 @@
 				});
 				this.pageConfig.lengthFCalc = '';
 				this.pageConfig.widthFCalc  = '';
-				this.getConfig( '' );
+				this.getClackAdjust( this.formData.materialType, true );
 			},
 			fastBuild( orderId ){
 				this.config.isFastBuild = true;
@@ -723,6 +731,10 @@
 	                    iBoxH        : this.formData.boxHeight,
 	                    iTonLen      : this.formData.tonLen,
 	                    iULen        : this.formData.uLen,
+					}
+					if( this.formData.isEdge == '毛片' && this.pageConfig.IsAddTrimArea == 1 ){
+						data.bAddTrim = false;
+						data.bAddArea = false;
 					}
 					let self = this;
 					this.$request.staff.connecterp.calBdPriceInfo( data, 1 ).then((res)=>{

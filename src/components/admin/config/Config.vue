@@ -604,6 +604,12 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">订单试算毛片加面积加修边</td>
+							<td>
+								<el-checkbox v-model="form.IsAddTrimArea" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">纸板下单面积范围</td>
 							<td>
 								<el-input style="width: 100px;" v-model="form.BuildMinArea"></el-input>
@@ -923,6 +929,7 @@
 					BuildTonLen               : '',  //箱舌
 					BuildULen                 : '',  //封箱调整
 					BuildAddCalc              : 0,  //是否开启订单试算
+					IsAddTrimArea             : 0,  //是否开启订单试算毛片不加面积修边
 					//团购参数
 					UseCreditPay     : '',  //是否开启信用额度付款
 					WebSalesWidth    : '',  //团购纸板销售宽默认值

@@ -12,7 +12,8 @@ const staff = {
 		},
 		wxConfig : null,
 		navList  : null,
-		backPath : '/staff/index/menu'
+		backPath : '/staff/index/menu',
+		isLogin:false
 	},
 	mutations:{
 		setHeaderTitle( state, title ){
@@ -29,6 +30,9 @@ const staff = {
 		},
 		setBackPath( state, path ){
 			state.backPath = path;
+		},
+		setIsLogin(state, isLogin){
+			state.isLogin = isLogin;
 		}
 	},
 	actions: {

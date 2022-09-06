@@ -164,6 +164,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import HighChart from '@/components/subject/chart/HighChart';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -353,8 +354,9 @@
 				});
 			},
 			resetClick(){
+				this.config.getConfig = true;
 				this.filterForm.dateType = 1;
-				sessionStorage.removeItem('statis/getOrderSum');
+				removeStorage('statis/getOrderSum');
 				this.getOrderSumConfig( true );
 			},
 			filterClick(){
@@ -376,12 +378,19 @@
 						this.filterForm.limitValue = '';
 				}
 				this.config.popup.detailShow = true;
+			},
+			beforeunloadHandler(){
+				if( this.config.switchCell.checked ){
+					setStorage('statis/getOrderSum',this.filterForm);
+				}else{
+					removeStorage('statis/getOrderSum');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','订单统计');
-			if( sessionStorage.getItem('statis/getOrderSum') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrderSum'));
+			if( getStorage('statis/getOrderSum') !== null ){
+				let storageData = JSON.parse(getStorage('statis/getOrderSum'));
 				this.filterForm = storageData;
 				this.config.getConfig          = false;
 				this.config.switchCell.checked = true;
@@ -390,16 +399,14 @@
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
 			this.getOrderSumConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switchCell.checked ){
-				sessionStorage.setItem('statis/getOrderSum',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('statis/getOrderSum');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

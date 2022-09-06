@@ -95,6 +95,7 @@
 </style>
 
 <script>
+	import { getStorage, setStorage, removeStorage } from '@/util/storage'
 	export default {
 		data(){
 			return {
@@ -111,9 +112,10 @@
 		},
 		methods:{
 			command( command ){
-				sessionStorage.removeItem('jpdn-admin-token');
-				sessionStorage.removeItem('jpdn-admin-refresh');
-				sessionStorage.removeItem('jpdn-admin-username');
+				removeStorage('jpdn-admin-token');
+				removeStorage('jpdn-admin-refresh');
+				removeStorage('jpdn-admin-username');
+				/*removeStorage();*/
 				this.$router.push('/admin/login');
 			},
 			getConfig(){
@@ -135,7 +137,8 @@
 		},
 		created(){
 			this.config.height      = window.innerHeight;
-			this.adminName          = sessionStorage.getItem('jpdn-admin-username');
+			//this.adminName          = sessionStorage.getItem('jpdn-admin-username');
+			this.adminName          = getStorage('jpdn-admin-username');
 			this.config.activeIndex = this.$store.state.admin.asideActive;
 			this.getConfig();
 		},

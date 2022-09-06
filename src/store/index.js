@@ -10,6 +10,7 @@ import common from './module/common';
 import sg from './module/sg';
 Vue.use(Vuex);
 
+Vue.config.devtools = true
 export default new Vuex.Store({
 　　states,
  	mutations,

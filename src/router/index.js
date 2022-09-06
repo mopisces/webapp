@@ -1,4 +1,5 @@
 import store from '@/store';
+import { getStorage } from '@/util/storage';
 import staff from './staff';
 import client from './client';
 import admin from './admin';
@@ -25,6 +26,8 @@ const loginStaff  = () => import('@/components/login/StaffLogin');
 const loginClient = () => import('@/components/login/ClientLogin');
 //联系我们
 const contact     = () => import('@/components/client/index/Contact');
+//测试扫码
+const scanCode = () => import('@/components/common/ScanCodePage');
 let routes = [
     {
         path : '/group',
@@ -39,6 +42,7 @@ let routes = [
             {
                 path : 'staff/login',
                 alias: 'staff/login?token=:token',
+                name : 'staffLogin',
                 meta: { title: '员工登录', role:'员工登录', isGroup:true },
                 component: loginStaff,
             },
@@ -76,6 +80,11 @@ let routes = [
         component: wxQrCode,
         meta:{ title: '微信授权生成二维码登陆' }
     },
+    {
+        path : '/common/scanCode',
+        component: scanCode,
+        meta:{ title: '扫描二维码/条形码' }
+    },
     ...staff,
     ...client,
     ...admin,
@@ -95,11 +104,17 @@ let router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    store.commit('client/setIsLogin',sessionStorage.getItem('jpdn-client-isLogin'));
+    if( to.name != 'staffLogin' || to.name != 'clientLogin' ){
+        if( getStorage('jpdn-login-type') == 'client' ){
+            store.commit('client/setIsLogin',getStorage('jpdn-client-isLogin', 'sessionStorage') == 1 ? true : false);
+        }
+        if( getStorage('jpdn-login-type') == 'staff' ){
+            store.commit('staff/setIsLogin',getStorage('jpdn-staff-isLogin', 'sessionStorage') == 1 ? true : false);
+        }
+        //store.commit('staff/setIsLogin',getStorage('jpdn-staff-isLogin'));
+    }
     window.scrollTo(0,0);
-    /*if (document.URL.indexOf('?version=') < 0) {
-        window.location.href = to.fullPath + '?version=1.0.0'
-    }*/
+    
     if( to.meta.title ){
         document.title = to.meta.title;
     }
@@ -108,21 +123,21 @@ router.beforeEach((to, from, next) => {
     }else{
         store.commit('client/setTabbarActive','menu');
     }
-    if( to.meta.needLogin && ( !sessionStorage.getItem('jpdn-client-isLogin') && to.params ) ){
+    if( to.meta.needLogin && ( !getStorage('jpdn-client-isLogin', 'sessionStorage') && to.params ) ){
         next({
             replace:true,
             name:'clientLogin',
             params:Object.assign(to.params,{redirectName:to.name})
         });
-    }else if( sessionStorage.getItem('staff-auth-url') && store.state.staff.navList == null ){
-        store.dispatch('staff/permission', JSON.parse(sessionStorage.getItem('staff-auth-url')));
+    }else if( store.state.staff.isLogin && getStorage('staff-auth-url') && store.state.staff.navList == null ){
+        store.dispatch('staff/permission', JSON.parse(getStorage('staff-auth-url')));
         router.addRoutes(store.state.staff.navList);
         next({ ...to, replace: true });
-    }else if( sessionStorage.getItem('client-auth-url') && store.state.client.navList == null ){
-        store.dispatch('client/permission', JSON.parse(sessionStorage.getItem('client-auth-url')));
+    }else if( store.state.client.isLogin &&getStorage('client-auth-url') && store.state.client.navList == null ){
+        store.dispatch('client/permission', JSON.parse(getStorage('client-auth-url')));
         router.addRoutes(store.state.client.navList);
         next({ ...to, replace: true });
-    }else if( sessionStorage.getItem('jpdn-admin-token') && store.state.admin.navList == null ){
+    }else if( getStorage('jpdn-admin-token', 'sessionStorage') && store.state.admin.navList == null ){
         store.dispatch('admin/permission');
         router.addRoutes(store.state.admin.navList);
         next({ ...to, replace: true });

@@ -66,6 +66,7 @@
 	import { Button, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
+	import { getStorage, setStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -173,7 +174,7 @@
 				});
 			},
 			getChangePass(){
-				this.formData.account = sessionStorage.getItem('jpdn-staff-username');
+				this.formData.account = getStorage('jpdn-staff-username');
 				this.config.popup.changePass.show = true ;
 			},
 			changeClick(){
@@ -226,12 +227,12 @@
 			},
 			getAuthName(){
 				let self = this;
-				this.$request.staff.user.getAuthName({ userName:sessionStorage.getItem('jpdn-staff-username') }).then(res=>{
+				this.$request.staff.user.getAuthName({ userName:getStorage('jpdn-staff-username') }).then(res=>{
 					if( res.errorCode != '00000' ){
 						return ;
 					}
 					self.authUrl = res.result.available;
-					sessionStorage.setItem('staff-auth-url',JSON.stringify(res.result.available));
+					setStorage('staff-auth-url', res.result.available);
 					self.$store.commit('staff/setNavList',null);
 				}).then(()=>{
 					this.$nextTick(()=>{
@@ -243,7 +244,8 @@
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
 			this.getMenuUserName();
-			this.getAuthName();
+			this.authGrid( JSON.parse( getStorage('staff-auth-url') ) );
+			//this.getAuthName();
 		},
 		mounted(){
 			this.validator = new schema(this.rules);

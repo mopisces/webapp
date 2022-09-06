@@ -11,7 +11,7 @@ Vue.component("TableOperate",TableOperate);
 
 Vue.config.productionTip = false;//生产提示
 Vue.prototype.$request   = request;
-
+Vue.config.devtools = true
 import config from '@/request/config.js';
 
 config.requestRemoteIp().finally(res => {

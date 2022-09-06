@@ -9,7 +9,10 @@ const client = {
 		navList      : null,
 		tabbarActive : 'menu',
 		isLogin      : false,
-		backPath     : '/client/index/menu'
+		backPath     : '/client/index/menu',
+		backIsGroup  : true,
+		loginRedirect: '/client/index/menu',
+
 	},
 	mutations:{ 
 		setHeaderTitle( state, title ){
@@ -23,6 +26,12 @@ const client = {
 		},
 		setIsLogin( state, isLogin ){
 			state.isLogin = isLogin;
+		},
+		setBackIsGroup( state, isgroup ){
+			state.backIsGroup = isgroup
+		},
+		setLoginRedirect( state, path ){
+			state.loginRedirect = path;
 		}
 	},
 	actions:{

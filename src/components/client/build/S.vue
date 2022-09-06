@@ -132,7 +132,8 @@
 					minArea   : '',
 					minDate   : '',
 					minLength : '',
-					minWidth  : ''
+					minWidth  : '',
+					IsAddTrimArea: 0
 				},
 				formData : {
 					cusOrderId       : '',    //客订单号
@@ -292,6 +293,7 @@
 					self.pageConfig.minLength = res.result.page_config.BuildMinLength;
 					self.pageConfig.maxWidth  = res.result.page_config.BuildMaxWidth;
 					self.pageConfig.minWidth  = res.result.page_config.BuildMinWidth;
+					self.pageConfig.IsAddTrimArea = res.result.page_config.IsAddTrimArea;
 					self.formData.isCalc = res.result.page_config.BuildAddCalc;
 					self.formData.factoryId = res.result.page_config.FactoryId;
 					self.formData.cusId = res.result.page_config.CusId;
@@ -449,6 +451,10 @@
                     iTonLen      : null,
                     iULen        : null
 				};
+				if( this.formData.isEdge == '毛片' && this.pageConfig.IsAddTrimArea == 1 ){
+					data.bAddTrim = false;
+					data.bAddArea = false;
+				}
 				let self = this;
 				this.$request.staff.connecterp.calBdPriceInfo( postData, 0 ).then((res)=>{
 					if( res.data.result[2] === false ){
@@ -523,6 +529,10 @@
 	                    iBoxH        : null,
 	                    iTonLen      : null,
 	                    iULen        : null
+					}
+					if( this.formData.isEdge == '毛片' && this.pageConfig.IsAddTrimArea == 1 ){
+						data.bAddTrim = false;
+						data.bAddArea = false;
 					}
 					let self = this;
 					this.$request.staff.connecterp.calBdPriceInfo( data, 0 ).then((res)=>{

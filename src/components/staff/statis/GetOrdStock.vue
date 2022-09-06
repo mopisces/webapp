@@ -73,6 +73,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import HighChart from '@/components/subject/chart/HighChart';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -237,10 +238,11 @@
 				});
 			},
 			resetClick(){
+				this.config.getConfig = true;
 				this.filterForm.dateType  = 1;
 				this.filterForm.diffDay   = 0;
 				this.filterForm.remainDay = 0;
-				sessionStorage.removeItem('statis/getOrdStock');
+				removeStorage('statis/getOrdStock');
 				this.getOrdStockConfig( true );
 			},
 			filterClick(){
@@ -256,12 +258,19 @@
 						this.filterForm.limitValue = '';
 				}
 				this.config.popup.detailShow = true;
+			},
+			beforeunloadHandler(){
+				if( this.config.switchCell.checked ){
+					setStorage('statis/getOrdStock',JSON.stringify(this.filterForm));
+				}else{
+					removeStorage('statis/getOrdStock');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','库存统计');
-			if( sessionStorage.getItem('statis/getOrdStock') ){
-				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrdStock'));
+			if( getStorage('statis/getOrdStock') ){
+				let storageData = JSON.parse(getStorage('statis/getOrdStock'));
 				this.filterForm = storageData;
 				this.config.getConfig = false;
 				this.config.switchCell.checked = true;
@@ -270,16 +279,14 @@
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
 			this.getOrdStockConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switchCell.checked ){
-				sessionStorage.setItem('statis/getOrdStock',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('statis/getOrdStock');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

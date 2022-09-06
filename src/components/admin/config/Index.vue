@@ -170,6 +170,7 @@
 					BuildDeliveryDate         : '',  //交货日期(默认)
 					BuildMinDate              : '',  //交货日期(范围)
 					BuildMaxDate              : '',  //交货日期
+					IsAddTrimArea             : '',  //是否开启加面积加修边
 					//团购参数
 					WebSalesWidth    : '',  //团购纸板销售宽默认值
 					MaxOverTimeOrder : '',  //最大超时未支付订单数量

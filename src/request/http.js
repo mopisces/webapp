@@ -1,5 +1,7 @@
 import { Dialog, Toast } from 'vant';
 import router from '@/router';
+import { getStorage, setStorage,removeStorage } from '@/util/storage';
+import store from '@/store';
 var httpServer = axios.create();
 httpServer.defaults.timeout = 15000;
 httpServer.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
@@ -11,14 +13,14 @@ httpServer.interceptors.request.use(
 			loadingType: 'spinner'
 		});
 		let auth = '';
-		if( sessionStorage.getItem('jpdn-client-token') ){
-			auth = sessionStorage.getItem('jpdn-client-token');
-		}else if( sessionStorage.getItem('jpdn-staff-token') ){
-			auth = sessionStorage.getItem('jpdn-staff-token');
-		}else if( sessionStorage.getItem('jpdn-admin-token') ){
-			auth = sessionStorage.getItem('jpdn-admin-token');
-		}else if( sessionStorage.getItem('jpdn-sg-token') ){
-			auth = sessionStorage.getItem('jpdn-sg-token');
+		if( getStorage('jpdn-client-token', 'sessionStorage') ){
+			auth = getStorage('jpdn-client-token', 'sessionStorage');
+		}else if( getStorage('jpdn-staff-token', 'sessionStorage') ){
+			auth = getStorage('jpdn-staff-token', 'sessionStorage');
+		}else if( getStorage('jpdn-admin-token', 'sessionStorage') ){
+			auth = getStorage('jpdn-admin-token', 'sessionStorage');
+		}else if( getStorage('jpdn-sg-token', 'sessionStorage') ){
+			auth = getStorage('jpdn-sg-token', 'sessionStorage');
 		}else{
 			auth = '';
 		}
@@ -52,61 +54,101 @@ httpServer.interceptors.response.use(
 
 const errorHandle = {
 	mainHandle( errorCode,msg ){
+		console.log(errorCode)
 		switch(errorCode){
-			case '10014':
-				Toast.fail(msg);
+			case 10001:
+				Toast.fail('请求方式错误');
 				break;
-			case '20201':
-				Toast.fail(msg);
+			case 10014:
+				Toast.fail(msg ? msg : '微信模块参数错误');
 				break;
-			case '20250':
-				Toast.fail(msg);
+			case 10203:
+				relogin( msg ? msg : '服务器内部错误,请稍后再试' );
 				break;
-			case '20215':
-				if( sessionStorage.getItem('jpdn-staff-token') !== null && sessionStorage.getItem('jpdn-staff-refresh') !== null ){
-					/*let postData = {
-						access_token  : sessionStorage.getItem('jpdn-staff-token'),
-						refresh_token : sessionStorage.getItem('jpdn-staff-refresh')
-					};
-					httpServer.post(index.index.getToken,postData).then((res)=>{
-						sessionStorage.setItem('jpdn-staff-token',res.data.result.access_token);
-						sessionStorage.setItem('jpdn-staff-refresh',res.data.result.refresh_token);
-						sessionStorage.setItem('jpdn-staff-username',res.data.result.user_name);
-					});*/
-					Dialog({ message: '登录过期,请重新登录' }).then(()=>{
-						router.push('/group/staff/login')
-					});
-				}
-				if( sessionStorage.getItem('jpdn-client-token') !== null && sessionStorage.getItem('jpdn-client-refresh') !== null ){
-					/*let postData = {
-						access_token  : sessionStorage.getItem('jpdn-client-token'),
-						refresh_token : sessionStorage.getItem('jpdn-client-refresh')
-					};
-					httpServer.post(index.index.getToken,postData).then((res)=>{
-						sessionStorage.setItem('jpdn-client-token',res.data.result.access_token);
-						sessionStorage.setItem('jpdn-client-refresh',res.data.result.refresh_token);
-						sessionStorage.setItem('jpdn-client-username',res.data.result.user_name);
-					});*/
-					Dialog({ message: '登录过期,请重新登录' }).then(()=>{
-						router.push('/group/client/login')
-					});
+			//支付宝支付参数错误
+			case 10300:
+				Toast.fail(msg ? msg : '支付宝支付参数错误');
+				break;
+			//微信模块参数错误
+			case 10400:
+				Toast.fail(msg ? msg : '微信模块参数错误')
+				break;
+			//ERP下单系统不可用
+			case 20200:
+				Toast.fail('ERP下单系统不可用')
+			//参数错误
+			case 20201:
+				Toast.fail(msg ? msg:'查询参数不符合条件');
+				if( msg.includes("用户名或密码错误") ){
+					relogin(msg);
 				}
 				break;
-			case '20216':
-				Dialog({ message: '登录过期,请重新登录' }).then(()=>{
-					router.push('/group/index')
-				});
+			//没有访问权限
+			case 20204:
+				relogin( msg ? msg : '没有访问权限', 'menu' );
 				break;
-			//生管权限异常,包含登陆过期
-			case '11000':
-				Dialog({ message: '登录异常,请重新登陆' }).then(()=>{
-					router.push('/sg/login')
-				});
+			//令牌验证失败
+			case 20205:
+				relogin( msg ? msg : '令牌验证失败' );
+				break;
+			//数据库操作失败
+			case 20220:
+				Toast.fail(msg ? msg : '数据库操作失败');
+				break;
+			//空数据
+			case 20250:
+				Toast.fail(msg ? msg : '没有更多数据了');
+				break;
+			//团购失败
+			case 20260:
+				Toast.fail(msg ? msg : '团购失败');
 				break;
 			default :
 				Toast.fail(msg);
 				break;
 		}
 	}
+}
+
+const relogin = ( msg, type='login' )=>{
+	Dialog({ message:msg }).then(()=>{
+		switch( getStorage('jpdn-login-type') ){
+			case 'client':
+				removeStorage('jpdn-client-token');
+				removeStorage('jpdn-client-refresh');
+				removeStorage('jpdn-client-isLogin');
+				removeStorage('client-auth-url');
+				setStorage('jpdn-client-isLogin',0);
+				store.commit('client/setIsLogin',false);
+				if( type == 'login'){
+					router.push('/group/client/login');
+				}else if(type == 'menu'){
+					router.push('/client/index/menu');
+				}
+				break;
+			case 'staff':
+				removeStorage('jpdn-staff-token');
+				removeStorage('jpdn-staff-refresh');
+				removeStorage('jpdn-staff-isLogin');
+				removeStorage('staff-auth-url');
+				setStorage('jpdn-staff-isLogin',0);
+				store.commit('staff/setIsLogin',false);
+				if( type == 'login'){
+					router.push('/group/staff/login');
+				}else if(type == 'menu'){
+					router.push('/staff/index/menu');
+				}
+				break;
+			case 'admin':
+				removeStorage('jpdn-admin-token');
+				removeStorage('jpdn-admin-refresh');
+				removeStorage('jpdn-admin-username');
+				router.push('/admin/login');
+				break;
+			default:
+				router.push('/group/client/login');
+				break;
+		}
+	})
 }
 export default httpServer;

@@ -79,6 +79,7 @@
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -173,17 +174,24 @@
 			},
 			resetClick(){
 				this.config.switch.checked = false;
-				sessionStorage.removeItem('client-order/getCusFreeMB');
+				removeStorage('client-order/getCusFreeMB');
 				this.getConfig( true );
 			},
 			filterClick(){
 				this.pullOnRefresh();
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('client-order/getCusFreeMB',this.filterForm);
+				}else{
+					removeStorage('client-order/getCusFreeMB');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','对账单');
-			if( sessionStorage.getItem('client-order/getCusFreeMB') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('client-order/getCusFreeMB'));
+			if( getStorage('client-order/getCusFreeMB') !== null ){
+				let storageData = JSON.parse(getStorage('client-order/getCusFreeMB'));
 				this.filterForm = storageData;
 				this.config.switch.checked = true;
 			}else{
@@ -192,16 +200,14 @@
 		},
 		mounted(){
 			this.getConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('client-order/getCusFreeMB',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('client-order/getCusFreeMB');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			typeChange(){

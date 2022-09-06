@@ -22,6 +22,8 @@
 	import { Button, Image, Field, Toast, Divider } from 'vant';
 	import schema from 'async-validator';
 	import CopyRight from '@/components/subject/footer/CopyRight';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	import { clearLogin } from '@/util';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -88,21 +90,37 @@
 			login( data ){
 				let self = this;
 				this.$request.login.login.login( data ).then(res=>{
-					sessionStorage.setItem('jpdn-client-token',res.result.access_token);
-					sessionStorage.setItem('jpdn-client-refresh',res.result.refresh_token);
-					sessionStorage.setItem('jpdn-client-username',res.result.user_name);
+					/*setStorage('jpdn-client-token',res.result.access_token);
+					setStorage('jpdn-client-refresh',res.result.refresh_token);
+					setStorage('jpdn-client-username',res.result.user_name);
+					setStorage('jpdn-client-userpwd',res.result.user_pwd);
+					setStorage('jpdn-client-isLogin',true);*/
+					if( res.result.user_name != getStorage('jpdn-client-username') ) removeStorage();
+					self.setLocalInfo(res.result);
 					self.result.userName = res.result.user_name;
-					localStorage.setItem("client-loginInfo",JSON.stringify( this.formData ));
+					//localStorage.setItem("client-loginInfo",JSON.stringify( this.formData ));
 				});
 			},
 			quickLogin(){
 				let self = this;
 				this.$request.login.login.quickLogin( this.$route.query.token ).then(res=>{
-					sessionStorage.setItem('jpdn-client-token',res.result.access_token);
-					sessionStorage.setItem('jpdn-client-refresh',res.result.refresh_token);
-					sessionStorage.setItem('jpdn-client-username',res.result.user_name);
+					/*setStorage('jpdn-client-token',res.result.access_token);
+					setStorage('jpdn-client-refresh',res.result.refresh_token);
+					setStorage('jpdn-client-username',res.result.user_name);
+					setStorage('jpdn-client-userpwd',res.result.user_pwd);
+					setStorage('jpdn-client-isLogin',true);*/
+					if( res.result.user_name != getStorage('jpdn-client-username') ) removeStorage();
+					self.setLocalInfo(res.result);
 					self.result.userName = res.result.user_name;
 				});
+			},
+			setLocalInfo( $info ){
+				setStorage('jpdn-client-token',$info.access_token, 'sessionStorage');
+				setStorage('jpdn-client-refresh',$info.refresh_token, 'sessionStorage');
+				setStorage('jpdn-client-username',$info.user_name);
+				setStorage('jpdn-client-userpwd',$info.user_pwd);
+				setStorage('jpdn-client-isLogin',1, 'sessionStorage');
+				setStorage('jpdn-login-type','client');
 			},
 			getAuthName( data ){
 				let self = this;
@@ -110,18 +128,20 @@
 					if( res.errorCode != '00000' ){
 						return ;
 					}
-					sessionStorage.setItem('client-auth-url',JSON.stringify(res.result.available));
+					setStorage('client-auth-url',res.result.available);
 					self.$store.dispatch('client/permission',res.result.available);
 					self.$router.addRoutes(self.$store.state.client.navList);
 				}).then(()=>{
 					this.$nextTick(()=>{
-						sessionStorage.setItem('jpdn-client-isLogin',true);
+						setStorage('jpdn-client-isLogin',1, 'sessionStorage');
 						if( this.config.redirect.name != '' ){
 							this.$store.commit('client/setTabbarActive','group');
 							this.$router.replace({ name : this.config.redirect.name , params : { productId : this.config.redirect.params } }); 
 						}else{
 							this.$store.commit('client/setTabbarActive','menu');
-							this.$router.push('/client/index/menu');
+							//this.$router.push('/client/index/menu');
+							this.$router.push(this.$store.state.client.loginRedirect);
+							this.$store.commit('client/setLoginRedirect','/client/index/menu')
 						}
 					});
 				});
@@ -148,18 +168,18 @@
 			}
 		},
 		created(){
-			/*if( sessionStorage.getItem('jpdn-client-username') !== null ){
-				this.formData.userName = sessionStorage.getItem('jpdn-client-username')
-			}*/
-			try{
-				let loginInfo = JSON.parse(localStorage.getItem("client-loginInfo"));
-				if( loginInfo != null ){
-					this.formData = loginInfo;
-				}
-			}catch(err){
-				console.log( err )
+			if( getStorage('jpdn-client-username') ){
+				this.formData.userName = getStorage('jpdn-client-username');
 			}
-			sessionStorage.clear();
+			if( getStorage('jpdn-client-userpwd') ){
+				this.formData.userPass = getStorage('jpdn-client-userpwd');
+			}
+			/*setStorage('jpdn-client-isLogin',0,'sessionStorage');
+			removeStorage('client-auth-url');
+			removeStorage('jpdn-client-token', 'sessionStorage');
+			removeStorage('jpdn-client-refresh', 'sessionStorage');
+			this.$store.commit('client/setIsLogin',false);*/
+			clearLogin();
 			let height = window.screen.height - 96;
 			this.config.style.div = 'width:100%;height:' + height + 'px';
 			if( typeof (this.$route.query.token) != 'undefined' ){

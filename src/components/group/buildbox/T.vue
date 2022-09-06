@@ -298,6 +298,11 @@
 			}else{
 				this.$router.go(-1);
 			}
+			if( !this.$store.state.client.isLogin ){
+				this.$store.commit('client/setLoginRedirect','/group/box/detail')
+				this.$router.replace('/group/client/login');
+				return 
+			}
 			this.getConfig( this.formData.productId );
 			this.validator = new schema( this.rules );
 		},

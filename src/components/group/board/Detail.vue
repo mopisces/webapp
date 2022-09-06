@@ -129,7 +129,8 @@
 					},
 					countDown : {
 						show : false
-					}
+					},
+					loginShow:false
 				},
       			imagesList : [],
               	detailData : {},

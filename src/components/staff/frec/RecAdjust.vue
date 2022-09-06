@@ -79,6 +79,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import FrecSellPay from '@/components/subject/staff/FrecSellPay.vue';
 	import schema from 'async-validator';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -581,17 +582,24 @@
 					Toast.fail(errors[0].message);
 				});
 			},
+			beforeunloadHandler(){
+				if( this.info.switch.checked ){
+					setStorage('frec/recAdjust',this.filterForm);
+				}else{
+					removeStorage('frec/recAdjust');
+				}
+			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','收款调账');
-			if( sessionStorage.getItem('frec/recAdjust') !== null  ){
-				let storageData = JSON.parse(sessionStorage.getItem('frec/recAdjust'));
+			if( getStorage('frec/recAdjust') !== null  ){
+				let storageData = JSON.parse(getStorage('frec/recAdjust'));
 				this.filterForm = storageData;
 				this.config.getConfig = false;
 				this.info.switch.checked = true;
 			}
-			if( sessionStorage.getItem('staff-auth-url') !== null){
-				let auth = JSON.parse(sessionStorage.getItem('staff-auth-url'));
+			if( getStorage('staff-auth-url') !== null ){
+				let auth = JSON.parse(getStorage('staff-auth-url'));
 				if( auth.indexOf('收款调账维护') >= 0 ){
 					this.config.modifyAuth = true;
 				}
@@ -608,13 +616,11 @@
 			this.getTableConfig();
 			this.recAdjustConfig();
 			this.config.table.height = window.screen.height - 170;
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.info.switch.checked ){
-				sessionStorage.setItem('frec/recAdjust',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('frec/recAdjust');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

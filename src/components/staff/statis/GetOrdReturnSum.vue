@@ -82,6 +82,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import HighChart from '@/components/subject/chart/HighChart';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -265,19 +266,27 @@
 				});
 			},
 			resetClick(){
+				this.config.getConfig = true;
 				this.filterForm.dateType = 4;
-				sessionStorage.removeItem('statis/getOrdReturnSum');
+				removeStorage('statis/getOrdReturnSum');
 				this.getOrdReturnSumConfig( true );
 			},
 			filterClick(){
 				this.onRefresh();
 				this.config.popup.filterShow = false;
+			},
+			beforeunloadHandler(){
+				if( this.config.switchCell.checked ){
+					setStorage('statis/getOrdReturnSum',this.filterForm);
+				}else{
+					removeStorage('statis/getOrdReturnSum');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','退货统计');
-			if( sessionStorage.getItem('statis/getOrdReturnSum') ){
-				let storageData = JSON.parse(sessionStorage.getItem('statis/getOrdReturnSum'));
+			if( getStorage('statis/getOrdReturnSum') ){
+				let storageData = JSON.parse(getStorage('statis/getOrdReturnSum'));
 				this.filterForm = storageData;
 				this.config.getConfig = false;
 				this.config.switchCell.checked = true;
@@ -286,16 +295,14 @@
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
 			this.getOrdReturnSumConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switchCell.checked ){
-				sessionStorage.setItem('statis/getOrdReturnSum',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('statis/getOrdReturnSum');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

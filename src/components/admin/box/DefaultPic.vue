@@ -9,12 +9,13 @@
 	</div>
 </template>
 <script>
+	import { getStorage } from '@/util/storage';
 	export default {
 		data(){
 			return {
 				upload:{
 					header:{
-						Authentication : sessionStorage.getItem('jpdn-admin-token')
+						Authentication : getStorage('jpdn-admin-token', 'sessionStorage')
 					},
 					action:window.jpdn_domain_admin + 'adminDefaultImgAdd' ,
 					data:{

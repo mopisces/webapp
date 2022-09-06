@@ -184,6 +184,7 @@
 	import FloatNav from '@/components/subject/client/FloatNav.vue';
 	import schema from 'async-validator';
 	import { cTypeChange } from '@/util/index';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -411,7 +412,7 @@
 					orderState : this.filterForm.orderState,
 					curPage    : 0,
 				};
-				sessionStorage.removeItem('client/wxOrders');
+				removeStorage('client/wxOrders');
 				this.config.getConfig      = true;
 				this.config.switch.checked = false;
 				this.getConfig( true );
@@ -540,12 +541,19 @@
 			},
 			payDetailClick( cusPoNo ){
 				this.$router.push({ name:'payDetail', params:{ orderId : cusPoNo } });
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('client/wxOrders',this.filterForm);
+				}else{
+					removeStorage('client/wxOrders');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','微信订单');
-			if( sessionStorage.getItem('client/wxOrders') ){
-				let storageData = JSON.parse(sessionStorage.getItem('client/wxOrders'));
+			if( getStorage('client/wxOrders') ){
+				let storageData = JSON.parse(getStorage('client/wxOrders'));
 				this.filterForm            = storageData;
 				this.config.getConfig      = false;
 				this.config.switch.checked = true;
@@ -553,16 +561,14 @@
 		},
 		mounted(){
 			this.validator = new schema(this.delRules);
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('client/wxOrders',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('client/wxOrders');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			orderStateChange(){

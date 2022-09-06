@@ -22,24 +22,11 @@
 				</van-tabbar-item>
 			</van-tabbar>
 		</div>
-		<!-- <div style="width:100%;height:2.875rem;"></div>
-		<div class="container" :style="'height:' + fullHeight + 'px;width:100%;'">
-			<router-view v-if="isRouterAlive" />
-			<div style="width:100%;height:50px;"></div>
-			<div style="margin-bottom:50px;"></div>
-		</div>
-		<div style="height:3.125rem;width:100%;"></div> 
-		<van-tabbar v-model="active">
-			<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>
-			<van-tabbar-item @click="logout">
-				退出
-				<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
-			</van-tabbar-item>
-		</van-tabbar> -->
 	</div>
 </template>
 <script>
 	import { Cell, Icon, Dialog, NavBar, Tabbar, TabbarItem } from 'vant';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default{
 		components:{
 			[Cell.name]: Cell,
@@ -84,10 +71,19 @@
 				Dialog.confirm({
 					message: '确认退出?'
 				}).then(() => {
-					this.userName = sessionStorage.getItem('jpdn-staff-username');
-					sessionStorage.clear();
-					sessionStorage.setItem('jpdn-staff-username',this.userName);
-					this.$router.push('/group/staff/login');
+					/*this.userName = getStorage('jpdn-staff-username');
+					removeStorage();
+					setStorage( 'jpdn-staff-username', this.userName );
+					this.$router.push('/group/staff/login');*/
+					if( getStorage('jpdn-login-type') == 'staff' ){
+						removeStorage('jpdn-staff-token', 'sessionStorage');
+						removeStorage('jpdn-staff-refresh', 'sessionStorage');
+						removeStorage('staff-auth-url');
+						setStorage('jpdn-staff-isLogin',0, 'sessionStorage') ;
+						this.$store.commit('staff/setIsLogin',false);
+						this.$store.commit('client/setIsLogin',false);
+						this.$router.push('/group/staff/login');
+					}
 				}).catch(()=>{
 					Dialog.close();
 				});

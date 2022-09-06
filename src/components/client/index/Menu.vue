@@ -63,6 +63,7 @@
 	import { urlWhiteList } from '@/util';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -160,7 +161,7 @@
 				});
 			},
 			getChangePass(){
-				this.formData.account = sessionStorage.getItem('jpdn-client-username');
+				this.formData.account = getStorage('jpdn-client-username');
 				this.config.popup.changePass.show = true ;
 			},
 			changeClick(){
@@ -205,12 +206,12 @@
 			},
 			getAuthMap(){
 				let self = this;
-				this.$request.staff.user.getAuthName( {UserName:sessionStorage.getItem('jpdn-client-username')} ).then(res=>{
+				this.$request.staff.user.getAuthName( {UserName:getStorage('jpdn-client-username')} ).then(res=>{
 					if( res.errorCode != '00000' ){
 						return ;
 					}
 					self.authUrl = res.result.available;
-					sessionStorage.setItem('client-auth-url',JSON.stringify(res.result.available));
+					setStorage('client-auth-url',res.result.available);
 					self.$store.commit('client/setNavList',null);
 				}).then(()=>{
 					this.$nextTick(()=>{

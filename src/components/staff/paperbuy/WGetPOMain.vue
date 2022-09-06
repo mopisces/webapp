@@ -61,6 +61,7 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PaperBuyDetail from '@/components/subject/PaperBuyDetail.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -142,10 +143,12 @@
 				let self = this;
 				this.$request.staff.paperbuy.paperBuy( data ).then(res=>{
 					self.radioData = [];
-					res.result.po_date_select.forEach((item,index)=>{
-						self.radioData.push({prevNext:item,tag:'poMain'});
-					});
-					self.cellList = res.result.data;
+					if( res.result ){
+						res.result.po_date_select.forEach((item,index)=>{
+							self.radioData.push({prevNext:item,tag:'poMain'});
+						});
+						self.cellList = res.result.data;
+					}
 				});
 			},
 			radioConfirm( value ){
@@ -155,12 +158,19 @@
 				item['Date'] = date; 
 				this.config.detailTable.item = item;
 				this.config.popup.detailShow = true;
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('paperbuy/wGetPOMain',this.filterForm);
+				}else{
+					removeStorage('paperbuy/wGetPOMain');
+				}
 			}
 		},	
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸采购');
-			if( sessionStorage.getItem('paperbuy/wGetPOMain') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('paperbuy/wGetPOMain'));
+			if( getStorage('paperbuy/wGetPOMain') !== null ){
+				let storageData = JSON.parse(getStorage('paperbuy/wGetPOMain'));
 				this.filterForm = storageData;
 				this.config.getConfig = false;
 				this.config.switch.checked = true;
@@ -168,13 +178,11 @@
 		},
 		mounted(){
 			this.paperBuyConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('paperbuy/wGetPOMain',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('paperbuy/wGetPOMain');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

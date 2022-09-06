@@ -25,6 +25,7 @@
 	import { Button, Field, SwitchCell, Sticky, Tab, Tabs} from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -119,7 +120,9 @@
 			getTableData( data ){
 				let self = this;
 				this.$request.staff.paper.staffPaperSafe( data ).then(res=>{
-					self.table.data = res.result;
+					if( res.result ){
+						self.table.data = res.result;
+					}
 				});
 			},
 			columnCellClass( rowIndex,columnName,rowData ){
@@ -153,12 +156,19 @@
 						}
 					});
 				});
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('paper/paperSafe',this.filterForm);
+				}else{
+					removeStorage('paper/paperSafe');
+				}
 			}	
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','安全库存');
-			if( sessionStorage.getItem('paper/paperSafe') !== null  ){
-				this.filterForm = JSON.parse(sessionStorage.getItem('paper/paperSafe'));
+			if( getStorage('paper/paperSafe') !== null  ){
+				this.filterForm = JSON.parse(getStorage('paper/paperSafe'));
 				this.config.switch.checked = true;
 			}
 		},
@@ -166,13 +176,11 @@
 			this.getTableConfig();
 			this.getTableData( this.filterForm );
 			this.config.table.height = window.screen.height - 170;
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('paper/paperSafe',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('paper/paperSafe');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			paperState(){

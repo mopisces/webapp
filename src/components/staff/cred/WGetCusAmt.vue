@@ -26,7 +26,7 @@
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<cus-picker :cusName.sync="filterForm.cusId" ></cus-picker>
+				<cus-picker ref="cusPicker" :cusName.sync="filterForm.cusId" ></cus-picker>
 				<radio-cell :radioInfo.sync="filterForm.isStopped" :radioColumns="config.radio.isStopped.options" :title="config.radio.isStopped.title"></radio-cell>
 				<radio-cell :radioInfo.sync="filterForm.isSettleDay" :radioColumns="config.radio.isSettleDay.options" :title="config.radio.isSettleDay.title"></radio-cell>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"/>
@@ -42,6 +42,7 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import CusAmtDetail from '@/components/subject/cred/CusAmtDetail.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -160,25 +161,30 @@
 			cusPickerConfirm( result ){
 				this.config.popup.cusPicker.show = false;
 				this.filterForm.cusId = result.key;
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage( 'cred/wGetCusAmt', this.filterForm );
+				}else{
+					removeStorage( 'cred/wGetCusAmt' );
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','客户信用余额');
-			if( sessionStorage.getItem('cred/wGetCusAmt') !== null  ){
-				this.filterForm = JSON.parse(sessionStorage.getItem('cred/wGetCusAmt'));
+			if( getStorage('cred/wGetCusAmt') !== null  ){
+				this.filterForm = JSON.parse( getStorage('cred/wGetCusAmt') );
 				this.config.switch.checked = true;
 			}
 		},
 		mounted(){
 			this.getUserInfo();
 			this.getInitData( this.filterForm );
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('cred/wGetCusAmt',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('cred/wGetCusAmt');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

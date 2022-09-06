@@ -77,6 +77,7 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
+	import { getStorage, setStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -283,8 +284,8 @@
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','每日订单详细信息');
-			if( sessionStorage.getItem('daily/wGetCusOrder/info') !== null ){
-				this.form = JSON.parse(sessionStorage.getItem('daily/wGetCusOrder/info'));
+			if( getStorage('daily/wGetCusOrder/info') !== null ){
+				this.form = JSON.parse(getStorage('daily/wGetCusOrder/info'));
 				this.pageConfig.maxDate    = this.form.maxDate;
 				this.pageConfig.minDate    = this.form.minDate;
 				this.filterCount.cusId     = this.form.CusId;
@@ -293,6 +294,7 @@
 			}else{
 				this.$router.go(-1);
 			}
+			this.$store.commit('staff/setBackPath','/staff/daily/wGetCusOrder');
 		},
 		mounted(){
 			this.getConfig();

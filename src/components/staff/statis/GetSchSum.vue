@@ -65,6 +65,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import HighChart from '@/components/subject/chart/HighChart';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -229,21 +230,29 @@
 				});
 			},
 			resetClick(){
+				this.config.getConfig = true;
 				this.filterForm.sState         = '0';
 				this.filterForm.dateType       = '0';
 				this.config.switchCell.checked = false;
-				sessionStorage.removeItem('statis/getSchSum');
+				removeStorage('statis/getSchSum');
 				this.getSchSumConfig( true );
 			},
 			filterClick(){
 				this.onRefresh();
 				this.config.popup.filterShow = false;
+			},
+			beforeunloadHandler(){
+				if( this.config.switchCell.checked ){
+					setStorage('statis/getSchSum',this.filterForm);
+				}else{
+					removeStorage('statis/getSchSum');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','传单统计');
-			if( sessionStorage.getItem('statis/getSchSum') ){
-				let storageData = JSON.parse(sessionStorage.getItem('statis/getSchSum'));
+			if( getStorage('statis/getSchSum') ){
+				let storageData = JSON.parse(getStorage('statis/getSchSum'));
 				this.filterForm = storageData;
 				this.config.getConfig          = false;
 				this.config.switchCell.checked = true;
@@ -252,16 +261,14 @@
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
 			this.getSchSumConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switchCell.checked ){
-				sessionStorage.setItem('statis/getSchSum',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('statis/getSchSum');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			/*statisTypeChange(){

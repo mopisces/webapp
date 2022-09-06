@@ -57,7 +57,7 @@
 				<van-field label="箱宽" v-model="filterForm.boxWidth" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="箱高" v-model="filterForm.boxHeight" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="精确查询" input-align="center" type="number" maxlength="10"></van-field>
-				<cus-picker :cusName.sync="filterForm.cusName" ></cus-picker>
+				<cus-picker ref="cusPicker" :cusName.sync="filterForm.cusName" ></cus-picker>
 				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.radioColumns" title="日期类型"></radio-cell>
 				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
@@ -74,6 +74,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -192,7 +193,8 @@
 					beginDate     : '',
 					endDate       : ''
 				};
-				sessionStorage.removeItem('erp/getOrders');
+				this.$refs.cusPicker.cusPickerClean();
+				removeStorage('erp/getOrders');
 				this.config.getConfig = true;
 				this.config.switch.checked = false;
 				this.getConfig( true );
@@ -231,9 +233,11 @@
 						self.config.list.pushLoading.finished = true;
 					}
 					self.config.list.pushLoading.loading = false;
-					res.result.forEach((item,index)=>{
-						self.info.panelList.push(item);
-					});
+					if( res.result != null ){
+						res.result.forEach((item,index)=>{
+							self.info.panelList.push(item);
+						});
+					}
 				});
 			},
 			detailShowClick( strOrderId ){
@@ -244,19 +248,26 @@
 			},
 			detailClose(){
 				this.config.popup.detailShow = false;
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('erp/getOrders',this.filterForm);
+				}else{
+					removeStorage('erp/getOrders');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','ERP订单');
-			if( sessionStorage.getItem('erp/getOrders') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('erp/getOrders'));
+			if( getStorage('erp/getOrders') !== null ){
+				let storageData = JSON.parse(getStorage('erp/getOrders'));
 				this.filterForm = storageData;
 				this.config.getConfig      = false;
 				this.config.switch.checked = true;
 			}
 		},
 		mounted(){
-
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
@@ -265,11 +276,8 @@
 			
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('erp/getOrders',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('erp/getOrders');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			orderState(){

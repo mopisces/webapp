@@ -26,7 +26,7 @@
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick" id="popup-filter">
 			<div slot="filter-field-1">
-				<cus-picker :cusName.sync="filterForm.cusName"></cus-picker>
+				<cus-picker ref="cusPicker" :cusName.sync="filterForm.cusName"></cus-picker>
 				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
 				<van-switch-cell v-model="filterForm.addUserId" title="下单员" v-if=" false "/>
@@ -41,6 +41,7 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -75,7 +76,7 @@
 					},
 					switch:{
 						rem:{
-							checked : true
+							checked : false
 						}
 					}
 				},
@@ -117,7 +118,8 @@
 			},
 			cellClick(item){
 				let str  = JSON.stringify(Object.assign({},this.filterForm,item,this.pageConfig));
-				sessionStorage.setItem('daily/wGetCusOrder/info',str);
+				//sessionStorage.setItem('daily/wGetCusOrder/info',str);
+				setStorage('daily/wGetCusOrder/info',str);
 				this.$router.push('/staff/daily/getOrdersP');
 			},
 			getDailyConfig( isReset = false ){
@@ -158,7 +160,7 @@
 					cusName:''
 				};
 				this.$refs.cusPicker.cusPickerClean();
-				sessionStorage.removeItem('daily/wGetCusorder');
+				removeStorage('daily/wGetCusorder');
 				this.config.getConfig = true;
 				this.config.switch.rem.checked = false;
 				this.getDailyConfig( true );
@@ -166,12 +168,20 @@
 			filterClick(){
 				this.config.popup.rightFilter.show = false;
 				this.getDailyOrder( this.filterForm );
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.rem.checked ){
+					setStorage('daily/wGetCusorder',this.filterForm);
+				}else{
+					removeStorage('daily/wGetCusorder');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','客户每日订单');
-			if( sessionStorage.getItem('daily/wGetCusorder') !== null   ){
-				let storageData = JSON.parse(sessionStorage.getItem('daily/wGetCusorder'));
+			removeStorage('daily/wGetCusOrder/info');
+			if( getStorage('daily/wGetCusorder') !== null   ){
+				let storageData = JSON.parse( getStorage('daily/wGetCusorder') );
 				this.filterForm = storageData;
 				this.config.getConfig     = false;
 				this.config.switch.rem.checked = true;
@@ -179,13 +189,11 @@
 		},
 		mounted(){
 			this.getDailyConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.config.switch.rem.checked ){
-				sessionStorage.setItem('daily/wGetCusorder',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('daily/wGetCusorder');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

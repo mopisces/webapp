@@ -76,6 +76,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -219,16 +220,15 @@
 				let self = this;
 				this.config.prevNext.show   = false;
 				this.$request.client.ordersManage.dailyOrderOptionalDate( this.filterForm ).then(res=>{
-					if( res.errorCode != '00000' || res.result.length <= 0 ){
-						return ;
+					if( res.result && res.errorCode == '00000' && res.result.length > 0 ){
+						self.radioData = res.result;
+						self.radioData.forEach((item,index)=>{
+							item['prevNext'] = item.OrderDate;
+							item['tag']      = 'daily';
+						});
+						self.config.prevNext.show   = true;
+						self.filterForm.bookingDate = this.radioData[0].OrderDate;
 					}
-					self.radioData = res.result;
-					self.radioData.forEach((item,index)=>{
-						item['prevNext'] = item.OrderDate;
-						item['tag']      = 'daily';
-					});
-					self.config.prevNext.show   = true;
-					self.filterForm.bookingDate = this.radioData[0].OrderDate;
 				});
 			},
 			dailyOrders( data ){
@@ -308,12 +308,19 @@
 				this.optionalDate();
 				this.dailyOrders();
 				this.config.popup.rightFilter.show = false;
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('client-daily/getOrdersP',this.filterForm);
+				}else{
+					removeStorage('client-daily/getOrdersP');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','每日订单');
-			if( sessionStorage.getItem('client-daily/getOrdersP') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('client-daily/getOrdersP'));
+			if( getStorage('client-daily/getOrdersP') !== null ){
+				let storageData = JSON.parse(getStorage('client-daily/getOrdersP'));
 				this.filterForm = storageData;
 				this.config.switch.checked = true;
 				this.getConfig( false );
@@ -323,16 +330,14 @@
 		},
 		mounted(){
 			this.config.table.height  = window.screen.height - 225;
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('client-daily/getOrdersP',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('client-daily/getOrdersP');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

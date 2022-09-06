@@ -47,6 +47,7 @@
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -201,12 +202,19 @@
 				this.$request.common.table.getTableConfig().then(res=>{
 					this.config.table.columns = res.clientDeliveryDaily;
 				});
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('client-delivery/index',this.filterForm);
+				}else{
+					removeStorage('client-delivery/index');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','每日送货');
-			if( sessionStorage.getItem('client-delivery/index') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('client-delivery/index'));
+			if( getStorage('client-delivery/index') !== null ){
+				let storageData = JSON.parse(getStorage('client-delivery/index'));
 				this.filterForm = storageData;
 				this.config.switch.checked = true;
 				this.getConfig( false );
@@ -217,16 +225,14 @@
 		mounted(){
 			this.getTableConfig();
 			this.config.table.height  = window.screen.height - 225;
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('client-delivery/index',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('client-delivery/index');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

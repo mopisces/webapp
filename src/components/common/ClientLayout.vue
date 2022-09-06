@@ -31,6 +31,8 @@
 </template>
 <script>
 	import { Cell, Icon, Dialog, NavBar, Tabbar, TabbarItem } from 'vant';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	import { clearLogin } from '@/util';
 	export default{
 		components:{
 			[Cell.name]: Cell,
@@ -58,14 +60,17 @@
 					bounce:true,
 				},
 				active   : '',
-				isLogin  : '',
-				userName : '',
+				isLogin  : false,
 			};
 		},
 		methods:{
 			onClickLeft(){
-				this.$router.push( this.$store.state.client.backPath );
-				this.$store.commit('client/setBackPath','/client/index/menu');
+				if( (this.$store.state.client.isLogin || this.$store.state.staff.isLogin) && !this.$store.state.client.backIsGroup ){
+					this.$router.push( this.$store.state.client.backPath );
+					this.$store.commit('client/setBackPath','/client/index/menu');
+				}else{
+					this.$router.go(-1);
+				}
 				/*this.$router.go(-1);return ;
 				if( sessionStorage.getItem('jpdn-client-isLogin') ){
 					this.$router.push(this.$store.state.client.backPath);
@@ -83,11 +88,22 @@
 				Dialog.confirm({
 					message: '确认退出?'
 				}).then(() => {
-					this.userName = sessionStorage.getItem('jpdn-client-username');
-					sessionStorage.clear();
-					sessionStorage.setItem('jpdn-client-username',this.userName);
+					clearLogin();
+					/*removeStorage('jpdn-client-token', 'sessionStorage');
+					removeStorage('jpdn-client-refresh', 'sessionStorage');
+					removeStorage('client-auth-url');
+					setStorage('jpdn-client-isLogin', 0, 'sessionStorage');
 					this.$store.commit('client/setIsLogin',false);
+					this.$store.commit('staff/setIsLogin',false);*/
 					this.$router.push('/group/client/login');
+					/*if( getStorage('jpdn-login-type') == 'staff' ){
+						removeStorage('jpdn-staff-token');
+						removeStorage('jpdn-staff-refresh');
+						removeStorage('staff-auth-url');
+						setStorage('jpdn-staff-isLogin',0);
+						this.$store.commit('staff/setIsLogin',false);
+						this.$router.push('/group/staff/login');
+					}*/
 				}).catch(()=>{
 					Dialog.close();
 				});
@@ -104,7 +120,12 @@
 		},
 		created(){
 			this.config.headerTitle = this.$store.state.client.layout.title;
-			this.isLogin = this.$store.state.client.isLogin;
+			if( getStorage('jpdn-login-type') == 'client' ){
+				this.isLogin = this.$store.state.client.isLogin;
+			}
+			if( getStorage('jpdn-login-type') == 'staff' ){
+				this.isLogin = this.$store.state.staff.isLogin;
+			}
 			this.active  = this.$store.state.client.tabbarActive;
 		},
 		mounted(){

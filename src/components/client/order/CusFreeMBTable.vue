@@ -22,6 +22,7 @@
 	import { Button, Sticky } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -102,12 +103,19 @@
 			},
 			setElementSize(){
 				this.config.table.height = window.screen.height - 126;
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('order/cusFreeMBTable',JSON.stringify(this.filterForm));
+				}else{
+					setStorage('order/cusFreeMBTable');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','对账单明细');
-			if( sessionStorage.getItem('order/cusFreeMBTable') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('order/cusFreeMBTable'));
+			if( getStorage('order/cusFreeMBTable') !== null ){
+				let storageData = JSON.parse(getStorage('order/cusFreeMBTable'));
 				this.filterForm = storageData;
 				this.config.getConfig      = false;
 				this.config.switch.checked = true;
@@ -121,16 +129,14 @@
 				})()
 			}
 			this.getConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('order/cusFreeMBTable',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('order/cusFreeMBTable');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

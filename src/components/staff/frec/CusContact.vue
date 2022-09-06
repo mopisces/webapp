@@ -19,6 +19,7 @@
 	import { Button, Field, SwitchCell } from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -70,12 +71,19 @@
 				this.$request.common.table.getTableConfig().then(res=>{
 					this.config.table.columns = res.cusContact;
 				});
+			},
+			beforeunloadHandler(){
+				if( this.pageConfig.switchChecked ){
+					setStorage('frec/cusContact',this.filterForm);
+				}else{
+					removeStorage('frec/cusContact');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','客户来往统计');
-			if( sessionStorage.getItem('frec/cusContact') !== null  ){
-				this.filterForm = JSON.parse(sessionStorage.getItem('frec/cusContact'));
+			if( getStorage('frec/cusContact') !== null  ){
+				this.filterForm = JSON.parse(getStorage('frec/cusContact'));
 				this.pageConfig.switchChecked = true;
 			}
 		},
@@ -83,13 +91,11 @@
 			this.getTableConfig();
 			this.cusContact( this.filterForm );
 			this.config.table.height  = window.screen.height - 136;
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.pageConfig.switchChecked ){
-				sessionStorage.setItem('frec/cusContact',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('frec/cusContact');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		watch:{
 			

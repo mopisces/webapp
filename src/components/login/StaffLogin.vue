@@ -27,6 +27,8 @@
 	import { Button, Icon, Image, Row, Col, Popup, Picker, Field, Toast, Tab, Tabs } from 'vant';
 	import schema from 'async-validator';
 	import CopyRight from '@/components/subject/footer/CopyRight';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	import { clearLogin } from '@/util';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -139,29 +141,52 @@
 			login( data ){
 				let self = this;
 				this.$request.login.login.login( data ).then(res=>{
-					sessionStorage.setItem('jpdn-staff-token',res.result.access_token);
-					sessionStorage.setItem('jpdn-staff-refresh',res.result.refresh_token);
-					sessionStorage.setItem('jpdn-staff-username',res.result.user_name);
+					/*setStorage('jpdn-staff-token',res.result.access_token);
+					setStorage('jpdn-staff-refresh',res.result.refresh_token);
+					setStorage('jpdn-staff-username',res.result.user_name);
+					setStorage('jpdn-staff-userpwd',res.result.user_pwd);
+					setStorage('jpdn-staff-isLogin',true);
+					setStorage('jpdn-login-type','staff');*/
+					if( res.result.user_name != getStorage('jpdn-staff-username') ) removeStorage();
+					self.setLocalInfo(res.result);
 					self.result.userName = res.result.user_name;
-					localStorage.setItem("staff-loginInfo",JSON.stringify( this.formData ));
+					//localStorage.setItem("staff-loginInfo",JSON.stringify( this.formData ));
 				});
 			},
 			quickLogin(){
 				let self = this;
 				this.$request.login.login.quickLogin( this.$route.query.token ).then(res=>{
-					sessionStorage.setItem('jpdn-staff-token',res.result.access_token);
-					sessionStorage.setItem('jpdn-staff-refresh',res.result.refresh_token);
-					sessionStorage.setItem('jpdn-staff-username',res.result.user_name);
+					/*setStorage('jpdn-staff-token',res.result.access_token);
+					setStorage('jpdn-staff-refresh',res.result.refresh_token);
+					setStorage('jpdn-staff-username',res.result.user_name);
+					setStorage('jpdn-staff-userpwd',res.result.user_pwd);
+					setStorage('jpdn-staff-isLogin',true);
+					setStorage('jpdn-login-type','staff');*/
+					if( res.result.user_name != getStorage('jpdn-staff-username') ) removeStorage();
+					self.setLocalInfo(res.result);
 					self.result.userName = res.result.user_name;
+					
 				});
+			},
+			setLocalInfo( $info ){
+				setStorage('jpdn-staff-token',$info.access_token, 'sessionStorage');
+				setStorage('jpdn-staff-refresh',$info.refresh_token, 'sessionStorage');
+				setStorage('jpdn-staff-username',$info.user_name);
+				setStorage('jpdn-staff-userpwd',$info.user_pwd);
+				setStorage('jpdn-staff-isLogin',1, 'sessionStorage');
+				setStorage('jpdn-login-type','staff');
 			},
 			getAuthName( data ){
 				let self = this;
+				let authUrl = '';
 				this.$request.staff.user.getAuthName( data ).then(res=>{
 					if( res.errorCode != '00000' ){
 						return ;
 					}
-					sessionStorage.setItem('staff-auth-url',JSON.stringify(res.result.available));
+					/*res.result.available.forEach((item,index)=>{
+						authUrl += item + ',';
+					})*/
+					setStorage('staff-auth-url',res.result.available);
 					self.$store.dispatch('staff/permission', res.result.available);
 					self.$router.addRoutes(self.$store.state.staff.navList);
 				}).then(()=>{
@@ -184,15 +209,29 @@
 			/*if( sessionStorage.getItem('jpdn-staff-username') !== null ){
 				this.formData.userName = sessionStorage.getItem('jpdn-staff-username')
 			}*/
-			try{
-				let loginInfo = JSON.parse(localStorage.getItem("staff-loginInfo"));
+			/*try{
+				let loginInfo = JSON.parse(getStorage("staff-loginInfo"));
 				if( loginInfo != null ){
 					this.formData = loginInfo;
 				}
 			}catch(err){
 				console.log( err )
+			}*/
+			if( getStorage('jpdn-staff-username') ){
+				this.formData.userName = getStorage('jpdn-staff-username');
 			}
-			sessionStorage.clear();
+			if( getStorage('jpdn-staff-userpwd') ){
+				this.formData.userPass = getStorage('jpdn-staff-userpwd');
+			}
+			//setStorage('jpdn-login-type','staff');
+			/*setStorage('jpdn-staff-isLogin', 0, 'sessionStorage');
+			removeStorage('staff-auth-url');
+			removeStorage('jpdn-staff-token', 'sessionStorage');
+			removeStorage('jpdn-staff-refresh', 'sessionStorage');
+			this.$store.commit('staff/setIsLogin',false);*/
+
+			clearLogin();
+
 			this.config.style.div = 'width:100%;height:' + (window.screen.height - 96 ) + 'px';
 			if( typeof (this.$route.query.token) != 'undefined' ){
 				if( this.$route.query.token.length > 100 ){

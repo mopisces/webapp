@@ -97,6 +97,7 @@
 	import { Button, Col, Row, Tab, Tabs, SwitchCell } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -232,12 +233,19 @@
 					this.config.table.columns.meters = res.saleStatisMeters;
 					this.config.table.columns.orderTake = res.saleStatisOrder;
 				});
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('hide/SaleStatis',this.filterForm);
+				}else{
+					removeStorage('hide/SaleStatis');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','接单统计');
-			if( sessionStorage.getItem('hide/SaleStatis') !== null  ){
-				let storageData = JSON.parse(sessionStorage.getItem('hide/SaleStatis'));
+			if(  getStorage('hide/SaleStatis') !== null  ){
+				let storageData = JSON.parse(getStorage('hide/SaleStatis'));
 				this.filterForm = storageData;
 				this.config.getConfig = false;
 				this.config.switch.checked = true;
@@ -248,16 +256,14 @@
 			this.getTableConfig();
 			this.config.table.height  = window.screen.height - 86;
 			this.config.table.meterTableHeight = window.screen.height - 508;
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('hide/SaleStatis',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('hide/SaleStatis');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			produceChange(){

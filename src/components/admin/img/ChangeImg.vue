@@ -10,6 +10,7 @@
 	</div>
 </template>
 <script>
+	import { getStorage } from '@/util/storage';
 	export default {
 		data(){
 			return {
@@ -17,7 +18,7 @@
 					upload:{
 						action:window.jpdn_domain_admin + 'admiListImgAdd',
 						header:{
-							Authentication : sessionStorage.getItem('jpdn-admin-token')
+							Authentication : getStorage('jpdn-admin-token', 'sessionStorage')
 						},
 						data:{
 							img_id : ''

@@ -1,3 +1,6 @@
+import { getStorage, setStorage, removeStorage } from '@/util/storage';
+import store from '@/store';
+
 export function trim()
 {
 	return str.replace(/(^\s*)|(\s*$)/g, "");
@@ -206,4 +209,22 @@ export function digitUppercase( n ){
     return head + s.replace(/(零.)*零元/, '元')
         .replace(/(零.)+/g, '零')
         .replace(/^整$/, '零元整');
+}
+
+
+export function clearLogin()
+{
+	store.commit('client/setIsLogin', false);
+	store.commit('staff/setIsLogin', false);
+
+	setStorage('jpdn-client-isLogin', 0, 'sessionStorage');
+	setStorage('jpdn-staff-isLogin', 0, 'sessionStorage');
+	
+	removeStorage( 'jpdn-client-token', 'sessionStorage' );
+	removeStorage( 'jpdn-client-refresh', 'sessionStorage' );
+	removeStorage( 'jpdn-staff-token', 'sessionStorage' );
+	removeStorage( 'jpdn-staff-refresh', 'sessionStorage' );
+
+	removeStorage('client-auth-url');
+	removeStorage('staff-auth-url');
 }

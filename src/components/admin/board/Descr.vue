@@ -17,6 +17,7 @@
 
 <script>
 	import { quillEditor } from 'vue-quill-editor';
+	import { getStorage } from '@/util/storage';
 	export default {
 		components:{
 			quillEditor,
@@ -27,7 +28,7 @@
 					upload:{
 						action : window.jpdn_domain_admin + 'addDescrImage',
 						header:{
-							Authentication : sessionStorage.getItem('jpdn-admin-token')
+							Authentication : getStorage('jpdn-admin-token', 'sessionStorage')
 						},
 						data   : {
 							goods_id : ''

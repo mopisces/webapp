@@ -26,7 +26,7 @@
 		</new-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick" id="popup-filter">
 			<div slot="filter-field-1">
-				<cus-picker :cusName.sync="filterForm.cusName"></cus-picker>
+				<cus-picker :cusName.sync="filterForm.cusName" ref="cusPicker"></cus-picker>
 				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
 				<!-- <van-switch-cell v-model="filterForm.addUserId" title="下单员" v-if=" false "/> -->
@@ -41,6 +41,7 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -157,7 +158,7 @@
 					cusName:''
 				};
 				this.$refs.cusPicker.cusPickerClean();
-				sessionStorage.removeItem('delivery/GetDNMain');
+				removeStorage('delivery/GetDNMain');
 				this.config.getConfig = true;
 				this.config.switch.rem.checked = false;
 				this.getDailyConfig( true );
@@ -165,12 +166,19 @@
 			filterClick(){
 				this.config.popup.rightFilter.show = false;
 				this.getDailyOrder( this.filterForm );
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.rem.checked ){
+					setStorage('delivery/GetDNMain',this.filterForm);
+				}else{
+					removeStorage('delivery/GetDNMain');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','客户每日送货');
-			if( sessionStorage.getItem('delivery/GetDNMain') !== null   ){
-				let storageData = JSON.parse(sessionStorage.getItem('delivery/GetDNMain'));
+			if( getStorage('delivery/GetDNMain') !== null   ){
+				let storageData = JSON.parse(getStorage('delivery/GetDNMain'));
 				this.filterForm = storageData;
 				this.config.getConfig     = false;
 				this.config.switch.rem.checked = true;
@@ -178,13 +186,11 @@
 		},
 		mounted(){
 			this.getDailyConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.config.switch.rem.checked ){
-				sessionStorage.setItem('delivery/GetDNMain',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('delivery/GetDNMain');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			

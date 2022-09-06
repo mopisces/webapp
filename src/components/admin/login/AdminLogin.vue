@@ -15,6 +15,7 @@
 	</div>
 </template>
 <script>
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		data(){
 			return {
@@ -49,9 +50,13 @@
 				let self = this;
 				this.$request.admin.login.login( data ).then((res)=>{
 					if( res.errorCode == '00000' ){
-						sessionStorage.setItem('jpdn-admin-token',res.result.access_token);
+						setStorage('jpdn-admin-token',res.result.access_token, 'sessionStorage')
+						setStorage('jpdn-admin-refresh',res.result.refresh_token,  'sessionStorage')
+						setStorage('jpdn-admin-username',self.formData.adminName)
+						setStorage('jpdn-login-type','admin')
+						/*sessionStorage.setItem('jpdn-admin-token',res.result.access_token);
 						sessionStorage.setItem('jpdn-admin-refresh',res.result.refresh_token);
-						sessionStorage.setItem('jpdn-admin-username',self.formData.adminName);
+						sessionStorage.setItem('jpdn-admin-username',self.formData.adminName);*/
 						self.$router.push('/admin/config/lists');
 					}
 				});
@@ -59,7 +64,8 @@
 		},
 		created(){
 			this.$store.commit('common/setType','admin');
-			sessionStorage.clear();
+			removeStorage()
+			//sessionStorage.clear();
 		},
 		mounted(){
 

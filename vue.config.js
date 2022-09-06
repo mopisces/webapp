@@ -1,4 +1,6 @@
 //const TimeStamp = new Date().getTime();
+const CompressionPlugin = require('compression-webpack-plugin');
+
 let timeStamp = new Date().getTime();
 module.exports = {
   filenameHashing:false,
@@ -44,11 +46,22 @@ module.exports = {
       'echarts':'echarts',
       'XEUtils':'XEUtils',
       'VTable':'VTable'
-    }
+    },
+    plugins:[
+      new CompressionPlugin({
+        filename: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: /\.js$|\.html$|\.css$|\.jpg$|\.jpeg$|\.png/,
+        threshold: 10240,
+        minRatio: 0.8,
+        deleteOriginalAssets:false
+      })
+    ]
   },
   devServer: {
     disableHostCheck: true,
-    port: 8080,
+    port: 8080/*,
+    https: true*/
   },
   lintOnSave: false 
 }

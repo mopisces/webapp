@@ -2,14 +2,14 @@
 	<div>
 		<van-sticky :offset-top="46">
 			<van-dropdown-menu>
-				<van-dropdown-item v-model="filterInfo.statis" :options="config.dropMenu.options" />
+				<van-dropdown-item v-model="filterForm.statis" :options="config.dropMenu.options" />
 			</van-dropdown-menu>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="onRefresh()">刷新</van-button>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="config.popup.filterShow = true">筛选</van-button>
 			<div style="height:0.5rem;width:100%;"></div>
 		</van-sticky>
-		<div id="container" v-show="filterInfo.statis === 'charts' "></div>
-		<van-cell v-for="(item,index) in data" :key="index" v-show="filterInfo.statis === 'lists'">
+		<div id="container" v-show="filterForm.statis === 'charts' "></div>
+		<van-cell v-for="(item,index) in data" :key="index" v-show="filterForm.statis === 'lists'">
 			<div slot="title">
 				{{ item.CateName }}
 			</div>
@@ -38,6 +38,7 @@
 	import Highcharts from 'highcharts/highstock';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -79,9 +80,6 @@
 					maxDate : '',
 					minDate : ''
 				},
-				filterInfo:{
-					statis : 'lists',
-				},
 				options:{
 					chart: {
 		                type: 'column'
@@ -110,7 +108,8 @@
 				},
 				filterForm:{
 					beginDate : '',
-					endDate   : ''
+					endDate   : '',
+					statis:'lists'
 				}
 			}
 		},
@@ -163,12 +162,19 @@
 			filterClick(){
 				this.getProInfo( this.filterForm );
 				this.config.popup.filterShow = false;	
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('statis/getProInfo',JSON.stringify(this.filterForm));
+				}else{
+					removeStorage('statis/getProInfo');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','生产分析总计');
-			if( sessionStorage.getItem('statis/getProInfo') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('statis/getProInfo'));
+			if( getStorage('statis/getProInfo') !== null ){
+				let storageData = JSON.parse(getStorage('statis/getProInfo'));
 				this.filterForm = storageData;
 				this.config.getConfig      = false;
 				this.config.switch.checked = true;
@@ -176,17 +182,15 @@
 		},
 		mounted(){
 			this.getProInfoConfig();
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('statis/getProInfo',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('statis/getProInfo');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			chartsType(){
-				return this.filterInfo.statis;
+				return this.filterForm.statis;
 			}
 		},
 		watch:{

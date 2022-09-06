@@ -69,6 +69,7 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -198,14 +199,18 @@
 			},
 			getErpOrders( data ){
 				let self = this;
+				console.log(data)
 				this.$request.client.ordersManage.erpOrders( data ).then(res=>{
 					if( res.result == null || res.result.length < 6 ){
 						self.config.list.pushLoading.finished = true;
 					}
 					self.config.list.pushLoading.loading = false;
-					res.result.forEach((item,index)=>{
-						self.listData.push(item);
-					});
+					if( res.result ){
+						res.result.forEach((item,index)=>{
+							self.listData.push(item);
+						});
+					}
+					
 				});
 			},
 			resetClick(){
@@ -224,7 +229,7 @@
 					isWx          : '2',
 					curPage       : 0
 				};
-				sessionStorage.removeItem('client-erp/getOrders');
+				removeStorage('client-erp/getOrders');
 				this.config.switch.checked = false;
 				this.config.getConfig      = true;
 				this.getConfig( true );
@@ -236,29 +241,33 @@
 			},
 			detailClose(){
 				this.config.popup.detailShow = false;
+			},
+			beforeunloadHandler(){
+				if( this.config.switch.checked ){
+					setStorage('client-erp/getOrders',this.filterForm);
+				}else{
+					removeStorage('client-erp/getOrders');
+				}
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','ERP订单');
-			if( sessionStorage.getItem('client-erp/getOrders') !== null ){
-				let storageData = JSON.parse(sessionStorage.getItem('client-erp/getOrders'));
+			if( getStorage('client-erp/getOrders') !== null ){
+				let storageData = JSON.parse(getStorage('client-erp/getOrders'));
 				this.filterForm            = storageData;
 				this.config.switch.checked = true;
 				this.config.getConfig      = false;
 			}
 		},
 		mounted(){
-
+			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
 			
 		},
 		destroyed(){
-			if( this.config.switch.checked ){
-				sessionStorage.setItem('client-erp/getOrders',JSON.stringify(this.filterForm));
-			}else{
-				sessionStorage.removeItem('client-erp/getOrders');
-			}
+			this.beforeunloadHandler();
+			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
 			orderTypeChange(){

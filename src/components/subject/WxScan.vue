@@ -23,6 +23,8 @@
 		},
 		methods:{
 			scanQRCode(){
+				/*this.$router.push('/common/scanCode');
+				return ;*/
 				let self = this;
 				let postData = {
 					urlType:this.urlType
@@ -47,6 +49,7 @@
 		},
 		created(){
 			this.isWX();
+			//this.scanValuable   = true;
 		},
 		mounted(){
 			

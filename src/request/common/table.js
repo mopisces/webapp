@@ -17,6 +17,7 @@ const table = {
 				table[idx][index].width = table[idx][index].width * clientWidth / 375;
 			});
 		}
+		//console.log(table.getOrdersP)
 		return new Promise((resolve, reject)=>{
 			resolve(table);
 		});
