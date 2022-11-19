@@ -80,6 +80,8 @@
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	import { exportExcel } from '@/util/exportToExcel'
+	import { dateTimeFormat } from '@/util'
 	export default {
 		components:{
 			[Button.name]: Button,

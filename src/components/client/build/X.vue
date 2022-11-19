@@ -6,7 +6,7 @@
 		<van-field v-model="formData.orderQuantities" input-align="center" label="订单数" placeholder="输入订单数" type="number" right-icon="question-o" @click-right-icon="clickQuestion()" />
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
+		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<van-button  type="primary" size="normal" style="width:100%;" @click="buildOrder()">下单</van-button>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="x" @saveOrder="saveOrder" :isGroup="false"></build-sku>
@@ -62,7 +62,8 @@
 						cusOrderId : '',
 						failMsg:'下单失败'
 					},
-					isFastBuild : false
+					isFastBuild : false,
+					showDeliveryRemark:0,
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -134,11 +135,13 @@
 					self.pageConfig.minQty  = res.result.page_config.BuildMinOrdQty;
 					self.pageConfig.maxQty  = res.result.page_config.BuildMaxOrdQty;
 
+					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark
+
 					if( this.config.isFastBuild ){
 						self.formData.pON       = res.result.fast_order_booking.PON;
 						self.formData.productId = res.result.fast_order_booking.ProductId;
 						self.formData.address   = res.result.fast_order_booking.CusSubNo;
-						self.formData.deliveryRemark   = res.result.fast_order_booking.DNRemark;
+						self.formData.deliveryRemark   = self.config.showDeliveryRemark == 1 ?  res.result.fast_order_booking.DNRemark : '';
 						self.formData.productionRemark = res.result.fast_order_booking.ProRemark; 
 					}
 

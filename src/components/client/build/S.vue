@@ -38,7 +38,7 @@
 		</template>
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.cusInfo" :radioData="config.radioData.cusInfo" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
+		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
 		<div style="width:100%;height:3.125rem;"></div>
 		<template  v-if="formData.isCalc == 1 ">
@@ -122,7 +122,8 @@
 						edgeType:'净片',
 						index:null,
 						name :null
-					}
+					},
+					showDeliveryRemark:0
 				},
  				pageConfig : {
 					maxDate   : '',
@@ -299,6 +300,8 @@
 					self.formData.cusId = res.result.page_config.CusId;
 					self.formData.saAreaAddArea = res.result.page_config.SaAreaAddArea == 1 ? true : false;
 					self.formData.saAreaAddTrim = res.result.page_config.SaAreaAddTrim == 1 ? true : false;
+					//是否显示送货备注
+					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark
 
 					if( self.formData.isCalc == 1 ){
 						const jp = [];
@@ -343,7 +346,7 @@
 						self.formData.boardWidth      = res.result.fast_order_booking.Width;
 						self.formData.lineBallFormula = res.result.fast_order_booking.ScoreInfo;
 						self.formData.address         = res.result.fast_order_booking.CusSubNo;
-						self.formData.deliveryRemark  = res.result.fast_order_booking.DNRemark;
+						self.formData.deliveryRemark  = self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : '';
 						self.formData.productionRemark= res.result.fast_order_booking.ProRemark;
 					}
 				}).then(()=>{

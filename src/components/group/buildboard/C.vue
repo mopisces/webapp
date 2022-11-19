@@ -67,7 +67,7 @@
 		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡')" />
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
+		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<div style="height:3.5rem;width:100%;"></div>
 		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
@@ -159,7 +159,8 @@
 						failMsg : '下单失败'
 					},
 					showTonLen:true,
-					showULen:true
+					showULen:true,
+					showDeliveryRemark:0,
 				},
 				cardInfo:{
 					boardId      : '',
@@ -337,6 +338,9 @@
 					self.formData.address = res.result.ERPId;
 					self.formData.tonLen  = res.result.adjust_info.TonLen;
 					self.formData.uLen    = res.result.adjust_info.ULen;
+
+					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark
+
 					if( res.result.product_info.Pic[0] ){
 						self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];
 					}

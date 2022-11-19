@@ -111,6 +111,7 @@
 						{text:'用户管理',iconName:'guanwangicon31334',url:'/staff/user/manage'},
 						{text:'接单统计',iconName:'daquxindai',url:'/staff/statis/saleStatis'},
 						{text:'客户每日送货',iconName:'chanpin',url:'/staff/delivery/daily'},
+						{text:'报价查询',iconName:'tichengguize',url:'/staff/quo/customerQuo'},
 					],
 					authGrid:[],
 					popup:{

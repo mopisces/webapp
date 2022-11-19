@@ -15,5 +15,11 @@
 		{"field":"BoardName","title":"材质名称","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"OrdQty","title":"数量","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"sstate","title":"状态","width":"75","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
+	"saleStatisCus":[
+		{"field":"CusShortName","title":"客户","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"TLength","title":"米数","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TSalesArea","title":"面积","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"Amt","title":"金额","width":"135","titleAlign":"center","columnAlign":"center","isResize":true}
 	]
 }

@@ -26,7 +26,7 @@
 		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数" right-icon="question-o" @click-right-icon="$toast('订单数范围:' + pageConfig.minQty + '~' + pageConfig.maxQty )" ref="orderQuantitiesField" @blur="getBoxCost()"></van-field>
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
+		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<div style="height:3.5rem;width:100%;"></div>
 		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
@@ -98,7 +98,8 @@
 						show    : false,
 						isGroup :false,
 						failMsg :'下单失败'
-					}
+					},
+					showDeliveryRemark: 0
 				},
 				formData:{
 					cusOrderId      : '',
@@ -196,6 +197,8 @@
 							self.config.radioData.address.push({ value : item.CusSubNo, text:item.SubDNAddress})
 						});
 						self.formData.address = res.result.ERPId;
+
+						self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{

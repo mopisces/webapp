@@ -42,7 +42,7 @@
 		</van-field>
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.cusInfo" :radioData="config.radioData.cusInfo" selectType="cusInfo"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
+		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
 		<div style="height:3.5rem;width:100%;"></div>
 		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
@@ -121,7 +121,8 @@
 						cusOrderId : '',
 						isGroup    : false,
 						failMsg    : '下单失败'
-					}
+					},
+					showDeliveryRemark:0
 				},
 				formData : {
 					productId       : '',      //产品ID
@@ -294,6 +295,7 @@
 					self.pageConfig.title        = res.result.product_info.Title;
 					self.pageConfig.boardId      = res.result.product_info.BoardId;
 
+					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark
 				}).then(()=>{
 					this.$nextTick(()=>{
 						self.config.countDown.show = true;

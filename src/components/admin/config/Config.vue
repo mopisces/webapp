@@ -641,6 +641,12 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">否显示送货备注</td>
+							<td>
+								<el-checkbox v-model="form.ShowDeliveryRemark" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr>
 							<td>
 								<el-button type="primary" @click="saveConfig()">保存</el-button>
 							</td>
@@ -930,6 +936,7 @@
 					BuildULen                 : '',  //封箱调整
 					BuildAddCalc              : 0,  //是否开启订单试算
 					IsAddTrimArea             : 0,  //是否开启订单试算毛片不加面积修边
+					ShowDeliveryRemark        : 0, //是否显示送货备注
 					//团购参数
 					UseCreditPay     : '',  //是否开启信用额度付款
 					WebSalesWidth    : '',  //团购纸板销售宽默认值

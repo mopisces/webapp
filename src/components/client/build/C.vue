@@ -52,7 +52,7 @@
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo">
 		</popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
+		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
 		<template  v-if="formData.isCalc == 1 ">
 			<van-button  type="warning" size="normal" style="width:50%;position:fixed;bottom:3.125rem;" @click="calcPriceInfo()" :disabled=" config.button.calcBtnDis ">试算</van-button>
@@ -153,7 +153,8 @@
 						index:null,
 						name :null,
 						edgeType:'净片'
-					}
+					},
+					showDeliveryRemark:0
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -400,6 +401,8 @@
 					self.formData.saAreaAddArea = res.result.config.SaAreaAddArea == 1 ? true : false;
 					self.formData.saAreaAddTrim = res.result.config.SaAreaAddTrim == 1 ? true : false;
 
+					self.config.showDeliveryRemark = res.result.config.ShowDeliveryRemark
+
 					if( self.formData.isCalc == 1 ){
 						const jp = [];
 						res.result.line_ball_config.forEach((item,index)=>{
@@ -466,7 +469,7 @@
 						self.formData.uLen         = res.result.fast_order_booking.ULen;
 						self.formData.bdMultiple   = Number(res.result.fast_order_booking.BdMultiple) ? Number(res.result.fast_order_booking.BdMultiple) : 0;
 						self.formData.address      = res.result.fast_order_booking.CusSubNo;
-						self.formData.deliveryRemark   = res.result.fast_order_booking.DNRemark;
+						self.formData.deliveryRemark   =  self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : '';
 						self.formData.productionRemark = res.result.fast_order_booking.ProRemark;
 					}
 				}).then(()=>{

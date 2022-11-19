@@ -41,7 +41,7 @@
 						{required : true , message:'请填写账号'},
 						{validator: (rule, value, callback, source, options)=>{
 							let errors;
-							if( !(/(^[a-zA-Z][A-Za-z0-9]{1,5}$)/.test(this.formData.ordQty) ) ){
+							if( !(/(^[a-zA-Z][A-Za-z0-9]{1,5}$)/.test(this.formData.userName) ) ){
 								errors = '账号只能字母开头且只能有数字和字母';
 							}
 							callback(errors);
