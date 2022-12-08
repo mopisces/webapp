@@ -100,7 +100,8 @@
 		methods:{
 			cusContact( data ){
 				let self = this;
-				this.config.table.columns = this.$options.data().config.table.columns
+				this.config.table.columns = this.$options.data().config.table.columns;
+				this.formData =  this.$options.data().formData;
 				this.$request.staff.frec.cusContact( data ).then(res=>{
 					if(res.have_adjust == 1){
 						self.config.table.columns.splice(14,0,{field: 'adjustCusContact', title: '调整信用额度', width: 100, titleAlign: 'center', componentName:'table-operate', columnAlign: 'center',isResize:true})
