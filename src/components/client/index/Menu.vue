@@ -98,6 +98,7 @@
 						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s'},
 						{text:'纸箱纸板下单', role:'纸板支付下单', iconName:'jiage1',    url:'/client/buildpay/c'},
 						{text:'简单纸板下单', role:'纸板支付下单', iconName:'jiage1', url:'/client/buildpay/s'},
+						{text:'往来统计', role:'往来统计', iconName:'kehu', url:'/client/frec/statisContact'},
 					],
 					authGrid:[],
 					popup:{

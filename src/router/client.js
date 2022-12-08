@@ -45,6 +45,8 @@ const aliReturnUrl     = () => import('@/components/pay/order/AliReturn');
 const sBuildPay        = () => import('@/components/client/buildpay/S');
 //纸箱纸板下单并支付
 const cBuildPay        = () => import('@/components/client/buildpay/C');
+//往来统计
+const statisContact = () => import('@/components/client/frec/statisContact');
 export const asyncClientRouterMap = [
     {
         path:'/client',
@@ -135,6 +137,12 @@ export const asyncClientRouterMap = [
                 name: 'cBuildPay',
                 meta: { title: '纸箱纸板下单', role:'纸板支付下单' },
                 component: cBuildPay,
+            },
+            {
+                path:'frec/statisContact',
+                name: 'statisContact',
+                meta: { title: '往来统计', role:'往来统计' },
+                component: statisContact,
             }
         ]
     }

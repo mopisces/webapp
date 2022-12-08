@@ -70,6 +70,12 @@
 				详细
 			</van-button>
 		</div>
+		<!-- 内部用户-调整信用额度 -->
+		<div v-if=" field === 'adjustCusContact' ">
+			<van-button plain hairline type="primary" size="small" @click="adjustCusContact()">
+				调整
+			</van-button>
+		</div>
 		<!-- 导航模块 单选
 		<div v-if=" field === 'amapPDNCusRadio' ">
 			<van-radio-group v-model="selectNo">
@@ -185,6 +191,9 @@
 				this.$emit('on-custom-comp',{rowData:this.rowData});
 			},
 			cusFreeMBDetail(){
+				this.$emit('on-custom-comp',{rowData:this.rowData});
+			},
+			adjustCusContact(){
 				this.$emit('on-custom-comp',{rowData:this.rowData});
 			}
 		},

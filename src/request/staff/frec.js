@@ -7,6 +7,16 @@ const frec = {
 	cusContact( data ){
 		return post( window.jpdn_domain_staff + 'frecCusContact', {cus_id:data.cusName,task_id:data.taskId} );
 	},
+	updateCusContact( data ){
+		let postData = {
+			update_cuscontact_cus_id : data.CusId,
+			old_min_amt_cond: data.OldMinAmtCond,
+			old_pre_amt: data.OldPreAmt,
+			min_amt_cond: data.MinAmtCond,
+			pre_amt: data.PreAmt
+		}
+		return post( window.jpdn_domain_staff + 'cusContact/update', postData );
+	},
 	recAdjustConfig(){
 		return post( window.jpdn_domain_staff + 'frecAdjustConfig' );
 	},

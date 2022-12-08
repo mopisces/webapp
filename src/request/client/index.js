@@ -8,6 +8,7 @@ import other from './other';
 import groupBuying from './groupBuying';
 import delivery from './delivery';
 import orderBookingPay from './orderBookingPay';
+import frec from './frec';
 export default {
 	cred,
 	makeOffers,
@@ -18,5 +19,6 @@ export default {
 	other,
 	groupBuying,
 	delivery,
-	orderBookingPay
+	orderBookingPay,
+	frec
 };

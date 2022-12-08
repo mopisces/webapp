@@ -10,21 +10,30 @@
 		</popup-filter>
    		<template>
    			<div class="container">
-   				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa"></v-table>
+   				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa"  @on-custom-comp="customCompFunc"></v-table>
    			</div>
    		</template>
+   		<van-dialog v-model:show="config.dialog.showAdjust" :show-confirm-button="false" :close-on-click-overlay="true" @close="checkClose()">
+   			<van-field label="客户名称" :value="formData.Cus" input-align="center" readonly style="line-height:36px;"/>
+   			<van-field label="预警金额" v-model="formData.PreAmt" placeholder="请输入预警金额" input-align="center"  style="line-height:36px;" />
+   			<van-field label="终止金额" v-model="formData.MinAmtCond" placeholder="请输入终止金额" input-align="center"  style="line-height:36px;" />
+   			<van-button type="primary" :loading="config.dialog.confirmBtn.submit" loading-text="提交" style="width:80%;margin-left:10%;margin-bottom:2%;margin-top:2%;" round @click="updateClick()">修改</van-button>
+   		</van-dialog>
 	</div>
 </template>
 <script>
-	import { Button, Field, SwitchCell } from 'vant';
+	import { Button, Field, SwitchCell, Dialog, Toast } from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	import schema from 'async-validator';
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
+			[Dialog.Component.name]: Dialog.Component,
+			[Toast.name]: Toast,
 
 			CusPicker,
 			PopupFilter,
@@ -36,9 +45,30 @@
 						filterShow:false,
 					},
 					table:{
-						columns: [],
+						columns: [
+							{field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'Task', title: '业务员', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'LastMBDate', title: '上次结算时间', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'LastAmt', title: '上期余额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'ConfAmtT', title: '确收金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'ConfArea', title: '确收面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'AdjustAmt', title: '调整金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'CusPayAmt', title: '本期收款', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'OrdNeedAmt', title: '订单未送', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'CurAmt', title: '当前欠款', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'PreAmt', title: '预警金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'MinAmtCond', title: '终止金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'LeftMinAmtCond', title: '终止金额剩余', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'CurNeedPay', title: '当前需付总额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+						],
 		                height : 0
 					},
+					dialog:{
+						showAdjust:false,
+						confirmBtn:{
+							submit:false
+						}
+					}
 				},
 				tableData: [],
 				filterForm:{
@@ -47,13 +77,34 @@
 				},
 				pageConfig:{
 					switchChecked:false,
-				}
+				},
+				formData:{
+					Cus:null,
+					CusId:null,
+					OldMinAmtCond:null,
+					OldPreAmt:null,
+					MinAmtCond:null,
+					PreAmt:null,
+				},
+				updateRules:{
+					MinAmtCond:[
+						{ required : true, message : '请输入终止金额' }
+					],
+					PreAmt:[
+						{ required : true, message : '请输入预警金额' }
+					]
+				},
+				validator:null
 			}
 		},
 		methods:{
 			cusContact( data ){
 				let self = this;
+				this.config.table.columns = this.$options.data().config.table.columns
 				this.$request.staff.frec.cusContact( data ).then(res=>{
+					if(res.have_adjust == 1){
+						self.config.table.columns.splice(14,0,{field: 'adjustCusContact', title: '调整信用额度', width: 100, titleAlign: 'center', componentName:'table-operate', columnAlign: 'center',isResize:true})
+					}
 					self.tableData = res.result
 				});
 			},
@@ -67,17 +118,34 @@
 				this.config.popup.filterShow = false;
 				this.cusContact( this.filterForm );
 			},
-			getTableConfig(){
-				this.$request.common.table.getTableConfig().then(res=>{
-					this.config.table.columns = res.cusContact;
-				});
-			},
 			beforeunloadHandler(){
 				if( this.pageConfig.switchChecked ){
 					setStorage('frec/cusContact',this.filterForm);
 				}else{
 					removeStorage('frec/cusContact');
 				}
+			},
+			customCompFunc( params ){
+				this.formData = params.rowData
+				this.config.dialog.showAdjust = true
+			},
+			checkClose(){
+				this.formData = this.$options.data().formData
+			},
+			updateClick(){
+				this.validator.validate( this.formData ).then(()=>{
+					this.config.dialog.confirmBtn.submit = true
+					this.$request.staff.frec.updateCusContact( this.formData ).then(res=>{
+						if( res.errorCode == '00000' ){
+							Toast.success(res.result);
+							this.config.dialog.showAdjust = false
+							this.cusContact(this.filterForm);
+						}
+					})
+					this.config.dialog.confirmBtn.submit = false
+				}).catch(({ errors, fields })=>{
+					Toast.fail(errors[0].message);
+				});
 			}
 		},
 		created(){
@@ -88,7 +156,7 @@
 			}
 		},
 		mounted(){
-			this.getTableConfig();
+			this.validator = new schema(this.updateRules);
 			this.cusContact( this.filterForm );
 			this.config.table.height  = window.screen.height - 136;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());

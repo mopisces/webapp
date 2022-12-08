@@ -477,6 +477,20 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">往来统计</td>
+							<td>
+								默认日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.Wap0StatisContactBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.Wap0StatisContactEndDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.Wap0StatisContactMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.Wap0StatisContactMaxDate"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">每日订单是否显示金额</td>
 							<td>
 								<el-checkbox v-model="form.WGetCusOrderShowAmt" label="是否使用" border true-label="1" false-label="0"></el-checkbox>
@@ -910,6 +924,10 @@
 					CusFreeMBTableEndDate    : '',  //对账单2
 					CusFreeMBTableMinDate    : '',  //对账单2(日期范围)
 					CusFreeMBTableMaxDate    : '',  //对账单2
+					Wap0StatisContactBeginDate : '', //往来统计默认日期)
+					Wap0StatisContactEndDate   : '', //往来统计
+					Wap0StatisContactMinDate   : '', //往来统计(日期范围)
+					Wap0StatisContactMaxDate   : '', //往来统计
 					//下单参数
 					UseQuoBoard               : '',  //常用材质使用报价价格材质
 					BuildMinLength            : '',  //板长范围

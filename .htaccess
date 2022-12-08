@@ -11,12 +11,18 @@
 </IfModule>
 <IfModule mod_headers.c>
 	<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|htc)$">
-		Header set Cache-Control "max-age=2592000, public"
+		Header set Cache-Control "no-cache, no-store"
+		Header set Pragma "no-cache"
+    	Header set Expires "-1"
 	</FilesMatch>
 	<FilesMatch "\.(xml|txt)$">
-		Header set Cache-Control "max-age=604800, public"
+		Header set Cache-Control "no-cache, no-store"
+		Header set Pragma "no-cache"
+    	Header set Expires "-1"
 	</FilesMatch>
 	<FilesMatch "\.(css|js|html|htm|php|shtml)$">
-		Header set Cache-Control "max-age=600"
+		Header set Cache-Control "no-cache, no-store"
+		Header set Pragma "no-cache"
+    	Header set Expires "-1"
 	</FilesMatch>
 </IfModule>

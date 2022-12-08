@@ -113,6 +113,10 @@
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--2"></div>
+							<div class="van-col van-col--22">压线信息:{{ item.ScoreInfo }}</div>
+						</div>
+						<div class="van-row van-row--flex van-row--justify-center">
+							<div class="van-col van-col--2"></div>
 							<div class="van-col van-col--22">送货地址:{{ item.SubDNAddress }}</div>
 						</div>
 						<div class="van-row van-row--flex van-row--justify-center">
