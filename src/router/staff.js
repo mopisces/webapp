@@ -38,6 +38,8 @@ const stowLists              = () => import('@/components/staff/stow/Lists');
 const stowDetail             = () => import('@/components/staff/stow/Detail');
 //生产分析总计
 const statisGetProInfo       = () => import('@/components/staff/statis/GetProInfo');
+//生产分析总计2
+const statisGetProInfo2       = () => import('@/components/staff/statis/GetProInfo2');
 //库存统计
 const statisGetOrdStock      = () => import('@/components/staff/statis/GetOrdStock');
 //订单统计
@@ -154,6 +156,11 @@ export const asyncStaffRouterMap = [
                 path:'statis/getProInfo',
                 meta: { title: '生产分析总计', role:'生产分析总计' },
                 component: statisGetProInfo,
+            },
+             {
+                path:'statis/getProInfo2',
+                meta: { title: '生产分析总计2', role:'生产分析总计' },
+                component: statisGetProInfo2,
             },
             {
                 path:'statis/getOrdStock',

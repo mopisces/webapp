@@ -85,33 +85,34 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'客户往来统计',iconName:'kehu',url: '/staff/frec/cusContact'},
-						{text:'收款调账',iconName:'yewutiaozhang',url:'/staff/frec/recAdjust'},
-						{text:'订单试算',iconName:'jisuanqi',url:'/staff/calc/index'},
-						{text:'库区面积',iconName:'fangwumianji',url:'/staff/stock/deliveryArea'},
-						{text:'库存修改',iconName:'iconfontzhizuobiaozhunbduan24',url:'/staff/stock/mStockDetailR'},
-						{text:'扫描装货',iconName:'zhuangche1',url:'/staff/stow/lists'},
-						/*{text:'库存预计',iconName:'kucun1',url:'/staff/paper/getExpectStock'},*/
-						{text:'安全库存',iconName:'anquanmenhu',url:'/staff/paper/paperSafe'},
-						{text:'原纸库存',iconName:'weishengzhi',url:'/staff/paper/getSStocks'},
-						{text:'直接入库',iconName:'ruku2',url:'/staff/paper/directInStock'},
-						{text:'原纸入库',iconName:'ruku',url:'/staff/paper/doRStockIn'},
-						{text:'原纸出库',iconName:'ccgl-chukucaozuo-5',url:'/staff/paper/doStockOut'},
-						{text:'原纸日用量',iconName:'rili1',url:'/staff/paper/dailyUsed'},
-						{text:'原纸收货',iconName:'che2',url:'/staff/paperbuy/wGetPOIn'},
-						{text:'原纸采购',iconName:'caigou',url:'/staff/paperbuy/wGetPOMain'},
-						{text:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo'},
-						{text:'库存统计',iconName:'storage',url:'/staff/statis/getOrdStock'},
-						{text:'传单统计',iconName:'chuandan',url:'/staff/statis/getSchSum'},
-						{text:'退货统计',iconName:'tuihuo1',url:'/staff/statis/getOrdReturnSum'},
-						{text:'订单统计',iconName:'dingdan2',url:'/staff/statis/getOrderSum'},
-						{text:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt'},
-						{text:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder'},
-						{text:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders'},
-						{text:'用户管理',iconName:'guanwangicon31334',url:'/staff/user/manage'},
-						{text:'接单统计',iconName:'daquxindai',url:'/staff/statis/saleStatis'},
-						{text:'客户每日送货',iconName:'chanpin',url:'/staff/delivery/daily'},
-						{text:'报价查询',iconName:'tichengguize',url:'/staff/quo/customerQuo'},
+						{text:'客户往来统计',role:'客户往来统计',iconName:'kehu',url: '/staff/frec/cusContact'},
+						{text:'收款调账',role:'收款调账',iconName:'yewutiaozhang',url:'/staff/frec/recAdjust'},
+						{text:'订单试算',role:'订单试算',iconName:'jisuanqi',url:'/staff/calc/index'},
+						{text:'库区面积',role:'库区面积',iconName:'fangwumianji',url:'/staff/stock/deliveryArea'},
+						{text:'库存修改',role:'库存修改',iconName:'iconfontzhizuobiaozhunbduan24',url:'/staff/stock/mStockDetailR'},
+						{text:'扫描装货',role:'扫描装货',iconName:'zhuangche1',url:'/staff/stow/lists'},
+						/*{text:'库存预计',role:'',iconName:'kucun1',url:'/staff/paper/getExpectStock'},*/
+						{text:'安全库存',role:'安全库存',iconName:'anquanmenhu',url:'/staff/paper/paperSafe'},
+						{text:'原纸库存',role:'原纸库存',iconName:'weishengzhi',url:'/staff/paper/getSStocks'},
+						{text:'直接入库',role:'直接入库',iconName:'ruku2',url:'/staff/paper/directInStock'},
+						{text:'原纸入库',role:'原纸入库',iconName:'ruku',url:'/staff/paper/doRStockIn'},
+						{text:'原纸出库',role:'原纸出库',iconName:'ccgl-chukucaozuo-5',url:'/staff/paper/doStockOut'},
+						{text:'原纸日用量',role:'原纸日用量',iconName:'rili1',url:'/staff/paper/dailyUsed'},
+						{text:'原纸收货',role:'原纸收货',iconName:'che2',url:'/staff/paperbuy/wGetPOIn'},
+						{text:'原纸采购',role:'原纸采购',iconName:'caigou',url:'/staff/paperbuy/wGetPOMain'},
+						{text:'生产分析总计',role:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo'},
+						{text:'生产分析总计2',role:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo2'},
+						{text:'库存统计',role:'库存统计',iconName:'storage',url:'/staff/statis/getOrdStock'},
+						{text:'传单统计',role:'传单统计',iconName:'chuandan',url:'/staff/statis/getSchSum'},
+						{text:'退货统计',role:'退货统计',iconName:'tuihuo1',url:'/staff/statis/getOrdReturnSum'},
+						{text:'订单统计',role:'订单统计',iconName:'dingdan2',url:'/staff/statis/getOrderSum'},
+						{text:'客户信用余额',role:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt'},
+						{text:'客户每日订单',role:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder'},
+						{text:'ERP订单',role:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders'},
+						{text:'用户管理',role:'用户管理',iconName:'guanwangicon31334',url:'/staff/user/manage'},
+						{text:'接单统计',role:'接单统计',iconName:'daquxindai',url:'/staff/statis/saleStatis'},
+						{text:'客户每日送货',role:'客户每日送货',iconName:'chanpin',url:'/staff/delivery/daily'},
+						{text:'报价查询',role:'报价查询',iconName:'tichengguize',url:'/staff/quo/customerQuo'},
 					],
 					authGrid:[],
 					popup:{
@@ -205,7 +206,7 @@
 			authGrid( authName ){
 				for (var i = this.config.gridItem.length - 1; i >= 0; i--) {
 					for (var j = authName.length - 1; j >= 0; j--) {
-						if( authName[j] == this.config.gridItem[i].text ){
+						if( authName[j] == this.config.gridItem[i].role ){
 							this.config.authGrid.push(this.config.gridItem[i]);
 							break;
 						}

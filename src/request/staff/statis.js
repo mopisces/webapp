@@ -1,6 +1,14 @@
 import { get, post } from '../request';
 
 const statis = {
+	getProInfo2( data ){
+		let postData = {
+			info_begin_date : data.beginDate,
+			info_end_date   : data.endDate,
+			return_date_type : data.dateType,
+		}
+		return post( window.jpdn_domain_staff + 'statis/getProInfo2', postData );
+	},
 	getProInfo( data ){
 		let postData = {
 			info_begin_date : data.beginDate,
