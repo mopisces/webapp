@@ -492,13 +492,10 @@
 				});
 			},
 			clearFormData(){
-				//console.log(this.$options.data())
-				Object.keys( this.formData ).forEach((item,index)=>{
-					if( item != 'materialType' ){
-						this.formData[item] = '';
-					}
-					this.formData.isEdge = '净片';
+				let formDataInit = Object.assign({},this.$options.data().formData,{
+					materialType: this.formData.materialType
 				});
+				this.formData = formDataInit;
 				this.getConfig();
 			},
 			fastBuild( orderId ){

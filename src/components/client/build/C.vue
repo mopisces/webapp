@@ -154,7 +154,8 @@
 						name :null,
 						edgeType:'净片'
 					},
-					showDeliveryRemark:0
+					showDeliveryRemark:0,
+					lastToLen: null
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -383,6 +384,7 @@
 				let self = this;
 				this.$request.client.orderBooking.cBuildConfig( fastOrderId ).then(res=>{
 					self.pageConfig.buildAutoGetTonLenAndULen = res.result.config.BuildAutoGetTonLenAndULen == 1 ? true : false;
+					self.config.lastToLen = res.result.last_tolen;
 					self.pageConfig.minBoxH = res.result.config.BuildMinBoxH;
 					self.pageConfig.maxBoxH = res.result.config.BuildMaxBoxH;
 					self.pageConfig.minBoxL = res.result.config.BuildMinBoxL;
@@ -620,9 +622,10 @@
 					});
 				}
 			},
-			getClackAdjust( materialType, needConfig = false ){
+			getClackAdjust( materialType ){
 				if( !this.pageConfig.buildAutoGetTonLenAndULen ){
-					this.formData.tonLen = this.config.radioData.tonLen[0].value;
+					//this.formData.tonLen = this.config.radioData.tonLen[0].value;
+					this.formData.tonLen = this.inArray('tonLen', this.config.lastToLen ) ? this.config.lastToLen : this.config.radioData.tonLen[0].value;
 					this.formData.uLen = this.config.radioData.uLen[0].value;
 					this.calcBdLW();
 					return true;
@@ -662,24 +665,29 @@
 						Toast.fail(string);
 					}
 					self.calcBdLW();
-				}).then(()=>{
+				})/*.then(()=>{
 					if( needConfig ){
 						this.$nextTick(()=>{
 							this.getConfig('');
 						})	
 					}
-				});
+				})*/;
 			},
 			clearFormData(){
-				Object.keys( this.formData ).forEach((item,index)=>{
-					if( item != 'materialType' ){
-						this.formData[item] = '';
-					}
-					this.formData.isEdge = '净片';
+				let formDataInit = Object.assign({},this.$options.data().formData,{
+					materialType: this.formData.materialType,
+					isCalc: this.formData.isCalc,
+					address: this.formData.address,
+					date: this.formData.date,
+					tonLen: this.formData.tonLen
 				});
+				this.formData = formDataInit;
+				if( this.config.result.isSuccess ) 
+					this.config.lastToLen = this.formData.tonLen
+				this.config.result.isSuccess = this.$options.data().config.result.isSuccess;
 				this.pageConfig.lengthFCalc = '';
 				this.pageConfig.widthFCalc  = '';
-				this.getClackAdjust( this.formData.materialType, true );
+				this.getClackAdjust( this.formData.materialType );
 			},
 			fastBuild( orderId ){
 				this.config.isFastBuild = true;

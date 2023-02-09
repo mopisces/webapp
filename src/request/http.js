@@ -54,7 +54,7 @@ httpServer.interceptors.response.use(
 
 const errorHandle = {
 	mainHandle( errorCode,msg ){
-		console.log(errorCode)
+		//console.log(errorCode)
 		switch(errorCode){
 			case 10001:
 				Toast.fail('请求方式错误');
