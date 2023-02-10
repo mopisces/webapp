@@ -19,14 +19,14 @@ module.exports = {
       }
     },
     extract:{
-      filename: `css/[name].${timeStamp}.css`,
-      chunkFilename: `css/chunk.[id].${timeStamp}.css`,
+      filename: `css/[name]-${timeStamp}.css`,
+      chunkFilename: `css/chunk-[id]-${timeStamp}.css`,
     }
   },
   configureWebpack:{
     output:{
-      filename: `js/js[name].${timeStamp}.js`,
-      chunkFilename: `js/chunk.[id].${timeStamp}.js`,
+      filename: `js/js[name]-${timeStamp}.js`,
+      chunkFilename: `js/chunk-[id]-${timeStamp}.js`,
     },
     performance:{
       hints:'warning',

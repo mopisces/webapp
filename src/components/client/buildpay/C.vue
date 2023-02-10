@@ -155,7 +155,8 @@
 						edgeType:'净片'
 					},
 					showDeliveryRemark: 0,
-					lastToLen: null
+					lastToLen: null,
+					lastULen:null
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -421,7 +422,7 @@
 					}
 				});
 			},
-			getConfig( fastOrderId ){
+			getConfig( fastOrderId, isRebuild=false ){
 				this.config.button.calcBtnDis = true;
 				this.config.button.disabled = true;
 
@@ -435,6 +436,7 @@
 				this.$request.client.orderBookingPay.cBuildConfig( fastOrderId ).then(res=>{
 					self.pageConfig.buildAutoGetTonLenAndULen = res.result.config.BuildAutoGetTonLenAndULen == 1 ? true : false;
 					self.config.lastToLen = res.result.last_tolen;
+					self.config.lastULen  = res.result.last_ulen;
 					self.pageConfig.minBoxH = res.result.config.BuildMinBoxH;
 					self.pageConfig.maxBoxH = res.result.config.BuildMaxBoxH;
 					self.pageConfig.minBoxL = res.result.config.BuildMinBoxL;
@@ -531,6 +533,11 @@
 							this.getBoxFormula( this.formData.boxType );
 						}
 					});
+				}).then(()=>{
+					console.log(isRebuild)
+					if( isRebuild ){
+						this.getClackAdjust(this.formData.materialType)
+					}
 				});
 			},
 			saveOrder( data ){
@@ -668,9 +675,8 @@
 			},
 			getClackAdjust( materialType, needConfig = false ){
 				if( !this.pageConfig.buildAutoGetTonLenAndULen ){
-					//this.formData.tonLen = this.config.radioData.tonLen[0].value;
 					this.formData.tonLen = this.inArray('tonLen', this.config.lastToLen ) ? this.config.lastToLen : this.config.radioData.tonLen[0].value;
-					this.formData.uLen = this.config.radioData.uLen[0].value;
+					this.formData.uLen = this.inArray('uLen', this.config.lastULen ) ? this.config.lastULen : this.config.radioData.uLen[0].value;
 					this.calcBdLW();
 					return true;
 				}
@@ -717,8 +723,8 @@
 					}
 				});
 			},
-			clearFormData(){
-				let formDataInit = Object.assign({},this.$options.data().formData,{
+			async clearFormData(){
+				/*let formDataInit = Object.assign({},this.$options.data().formData,{
 					materialType: this.formData.materialType,
 					isCalc: this.formData.isCalc,
 					address: this.formData.address,
@@ -731,7 +737,14 @@
 				this.config.result.isSuccess = this.$options.data().config.result.isSuccess;
 				this.pageConfig.lengthFCalc = '';
 				this.pageConfig.widthFCalc  = '';
-				this.getClackAdjust( this.formData.materialType, true );
+				this.getClackAdjust( this.formData.materialType, true );*/
+				if( this.config.result.isSuccess ){
+					let material = Object.assign({},{materialType:this.formData.materialType});
+					this.formData =  this.$options.data().formData;
+					this.pageConfig = this.$options.data().formData;
+					this.formData.materialType = material.materialType;
+					await this.getConfig( '', true );
+				}
 			},
 			fastBuild( orderId ){
 				this.config.isFastBuild = true;
