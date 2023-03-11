@@ -114,13 +114,14 @@
 					self.result.userName = res.result.user_name;
 				});
 			},
-			setLocalInfo( $info ){
+			async setLocalInfo( $info ){
 				setStorage('jpdn-client-token',$info.access_token, 'sessionStorage');
 				setStorage('jpdn-client-refresh',$info.refresh_token, 'sessionStorage');
 				setStorage('jpdn-client-username',$info.user_name);
 				setStorage('jpdn-client-userpwd',$info.user_pwd);
 				setStorage('jpdn-client-isLogin',1, 'sessionStorage');
 				setStorage('jpdn-login-type','client');
+				await this.fetchConfig();
 			},
 			getAuthName( data ){
 				let self = this;
@@ -165,6 +166,13 @@
 					this.config.field.passIcon = 'eye-o';
 					this.config.field.type = 'text';
 				}
+			},
+			fetchConfig(){
+				this.$request.staff.login.fetchConfig().then(res=>{
+					if( res.errorCode == '00000' ){
+						setStorage('jpdn_webapp_config',{ selectNeedConfirm:res.result.BuildRadioNeedConfirm });
+					}
+				});
 			}
 		},
 		created(){

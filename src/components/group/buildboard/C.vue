@@ -22,28 +22,31 @@
 			<van-image :src="cardInfo.pic" slot="thumb"/>
 		</van-card>
 		<van-field v-model="formData.cusOrderId" label="客订单号" input-align="center" placeholder="未填写则系统自动生成"></van-field>
-		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @boxTypeConfirm="getBoxFormula( formData.boxType )"></popup-select>
+		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @valueChange="boxTypeChange"></popup-select>
+		<!-- @boxTypeConfirm="getBoxFormula( formData.boxType )" -->
 		<van-field label="纸箱规格(mm)" right-icon="question-o" @click-right-icon="$toast('箱长范围:' + pageConfig.minBoxL + 'mm~'+ pageConfig.maxBoxL  + 'mm\n箱宽范围:' + pageConfig.minBoxW + 'mm~' + pageConfig.maxBoxW + 'mm\n' + '箱高范围:' + pageConfig.minBoxH + 'mm~' + pageConfig.maxBoxH + 'mm'  )">
 			<div class="van-row van-row--flex van-row--justify-center" slot="input">
 				<div class="van-col van-col--7" >
-					<input placeholder="箱长(L)" v-model="formData.boxLength" style="width:100%;" @blur="calcBdLW()"/>
+					<input id="boxLength" placeholder="箱长(L)" v-model="formData.boxLength" style="width:100%;" @focus="inputFocus('boxLength')" @blur=" inputBlur('boxLength') "/>
 				</div>
 				<div class="van-col van-col--1">
 					x
 				</div>
 				<div class="van-col van-col--7">
-					<input placeholder="箱宽(W)" v-model="formData.boxWidth" style="width:100%;" @blur="calcBdLW()"/>
+					<input id="boxWidth" placeholder="箱宽(W)" v-model="formData.boxWidth" style="width:100%;" @focus="inputFocus('boxWidth')" @blur=" inputBlur('boxWidth') "/>
 				</div>
 				<div class="van-col van-col--1">
 					x
 				</div>
 				<div class="van-col van-col--8">
-					<input placeholder="箱高(H)" v-model="formData.boxHeight" style="width:100%;" @blur="calcBdLW()"/>
+					<input id="boxHeight" placeholder="箱高(H)" v-model="formData.boxHeight" style="width:100%;" @focus="inputFocus('boxHeight')" @blur=" inputBlur('boxHeight') "/>
 				</div>
 			</div>	
 		</van-field>
-		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @lenConfirm="calcBdLW()" v-if="config.showTonLen"></popup-select>
-		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @lenConfirm="calcBdLW()" v-if="config.showULen"></popup-select>
+		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @valueChange="tonLenChange" v-if="config.showTonLen"></popup-select>
+		<!--  @lenConfirm="calcBdLW()" -->
+		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @valueChange="lenChange" v-if="config.showULen"></popup-select>
+		<!--  @lenConfirm="calcBdLW()" -->
 		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
 		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
 		<van-field label="纸板规格(mm)">
@@ -60,12 +63,12 @@
 			</div>
 		</van-field>
 		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
-		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
+		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
 		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="$toast('正数:几个纸板=>1个纸箱\n负数:1个纸板=>几个纸箱' )"/>
-		<van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()" ref="orderQuantitiesField"/>
+		<van-field id="ordQty" v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" ref="orderQuantitiesField" @focus="inputFocus('ordQty')" @blur="inputBlur('ordQty')"/>
 		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly/>
 		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡')" />
-		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
+		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo" @valueChange="addressChange"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
@@ -161,6 +164,17 @@
 					showTonLen:true,
 					showULen:true,
 					showDeliveryRemark:0,
+					lastToLen: null,
+					lastULen:null,
+					build:{
+						lenNeedToast:false,
+						widthNeedToast:false,
+						heightNeedToast:false,
+						lenToastDefault:null,
+						widthToastDefault:null,
+						heightToastDefault:null,
+					},
+					initClientHeight: document.documentElement.clientHeight
 				},
 				cardInfo:{
 					boardId      : '',
@@ -234,6 +248,7 @@
 							let errors;
 							if( Number(value) > this.pageConfig.maxBoxL || Number(value) < this.pageConfig.minBoxL){
 								errors = '箱长范围:' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm';
+								this.formData.boxLength = null;
 							}
 							callback(errors);
 						} }
@@ -244,6 +259,7 @@
 							let errors;
 							if( Number(value) > this.pageConfig.maxBoxW || Number(value) < this.pageConfig.minBoxW){
 								errors = '箱宽范围:' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm';
+								this.formData.boxWidth = null;
 							}
 							callback(errors);
 						} }
@@ -254,6 +270,7 @@
 							let errors;
 							if( Number(value) > this.pageConfig.maxBoxH || Number(value) < this.pageConfig.minBoxH){
 								errors = '箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm';
+								this.formData.boxHeight = null;
 							}
 							callback(errors);
 						} }
@@ -318,6 +335,12 @@
 						self.config.result.isGroup = true;
 					}
 					self.pageConfig.buildAutoGetTonLenAndULen = res.result.page_config.BuildAutoGetTonLenAndULen == 1 ? true : false;
+					/*if( res.result.page_config.BuildAutoGetTonLenAndULen == 1 ){
+						self.pageConfig.buildAutoGetTonLenAndULen = true;
+						self.formData.u
+					}*/
+					self.config.lastToLen = res.result.last_tolen;
+					self.config.lastULen  = res.result.last_ulen;
 					self.pageConfig.minDate = res.result.page_config.BuildMinDate;
 					self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
 					self.pageConfig.minBoxL = res.result.page_config.BuildMinBoxL;
@@ -339,7 +362,14 @@
 					self.formData.tonLen  = res.result.adjust_info.TonLen;
 					self.formData.uLen    = res.result.adjust_info.ULen;
 
-					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark
+					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark;
+
+					self.config.build.lenNeedToast = res.result.config.BuildLenNeedToast == 1 ? true : false;
+					self.config.build.lenToastDefault = Number(res.result.config.BuildLenToastDefault);
+					self.config.build.widthNeedToast = res.result.config.BuildWidthNeedToast == 1 ? true : false;
+					self.config.build.widthToastDefault = Number(res.result.config.BuildWidthToastDefault);
+					self.config.build.heightNeedToast = res.result.config.BuildHeightNeedToast == 1 ? true : false;
+					self.config.build.heightToastDefault = Number(res.result.config.BuildWidthToastDefault);
 
 					if( res.result.product_info.Pic[0] ){
 						self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];
@@ -379,10 +409,10 @@
 				});
 			},
 			getBoxFormula( boxType ){
-				if( !this.pageConfig.buildAutoGetTonLenAndULen ){
+				/*if( !this.pageConfig.buildAutoGetTonLenAndULen ){
 					this.formData.uLen = this.config.radioData.uLen[0].value;
 					this.formData.tonLen = this.config.radioData.tonLen[0].value;
-				}
+				}*/
 				let self = this;
 				this.$request.client.groupBuying.getBoxFormula( boxType ).then(res=>{
 					self.formData.lengthF    = res.result.LengthF;
@@ -434,8 +464,15 @@
 					});
 				});
 			},
-			clearFormData(){
-				Object.keys( this.formData ).forEach((item,index)=>{
+			async clearFormData(){
+				if( this.config.result.isSuccess ){
+					let productId = Object.assign({},{productId:this.formData.productId});
+					this.formData =  this.$options.data().formData;
+					this.pageConfig = this.$options.data().formData;
+					this.formData.productId = productId.productId;
+					await this.getConfig( this.formData.productId );
+				}
+				/*Object.keys( this.formData ).forEach((item,index)=>{
 					if( item != 'productId' ){
 						this.formData[item] = '';
 					}
@@ -443,7 +480,7 @@
 						this.formData[item] = false;
 					}
 				});
-				this.getConfig( this.formData.productId );
+				this.getConfig( this.formData.productId );*/
 			},
 			calcBdLW(){
 				if( Number(this.formData.boxLength) && ( Number(this.formData.boxLength) <  Number(this.pageConfig.minBoxL) ||  Number(this.formData.boxLength) >  Number(this.pageConfig.maxBoxL)) ){
@@ -587,6 +624,79 @@
                 }else if(this.formData.bdMultiple < 0){
                     return bdQty * this.formData.bdMultiple * -1;
                 }
+			},
+			boxTypeChange( newValue ){
+				this.formData.boxType = newValue;
+				this.getBoxFormula(this.formData.boxType);
+			},
+			tonLenChange( newValue ){
+				this.formData.tonLen = newValue;
+				this.calcBdLW();
+			},
+			lenChange( newValue ){
+				this.formData.uLen = newValue;
+				this.calcBdLW();
+			},
+			addressChange( newValue ){
+				this.formData.address = newValue;
+			},
+			lineBallChange( newValue ){
+				this.formData.lineBallInfo = newValue;
+			},
+			sizeBlur( id ){
+				let tips = '';
+				if( id == 'boxLength' && this.config.build.lenNeedToast ){
+					if( this.config.build.lenToastDefault > this.formData.boxLength )
+						tips = '下单长度小于' + this.config.build.lenToastDefault + 'mm';
+				}
+				if( id == 'boxWidth' && this.config.build.widthNeedToast ){
+					if( this.config.build.widthToastDefault > this.formData.boxWidth )
+						tips = '下单宽度小于' + this.config.build.widthToastDefault + 'mm';
+				}
+				if( id == 'boxHeight' && this.config.build.heightNeedToast ){
+					if( this.config.build.heightToastDefault > this.formData.boxHeight )
+						tips = '下单高度度小于' + this.config.build.heightToastDefault + 'mm';
+				}
+				if( tips.length > 0 ){
+					var that = this;
+					Toast({
+						message: tips,
+						icon:'warning-o',
+					});
+				}
+				this.calcBdLW();
+			},
+			inputFocus( id ){
+				const ua = window.navigator.userAgent.toLocaleLowerCase();
+				const isAndroid = /android/.test(ua);
+				let that = this;
+				if( isAndroid ){
+					window.onresize = () => {
+						const curClientHeight = document.documentElement.clientHeight;
+						//安卓键盘收起
+						if (curClientHeight >= that.config.initClientHeight) {
+							if( id == 'boxLength' || id == 'boxWidth' || id == 'boxHeight' ){
+								that.sizeBlur(id);
+							}
+							if( id == 'ordQty' ){
+								that.calcBdQty();
+							}
+							window.onresize = null;
+						}
+					}
+				}
+			},
+			inputBlur( id ){
+				/*const ua = window.navigator.userAgent.toLocaleLowerCase();
+				const isAndroid = /android/.test(ua);
+				if (isAndroid)
+					return */
+				if( id == 'ordQty' ){
+					this.calcBdQty();
+				}
+				if( id == 'boxLength' || id == 'boxWidth' || id == 'boxHeight'){
+					this.sizeBlur(id);
+				}
 			}
 		},
 		created(){

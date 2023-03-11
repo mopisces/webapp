@@ -10,15 +10,23 @@
 						<span class="van-nav-bar__text">{{ fieldConfig.placeholder }}</span>
 					</div>
 					<div class="van-nav-bar__title van-ellipsis"></div>
-					<div class="van-nav-bar__right" @click=" confirmClick() ">
-						<i class="van-icon">确认</i>
-						<i class="van-icon van-icon-success" style="font-size: 16px;"><!----></i>
-					</div>
+					<template v-if="needConfirm == 1">
+						<div class="van-nav-bar__right" @click=" confirmClick() ">
+							<i class="van-icon">确认</i>
+							<i class="van-icon van-icon-success" style="font-size: 16px;"><!----></i>
+						</div>
+					</template>
+					<template v-else>
+						<div class="van-nav-bar__right">
+							<i class="van-icon">请选择</i>
+							<i class="van-icon van-icon-setting-o" style="font-size: 16px;"><!----></i>
+						</div>
+					</template>
 				</div>
 			</van-sticky>
 			<van-radio-group v-model="value">
 				<van-cell-group>
-					<van-cell clickable @click=" value = item.value " v-for=" (item,index) in radioData " :key="index">
+					<van-cell clickable @click=" value = item.value;itemClick() " v-for=" (item,index) in radioData " :key="index">
 						<div slot="title">
 							<div>{{ item.value }}</div>
 							<div v-if=" selectType == 'cusInfo' && item.text != '' ">
@@ -49,6 +57,7 @@
 </template>
 <script>
 	import { Button, Cell, CellGroup, Icon, Popup, Field, RadioGroup, Radio, Sticky ,Tag } from 'vant';
+	import { getStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -65,6 +74,7 @@
 		props:['selectValue','fieldConfig','radioData','selectType'],
 		data(){
 			return {
+				needConfirm: 1,
 				show  : false,
 				value : this.selectValue,
 			}
@@ -72,7 +82,8 @@
 		methods:{
 			confirmClick(){
 				this.show = false;
-				if( this.selectType == 'material' ){
+				this.$emit('valueChange', this.value);
+				/*if( this.selectType == 'material' ){
 					this.$emit('materialConfirm');
 				}
 				if ( this.selectType == 'boxType' ) {
@@ -80,14 +91,27 @@
 				}
 				if( this.selectType == 'uLen' || this.selectType == 'tonLen' ){
 					this.$emit('lenConfirm');
+				}*/
+			},
+			itemClick(){
+				if( this.needConfirm == 0 ){
+					this.confirmClick();
 				}
 			}
 		},
 		created(){
-			
+			//console.log(this.selectValue)
 		},
 		mounted(){
-
+			try{
+				let config = JSON.parse(getStorage('jpdn_webapp_config'));
+				//console.log(typeof(config.selectNeedConfirm) == 'string')
+				if( typeof(config.selectNeedConfirm) == 'string' ){
+					this.needConfirm = config.selectNeedConfirm;
+				}
+			}catch(err){
+				this.needConfirm = 1;
+			}
 		},
 		updated(){
 			
@@ -104,6 +128,14 @@
 			},
 			value(newV,oldV){
 				this.$emit("update:selectValue", newV);
+			},
+			show( newV,oldV ){
+				if( newV == true && this.needConfirm != 1 ){
+					let arr = JSON.parse(JSON.stringify(this.radioData));
+					if( arr.length == 0 ){
+						this.needConfirm = 1;
+					}
+				}
 			}
 		}
 	}

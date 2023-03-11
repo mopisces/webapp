@@ -46,7 +46,7 @@
 					},
 					table:{
 						columns: [
-							{field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							/*{field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'Task', title: '业务员', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'LastMBDate', title: '上次结算时间', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'LastAmt', title: '上期余额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
@@ -59,7 +59,7 @@
 							{field: 'PreAmt', title: '预警金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'MinAmtCond', title: '终止金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'LeftMinAmtCond', title: '终止金额剩余', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'CurNeedPay', title: '当前需付总额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
+							{field: 'CurNeedPay', title: '当前需付总额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},*/
 						],
 		                height : 0
 					},
@@ -100,13 +100,14 @@
 		methods:{
 			cusContact( data ){
 				let self = this;
-				this.config.table.columns = this.$options.data().config.table.columns;
+				//this.config.table.columns = this.$options.data().config.table.columns;
 				this.formData =  this.$options.data().formData;
 				this.$request.staff.frec.cusContact( data ).then(res=>{
-					if(res.have_adjust == 1){
-						self.config.table.columns.splice(14,0,{field: 'adjustCusContact', title: '调整信用额度', width: 100, titleAlign: 'center', componentName:'table-operate', columnAlign: 'center',isResize:true})
+					let columnNum = self.config.table.columns.length;
+					if(res.have_adjust == 1 && self.config.table.columns[columnNum-1].field != 'adjustCusContact' ){
+						self.config.table.columns.splice(columnNum,0,{field: 'adjustCusContact', title: '调整信用额度', width: 100, titleAlign: 'center', componentName:'table-operate', columnAlign: 'center',isResize:true});
 					}
-					self.tableData = res.result
+					self.tableData = res.result;
 				});
 			},
 			resetClick(){
@@ -147,6 +148,13 @@
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
+			},
+			getTableConfig(){
+				this.$request.common.table.getTableConfig().then(res=>{
+					this.config.table.columns = res.staffCusContact;
+				}).then(()=>{
+					this.cusContact(this.filterForm);
+				});
 			}
 		},
 		created(){
@@ -158,7 +166,8 @@
 		},
 		mounted(){
 			this.validator = new schema(this.updateRules);
-			this.cusContact( this.filterForm );
+			//this.cusContact( this.filterForm );
+			this.getTableConfig();
 			this.config.table.height  = window.screen.height - 136;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},

@@ -2,9 +2,9 @@
 	<div>
 		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
 		<van-field v-model="formData.pON" input-align="center" label="PO号" placeholder="输入PO号"/>
-		<popup-select :selectValue.sync="formData.productId" :fieldConfig="config.fieldConfig.productId" :radioData="config.radioData.productId" selectType="productName"></popup-select>
+		<popup-select :selectValue.sync="formData.productId" :fieldConfig="config.fieldConfig.productId" :radioData="config.radioData.productId" selectType="productName" @valueChange="productIdChange"></popup-select>
 		<van-field v-model="formData.orderQuantities" input-align="center" label="订单数" placeholder="输入订单数" type="number" right-icon="question-o" @click-right-icon="clickQuestion()" />
-		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"></popup-select>
+		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo"  @valueChange="addressChange"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
@@ -20,6 +20,7 @@
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
 	import BuildResult from '@/components/subject/build/BuildResult.vue';
 	import schema from 'async-validator';
+	import { checkBuildTime } from '@/util';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -64,6 +65,11 @@
 					},
 					isFastBuild : false,
 					showDeliveryRemark:0,
+					buildTime:{
+						NeedSetBuildTime: false,
+						BuildInTime1:[],
+						BuildInTime2:[]
+					}
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -134,8 +140,13 @@
 
 					self.pageConfig.minQty  = res.result.page_config.BuildMinOrdQty;
 					self.pageConfig.maxQty  = res.result.page_config.BuildMaxOrdQty;
-
-					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark
+					//是否显示送货备注
+					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark;
+					//下单时间段
+					self.config.buildTime.NeedSetBuildTime = res.result.page_config.NeedSetBuildTime == 1 ? true : false;
+					self.config.buildTime.BuildInTime1 = res.result.page_config.BuildInTime1;
+					self.config.buildTime.BuildInTime2 = res.result.page_config.BuildInTime2;
+					self.checkTime();
 
 					if( this.config.isFastBuild ){
 						self.formData.pON       = res.result.fast_order_booking.PON;
@@ -175,6 +186,7 @@
 				});
 			},
 			saveOrder( data ){
+				this.checkTime();
 				let self = this;
 				this.$request.client.orderBooking.xBuildSave( data ).then(res=>{
 					if( res.errorCode === '00000' ){
@@ -196,6 +208,31 @@
 			fastBuild( orderId ){
 				this.getConfig( orderId );
 				this.config.isFastBuild = true;
+			},
+			productIdChange( newValue ){
+				this.formData.productId = newValue;
+			},
+			addressChange( newValue ){
+				this.formData.address = newValue;
+			},
+			checkTime(){
+				if( !this.config.buildTime.NeedSetBuildTime ){
+					return true;
+				}
+				let timeRes1 = checkBuildTime(this.config.buildTime.BuildInTime1[0],this.config.buildTime.BuildInTime1[1]);
+				let timeRes2 = checkBuildTime(this.config.buildTime.BuildInTime2[0],this.config.buildTime.BuildInTime2[1]);
+				if( timeRes1 || timeRes2 ){
+					return true;
+				}else{
+					let that = this;
+					Dialog.alert({
+						title: '目前不在下单时间',
+						message:'下单时间段为:' + that.config.buildTime.BuildInTime1[0] + '~' + that.config.buildTime.BuildInTime1[1] + '\n' + that.config.buildTime.BuildInTime2[0] + '~' + that.config.buildTime.BuildInTime2[1]
+					}).then(()=>{
+						Dialog.close();
+						that.$router.push('/client/index/menu');
+					});
+				}
 			}
 		},
 		created(){

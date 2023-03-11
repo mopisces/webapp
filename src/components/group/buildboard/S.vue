@@ -25,22 +25,22 @@
 		<van-field clearable label="纸板规格(mm)" right-icon="question-o" @click-right-icon="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth + 'mm~' + pageConfig.maxWidth + 'mm')">
 			<div class="van-row van-row--flex van-row--justify-center" slot="input">
 				<div class="van-col van-col--8">
-					<input type="number" placeholder="板长" v-model="formData.boardLength" class="van-field__control van-field__control--center" style="border:1px solid #000;" @blur="getAreaCost()"/>
+					<input type="number" placeholder="板长" v-model="formData.boardLength" class="van-field__control van-field__control--center" style="border:1px solid #000;" @focus="inputFocus()" @blur=" inputBlur() "/><!--  @blur="getAreaCost()" -->
 				</div>
 				<div class="van-col van-col--3" style="text-align:center;">
 					x 
 				</div>
 				<div class="van-col van-col--8">
-					<input type="number" placeholder="板宽" v-model="formData.boardWidth" class="van-field__control van-field__control--center" style="border:1px solid #000;" @blur="getAreaCost()"/>
+					<input type="number" placeholder="板宽" v-model="formData.boardWidth" class="van-field__control van-field__control--center" style="border:1px solid #000;" @focus="inputFocus()" @blur=" inputBlur() "/><!--  @blur="getAreaCost()" -->
 				</div>
 			</div>
 		</van-field>
-		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
+		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
 		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="压线和=板宽(格式:x+x+x)"/>
-		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数" @blur="getAreaCost()" ref="orderQuantitiesField"/>
+		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数"  @focus="inputFocus()" @blur=" inputBlur() " ref="orderQuantitiesField"/><!--  @blur="getAreaCost()" -->
 		<van-field v-model="formData.area" clearable readonly input-align="center" label="下单面积(㎡)" placeholder="待计算" right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡')">
 		</van-field>
-		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.cusInfo" :radioData="config.radioData.cusInfo" selectType="cusInfo"></popup-select>
+		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.cusInfo" :radioData="config.radioData.cusInfo" selectType="cusInfo" @valueChange="addressChange"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
@@ -173,6 +173,7 @@
 							let errors;
 							if( Number(value) > this.pageConfig.maxLength || Number(value) < this.pageConfig.minLength){
 								errors = '板长范围:' + this.pageConfig.minLength + 'mm~' + this.pageConfig.maxLength + 'mm';
+								this.formData.boardLength = null;
 							}
 							callback(errors);
 						}}
@@ -183,6 +184,7 @@
 							let errors;
 							if( Number(value) > this.pageConfig.maxWidth || Number(value) < this.pageConfig.minWidth){
 								errors = '板宽范围:' + this.pageConfig.minWidth + 'mm~' + this.pageConfig.maxWidth + 'mm';
+								this.formData.boardWidth = null;
 							}
 							callback(errors);
 						}}
@@ -430,6 +432,34 @@
 					}
 				});
 				this.getConfig( this.formData.productId );
+			},
+			lineBallChange( newValue ){
+				this.formData.lineBallInfo = newValue;
+			},
+			addressChange( newValue ){
+				this.formData.address = newValue;
+			},
+			inputFocus(){
+				const ua = window.navigator.userAgent.toLocaleLowerCase();
+				const isAndroid = /android/.test(ua);
+				let that = this;
+				if( isAndroid ){
+					window.onresize = () => {
+						const curClientHeight = document.documentElement.clientHeight;
+						//安卓键盘收起
+						if (curClientHeight >= that.config.initClientHeight) {
+							that.getAreaCost();
+							window.onresize = null;
+						}
+					}
+				}
+			},
+			inputBlur(){
+				/*const ua = window.navigator.userAgent.toLocaleLowerCase();
+				const isAndroid = /android/.test(ua);
+				if (isAndroid)
+					return */
+				this.getAreaCost();
 			}
 		},
 		created(){

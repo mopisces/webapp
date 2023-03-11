@@ -8,6 +8,9 @@ const login = {
 	isOpenGroup(){
 		return get( window.jpdn_domain_staff + 'isOpenGroup' );
 		/*return get( 'staff' , 'isOpenGroup' );*/
+	},
+	fetchConfig(){
+		return post( window.jpdn_domain_staff + 'config/fetchConfig' );
 	}
 };
 

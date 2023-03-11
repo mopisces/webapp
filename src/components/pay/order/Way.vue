@@ -28,6 +28,9 @@
 				<span>{{info.leftMinAmtCond}}</span>
 				<van-icon name="arrow" />
 			</div>
+		</van-cell><!--  && config.isWx -->
+		<van-cell size="large" title="易收宝支付" is-link v-if="info.useYSB" @click="payClick( 'ysb' )">
+			<van-icon slot="icon" name="balance-pay" style="line-height: inherit;" size="40" color="#1989FA"/>
 		</van-cell>
 		<van-popup v-model="wxQrCodeShow" position="top" :style="{ height : '100%', width: '100%'}">
 			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
@@ -72,6 +75,7 @@
 					useAlipay  : false,
 					useWechat  : false,
 					useCredit  : false,
+					useYSB     : false,
 					leftMinAmtCond:'',
 					orderName  : '',
 					total      : 0,
@@ -93,6 +97,7 @@
 					self.info.useWechat = res.result.pay_available.UseWxPay == '1' ? true : false;
 					self.info.useAlipay = res.result.pay_available.UseAliPay == '1' ? true : false;
 					self.info.useCredit = res.result.pay_available.UseCreditPay == '1' ? true : false;
+					self.info.useYSB    = res.result.pay_available.UseYSBPay == '1' ? true : false;
 					if( self.info.useCredit ){
 						self.info.leftMinAmtCond = res.result.pay_available.LeftMinAmtCond;
 					}
@@ -140,6 +145,21 @@
 				if( type == 'credit' ){
 					this.creditPay( this.info );
 				}
+				if( type == 'ysb' ){
+					if( !this.config.isWx ){
+						Dialog.alert({
+							message: '非微信环境不支持易收宝!'
+						}).then(()=>{
+							Dialog.close();
+						});
+					}else{
+						let data = {
+							tradeType  : 0,
+							cusOrderId : this.info.cusOrderId
+						};
+						this.ysbPay(data);
+					}
+				}
 			},
 			timeFinal(){
 				this.info.inTime = false;
@@ -149,6 +169,19 @@
 					Dialog.close();
 				});
 				this.$router.push('/client/wxorder/lists')
+			},
+			ysbPay( data ){
+				if( data.cusOrderId == '' || data.tradeType != 0 ){
+					Toast.fail('参数不正确');
+					return ;
+				}
+				let self = this;
+				this.$request.payAll.payAll.ysbPay( data ).then(res=>{
+					if( res.errorCode == '00000' ){
+						console.log(res)
+						submitForm(res.server_url,{code_info:res.result});
+					}
+				})
 			},
 			alipay( data ){
 				if( data.cusOrderId == '' || data.total <= 0 ){

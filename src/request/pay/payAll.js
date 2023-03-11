@@ -29,6 +29,13 @@ const payAll = {
 			token : data.token
 		};
 		return post( window.jpdn_domain_pay + 'wxPayForJsapi', postData );
+	},
+	ysbPay( data ){
+		let postData = {
+			trade_type   : data.tradeType,
+			cus_order_id : data.cusOrderId
+		};
+		return post( window.jpdn_domain_pay + 'ysb/pay', postData )
 	}
 };
 

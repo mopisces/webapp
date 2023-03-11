@@ -228,3 +228,23 @@ export function clearLogin()
 	removeStorage('client-auth-url');
 	removeStorage('staff-auth-url');
 }
+
+export function checkBuildTime( startTime, endTime )
+{
+	const date  = new Date();
+	const dataStr = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} `;
+
+	let startDate = new Date(dataStr + startTime).getTime();
+    let endDate = new Date(dataStr + endTime).getTime();
+    let nowDate = date.getTime();
+
+    const s = startDate > endDate;
+
+    if(s) [startDate, endDate] = [endDate, startDate];
+
+    if(nowDate > startDate && nowDate < endDate){
+    	return s ? false : true;
+    }else{
+    	return s ? true : false;
+    }
+}

@@ -497,21 +497,29 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="width:150px;">下单时间段</td>
+							<td style="width:150px;">是否需要设置下单时间段</td>
 							<td>
-								时间段1&nbsp;&nbsp;&nbsp;
-								<el-input style="width: 150px;" v-model="form.BuildInTime1"></el-input>
-								<p class="info">
-									用-隔开
-								</p>
-								<div style="width:100%;height:10px;"></div>
-								时间段2&nbsp;&nbsp;&nbsp;
-								<el-input style="width: 150px;" v-model="form.BuildInTime2"></el-input>
-								<p class="info">
-									用-隔开
-								</p> 
+								<el-checkbox v-model="form.NeedSetBuildTime" label="是否设置" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
+						<template v-if="form.NeedSetBuildTime == 1">
+							<tr>
+								<td style="width:150px;">下单时间段</td>
+								<td>
+									时间段1&nbsp;&nbsp;&nbsp;
+									<el-input style="width: 150px;" v-model="form.BuildInTime1"></el-input>
+									<p class="info">
+										用-隔开
+									</p>
+									<div style="width:100%;height:10px;"></div>
+									时间段2&nbsp;&nbsp;&nbsp;
+									<el-input style="width: 150px;" v-model="form.BuildInTime2"></el-input>
+									<p class="info">
+										用-隔开
+									</p> 
+								</td>
+							</tr>
+						</template>
 						<tr>
 							<td>
 								<el-button type="primary" @click="saveConfig()">保存</el-button>
@@ -655,11 +663,68 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="width:150px;">否显示送货备注</td>
+							<td style="width:150px;">是否显示送货备注</td>
 							<td>
 								<el-checkbox v-model="form.ShowDeliveryRemark" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
+						<tr>
+							<td style="width:150px;">弹出层是否需要确认按钮</td>
+							<td>
+								<el-checkbox v-model="form.BuildRadioNeedConfirm" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">下单长度不满指定长度是否需要提示</td>
+							<td>
+								<el-checkbox v-model="form.BuildLenNeedToast" label="是否需要提示" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<template v-if="form.BuildLenNeedToast == 1 ">
+							<tr>
+								<td style="width:150px;">指定下单长度</td>
+								<td>
+									<el-input style="width: 100px;" type="number" v-model="form.BuildLenToastDefault"></el-input>
+									<p class="info">
+										单位:mm
+									</p>
+								</td>
+							</tr>
+						</template>
+						<tr>
+							<td style="width:150px;">下单宽度不满指定宽度是否需要提示</td>
+							<td>
+								<el-checkbox v-model="form.BuildWidthNeedToast" label="是否需要提示" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<template v-if="form.BuildWidthNeedToast == 1 ">
+							<tr>
+								<td style="width:150px;">指定下单宽度</td>
+								<td>
+									<el-input style="width: 100px;" type="number" v-model="form.BuildWidthToastDefault"></el-input>
+									<p class="info">
+										单位:mm
+									</p>
+								</td>
+							</tr>
+						</template>
+						<tr>
+							<td style="width:150px;">下单高度不满指定高度是否需要提示</td>
+							<td>
+								<el-checkbox v-model="form.BuildHeightNeedToast" label="是否需要提示" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<template v-if="form.BuildHeightNeedToast == 1 ">
+							<tr>
+								<td style="width:150px;">指定下单高度</td>
+								<td>
+									<el-input style="width: 100px;" type="number" v-model="form.BuildHeightToastDefault"></el-input>
+									<p class="info">
+										单位:mm
+									</p>
+								</td>
+							</tr>
+						</template>
 						<tr>
 							<td>
 								<el-button type="primary" @click="saveConfig()">保存</el-button>
@@ -763,6 +828,12 @@
 								<td style="150px;">支付宝支付功能</td>
 								<td>
 									<el-checkbox v-model="form.UseAliPay" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
+								</td>
+							</tr>
+							<tr>
+								<td style="150px;">易收宝支付功能</td>
+								<td>
+									<el-checkbox v-model="form.UseYSBPay" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
 								</td>
 							</tr>
 						</template>
@@ -952,9 +1023,19 @@
 					BuildMaxDate              : '',  //交货日期,
 					BuildTonLen               : '',  //箱舌
 					BuildULen                 : '',  //封箱调整
-					BuildAddCalc              : 0,  //是否开启订单试算
-					IsAddTrimArea             : 0,  //是否开启订单试算毛片不加面积修边
-					ShowDeliveryRemark        : 0, //是否显示送货备注
+					BuildAddCalc              : 0,   //是否开启订单试算
+					IsAddTrimArea             : 0,   //是否开启订单试算毛片不加面积修边
+					ShowDeliveryRemark        : 0,   //是否显示送货备注
+					BuildRadioNeedConfirm     : 1,   //选择弹出层时是否需要点击确认
+					BuildLenNeedToast         : 0,   //下单长度不满指定长度是否需要提示
+					BuildLenToastDefault      : '',  //下单长度提示指定长度
+					BuildWidthNeedToast       : 0,   //下单宽度不满指定宽度是否需要提示
+					BuildWidthToastDefault    : '',  //下单宽度提示指定宽度
+					BuildHeightNeedToast      : 0,   //下单高度不满指定高度是否需要提示
+					BuildHeightToastDefault   : '',  //下单高度提示指定高度
+					NeedSetBuildTime          : 0,   //是否需要设置下单时间范围
+					BuildInTime1              : '',  //下单时间范围1
+					BuildInTime2              : '',  //下单时间范围2
 					//团购参数
 					UseCreditPay     : '',  //是否开启信用额度付款
 					WebSalesWidth    : '',  //团购纸板销售宽默认值
@@ -968,6 +1049,7 @@
 					BoxFlag          : '',  //淘宝箱特殊标识文字
 					UseWxPay         : '',  //微信支付功能
 					UseAliPay        : '',  //支付宝支付功能
+					UseYSBPay        : '',  //易收宝支付功能
 					ValidPayTime     : '',  //有效支付时间(秒)
 					//淘宝箱按面积报价
 					OpenBoxForArea   : '',  //淘宝箱是否按面积报价

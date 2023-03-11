@@ -1,21 +1,25 @@
 <template>
 	<div>
 		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
-		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @materialConfirm="getClackAdjust( formData.materialType )"></popup-select>
-		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @boxTypeConfirm="getBoxFormula( formData.boxType )"></popup-select>
+		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @valueChange="materialTypeChange"></popup-select>
+		<!-- @materialConfirm="getClackAdjust( formData.materialType )" -->
+		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @valueChange="boxTypeChange"></popup-select>
+		<!-- @boxTypeConfirm="getBoxFormula( formData.boxType )" -->
 		<div class="van-cell" style="display: flex;align-items: center;">
 			<div class="van-cell__title van-field__label">箱规(mm)</div>
-			<input type="number" class="karry-input" placeholder="长(L)" v-model="formData.boxLength" @blur=" calcBdLW() "/>
+			<input id="boxLength" type="number" class="karry-input" placeholder="长(L)" v-model="formData.boxLength" @focus="inputFocus('boxLength')" @blur=" inputBlur('boxLength') "/><!--calcBdLW()-->
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input type="number" class="karry-input" placeholder="宽(W)" v-model="formData.boxWidth" @blur=" calcBdLW() "/>
+			<input id="boxWidth" type="number" class="karry-input" placeholder="宽(W)" v-model="formData.boxWidth" @focus="inputFocus('boxWidth')" @blur=" inputBlur('boxWidth') "/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input type="number" class="karry-input" placeholder="高(H)" v-model="formData.boxHeight" @blur=" calcBdLW() "/>
+			<input id="boxHeight" type="number" class="karry-input" placeholder="高(H)" v-model="formData.boxHeight" @focus="inputFocus('boxHeight')" @blur=" inputBlur('boxHeight') "/>
 			<div class="van-field__right-icon">
 				<van-icon name="question-o" @click="clickQuestion(1)"/>
 			</div>
 		</div>
-		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @lenConfirm="calcBdLW()" v-if="config.showTonLen"></popup-select>
-		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @lenConfirm="calcBdLW()" v-if="config.showULen"></popup-select>
+		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @valueChange="tonLenChange" v-if="config.showTonLen"></popup-select>
+		<!--  @lenConfirm="calcBdLW()" -->
+		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @valueChange="lenChange" v-if="config.showULen"></popup-select>
+		<!--  @lenConfirm="calcBdLW()" -->
 		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
 		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
 		<div class="van-cell" style="display: flex;align-items: center;">
@@ -28,7 +32,7 @@
 			<build-calc :lineInfo="config.lineInfo" :calcDefault="config.calcDefault" @buildCalc="buildCalc"></build-calc>
 		</template>
 		<template v-else>
-			<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall"></popup-select>
+			<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
 		</template>
 		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
 		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="clickQuestion(2)"/>
@@ -39,7 +43,7 @@
 			</div>
 			<div class="van-cell__value">
 				<div class="van-field__body">
-					<input type="text" placeholder="输入订单数" v-model="formData.ordQty" class="van-field__control van-field__control--center karry-input" style="background-color:#f0f0f0;" v-on:blur="calcBdQty()"/>
+					<input id="ordQty" type="text" placeholder="输入订单数" v-model="formData.ordQty" class="van-field__control van-field__control--center karry-input" style="background-color:#f0f0f0;" v-on:focus="inputFocus('ordQty')" v-on:blur="inputBlur('ordQty')"/>
 				</div>
 			</div>
 		</div>
@@ -49,7 +53,7 @@
 			<field-label-variable :value.sync="formData.dOrdPrice" label="计价价格" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
 			<field-label-variable :value.sync="formData.dAmt" label="金额" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
 		</template>
-		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo">
+		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo" @valueChange="addressChange">
 		</popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
@@ -76,6 +80,7 @@
 	import schema from 'async-validator';
 	import BuildCalc from '@/components/subject/client/BuildCalc.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
+	import { checkBuildTime } from '@/util';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -156,7 +161,21 @@
 					},
 					showDeliveryRemark:0,
 					lastToLen: null,
-					lastULen:null
+					lastULen:null,
+					build:{
+						lenNeedToast:false,
+						widthNeedToast:false,
+						heightNeedToast:false,
+						lenToastDefault:null,
+						widthToastDefault:null,
+						heightToastDefault:null,
+					},
+					initClientHeight: document.documentElement.clientHeight,
+					buildTime:{
+						NeedSetBuildTime: false,
+						BuildInTime1:[],
+						BuildInTime2:[]
+					}
 				},
 				formData:{
 					cusOrderId       : '',   //客订单号
@@ -211,7 +230,8 @@
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( value != '' && ( Number(value) > this.pageConfig.maxBoxL || Number(value) < this.pageConfig.minBoxL ) ){
-									errors = '板宽范围:' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm';
+									errors = '板宽范围:\n' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm';
+									this.formData.boxLength = null;
 								}
 								callback(errors);
 							} }
@@ -220,7 +240,8 @@
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( value != '' && ( Number(value) > this.pageConfig.maxBoxW || Number(value) < this.pageConfig.minBoxW ) ){
-									errors = '板宽范围:' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm';
+									errors = '板宽范围:\n' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm';
+									this.formData.boxWidth = null;
 								}
 								callback(errors);
 							}  }
@@ -229,7 +250,8 @@
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if(  value != '' && ( Number(value) > this.pageConfig.maxBoxH || Number(value) < this.pageConfig.minBoxH ) ){
-									errors = '板宽范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm';
+									errors = '板宽范围:\n' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm';
+									this.formData.boxHeight = null;
 								}
 								callback(errors);
 							} }
@@ -343,7 +365,7 @@
 					info = '正数:几个纸板&nbsp;=>&nbsp;1个纸箱\n负数:1个纸板&nbsp;=>&nbsp;几个纸箱';
 				}
 				if( type == 3 ){
-					info = '下单面积范围:' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡';
+					info = '下单面积:\n' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡';
 				}
 				Dialog.alert({
 					message : info
@@ -404,8 +426,20 @@
 					self.formData.cusId = res.result.config.CusId;
 					self.formData.saAreaAddArea = res.result.config.SaAreaAddArea == 1 ? true : false;
 					self.formData.saAreaAddTrim = res.result.config.SaAreaAddTrim == 1 ? true : false;
-
-					self.config.showDeliveryRemark = res.result.config.ShowDeliveryRemark
+					//是否显示送货备注
+					self.config.showDeliveryRemark = res.result.config.ShowDeliveryRemark;
+					//下单长宽高是否需要提示
+					self.config.build.lenNeedToast = res.result.config.BuildLenNeedToast == 1 ? true : false;
+					self.config.build.lenToastDefault = Number(res.result.config.BuildLenToastDefault);
+					self.config.build.widthNeedToast = res.result.config.BuildWidthNeedToast == 1 ? true : false;
+					self.config.build.widthToastDefault = Number(res.result.config.BuildWidthToastDefault);
+					self.config.build.heightNeedToast = res.result.config.BuildHeightNeedToast == 1 ? true : false;
+					self.config.build.heightToastDefault = Number(res.result.config.BuildWidthToastDefault);
+					//下单时间段
+					self.config.buildTime.NeedSetBuildTime = res.result.config.NeedSetBuildTime == 1 ? true : false;
+					self.config.buildTime.BuildInTime1 = res.result.config.BuildInTime1;
+					self.config.buildTime.BuildInTime2 = res.result.config.BuildInTime2;
+					self.checkTime();
 
 					if( self.formData.isCalc == 1 ){
 						const jp = [];
@@ -476,6 +510,11 @@
 						self.formData.deliveryRemark   =  self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : '';
 						self.formData.productionRemark = res.result.fast_order_booking.ProRemark;
 					}
+
+					if( !self.pageConfig.buildAutoGetTonLenAndULen ){
+						self.formData.tonLen = self.inArray('tonLen', this.config.lastToLen ) ? self.config.lastToLen : this.config.radioData.tonLen[0].value;
+						self.formData.uLen = self.inArray('uLen', this.config.lastULen ) ? self.config.lastULen : self.config.radioData.uLen[0].value;
+					}
 				}).then(()=>{
 					if( this.formData.isCalc == 0 ){
 						delete this.rules.buildOrder.dOrdPrice
@@ -490,13 +529,14 @@
 						}
 					});
 				}).then(()=>{
-					console.log(isRebuild)
+					//console.log(isRebuild)
 					if( isRebuild ){
 						this.getClackAdjust(this.formData.materialType)
 					}
 				});
 			},
 			saveOrder( data ){
+				this.checkTime();
 				let self = this;
 				this.$request.client.orderBooking.cBuildSave( data ).then(res=>{
 					if( res.errorCode == '00000' ){
@@ -548,8 +588,8 @@
 					}
 					self.calcArea();
 				}).catch(({ errors, fields })=>{
-					//Toast.fail(errors[0].message);
-					console.log('fail')
+					Toast.fail(errors[0].message);
+					//console.log(errors[0].message)
 				});
 			},
 			calcBdQty( needCalcArea = true ){
@@ -817,6 +857,102 @@
 					this.config.button.disabled = true;
 					Toast.fail(errors[0].message);
 				});
+			},
+			materialTypeChange( newValue ){
+				this.formData.materialType = newValue;
+				this.getClackAdjust( this.formData.materialType );
+			},
+			boxTypeChange( newValue ){
+				this.formData.boxType = newValue;
+				this.getBoxFormula(this.formData.boxType);
+			},
+			tonLenChange( newValue ){
+				this.formData.tonLen = newValue;
+				this.calcBdLW();
+			},
+			lenChange( newValue ){
+				this.formData.uLen = newValue;
+				this.calcBdLW();
+			},
+			addressChange( newValue ){
+				this.formData.address = newValue;
+			},
+			lineBallChange( newValue ){
+				this.formData.lineBallInfo = newValue;
+			},
+			sizeBlur( id ){
+				let tips = '';
+				if( id == 'boxLength' && this.config.build.lenNeedToast ){
+					if( this.config.build.lenToastDefault > this.formData.boxLength )
+						tips = '下单长度小于' + this.config.build.lenToastDefault + 'mm';
+				}
+				if( id == 'boxWidth' && this.config.build.widthNeedToast ){
+					if( this.config.build.widthToastDefault > this.formData.boxWidth )
+						tips = '下单宽度小于' + this.config.build.widthToastDefault + 'mm';
+				}
+				if( id == 'boxHeight' && this.config.build.heightNeedToast ){
+					if( this.config.build.heightToastDefault > this.formData.boxHeight )
+						tips = '下单高度度小于' + this.config.build.heightToastDefault + 'mm';
+				}
+				if( tips.length > 0 ){
+					var that = this;
+					Toast({
+						message: tips,
+						icon:'warning-o',
+					});
+				}
+				this.calcBdLW();
+			},
+			inputFocus( id ){
+				const ua = window.navigator.userAgent.toLocaleLowerCase();
+				const isAndroid = /android/.test(ua);
+				let that = this;
+				if( isAndroid ){
+					window.onresize = () => {
+						const curClientHeight = document.documentElement.clientHeight;
+						//安卓键盘收起
+						if (curClientHeight >= that.config.initClientHeight) {
+							if( id == 'boxLength' || id == 'boxWidth' || id == 'boxHeight' ){
+								that.sizeBlur(id);
+							}
+							if( id == 'ordQty' ){
+								that.calcBdQty();
+							}
+							window.onresize = null;
+						}
+					}
+				}
+			},
+			inputBlur( id ){
+				/*const ua = window.navigator.userAgent.toLocaleLowerCase();
+				const isAndroid = /android/.test(ua);
+				if (isAndroid)
+					return */
+				if( id == 'ordQty' ){
+					this.calcBdQty();
+				}
+				if( id == 'boxLength' || id == 'boxWidth' || id == 'boxHeight'){
+					this.sizeBlur(id);
+				}
+			},
+			checkTime(){
+				if( !this.config.buildTime.NeedSetBuildTime ){
+					return true;
+				}
+				let timeRes1 = checkBuildTime(this.config.buildTime.BuildInTime1[0],this.config.buildTime.BuildInTime1[1]);
+				let timeRes2 = checkBuildTime(this.config.buildTime.BuildInTime2[0],this.config.buildTime.BuildInTime2[1]);
+				if( timeRes1 || timeRes2 ){
+					return true;
+				}else{
+					let that = this;
+					Dialog.alert({
+						title: '目前不在下单时间',
+						message:'下单时间段为:' + that.config.buildTime.BuildInTime1[0] + '~' + that.config.buildTime.BuildInTime1[1] + '\n' + that.config.buildTime.BuildInTime2[0] + '~' + that.config.buildTime.BuildInTime2[1]
+					}).then(()=>{
+						Dialog.close();
+						that.$router.push('/client/index/menu');
+					});
+				}
 			}
 		},
 		created(){

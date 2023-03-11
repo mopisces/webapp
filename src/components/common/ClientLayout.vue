@@ -10,7 +10,7 @@
 		<div class="container">
 			<router-view v-if="isRouterAlive" />
 		</div>
-		<div style="height:3.125rem;width:100%;"></div> 
+		<div style="height:3.125rem;width:100%;"></div>
 		<van-tabbar v-model="active">
 			<template v-if="!isLogin">
 				<van-tabbar-item name="clogin" icon="friends-o" to="/group/client/login">客户登录</van-tabbar-item>
@@ -107,7 +107,7 @@
 				this.$request.staff.login.isOpenGroup().then(res=>{
 					if( res.errorCode == '00000' ){
 						self.config.isOpenGroup = res.result == 0 ? false : true;
-						this.$store.commit('client/setGroupOpen',res.result);
+						self.$store.commit('client/setGroupOpen',res.result);
 					}
 				});
 			}
