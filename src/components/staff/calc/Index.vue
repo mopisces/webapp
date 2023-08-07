@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="padding-bottom:3.125rem;">
 		<van-tabs v-model="config.tabs.active" sticky>
 			<van-tab :title="item" v-for="(item,index) in config.tabs.title" :key="index">
 				<van-cell-group>

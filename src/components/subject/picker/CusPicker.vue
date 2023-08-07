@@ -48,6 +48,10 @@
 						return 
 					}
 					res.result.forEach((item,index)=>{
+						if( self.cusId == item.CusId ){
+							self.cusCHN = '客户名称：' + item.name;
+							self.defaultIndex = index;
+						}
 						self.columns.push({text:item.CusName + '--' +item.CusId ,key:item.CusId, name:item.CusName});
 					});
 				}).then(()=>{

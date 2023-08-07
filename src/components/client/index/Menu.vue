@@ -1,7 +1,31 @@
 <template>
-	<div  style="background-color:#f1f1f1;">
-		<div style="width:100%;height:0.625rem;"></div>
-		<div class="vant-row" style="height:3.125rem;">
+	<div style="min-height:100%;background-color:#f1f1f1;padding-bottom:3.125rem;">
+		<div class="inset-card">
+			<div class="inset-card-header">
+				<van-field>
+					<div slot="label" class="font-tips">
+						{{ userName }}
+					</div>
+					<div slot="input" class="font-tips">
+						<van-row style="text-align:center;">
+							<van-col span="12">
+								<van-button type="info" plain hairline round size="small" @click="getChangePass()">
+									<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
+									<span class="font-tips">更改密码</span>
+								</van-button>
+							</van-col>
+							<van-col span="12">
+								<van-button type="info" plain hairline round size="small" @click="qrClick">
+									<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
+									<span class="font-tips">登录二维码</span>
+								</van-button>
+							</van-col>
+						</van-row>
+					</div>
+				</van-field>
+			</div>
+		</div>
+		<!-- <div class="vant-row" style="height:3.125rem;padding-top:0.7rem;">
 			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
 				<div style="font-size:0.875rem;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
 					<span style="color:rgb(26, 173, 25);">{{ userName }}</span>
@@ -19,9 +43,14 @@
 					登录二维码
 				</van-button>
 			</div>
-		</div>
-		<van-grid square :gutter="10" :column-num="3">
-			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
+		</div> -->
+		<van-grid square :gutter="10" :column-num="4">
+			<van-grid-item 
+				v-for="(item,index) in config.authGrid" 
+				:key="index" 
+				:text="item.text"
+				:url="item.url"
+			>
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" color="#1a991d"/>
 			</van-grid-item>
 		</van-grid>
@@ -59,7 +88,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
+	import { Button, Col, Row, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
 	import { urlWhiteList } from '@/util';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
@@ -67,6 +96,8 @@
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Col.name]: Col,
+			[Row.name]: Row,
 			[Cell.name]: Cell,
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
@@ -82,6 +113,8 @@
 			return {
 				config:{
 					gridItem:[
+						{text:'开票信息', role:'开票信息', iconName:'iconddsh',  url:'/client/bill/billCenter'},
+						{text:'客户信用余额明细', role:'客户信用余额明细', iconName:'yewutiaozhang2',  url:'/client/cred/wGetCusDetail'},
 						{text:'信用余额', role:'信用余额', iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt'},
 						{text:'报价规则', role:'报价查询', iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus'},
 						{text:'报价价格', role:'报价查询', iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus'},
@@ -94,10 +127,10 @@
 						{text:'常用订单', role:'纸板下单', iconName:'dingdan1',    url:'/client/usedorder/lists'},
 						{text:'微信订单', role:'微信订单', iconName:'shouji',      url:'/client/wxorder/lists'},
 						{text:'纸箱下单', role:'纸箱下单', iconName:'zhixiang1',   url:'/client/build/x'},
-						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang',    url:'/client/build/c'},
+						{text:'纸箱纸板下单', role:'纸板下单', iconName:'zhixiang', url:'/client/build/c'},
 						{text:'简单纸板下单', role:'纸板下单', iconName:'mobancaidan', url:'/client/build/s'},
-						{text:'纸箱纸板下单', role:'纸板支付下单', iconName:'jiage1',    url:'/client/buildpay/c'},
-						{text:'简单纸板下单', role:'纸板支付下单', iconName:'jiage1', url:'/client/buildpay/s'},
+						{text:'纸箱纸板下单', role:'纸板支付下单', iconName:'jiage1',    url:'/client/buildpay/c', name:'cBuildPay'},
+						{text:'简单纸板下单', role:'纸板支付下单', iconName:'jiage1', url:'/client/buildpay/s', name:'sBuildPay'},
 						{text:'往来统计', role:'往来统计', iconName:'kehu', url:'/client/frec/statisContact'},
 					],
 					authGrid:[],
@@ -227,7 +260,7 @@
 						self.userName = res.result.short_name + '(' + res.result.ERPId + ')';
 					}
 				});
-			}
+			},
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','菜单页面');
@@ -251,4 +284,22 @@
 		margin:50% auto;
 		width:60%;
 	}
+	.inset-card{
+		height: 4.0625rem;
+		width: 100%;
+		padding-top: 0.7rem;
+	}
+	.inset-card-header{
+		padding: 0rem 0.8125rem;
+	}
+	.font-tips{
+		overflow: hidden;
+   		white-space: nowrap;
+   		text-overflow: ellipsis;
+	}
+	/* .van-field__label{
+		overflow: hidden;
+	   		white-space: nowrap;
+	   		text-overflow: ellipsis;
+	} */
 </style>

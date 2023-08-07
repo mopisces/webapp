@@ -199,7 +199,7 @@
 			},
 			getErpOrders( data ){
 				let self = this;
-				console.log(data)
+				//console.log(data)
 				this.$request.client.ordersManage.erpOrders( data ).then(res=>{
 					if( res.result == null || res.result.length < 6 ){
 						self.config.list.pushLoading.finished = true;

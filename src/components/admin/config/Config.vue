@@ -175,6 +175,28 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">订单统计2</td>
+							<td>
+								下单金额（默认日期）&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffAmountStatisDailyBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffAmountStatisDailyEndDate"></el-input>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffAmountStatisDailyMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffAmountStatisDailyMaxDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								送货金额（默认日期）&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffAmountStatisDeliveryBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffAmountStatisDeliveryEndDate"></el-input>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffAmountStatisDeliveryMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.StaffAmountStatisDeliveryMaxDate"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">退货统计</td>
 							<td>
 								默认日期&nbsp;&nbsp;&nbsp;
@@ -346,6 +368,16 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">扫描装货（新增装货单）</td>
+							<td>
+								最大日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.StowAddMaxDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								最小日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.StowAddMinDate"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">订单试算</td>
 							<td>
 								<el-checkbox v-model="form.CalcAutoGetTrimAndAreaByCus" label="自动获取客户是否默认加修边＆加面积" border true-label="1" false-label="0"></el-checkbox>
@@ -475,6 +507,34 @@
 								&nbsp;~&nbsp;
 								<el-input style="width: 100px;" v-model="form.CusFreeMBTableMaxDate"></el-input>
 							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">客户信用余额明细</td>
+							<td>
+								默认日期&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.GetCusFreeMBDetailBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.GetCusFreeMBDetailEndDate"></el-input>
+								<p class="info">默认开始时间是上次月结日期</p>
+								<div style="width:100%;height:10px;"></div>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.GetCusFreeMBDetailMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.GetCusFreeMBDetailMaxDate"></el-input>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">开票信息</td>
+							默认日期&nbsp;&nbsp;&nbsp;
+							<el-input style="width: 100px;" v-model="form.GetCusBillCenterBeginDate"></el-input>
+							&nbsp;~&nbsp;
+							<el-input style="width: 100px;" v-model="form.GetCusBillCenterEndDate"></el-input>
+							<p class="info">默认开始时间是上次月结日期</p>
+							<div style="width:100%;height:10px;"></div>
+							日期范围&nbsp;&nbsp;&nbsp;
+							<el-input style="width: 100px;" v-model="form.GetCusBillCenterMinDate"></el-input>
+							&nbsp;~&nbsp;
+							<el-input style="width: 100px;" v-model="form.GetCusBillCenterMaxDate"></el-input>
 						</tr>
 						<tr>
 							<td style="width:150px;">往来统计</td>
@@ -891,7 +951,7 @@
 					OriPagePort     : '',  //项目前端页面端口
 					OriPort         : '',  //项目后台端口
 					ErpApiPrefix    : '',  //erp接口地址
-					OpenMultiQuery  : '', //是否开启多数据查询
+					OpenMultiQuery  : '',  //是否开启多数据查询
 					//内部参数
 					Wap1Right                : '',  //用户权限
 					WGetCusOrderBeginDate    : '',  //客户每日订单(默认日期)
@@ -916,6 +976,16 @@
 					GetOrderSumEndDate       : '',  //订单统计
 					GetOrderSumMinDate       : '',  //订单统计(日期范围)
 					GetOrderSumMaxDate       : '',  //订单统计
+
+					StaffAmountStatisDailyBeginDate: '', //订单统计2 下单金额(默认日期)
+					StaffAmountStatisDailyEndDate: '',   //订单统计2 下单金额
+					StaffAmountStatisDailyMinDate: '',   //订单统计2 下单金额(日期范围)
+					StaffAmountStatisDailyMaxDate: '',   //订单统计2 下单金额
+					StaffAmountStatisDeliveryBeginDate: '', //订单统计2 送货(默认日期)
+					StaffAmountStatisDeliveryEndDate: '',
+					StaffAmountStatisDeliveryMinDate: '', //订单统计2 送货(日期范围)
+					StaffAmountStatisDeliveryMaxDate: '',
+
 					GetOrdReturnSumBeginDate : '',  //退货统计(默认日期)
 					GetOrdReturnSumEndDate   : '',  //退货统计
 					GetOrdReturnSumMinDate   : '',  //退货统计(日期范围)
@@ -960,6 +1030,8 @@
 					StowMinDate              : '',  //扫描装货-列表(日期范围)
 					StowMaxDate              : '',  //扫描装货-列表
 					bPackAddODefSQ           : '',  //扫描装货-详情(订单号装货默认带出库存数)
+					StowAddMaxDate           : '',  //扫描装货-新增装货单最大日期
+					StowAddMinDate           : '',  //扫描装货-新增装货单最小日期
 					CalcAutoGetTrimAndAreaByCus : '',  //订单试算(自动获取客户是否默认加修边＆加面积)
 					CalcAutoGetTonLenAndULen : '',  //订单试算(自动获取默认的箱舌＆封箱调整)
 					CalcAutoGetdOriPrice     : '',  //订单试算(自动获取平方报价)
@@ -995,6 +1067,14 @@
 					CusFreeMBTableEndDate    : '',  //对账单2
 					CusFreeMBTableMinDate    : '',  //对账单2(日期范围)
 					CusFreeMBTableMaxDate    : '',  //对账单2
+					GetCusFreeMBDetailBeginDate: '', //客户信用余额明细(默认日期)
+					GetCusFreeMBDetailEndDate  : '', //客户信用余额明细
+					GetCusFreeMBDetailMinDate  : '', //客户信用余额明细(日期范围)
+					GetCusFreeMBDetailMaxDate  : '', //客户信用余额明细
+					GetCusBillCenterBeginDate  : '', //开票信息(默认日期)
+					GetCusBillCenterEndDate    : '', //开票信息
+					GetCusBillCenterMinDate    : '', //开票信息(日期范围)
+					GetCusBillCenterMaxDate    : '', //开票信息
 					Wap0StatisContactBeginDate : '', //往来统计默认日期)
 					Wap0StatisContactEndDate   : '', //往来统计
 					Wap0StatisContactMinDate   : '', //往来统计(日期范围)

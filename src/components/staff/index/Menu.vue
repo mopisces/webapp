@@ -1,26 +1,66 @@
 <template>
-	<div style="background-color:#f1f1f1;">
-		<div style="width:100%;height:0.625rem;"></div>
-		<div class="vant-row" style="height:3.125rem;">
-			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
-				<div style="font-size:0.875rem;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-					<span style="color:rgb(26, 173, 25);">{{ userName }}</span>
+	<!-- <div class="menu-container">
+		<div class="menu-content-box">
+			<div class="menu-box menu-center-box">
+				<van-cell title="单元格" is-link value="内容" :border="false" />
+				<div class="menu-center-list">
+					<div class="menu-center-item">
+						<div class="menu-icon-box">
+							<van-icon class-prefix="iconfont" size="28" name="iconfontmima"/>
+						</div>
+						<div class="menu-center-text">
+							更改密码
+						</div>
+					</div>
+					<div class="menu-center-item">
+						<div class="menu-icon-box">
+							<van-icon class-prefix="iconfont" size="28" name="erweima2"/>
+						</div>
+						<div class="menu-center-text">
+							登录二维码
+						</div>
+					</div>
+					<div class="menu-center-item">
+						<div class="menu-icon-box">
+							<van-icon class-prefix="iconfont" size="28" name="erweima2"/>
+						</div>
+						<div class="menu-center-text">
+							我的发票
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="van-col van-col--8" style="text-align:center;">
-				<van-button type="info" plain hairline round size="small" @click="getChangePass()">
-					<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
-					更改密码
-				</van-button>
-			</div>
-			<div class="van-col van-col--8" style="text-align:center;">
-				<van-button type="info" plain hairline round size="small" @click="qrClick">
-					<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
-					登录二维码
-				</van-button>
+			<div class="menu-box menu-tool-box">
 			</div>
 		</div>
-		<van-grid square :gutter="10" :column-num="3">
+	</div> -->
+	<div style="min-height:100%;background-color:#f1f1f1;padding-bottom:3.125rem;">
+		<div class="inset-card">
+			<div class="inset-card-header">
+				<van-field >
+					<div slot="label" class="font-tips">
+						{{ userName }}
+					</div>
+					<div slot="input" class="font-tips">
+						<van-row slot="input" style="text-align:center;">
+							<van-col span="12">
+								<van-button type="info" plain hairline round size="small" @click="getChangePass()">
+									<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
+									更改密码
+								</van-button>
+							</van-col>
+							<van-col span="12">
+								<van-button type="info" plain hairline round size="small" @click="qrClick">
+									<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
+									登录二维码
+								</van-button>
+							</van-col>
+					</van-row>
+					</div>
+				</van-field>
+			</div>
+		</div>
+		<van-grid square :gutter="10" :column-num="4">
 			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
 				<van-icon class-prefix="iconfont" size="35" :name="item.iconName" slot="icon" color="#1a991d"/>
 			</van-grid-item>
@@ -63,13 +103,15 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
+	import { Button, Col, Row, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
 	import { getStorage, setStorage } from '@/util/storage';
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Col.name]: Col,
+			[Row.name]: Row,
 			[Cell.name]: Cell,
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
@@ -106,6 +148,7 @@
 						{text:'传单统计',role:'传单统计',iconName:'chuandan',url:'/staff/statis/getSchSum'},
 						{text:'退货统计',role:'退货统计',iconName:'tuihuo1',url:'/staff/statis/getOrdReturnSum'},
 						{text:'订单统计',role:'订单统计',iconName:'dingdan2',url:'/staff/statis/getOrderSum'},
+						{text:'订单统计2', role:'订单统计', iconName:'dingdan2',  url:'/staff/statis/getOrderSum2'},
 						{text:'客户信用余额',role:'客户信用余额',iconName:'xinyongyue',url:'/staff/cred/wGetCusAmt'},
 						{text:'客户每日订单',role:'客户每日订单',iconName:'meiri',url:'/staff/daily/wGetCusOrder'},
 						{text:'ERP订单',role:'ERP订单',iconName:'erp',url:'/staff/erp/getOrders'},
@@ -264,5 +307,70 @@
 	.qrcode img{
 		margin:50% auto;
 		width:60%;
+	}
+	.inset-card{
+		height: 4.0625rem;
+		width: 100%;
+		padding-top: 0.7rem;
+	}
+	.inset-card-header{
+		padding: 0rem 0.8125rem;
+	}
+	.font-tips{
+		overflow: hidden;
+   		white-space: nowrap;
+   		text-overflow: ellipsis;
+	}
+</style>
+<style>
+	.menu-container{
+		min-height:100%;
+		background-color:#f1f1f1;
+		position: relative;
+		top: 0;
+	}
+	.menu-content-box{
+		width: 100%;
+		padding: 0.5rem 1rem;
+		box-sizing: border-box;
+	}
+	.menu-box{
+		width: 100%;
+	    background: #fff;
+	    box-shadow: 0 0.0625rem 0.625rem hsl(0deg 0% 72% / 10%);
+	    border-radius: 0.3125rem;
+	    overflow: hidden;
+	} 
+	.menu-center-list{
+		width: 100%;
+	    height: 4.1875rem;
+	    padding: 0 0.9375rem;
+	    box-sizing: border-box;
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-between;
+	}
+	.menu-center-item{
+		flex: 1;
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+	}
+	.menu-icon-box{
+		position: relative;
+	}
+	.menu-center-text{
+		font-size: 0.8125rem;
+	    font-weight: 400;
+	    color: #666;
+	    padding-top: 0.125rem;
+	}
+	.menu-center-box{
+		height: 6.75rem;
+	}
+	.menu-tool-box{
+		height: 7.9375rem;
+		background-color: red;
+		margin-top: 0.625rem;
 	}
 </style>

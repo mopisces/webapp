@@ -13,6 +13,13 @@ const stow = {
 		};
 		return post( window.jpdn_domain_staff + 'stowList', postData );
 	},
+	getCarPersonInfo( data ){
+		return post( window.jpdn_domain_staff + 'stow/getCarPersonInfo', data );
+	},
+	stowListUpdate( data ){
+		let postData = data;
+		return post( window.jpdn_domain_staff + 'stow/stowListUpdate', postData );
+	},
 	detailConfig(){
 		return post( window.jpdn_domain_staff + 'stowDetailConfig' );
 	},

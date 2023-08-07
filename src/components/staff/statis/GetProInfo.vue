@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="padding-bottom:3.125rem;">
 		<van-sticky :offset-top="46">
 			<van-dropdown-menu>
 				<van-dropdown-item v-model="filterForm.statis" :options="config.dropMenu.options" />

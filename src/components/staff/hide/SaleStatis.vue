@@ -254,7 +254,7 @@
 		mounted(){
 			this.getConfig();
 			this.getTableConfig();
-			this.config.table.height  = window.screen.height - 86;
+			this.config.table.height  = window.screen.height - 186;
 			this.config.table.meterTableHeight = window.screen.height - 508;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},

@@ -1,5 +1,5 @@
 <template>
-	<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height">
+	<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :height="config.table.height" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff">
 	</v-table>
 </template>
 <script>

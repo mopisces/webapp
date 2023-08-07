@@ -44,6 +44,8 @@ const statisGetProInfo2       = () => import('@/components/staff/statis/GetProIn
 const statisGetOrdStock      = () => import('@/components/staff/statis/GetOrdStock');
 //订单统计
 const statisGetOrderSum      = () => import('@/components/staff/statis/GetOrderSum');
+//订单统计2
+const statisGetOrderSum2     = () => import('@/components/staff/statis/GetOrderSum2');
 //退货统计
 const statisGetOrdReturnSum  = () => import('@/components/staff/statis/GetOrdReturnSum');
 //传单统计
@@ -171,6 +173,12 @@ export const asyncStaffRouterMap = [
                 path:'statis/getOrderSum',
                 meta: { title: '订单统计', role:'订单统计' },
                 component: statisGetOrderSum,
+            },
+            {
+                path:'statis/getOrderSum2',
+                name: 'getOrderSum2',
+                meta: { title: '订单统计2', role:'订单统计2' },
+                component: statisGetOrderSum2,
             },
             {
                 path:'statis/getOrdReturnSum',

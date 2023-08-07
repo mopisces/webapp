@@ -240,8 +240,9 @@
 		},
 		mounted(){
 			this.$store.commit('staff/setHeaderTitle','原纸日用量');
-			this.config.table.info.height = window.screen.height - 126;
-			this.config.table.detail.height = window.screen.height - 100;
+			this.config.table.info.height = window.screen.height - 306;
+			this.config.table.detail.height = window.screen.height - 224;
+			console.log(this.config.table.detail.height)
 			this.getTableConfig();
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},

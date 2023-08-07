@@ -8,11 +8,11 @@
 				</div>
 			</van-nav-bar>
 		</div>
-		<div class="header-box"></div>
-		<div class="main">
+		<!-- <div class="header-box"></div> -->
+		<div class="container" :style=" 'min-height:' + height + 'px;padding-bottom:3.125rem;' ">
 			<router-view v-if="isRouterAlive" />
 		</div>
-		<div class="footer-box"></div>
+		<!-- <div class="footer-box"></div> -->
 		<div class="footer">
 			<van-tabbar v-model="active">
 				<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>
@@ -53,7 +53,8 @@
 					bounce:true,
 				},
 				active:0,
-				userName : ''
+				userName : '',
+				height : window.innerHeight - 96
 			};
 		},
 		methods:{
@@ -133,3 +134,9 @@
 		width:100%;
 	}
 </style>
+<style>
+	.container{
+		margin-top: 2.875rem;
+	}
+</style>
+

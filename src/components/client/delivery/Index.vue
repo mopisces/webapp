@@ -224,7 +224,7 @@
 		},
 		mounted(){
 			this.getTableConfig();
-			this.config.table.height  = window.screen.height - 225;
+			this.config.table.height  = window.screen.height - 275;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){

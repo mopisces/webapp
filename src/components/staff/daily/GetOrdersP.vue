@@ -13,7 +13,7 @@
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" v-if="config.prevNext.show"></prev-next>
 		<template v-if="config.field.show">
 			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa" :row-click="rowClick">
-		</v-table>
+			</v-table>
 		</template>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
 			<div slot="new-popup-1">
@@ -29,6 +29,9 @@
 				<van-field v-model="leftPopupData.TProVol" readonly label="生产立方" input-align="center"/>
 				<van-field v-model="leftPopupData.TStockVol" readonly label="库存立方" input-align="center"/>
 				<van-field v-model="leftPopupData.TUnDeliVol" readonly label="未送立方" input-align="center"/>
+				<template v-show="config.showOrdAmt">
+					<van-field v-model="leftPopupData.OrdAmt" readonly label="排单未送金额" input-align="center"/>
+				</template>
 			</div>
 		</new-popup>
 		<new-popup :leftShow.sync="config.popup.rightPopup.show" :title="config.popup.rightPopup.title" :position="config.popup.rightPopup.position" :isClose="true">
@@ -133,7 +136,8 @@
 					filterStatus : {
 						show   : false,
 						status : []
-					}
+					},
+					showOrdAmt: false
 				},
 				form:{
 					cusId     : '',
@@ -266,6 +270,7 @@
 							self.config.step.status.push({ title:item, value:item });
 						}
 					});
+					self.config.showOrdAmt = res.result.WGetCusOrderShowAmt == 1 ? true : false;
 					self.config.filterStatus.show = true;
 				});
 			},

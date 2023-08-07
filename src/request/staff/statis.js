@@ -30,6 +30,7 @@ const statis = {
 			stock_end_date     : data.endDate,
 			stock_remain_day   : data.remainDay,
 			stock_diff_day     : data.diffDay,
+			stock_cust_name    : data.cusName
 		}
 		return post( window.jpdn_domain_staff + 'getOrdStock', postData );
 	},
@@ -115,6 +116,19 @@ const statis = {
 			hide_end_date: data.endDate
 		};
 		return post( window.jpdn_domain_staff + 'saleStatis', postData);
+	},
+	//订单统计2
+	getStatisAmonutConfig(){
+		return post( window.jpdn_domain_staff + 'statis/getStatisAmountDataConfig');
+	},
+	getStatisAmountData(data){
+		let postData = {
+			daily_order_amount_begin_date: data.dailyBeginDate,
+			daily_order_amount_end_date: data.dailyEndDate,
+			delivery_amount_begin_date: data.deliveryBeginDate,
+			delivery_amount_end_date: data.deliveryEndDate
+		};
+		return post( window.jpdn_domain_staff + 'statis/getStatisAmountData', postData);
 	}
 
 };

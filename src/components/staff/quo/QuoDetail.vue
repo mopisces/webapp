@@ -90,7 +90,7 @@
 			this.$store.commit('staff/setBackPath','/staff/quo/customerQuo');
 		},
 		mounted(){
-
+			this.config.table.height = window.screen.height - 180;
 		},
 		updated(){
 			

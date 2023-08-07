@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="padding-bottom:3.125rem;">
 		<van-sticky :offset-top="46">
 			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 			<van-tabs v-model="filterForm.erpState">

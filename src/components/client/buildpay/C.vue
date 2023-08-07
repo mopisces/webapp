@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
+		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成" :disabled="config.custIDField.disabled"/>
 		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @valueChange="materialTypeChange"></popup-select>
 		<!-- @materialConfirm="getClackAdjust( formData.materialType )" -->
 		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @valueChange="boxTypeChange"></popup-select>
@@ -66,7 +66,7 @@
 			<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
 		</template>
 		<!-- <van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button> -->
-		<div style="width:100%;height:3.125rem;"></div>
+		<div style="width:100%;height:5.7rem;"></div>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="false" :showULen="config.showULen" :showTonLen="config.showTonLen"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="true" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
 	</div>
@@ -175,6 +175,9 @@
 						NeedSetBuildTime: false,
 						BuildInTime1:[],
 						BuildInTime2:[]
+					},
+					custIDField: {
+						disabled: false
 					}
 				},
 				formData:{
@@ -184,8 +187,8 @@
 					boxLength        : '',	 //箱长
 					boxWidth         : '',	 //箱宽
 					boxHeight        : '',   //箱高
-					tonLen           : '',   //箱舌
-					uLen             : '',   //封箱调整
+					tonLen           : null,   //箱舌
+					uLen             : null,   //封箱调整
 					length           : '',   //板长
 					width            : '',   //板宽
 					bdMultiple       : '',   //张数
@@ -207,6 +210,7 @@
 					saAreaAddTrim    : null,
 					dOrdPrice        : null,   //计价价格 
 					dAmt             : null,   //金额
+					buildType        : 0,      //0新增 1修改 2快速下单
 				},
 				pageConfig:{
 					minDate     : '',
@@ -457,8 +461,7 @@
 				let self = this;
 				this.$request.client.orderBookingPay.cBuildConfig( fastOrderId ).then(res=>{
 					self.pageConfig.buildAutoGetTonLenAndULen = res.result.config.BuildAutoGetTonLenAndULen == 1 ? true : false;
-					self.config.lastToLen = res.result.last_tolen;
-					self.config.lastULen  = res.result.last_ulen;
+
 					self.pageConfig.minBoxH = res.result.config.BuildMinBoxH;
 					self.pageConfig.maxBoxH = res.result.config.BuildMaxBoxH;
 					self.pageConfig.minBoxL = res.result.config.BuildMinBoxL;
@@ -491,32 +494,50 @@
 					self.config.buildTime.BuildInTime2 = res.result.config.BuildInTime2;
 					self.checkTime();
 
-					if( self.formData.isCalc == 1 ){
+					/*if( self.formData.isCalc == 1 ){*/
 						const jp = [];
 						res.result.line_ball_config.forEach((item,index)=>{
-							if( res.result.config.DefaultScoreName && res.result.config.DefaultScoreName == item ){
-								self.config.calcDefault.index = index;
-								self.config.calcDefault.name = item;
-							}
 							jp.push( item );
 						});
-
-						if( !res.result.config.DefaultScoreName ){
-							self.config.calcDefault.index = 0;
-							self.config.calcDefault.name = jp[0];
-						}
-
+						
 						self.config.lineInfo = {
 							'净片':jp,
 							'毛片':['无压线']
 						};
-						self.formData.lineBallInfo = res.result.config.DefaultScoreName ? res.result.config.DefaultScoreName : jp[0].value;
+
+						self.config.calcDefault.index = 0;
+						self.config.calcDefault.name = jp[0];
+						if( self.formData.buildType == 0 ){
+							let lastEdgeType = Number(res.result.last_build_info.LastEdgeType);
+							let lastScoreType = Number(res.result.last_build_info.LastScoreType);
+							self.config.calcDefault.edgeType = lastEdgeType == 1 ? '毛片':'净片';
+							//净片时需要设置对应的压线信息
+							if( lastScoreType <= jp.length && lastScoreType >= 0 && lastEdgeType == 0 ){
+								self.config.calcDefault.index = lastScoreType;
+								self.config.calcDefault.name = jp[lastScoreType ];
+							}
+						}
+
+						if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
+							let webEdgeType = Number(res.result.fast_order_booking.WebEdgeType);
+							let scoreType = Number(res.result.fast_order_booking.ScoreType);
+							//净片时需要设置对应的压线信息
+							if( webEdgeType == 0 && scoreType <= jp.length && scoreType>=0 ){
+								self.config.calcDefault.index = scoreType;
+								self.config.calcDefault.name = jp[scoreType ];
+							}
+						}
+						//设置formData参数
+						this.formData.isEdge = self.config.calcDefault.edgeType;
+						this.formData.lineBallInfo = self.config.calcDefault.name;
+
+						/*self.formData.lineBallInfo = res.result.config.DefaultScoreName ? res.result.config.DefaultScoreName : jp[0].value;
 					}else{
 						res.result.line_ball_config.forEach((item,index)=>{
 							self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
 						});
 						self.formData.lineBallInfo = res.result.config.DefaultScoreName ? res.result.config.DefaultScoreName : self.config.radioData.lineBall[0].value;
-					}
+					}*/
 					res.result.board_select_list.forEach((item,index)=>{
 						if( item.BoardName == null ){
 							self.config.radioData.material.push({ value : item.BoardId , text: '', tag:item.IsUsedBoard });
@@ -547,37 +568,51 @@
 						self.config.showULen = false;
 					}
 
-					if( self.config.isFastBuild ){
+					if( this.formData.buildType == 0 && !self.pageConfig.buildAutoGetTonLenAndULen ){
+						self.config.lastToLen = res.result.last_build_info.LastTonLen;
+						self.config.lastULen  = res.result.last_build_info.LastULen;
+					}
+
+					if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
 						self.formData.materialType = res.result.fast_order_booking.BoardId;
 						self.formData.boxType      = res.result.fast_order_booking.BoxId;
 						self.formData.boxLength    = res.result.fast_order_booking.BoxL;
 						self.formData.boxWidth     = res.result.fast_order_booking.BoxW;
 						self.formData.boxHeight    = res.result.fast_order_booking.BoxH;
-						self.formData.tonLen       = res.result.fast_order_booking.TonLen;
-						self.formData.uLen         = res.result.fast_order_booking.ULen;
-						self.formData.bdMultiple   = Number(res.result.fast_order_booking.BdMultiple) ? Number(res.result.fast_order_booking.BdMultiple) : 0;;
+						/*self.formData.tonLen       = res.result.fast_order_booking.TonLen;
+						self.formData.uLen         = res.result.fast_order_booking.ULen;*/
+
+						self.config.lastToLen = res.result.fast_order_booking.TonLen;
+						self.config.lastULen = res.result.fast_order_booking.ULen;
+
+						self.formData.ordQty = res.result.fast_order_booking.OrdQty;
+						self.formData.bdQty = res.result.fast_order_booking.BdQty;
+
+						self.formData.bdMultiple   = Number(res.result.fast_order_booking.BdMultiple) ? Number(res.result.fast_order_booking.BdMultiple) : 0;
 						self.formData.address      = res.result.fast_order_booking.CusSubNo;
 						self.formData.deliveryRemark   = self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : '';
 						self.formData.productionRemark = res.result.fast_order_booking.ProRemark;
 					}
-
-					if( !self.pageConfig.buildAutoGetTonLenAndULen ){
+					if( self.formData.buildType == 1 ){
+						self.formData.cusOrderId = res.result.fast_order_booking.CusPoNo;
+					}
+					/*if( self.formData.buildType == 0 && !self.pageConfig.buildAutoGetTonLenAndULen ){*/
 						self.formData.tonLen = self.inArray('tonLen', this.config.lastToLen ) ? self.config.lastToLen : this.config.radioData.tonLen[0].value;
 						self.formData.uLen = self.inArray('uLen', this.config.lastULen ) ? self.config.lastULen : self.config.radioData.uLen[0].value;
-					}
+					/*}*/
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timeFilter.isFinishLoad = true;
-						if( self.config.isFastBuild ){
+						if( this.formData.buildType == 1 || this.formData.buildType == 2 ){
 							this.getBoxFormula( this.formData.boxType );
 						}
 					});
-				}).then(()=>{
+				})/*.then(()=>{
 					console.log(isRebuild)
 					if( isRebuild ){
 						this.getClackAdjust(this.formData.materialType)
 					}
-				});
+				});*/
 			},
 			saveOrder( data ){
 				this.checkTime();
@@ -598,6 +633,9 @@
 				this.validator.calcBdLW.validate(this.formData).then(()=>{
 					let lengthExp = self.pageConfig.lengthFCalc;
 					let widthExp  = self.pageConfig.widthFCalc;
+					if( !lengthExp || !widthExp ){
+						return 
+					}
 					if( self.formData.boxLength ){
 						lengthExp = lengthExp.replace(/L/g,self.formData.boxLength);
 						widthExp  = widthExp.replace(/L/g,self.formData.boxLength);
@@ -1007,17 +1045,32 @@
 						that.$router.push('/client/index/menu');
 					});
 				}
+			},
+			fetchBuildType( params ){
+				let orderId = '';
+				if( typeof( params.orderId ) != 'undefined' && params.orderId != null ){
+					orderId = params.orderId;
+					if( typeof( params.buildType ) != 'undefined' && params.buildType != null ){
+						this.formData.buildType = params.buildType == 1 ? 1 : 2;
+					}else{
+						this.formData.buildType = 2;
+					}
+				}else{
+					this.formData.buildType = 0;
+				}
+				this.getConfig( orderId )
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','纸箱纸板下单');
 		},
 		mounted(){
-			if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
+			this.fetchBuildType( this.$route.params );
+			/*if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
 				this.fastBuild( this.$route.params.orderId ); 
 			}else{
 				this.getConfig( '' );
-			}
+			}*/
 			this.validator.calcBdLW   = new schema(this.rules.calcBdLW);
 			this.validator.buildOrder = new schema(this.rules.buildOrder);
 
@@ -1029,10 +1082,18 @@
 			
 		},
 		computed:{
-			
+			buildTypeChange(){
+				return this.formData.buildType;
+			}
 		},
 		watch:{
-			
+			buildTypeChange( newV, oldV ){
+				if( newV == 1 ){
+					this.config.custIDField.disabled = true;
+				}else{
+					this.config.custIDField.disabled = false;
+				}
+			}
 		}
 	}
 </script>

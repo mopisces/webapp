@@ -12,6 +12,7 @@
 	"getOrdersP":[
 		{"field":"guige","title":"规格","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
 		{"field":"ScoreInfo","title":"压线信息","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ScoreType","title":"压线类型","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"BoardName","title":"材质名称","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"OrdQty","title":"数量","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"sstate","title":"状态","width":"75","titleAlign":"center","columnAlign":"center","isResize":true}
@@ -38,5 +39,38 @@
 		{"field":"LeftMinAmtCond","title":"终止金额剩余","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"CurNeedPay","title":"当前需付总额","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"DNInvAmt","title":"累计需开票","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
+	"wGetCusDetail":[
+		{"field":"IssueDate","title":"生效日期","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"CategoryChiName","title":"类型","width":"50","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"DNAmt","title":"金额","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrderId","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"BoxL","title":"长","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"BoxW","title":"宽","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"BoxH","title":"高","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"BoardId","title":"材质","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"UnitPrice","title":"单价","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SquarePrice","title":"平方价","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DeliQty","title":"送货数量","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DNPrice","title":"送货价","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DNSize","title":"送货规格","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SalesLength","title":"销售长","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SalesWidth","title":"销售宽","width":"80","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
+	"staffDeliveryDaily":[
+		{"field":"GuiGe","title":"规则","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"BoardId","title":"货品名称","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DeliQty","title":"送货数","width":"60","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TSalesArea","title":"送货面积","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DNAmt","title":"金额","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DNPrice","title":"送货单价","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrderId","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ScoreInfo","title":"压线","width":"220","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrdQty","title":"订单数","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrdDeliQty","title":"累计送货数","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CarNo","title":"送货车号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CarPName","title":"司机","width":"70","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"Phone","title":"电话","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TimeToGo","title":"送货时间","width":"120","titleAlign":"center","columnAlign":"center","isResize":true}
 	]
 }

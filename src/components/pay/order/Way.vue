@@ -29,7 +29,7 @@
 				<van-icon name="arrow" />
 			</div>
 		</van-cell><!--  && config.isWx -->
-		<van-cell size="large" title="易收宝支付" is-link v-if="info.useYSB" @click="payClick( 'ysb' )">
+		<van-cell size="large" title="微信支付（易收宝）" is-link v-if="info.useYSB" @click="payClick( 'ysb' )">
 			<van-icon slot="icon" name="balance-pay" style="line-height: inherit;" size="40" color="#1989FA"/>
 		</van-cell>
 		<van-popup v-model="wxQrCodeShow" position="top" :style="{ height : '100%', width: '100%'}">

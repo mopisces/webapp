@@ -364,12 +364,12 @@
 
 					self.config.showDeliveryRemark = res.result.page_config.ShowDeliveryRemark;
 
-					self.config.build.lenNeedToast = res.result.config.BuildLenNeedToast == 1 ? true : false;
-					self.config.build.lenToastDefault = Number(res.result.config.BuildLenToastDefault);
-					self.config.build.widthNeedToast = res.result.config.BuildWidthNeedToast == 1 ? true : false;
-					self.config.build.widthToastDefault = Number(res.result.config.BuildWidthToastDefault);
-					self.config.build.heightNeedToast = res.result.config.BuildHeightNeedToast == 1 ? true : false;
-					self.config.build.heightToastDefault = Number(res.result.config.BuildWidthToastDefault);
+					self.config.build.lenNeedToast = res.result.page_config.BuildLenNeedToast == 1 ? true : false;
+					self.config.build.lenToastDefault = Number(res.result.page_config.BuildLenToastDefault);
+					self.config.build.widthNeedToast = res.result.page_config.BuildWidthNeedToast == 1 ? true : false;
+					self.config.build.widthToastDefault = Number(res.result.page_config.BuildWidthToastDefault);
+					self.config.build.heightNeedToast = res.result.page_config.BuildHeightNeedToast == 1 ? true : false;
+					self.config.build.heightToastDefault = Number(res.result.page_config.BuildWidthToastDefault);
 
 					if( res.result.product_info.Pic[0] ){
 						self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];

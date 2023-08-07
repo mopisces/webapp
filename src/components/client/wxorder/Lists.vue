@@ -10,7 +10,7 @@
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<van-panel v-for="(item,index) in wxOrdersList" :key="index" style="font-size:0.8125rem;">
+				<van-panel  v-for="(item,index) in wxOrdersList" :key="index" style="font-size:0.8125rem;">
 					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if="item.IsGroup === '1' && item.PayDeadlineTime ">
 						<div style="height:3.125rem;width:100%;display: flex;" @click="headerClick(item)">
 							<div style="display: inline-flex;line-height:3.125rem;width:75%;overflow: hidden;">
@@ -60,70 +60,106 @@
 						</div>
 					</div>
 					<div slot="default">
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">
-								<van-tag plain type="primary" style="font-size:0.75rem;">
-									{{ cTypeName(item.CType) }}
-								</van-tag>
-								<van-tag plain type="warning" v-if=" item.IsCard === '1' " style="font-size:0.75rem;">
-									常用订单标识:{{ item.CardFlag }}
-								</van-tag>
-								<van-tag plain type="danger" v-if=" item.IsDel === '1' " style="font-size:0.75rem;">
-									删除原因:{{ item.DelRemark }}
-								</van-tag>
+						<van-swipe-cell>
+							<template 
+								slot="right"  
+								v-if="item.IsDel === '0' && item.Checked === '0' && (( item.IsGroup === '0' && item.UsePay == null  )  || ( item.UsePay == '1' && item.Refund == 1 ) || ( item.UsePay == '1' && item.Paid == 0 ) )"
+								>
+								<van-button 
+									square 
+									text="删除" 
+									type="danger" 
+									style="height:100%;" 
+									@click="delClick(item.CusPoNo)"
+								/>
+							</template>
+							<template 
+								slot="left"
+								v-if="item.IsDel === '0' && item.Checked === '0' && ((item.UsePay == '1' && item.Paid == 0 && item.IsGroup == 0))"
+							>
+								<van-button 
+									square 
+									text="修改" 
+									type="primary" 
+									style="height:100%;" 
+									@click="modifyClick(item)"
+								/>
+							</template>
+							<div class="van-row van-row--flex van-row--justify-center">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--22">
+									<van-tag plain type="primary" style="font-size:0.75rem;">
+										{{ cTypeName(item.CType) }}
+									</van-tag>
+									<van-tag plain type="warning" v-if=" item.IsCard === '1' " style="font-size:0.75rem;">
+										常用订单标识:{{ item.CardFlag }}
+									</van-tag>
+									<van-tag plain type="danger" v-if=" item.IsDel === '1' " style="font-size:0.75rem;">
+										删除原因:{{ item.DelRemark }}
+									</van-tag>
+								</div>
 							</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--11">客订单号:{{ item.CusPoNo }}</div>
-							<div class="van-col van-col--11">
-								<span v-if=" item.CType === 's' || item.CType === 'c' ">材质:{{ item.BoardId }}</span>
-								<span v-else-if=" item.CType === 'x' ">套件:{{ item.ProductId }}</span>
-								<span v-else-if=" item.CType === 't' ">货品编号:{{ item.MatNo }}</span>
+							<div class="van-row van-row--flex van-row--justify-center">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--11">客订单号:{{ item.CusPoNo }}</div>
+								<div class="van-col van-col--11">
+									<span v-if=" item.CType === 's' || item.CType === 'c' ">材质:{{ item.BoardId }}</span>
+									<span v-else-if=" item.CType === 'x' ">套件:{{ item.ProductId }}</span>
+									<span v-else-if=" item.CType === 't' ">货品编号:{{ item.MatNo }}</span>
+								</div>
 							</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 'c' ">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">箱型:{{ item.BoxName }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 'c' ">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">
-								纸箱规格(mm):{{ item.BoxL }}&nbsp;x&nbsp;{{ item.BoxW }}&nbsp;x&nbsp;{{ item.BoxH }}
+							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 'c' ">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--22">箱型:{{ item.BoxName }}</div>
 							</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 's' || item.CType === 'c' ">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">
-								纸板规格(mm):{{ item.Length }}&nbsp;x&nbsp;{{ item.Width }}
+							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 'c' ">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--22">
+									纸箱规格(mm):{{ item.BoxL }}&nbsp;x&nbsp;{{ item.BoxW }}&nbsp;x&nbsp;{{ item.BoxH }}
+								</div>
 							</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center" v-if="item.CType === 'x'">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">
-								套件:{{ item.ProductName }}
+							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 's' || item.CType === 'c' ">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--22" >
+									纸板规格(mm):{{ item.Length }}&nbsp;x&nbsp;{{ item.Width }}
+								</div>
 							</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--11" v-if="item.CType === 's' || item.CType === 'c'" >订单数:{{ item.OrdQty }}</div>
-							<div class="van-col van-col--22" v-else>订单数:{{ item.OrdQty }}</div>
-							<div class="van-col van-col--11"  v-if="item.CType === 's' || item.CType === 'c'">下单面积(㎡):{{ item.Area }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">压线信息:{{ item.ScoreInfo }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--22">送货地址:{{ item.SubDNAddress }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--2"></div>
-							<div class="van-col van-col--11">下单日期:{{ item.BuildDate }}</div>
-							<div class="van-col van-col--11">交货日期:{{ item.DeliveryDate }}</div>
-						</div>
+							<div class="van-row van-row--flex van-row--justify-center" v-if="item.CType === 'x'">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--22">
+									套件:{{ item.ProductName }}
+								</div>
+							</div>
+							<div class="van-row van-row--flex van-row--justify-center">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--11" v-if="item.CType === 's' || item.CType === 'c'" >订单数:{{ item.OrdQty }}</div>
+								<div class="van-col van-col--22" v-else>订单数:{{ item.OrdQty }}</div>
+								<div class="van-col van-col--11"  v-if="item.CType === 's' || item.CType === 'c'">下单面积(㎡):{{ item.Area }}</div>
+							</div>
+							<div class="van-row van-row--flex van-row--justify-center">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--22">压线信息:{{ item.ScoreInfo }}</div>
+							</div>
+							<div class="van-row van-row--flex van-row--justify-center">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--22">送货地址:{{ item.SubDNAddress }}</div>
+							</div>
+							<div class="van-row van-row--flex van-row--justify-center">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--11">下单日期:{{ item.BuildDate }}</div>
+								<div class="van-col van-col--11">交货日期:{{ item.DeliveryDate }}</div>
+							</div>
+							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.IsGroup == 0 && pageConfig.isCalc ">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--11">计价价格:{{ item.WebCalPrice }}</div>
+								<div class="van-col van-col--11">金额:{{ item.WebCalAmt }}</div>
+							</div>
+							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.IsGroup == 1">
+								<div class="van-col van-col--2"></div>
+								<div class="van-col van-col--11">团购价格:{{ item.Price }}</div>
+								<div class="van-col van-col--11">团购金额:{{ item.Cost }}</div>
+							</div>
+						</van-swipe-cell>
 					</div>
 					<div slot="footer" style="text-align:right;">
 						<van-button size="small" color="linear-gradient(to right, #4bb0ff, #6149f6)" @click="payDetailClick(item.CusPoNo)" v-if=" filterForm.orderState == 1 && item.UsePay === '1' ">
@@ -132,9 +168,9 @@
 						<van-button size="small" type="primary" @click="wxDetailClick(item.CusPoNo)">
 							详情
 						</van-button>
-						<van-button size="small" type="danger" v-if="item.IsDel === '0' && item.Checked === '0' && ( item.IsGroup === '0' || item.UsePay === '0' || item.Paid === '0' || item.Refund === '1' ) " @click="delClick(item.CusPoNo)">
+						<!-- <van-button size="small" type="danger" v-if="item.IsDel === '0' && item.Checked === '0' && (( item.IsGroup === '0' && item.UsePay == null  )  || ( item.UsePay == '1' && item.Refund == 1 ) || ( item.UsePay == '1' && item.Paid == 0 ) )" @click="delClick(item.CusPoNo)">
 							删除
-						</van-button>
+						</van-button> -->
 						<van-button size="small" type="warning" v-if=" item.Checked === '1' && item.IsCard === '0' && item.CType !== 't' " @click="setCommon( item.CusPoNo )">
 							设为常用
 						</van-button>
@@ -146,9 +182,10 @@
 						</van-button>
 					</div>
 				</van-panel>
+				<!-- </van-swipe-cell> -->
 			</van-list>
 		</van-pull-refresh>
-		<float-nav v-if=" config.floatNav.show && config.floatNav.isFinish" :listData=" config.floatNav.listData " :selectNum=" config.floatNav.selectNum "></float-nav>
+		<float-nav v-if=" config.floatNav.show && config.floatNav.isFinish && filterForm.orderState==1" :listData=" config.floatNav.listData " :selectNum=" config.floatNav.selectNum "></float-nav>
 		<wx-order-detail :detailShow.sync="config.popup.detailShow" :cusOrderId="detailForm.cusOrderId" v-if="config.popup.detailShow"></wx-order-detail>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
@@ -180,7 +217,7 @@
 	</div>
 </template>
 <script>
-	import { Button, Image, Popup, Field, Dialog, PullRefresh, Toast, List, SwitchCell, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
+	import { Button, Image, Popup, Field, Dialog, PullRefresh, SwipeCell, Toast, List, SwitchCell, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
 	import WxOrderDetail from '@/components/subject/client/WxOrderDetail.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
@@ -197,6 +234,7 @@
 			[Field.name]: Field,
 			[Dialog.Component.name]: Dialog.Component,
 			[PullRefresh.name]: PullRefresh,
+			[SwipeCell.name]: SwipeCell,
 			[Toast.name]: Toast,
 			[List.name]: List,
 			[SwitchCell.name]: SwitchCell,
@@ -289,7 +327,8 @@
 				},
 				pageConfig : {
 					minDate : '',
-					maxDate : ''
+					maxDate : '',
+					isCalc: false
 				},
 				delForm : {
 					cusOrderId : '',
@@ -339,11 +378,12 @@
 					}
 					self.pageConfig.minDate   = res.result.WeborderMinDate;
 					self.pageConfig.maxDate   = res.result.WeborderMaxDate;
+					self.pageConfig.isCalc   = res.result.BuildAddCalc == 1 ? true : false;
 					self.config.radio.defaultDelRemark = [];
 					res.result.WeborderDefaultDelRemark.split(',').forEach((item,index)=>{
 						self.config.radio.defaultDelRemark.push({title:item,value:item});
 					});
-					if( res.result.UseWxPay == '1' || res.result.UseAliPay == '1' ){
+					if( res.result.UseWxPay == '1' || res.result.UseAliPay == '1' || res.result.UseYSBPay == '1'){
 						self.config.floatNav.show = true;
 					}
 				}).then(()=>{
@@ -429,6 +469,29 @@
 			delClick( cusOrderId ){
 				this.delForm.cusOrderId    = cusOrderId;
 				this.config.popup.del.show = true;
+			},
+			modifyClick( item ){
+				//console.log(item)
+				if( item.IsGroup != 0 ){
+					return 
+				}
+				//跳转支付下单
+				if( item.UsePay == 1 && item.CType == 's' ){
+					this.$router.push({ name:'sBuildPay', params: { orderId: item.CusPoNo, buildType: 1 } })
+				}
+				if( item.UsePay == 1 && item.CType == 'c' ){
+					this.$router.push({ name:'cBuildPay', params: { orderId: item.CusPoNo, buildType: 1 } })
+				}
+				//跳转非支付下单
+				if( item.UsePay == 0 && item.CType == 's' ){
+					this.$router.push({ name:'sBuild', params: { orderId: item.CusPoNo, buildType: 1 } })
+				}
+				if( item.UsePay == 0 && item.CType == 'c' ){
+					this.$router.push({ name:'cBuild', params: { orderId: item.CusPoNo, buildType: 1 } })
+				}
+				if( item.UsePay == 0 && item.CType == 'x' ){
+					this.$router.push({ name:'xBuild', params: { orderId: item.CusPoNo, buildType: 1 } })
+				}
 			},
 			otherReason( cusOrderId ){
 				this.delForm.delRemak      = '';

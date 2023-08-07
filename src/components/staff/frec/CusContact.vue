@@ -9,9 +9,7 @@
 			</div>
 		</popup-filter>
    		<template>
-   			<div class="container">
-   				<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa"  @on-custom-comp="customCompFunc"></v-table>
-   			</div>
+   			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa"  @on-custom-comp="customCompFunc"></v-table>
    		</template>
    		<van-dialog v-model:show="config.dialog.showAdjust" :show-confirm-button="false" :close-on-click-overlay="true" @close="checkClose()">
    			<van-field label="客户名称" :value="formData.Cus" input-align="center" readonly style="line-height:36px;"/>

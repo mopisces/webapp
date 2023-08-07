@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="padding-top:0.1rem;">
 		<template v-if="config.modifyAuth">
 			<van-button plain hairline type="info" style="width:50%" @click="addData()">添加</van-button>
 			<van-button plain hairline type="info" style="width:50%" @click="config.popup.filterShow = true">筛选</van-button>
@@ -615,7 +615,7 @@
 		mounted(){
 			this.getTableConfig();
 			this.recAdjustConfig();
-			this.config.table.height = window.screen.height - 170;
+			this.config.table.height = window.screen.height - 190;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		destroyed(){

@@ -10,6 +10,11 @@
 			</van-button>
 		</div>
 		<!--内部用户-扫描装货-->
+		<div v-if=" field === 'stowListModify' ">
+			<van-button plain hairline type="primary" @click="stowListModify()" size="small" v-if=" rowData.CarState == 0 " color="#000">
+				修改
+			</van-button>
+		</div>
 		<div v-if=" field === 'stowDelivery' ">
 			<van-button plain hairline type="primary" @click="prepare()" size="small" v-if=" rowData.CarState == 0 " color="#000">
 				准备
@@ -111,6 +116,9 @@
 			deleteData(){
 				let params = {type:'delete',index:this.index,rowData:this.rowData};
 				this.$emit('on-custom-comp',params);
+			},
+			stowListModify(){
+				this.$emit('on-custom-comp',{type: 'modify', index:this.index, rowData:this.rowData});
 			},
 			prepare(){
 				Dialog.confirm({

@@ -10,7 +10,7 @@
   			</van-tab>
 		</van-tabs>
 		<template v-if=" filterForm.dataType == 1 ">
-			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.widthColumns" :table-data="tableData.widthData" row-hover-color="#eee" row-click-color="#edf7ff"  even-bg-color="#fafafa">
+			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.widthColumns" :table-data="tableData.widthData" row-hover-color="#eee" row-click-color="#edf7ff"  even-bg-color="#fafafa" :height="config.table.height">
 			</v-table>
 		</template>
 		<template v-if=" filterForm.dataType == 2 ">
@@ -126,7 +126,7 @@
 		mounted(){
 			this.getTableConfig();
 			this.getPageConfig();
-			this.config.table.height = window.screen.height - 210;
+			this.config.table.height = window.screen.height - 260;
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','原纸库存');

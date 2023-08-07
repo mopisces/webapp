@@ -3,8 +3,8 @@
 		<van-sticky :offset-top="46">
 			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 			<van-tabs v-model="filterForm.type">
-				<van-tab title="送货"     name="1"></van-tab>
-				<van-tab title="退货"     name="2"></van-tab>
+				<van-tab title="送货" name="1"></van-tab>
+				<van-tab title="退货" name="2"></van-tab>
 				<van-tab title="调账折扣" name="3"></van-tab>
 			</van-tabs>
 		</van-sticky>
@@ -69,6 +69,7 @@
   				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
+				<!-- <van-button size="mini" type="info" @click="download()">下载</van-button> -->
   			</div>
   		</popup-filter>
   		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow.sync="config.popup.detailShow" @detailClose="detailClose"></order-detail>
@@ -160,6 +161,7 @@
 			},
 			statementAccount(){
 				let self = this;
+				self.listData = [];
 				this.$request.client.cred.statementAccount( this.filterForm ).then(res=>{
 					self.listData = res.result;
 				}).then(()=>{
@@ -188,6 +190,9 @@
 				}else{
 					removeStorage('client-order/getCusFreeMB');
 				}
+			},
+			download(){
+				exportExcel(this.listData,'hellowolrd')
 			}
 		},
 		created(){

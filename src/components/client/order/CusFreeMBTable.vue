@@ -102,7 +102,7 @@
 
 			},
 			setElementSize(){
-				this.config.table.height = window.screen.height - 126;
+				this.config.table.height = window.screen.height - 176;
 			},
 			beforeunloadHandler(){
 				if( this.config.switch.checked ){

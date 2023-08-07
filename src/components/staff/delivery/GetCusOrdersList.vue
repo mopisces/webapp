@@ -13,7 +13,7 @@
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" v-if="config.prevNext.show"></prev-next>
 		<template v-if="config.field.show">
 			<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa">
-		</v-table>
+			</v-table>
 		</template>
 		<new-popup :leftShow.sync="config.popup.leftPopup.show" :title="config.popup.leftPopup.title" :position="config.popup.leftPopup.position" :isClose="true">
 			<div slot="new-popup-1">
@@ -213,7 +213,7 @@
 			this.getCusInfo( this.form );
 			this.getCountOrder( this.filterCount, this.filterForm );
 			this.getTableConfig();
-			this.config.table.height = window.screen.height - 200;
+			this.config.table.height = window.screen.height - 220;
 		},
 		destroyed(){
 			

@@ -6,11 +6,11 @@
 				<van-icon class-prefix="iconfont" name="refresh" size="18" class="van-icon van-icon-arrow-right"/>
 			</div>
 		</van-nav-bar>
-		<div style="width:100%;height:2.875rem;"></div>
-		<div class="container">
+		<!-- <div style="width:100%;height:2.875rem;"></div> -->
+		<div class="container" :style=" 'min-height:' + height + 'px;padding-bottom:3.125rem;' ">
 			<router-view v-if="isRouterAlive" />
 		</div>
-		<div style="height:3.125rem;width:100%;"></div>
+		<!-- <div style="height:3.125rem;width:100%;"></div> -->
 		<van-tabbar v-model="active">
 			<template v-if="!isLogin">
 				<van-tabbar-item name="clogin" icon="friends-o" to="/group/client/login">客户登录</van-tabbar-item>
@@ -61,6 +61,7 @@
 				},
 				active   : '',
 				isLogin  : false,
+				height : window.innerHeight - 50
 			};
 		},
 		methods:{
@@ -110,7 +111,8 @@
 						self.$store.commit('client/setGroupOpen',res.result);
 					}
 				});
-			}
+			},
+
 		},
 		created(){
 			this.config.headerTitle = this.$store.state.client.layout.title;
@@ -160,3 +162,8 @@
 		}
 	}
 </script>
+<style>
+	.container{
+		margin-top: 2.875rem;
+	}
+</style>

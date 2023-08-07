@@ -65,7 +65,7 @@
 		mounted(){
 			this.getTableConfig();
 			this.makeOffersPrice();
-			this.config.table.height  = window.screen.height - 150;
+			this.config.table.height  = window.screen.height - 200;
 		},
 		updated(){
 			

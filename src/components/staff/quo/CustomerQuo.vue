@@ -1,7 +1,7 @@
 <template>
-	<div>
-		<div style="width:100%;height:0.0625rem;"></div>
-		<van-sticky :offset-top="46">
+	<div style="padding-bottom:3.125rem;">
+		<!-- <div style="width:100%;height:0.0625rem;"></div> -->
+		<van-sticky :offset-top="47">
 			<van-button plain hairline type="info" style="width:100%"  @click="config.popup.rightFilter.show = true">筛选</van-button>
 		</van-sticky>
 		<van-cell-group>

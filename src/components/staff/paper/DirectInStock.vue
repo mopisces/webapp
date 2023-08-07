@@ -36,7 +36,7 @@
 			<radio-cell :radioInfo.sync="formData.strStockArea" :radioColumns="pageInfo.stockAreaOpt" title=""></radio-cell>
 		</van-popup>
 		<template v-if="pageInfo.bSAreaControl">
-			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" even-bg-color="#fafafa" :height="500" @on-custom-comp="customCompFunc"></v-table>
+			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" even-bg-color="#fafafa" :height="config.table.height" @on-custom-comp="customCompFunc"></v-table>
 		</template>
 	</div>
 </template>
@@ -81,7 +81,8 @@
 							{field: 'StockArea', title: '传单库区', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'LeftQty', title: '未装订单数',width: 80,  titleAlign: 'center', columnAlign: 'center',isResize:true},
 							{field: 'LeftSArea', title: '未装折五面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-						]
+						],
+						height: 0
 					},
 					field:{
 						iQtyOnFocus:false
@@ -248,6 +249,7 @@
 		},
 		mounted(){
 			this.validator = new schema(this.rules);
+			this.config.table.height = window.screen.height - 350;
 			this.directInConfig();
 		},
 		computed:{

@@ -4,7 +4,7 @@ import staff from './staff';
 import client from './client';
 import admin from './admin';
 import group from './group';
-import amap from './amap';
+/*import amap from './amap';*/
 Vue.use(VueRouter);
 //404
 const error404    = () => import('@/components/common/404');
@@ -89,7 +89,7 @@ let routes = [
     ...client,
     ...admin,
     ...group,
-    ...amap,
+    //...amap,
     {
         path:'*',
         component : error404,

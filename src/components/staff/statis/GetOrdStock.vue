@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="padding-bottom:3.125rem;">
 		<van-sticky :offset-top="46">
 			<chart-header-select :show.sync="config.popup.chartSelect.show" :statisType="config.selectOption.statisType" :chartType="config.selectOption.chartType" :chartProperties="config.selectOption.chartProperties" @selectOption="selectOption">
 			</chart-header-select>
@@ -55,6 +55,7 @@
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="stockQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
+				<cus-picker ref="cusPicker" :cusName.sync="filterForm.cusName"></cus-picker>
 				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell>
 				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
 				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
@@ -73,6 +74,7 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import HighChart from '@/components/subject/chart/HighChart';
+	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	export default {
 		components:{
@@ -87,7 +89,8 @@
 			PopupFilter,
 			RadioCell,
 			NewTimePicker,
-			HighChart
+			HighChart,
+			CusPicker
 		},
 		data(){
 			return {
@@ -140,6 +143,7 @@
 					panelList:[],
 				},
 				filterForm:{
+					cusName     : '',
 					sType       : 3,
 					dateType    : 1,
 					beginDate   : '',

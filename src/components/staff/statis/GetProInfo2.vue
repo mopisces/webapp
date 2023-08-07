@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="padding-bottom:3.125rem;">
 		<van-sticky :offset-top="46">
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="onRefresh()">刷新</van-button>
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="config.popup.filterShow = true">筛选</van-button>

@@ -5,6 +5,8 @@ const clientLayout     = () => import('@/components/common/ClientLayout');
 const menu             = () => import('@/components/client/index/Menu');
 //信用余额
 const wGetCusAmt       = () => import('@/components/client/cred/WGetCusAmt');
+//信用余额详情
+const wGetCusDetail    = () => import('@/components/client/cred/WGetCusDetail');
 //报价规则
 const getQuoRuleByCus  = () => import('@/components/client/quo/GetQuoRuleByCus');
 //报价价格
@@ -47,6 +49,9 @@ const sBuildPay        = () => import('@/components/client/buildpay/S');
 const cBuildPay        = () => import('@/components/client/buildpay/C');
 //往来统计
 const statisContact = () => import('@/components/client/frec/statisContact');
+//发票中心
+const billCenter = () => import('@/components/client/bill/BillCenter');
+
 export const asyncClientRouterMap = [
     {
         path:'/client',
@@ -57,6 +62,11 @@ export const asyncClientRouterMap = [
                 path:'cred/wGetCusAmt',
                 meta: { title: '信用余额', role:'信用余额' },
                 component: wGetCusAmt,
+            },
+            {
+                path:'cred/wGetCusDetail',
+                meta: { title: '客户信用余额明细', role:'客户信用余额明细' },
+                component: wGetCusDetail,
             },
             {
                 path:'quo/getQuoRuleByCus',
@@ -143,6 +153,12 @@ export const asyncClientRouterMap = [
                 name: 'statisContact',
                 meta: { title: '往来统计', role:'往来统计' },
                 component: statisContact,
+            },
+            {
+                path:'bill/billCenter',
+                name: 'billCenter',
+                meta: { title: '开票信息', role:'开票信息' },
+                component: billCenter,
             }
         ]
     }

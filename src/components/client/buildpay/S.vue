@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
+		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成" :disabled="config.custIDField.disabled"/>
 		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @valueChange="materialTypeChange"></popup-select>
 		</van-field>
 		<div class="van-cell" style="display: flex;align-items: center;">
@@ -40,7 +40,7 @@
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
-		<div style="width:100%;height:3.125rem;"></div>
+		<div style="width:100%;height:5.7rem;"></div>
 		<template  v-if="formData.isCalc == 1 ">
 			<van-button  type="warning" size="normal" style="width:50%;position:fixed;bottom:3.125rem;" @click="calcPriceInfo()" :disabled=" config.button.calcBtnDis ">试算</van-button>
 			<van-button  type="primary" size="normal" style="width:50%;position:fixed;bottom:3.125rem;left:50%;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
@@ -113,7 +113,7 @@
 						cusOrderId :'',
 						failMsg:'下单失败'
 					},
-					isFastBuild : false,
+					//isFastBuild : false,
 					button:{
 						disabled : true,
 						calcBtnDis:true,
@@ -130,6 +130,9 @@
 						NeedSetBuildTime: false,
 						BuildInTime1:[],
 						BuildInTime2:[]
+					},
+					custIDField:{
+						disabled: false
 					}
 				},
  				pageConfig : {
@@ -170,6 +173,7 @@
 					dSquarePrice     : null,   //销售平方单价
 					dUnitPrice       : null,   //单价
 					quotaId          : null,   //
+					buildType        : 0,      //0新增 1修改 2快速下单
 				},
 				rules : {
 					cusOrderId : [
@@ -363,6 +367,7 @@
 						}
 						self.config.radioData.cusInfo.push( { value : item.CusSubNo, text:item.SubDNAddress, tag : ''} );
 					});
+					//设置默认送货时间(默认值数据库中配置)
 					self.formData.date = res.result.page_config.BuildDeliveryDate
 
 					self.pageConfig.maxDate   = res.result.page_config.BuildMaxDate;
@@ -387,54 +392,94 @@
 					self.config.buildTime.BuildInTime2 = res.result.page_config.BuildInTime2;
 					self.checkTime();
 
-					if( self.formData.isCalc == 1 ){
+					/*if( self.formData.isCalc == 1 ){*/
+						//console.log( res.result.fast_order_booking)
 						const jp = [];
 						res.result.line_ball_config.forEach((item,index)=>{
-							if( !self.config.isFastBuild && res.result.page_config.DefaultScoreName && res.result.page_config.DefaultScoreName == item ){
+							/*if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
+								
+							}
+							if( self.formData.buildType == 0 && res.result.page_config.DefaultScoreName && res.result.page_config.DefaultScoreName == item ){
 								self.config.calcDefault.index = index;
 								self.config.calcDefault.name = item;
 							}
-							if( self.config.isFastBuild && index == res.result.fast_order_booking.ScoreType){
+							if( self.formData.buildType == 0 && res.result.last_build_info.LastScoreName && res.result.last_build_info.LastEdgeType ){
+								if( res.result.last_build_info.LastEdgeType == 0 && res.result.last_build_info.LastScoreName == index ){
+									self.config.calcDefault.index = index;
+									self.config.calcDefault.name = item;
+								}
+								if( res.result.last_build_info.LastEdgeType == 1 ){
+									self.config.calcDefault.index = 0;
+									self.config.calcDefault.name = item;
+								}
+							}
+							if( self.formData.buildType == 1 && res.result.fast_order_booking.ScoreType && res.result.last_build_info.ScoreType == item ){
 								self.config.calcDefault.index = index;
 								self.config.calcDefault.name = item;
 								self.config.calcDefault.edgeType = res.result.fast_order_booking.WebEdgeType == 1 ? '毛片': '净片';
 							}
+							if( self.formData.buildType == 2 && index == res.result.fast_order_booking.ScoreType){
+								self.config.calcDefault.index = index;
+								self.config.calcDefault.name = item;
+								self.config.calcDefault.edgeType = res.result.fast_order_booking.WebEdgeType == 1 ? '毛片': '净片';
+							}*/
 							jp.push( item );
 						});
-
-						if( !res.result.page_config.DefaultScoreName ){
-							self.config.calcDefault.index = 0;
-							self.config.calcDefault.name = jp[0];
-						}
 
 						self.config.lineInfo = {
 							'净片':jp,
 							'毛片':['无压线']
 						};
-						if( !self.config.isFastBuild ){
-							self.formData.lineBallInfo = res.result.page_config.DefaultScoreName ? res.result.page_config.DefaultScoreName : jp[0].value;
-						}else{
-							self.formData.lineBallInfo = self.config.calcDefault.name;
-							self.formData.isEdge = self.config.calcDefault.edgeType;
+
+						self.config.calcDefault.index = 0;
+						self.config.calcDefault.name = jp[0];
+						if( self.formData.buildType == 0 ){
+							let lastEdgeType = Number(res.result.last_build_info.LastEdgeType);
+							let lastScoreType = Number(res.result.last_build_info.LastScoreType);
+							self.config.calcDefault.edgeType = lastEdgeType == 1 ? '毛片':'净片';
+							//净片时需要设置对应的压线信息
+							if( lastScoreType <= jp.length && lastScoreType >= 0 && lastEdgeType == 0 ){
+								self.config.calcDefault.index = lastScoreType;
+								self.config.calcDefault.name = jp[lastScoreType ];
+							}
 						}
-					}else{
-						res.result.line_ball_config.forEach((item,index)=>{
-							self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
-						});
-						self.formData.lineBallInfo = res.result.page_config.DefaultScoreName ? res.result.page_config.DefaultScoreName : self.config.radioData.lineBall[0].value;
-					}
-					if( self.config.isFastBuild ){
+
+						if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
+							let webEdgeType = Number(res.result.fast_order_booking.WebEdgeType);
+							let scoreType = Number(res.result.fast_order_booking.ScoreType);
+							//净片时需要设置对应的压线信息
+							if( webEdgeType == 0 && scoreType <= jp.length && scoreType>=0 ){
+								self.config.calcDefault.index = scoreType;
+								self.config.calcDefault.name = jp[scoreType ];
+							}
+						}
+						//设置formData参数
+						this.formData.isEdge = self.config.calcDefault.edgeType;
+						this.formData.lineBallInfo = self.config.calcDefault.name;
+
+						
+					if( self.formData.buildType == 2 || self.formData.buildType == 1 ){
 						self.formData.materialType    = res.result.fast_order_booking.BoardId;
 						self.formData.boardLength     = res.result.fast_order_booking.Length;
 						self.formData.boardWidth      = res.result.fast_order_booking.Width;
+
+						self.formData.orderQuantities = res.result.fast_order_booking.OrdQty;
+
 						self.formData.lineBallFormula = res.result.fast_order_booking.ScoreInfo;
 						self.formData.address         = res.result.fast_order_booking.CusSubNo;
 						self.formData.deliveryRemark  = self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : '';
 						self.formData.productionRemark= res.result.fast_order_booking.ProRemark;
+						
+					}
+					if( self.formData.buildType == 1 ){
+						self.formData.cusOrderId = res.result.fast_order_booking.CusPoNo;
 					}
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timeFilter.isFinishLoad = true;
+						if( self.formData.buildType == 2 || self.formData.buildType == 1 ){
+							this.inputBlur('orderQuantities');
+						}
 					})
 				});
 
@@ -580,12 +625,13 @@
 				let formDataInit = Object.assign({},this.$options.data().formData,{
 					materialType: this.formData.materialType
 				});
+				this.formData = formDataInit;
 				this.getConfig();
 			},
-			fastBuild( orderId ){
-				this.getConfig( orderId );
+			/*fastBuild( orderId ){
 				this.config.isFastBuild = true;
-			},
+				this.getConfig( orderId );
+			},*/
 			buildCalc( data ){
 				this.formData.isEdge = data[0];
 				this.formData.lineBallInfo = data[1];
@@ -742,17 +788,38 @@
 						that.$router.push('/client/index/menu');
 					});
 				}
+			},
+			fetchBuildType( params ){
+				let orderId = '';
+				if( typeof( params.orderId ) != 'undefined' && params.orderId != null ){
+					orderId = params.orderId;
+					if( typeof( params.buildType ) != 'undefined' && params.buildType != null ){
+						this.formData.buildType = params.buildType == 1 ? 1 : 2;
+					}else{
+						this.formData.buildType = 2;
+					}
+				}else{
+					this.formData.buildType = 0;
+				}
+				this.getConfig( orderId )
 			}
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','简单纸板下单');
 		},
 		mounted(){
+			/*this.fetchBuildType();
 			if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
-				this.fastBuild( this.$route.params.orderId );
+				if( typeof( this.$route.params.buildType ) != 'undefined' && this.$route.params.buildType != null ){
+					this.modifyBuild( this.$route.params.orderId );
+				}else{
+					this.fastBuild( this.$route.params.orderId );
+				}
+				
 			}else{
 				this.getConfig( '' );
-			}
+			}*/
+			this.fetchBuildType( this.$route.params );
 			this.validator = new schema(this.rules);
 			this.config.originHeight = document.documentElement.clientHeight || document.body.clientHeight;
 			
@@ -767,10 +834,19 @@
 			
 		},
 		computed:{
-			
+			buildTypeChange(){
+				return this.formData.buildType;
+			}
 		},
 		watch:{
-			
+			buildTypeChange( newV, oldV ){
+				console.log(newV)
+				if( newV == 1 ){
+					this.config.custIDField.disabled = true;
+				}else{
+					this.config.custIDField.disabled = false;
+				}
+			}
 		}
 	}
 </script>

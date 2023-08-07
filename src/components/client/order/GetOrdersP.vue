@@ -28,6 +28,9 @@
 				<van-field v-model="leftPopupData.TProVol" input-align="center" label="生产立方" readonly/>
 				<van-field v-model="leftPopupData.TStockVol" input-align="center" label="库存立方" readonly/>
 				<van-field v-model="leftPopupData.TUnDeliVol" input-align="center" label="未送立方" readonly/>
+				<template v-show="config.table.showOrdAmt">
+					<van-field v-model="leftPopupData.OrdAmt" input-align="center" label="排单未送金额" readonly/>
+				</template>
 			</div>
 		</new-popup>
 		<new-popup :leftShow.sync="config.popup.rightPopup.show" title="订单信息" position="right" :isClose="true">
@@ -42,14 +45,18 @@
 					<van-icon name="arrow-down" slot="right-icon" v-if="!config.step.show"></van-icon>
 					<van-icon name="arrow-up" slot="right-icon" v-if="config.step.show"></van-icon>
 				</van-field>
-				<van-steps :active="config.step.active" v-if="config.step.show" direction="vertical">
+				<van-steps :active="config.step.active" v-if="config.step.show">
 					<van-step v-for="(item,index) in config.step.status" :key="index">{{item.title}}</van-step>
 				</van-steps>
 				<van-field v-model="rightPopupData.InTime" input-align="center" label="完工时间" readonly v-if="rightPopupData.InTime" />
 				<van-field v-model="rightPopupData.TimeToGo" input-align="center" label="送货时间" readonly v-if="rightPopupData.TimeToGo" />
 				<van-field v-model="rightPopupData.ConfQty" input-align="center" label="回签数量" readonly v-if="rightPopupData.ConfQty" />
 				<van-field v-model="rightPopupData.CarPName" input-align="center" label="送货司机" readonly v-if="rightPopupData.CarPName" />
-				<van-field v-model="rightPopupData.Phone" input-align="center" label="电话" readonly v-if="rightPopupData.Phone" />
+				<van-field v-model="rightPopupData.Phone" input-align="center" label="电话" v-if="rightPopupData.Phone" >
+					<template slot="input">
+						<a :href="'tel:' + rightPopupData.Phone">{{rightPopupData.Phone}}</a>
+					</template>
+				</van-field>
 				<van-field v-model="rightPopupData.CarNo" input-align="center" label="送货车号" readonly v-if="rightPopupData.CarNo" />
 			</div>
 		</new-popup>
@@ -99,6 +106,7 @@
 					table:{
 						columns : [
 							{field: 'guige', title: '规格', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
+							{field: 'ScoreType', title: '压线类型', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'OrdQty', title: '订单数量', width: 60, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
 							{field: 'sstate', title: '订单状态', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true },
 							{field: 'dailyDetail', title: '详情',width: 100, titleAlign: 'center',componentName:'table-operate',columnAlign:'center',isResize:true}
@@ -172,7 +180,7 @@
 				let self = this;
 				this.$request.client.ordersManage.dailyOrdersConfig().then(res=>{
 					if( res.result.WGetCusOrderShowAmt == '1' ){
-						self.config.table.columns.splice(2,0,{field: 'OrdAmt', title: '金额', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
+						self.config.table.columns.splice(3,0,{field: 'OrdAmt', title: '金额', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
 							if( rowData.sstate == '未审核' ){
 								return '<span style="color:#ddd;">' + rowData.OrdAmt + '</span>';
 							}else{
@@ -329,7 +337,7 @@
 			}
 		},
 		mounted(){
-			this.config.table.height  = window.screen.height - 225;
+			this.config.table.height  = window.screen.height - 275;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
@@ -347,3 +355,8 @@
 		}
 	}
 </script>
+<style>
+	.van-steps--horizontal{
+		padding: 0px;
+	}
+</style>

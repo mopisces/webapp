@@ -92,7 +92,7 @@ const connecterp = {
             dDNPriceAdd  : 0.0,
             dOtherFee    : data.dOtherFee,
             strOrderId   : data.strOrderId,
-            strCusId     : '',
+            strCusId     : data.strCusId,
             strStockArea : data.strStockArea,
             strDNRemark  : data.strDNRemark,
             strCusSubNo  : data.strCusSubNo,
@@ -166,6 +166,13 @@ const connecterp = {
 			strUserId    : data.strUserId
 		};
 		return axios.post( window.jpdn_domain_erp + 'WebCommon/DirectInStock', QS.stringify(postData) );
+	},
+	/**
+	 * [addPackageList 新增装货单]
+	 * @param {[Object]} postData [装货单信息]
+	 */
+	addPackageList( postData ){
+		return axios.post( window.jpdn_domain_erp + 'WebCommon/AddPackage', QS.stringify(postData) );
 	}
 };
 export default connecterp;

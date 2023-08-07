@@ -24,6 +24,9 @@
 					<field-label-variable :value.sync="fieldData.iFreeQty" label="赠品数" placeholder="赠品数" maxlength="10" type="number"></field-label-variable>
 				</div>
 			</div>
+			<template v-if="fieldData.orderType == 'x'">
+				<cus-picker :cusName.sync="fieldData.strCusId" ref="cusPicker"></cus-picker>
+			</template>
 			<van-field readonly label="送货公司" v-model="fieldData.deliArea" placeholder="选择送货公司" input-align="center" @click="config.popup.deliAreaShow = true">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
 			</van-field>
@@ -51,7 +54,17 @@
 		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0rem 1rem;" v-else>
 			明细
 		</div>
-		<v-table is-horizontal-resize :is-vertical-resize="true" style="width:100%;" :columns="config.table.columns" :table-data="table.data" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" even-bg-color="#fafafa">
+		<v-table 
+			is-horizontal-resize 
+			:is-vertical-resize="true" 
+			style="width:100%;" 
+			:height="config.table.height" 
+			:columns="config.table.columns" 
+			:table-data="table.data" 
+			row-hover-color="#eee" 
+			row-click-color="#edf7ff" 
+			even-bg-color="#fafafa"
+			@on-custom-comp="customCompFunc">
 		</v-table>
 		<van-popup v-model="config.popup.deliAreaShow" position="top" :style="{ height: '100%', width:'100%' }">
 			<div class="header" style="width:100%;position:fixed;height:2.875rem;top:0rem;text-align:center;">
@@ -102,6 +115,7 @@
 	import { Button, Cell, CellGroup, Popup, Icon, Field, RadioGroup, Radio } from 'vant';
 	import { Dialog, Toast  } from 'vant';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
+	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import schema from 'async-validator';
 	export default {
@@ -116,20 +130,24 @@
 			[Radio.name]: Radio,
 
 			FieldLabelVariable,
-			WxScan
+			WxScan,
+			CusPicker
 		},
 		data(){
 			return {
 				config:{
-					popup:{
-						deliAreaShow  : false,
-						stockAreaShow : false
+					table: {
+						height: 0
 					},
-					button:{
-						showLoadButton : true
+					popup: {
+						deliAreaShow: false,
+						stockAreaShow: false
 					},
-					table:{
-						columns:[
+					button: {
+						showLoadButton: true
+					},
+					table: {
+						columns: [
 							{field: 'OrderId', title: '订单编号', width: 100, titleAlign: 'center',columnAlign: 'center',isResize:true,isFrozen: true},
 							{field: 'CusSubName', title: '子公司', width: 100, titleAlign: 'center',columnAlign: 'center',isResize:true},
 							{field: 'DeliQty', title: '送货数', width: 80, titleAlign: 'center', columnAlign: 'center',isResize:true},
@@ -139,19 +157,23 @@
 							{field: 'BoardId', title: '材质编号', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
 						]
 					},
-					isEdit : 0,
-					field:{
+					isEdit: 0,
+					field: {
 						iDeliQtyOnFocus : false
+					},
+					cusPicker: {
+						isInit: false
 					}
 				},
-				table:{
-					data : []
+				table: {
+					data: []
 				},
-				filterForm:{
-					listNo    : '',
-					orderType : '',
+				filterForm: {
+					listNo: '',
+					orderType: '',
 				},
 				fieldData:{
+					strCusId     : '',  //客户编号
 					strOrderId   : '',  //订单号
 					strStockArea : '',	//库区
 					strOrderInfo : '',  //订单信息
@@ -166,18 +188,18 @@
 					strCusSubNo  : '',
 					bModDetail   : false //是否是修改模式
 				},
-				strStockAreaAll:[],
-				deliveryAddress:{
-					all:[],
-					fit:[]
+				strStockAreaAll: [],
+				deliveryAddress: {
+					all: [],
+					fit: []
 				},
-				erpDelForm:{
+				erpDelForm: {
 					iPListNo     : '',
 					iDNId        : '',
 					strFactoryId : '',
 					strUserId    : ''
 				},
-				rules:{
+				rules: {
 					strOrderId : [
 						{ required : true , message : '请输入有效订单号' },
 					],
@@ -192,7 +214,19 @@
 						} },
 					],
 					OrderType : [
-						{ required : true , message : '订单类型非法' }
+						{ required : true , message : '订单类型非法' },
+						{
+							validator:(rule, value, callback, source, options)=>{
+								let errors;
+								if( value === 'x' && !this.fieldData.strCusId ){
+									errors = '请选择客户';
+								}
+								callback(errors)
+							}
+						}
+					],
+					strCusSubNo: [
+						{ required : true , message : '请选择送货地区' },
 					],
 					dOtherFee : [
 						{ required : true , message : '请填写附加费' },
@@ -274,6 +308,12 @@
 					self.pageConfig.bPackAddODefSQ = res.result.config_info.bPackAddODefSQ == 1 ? true : false;
 				}).then(()=>{
 					this.getUserInfo();
+					if( this.pageConfig.bMStockArea ){
+						this.config.table.height -=  50;
+					}
+					if( this.fieldData.orderType == 'x' ){
+						this.config.table.height  -= 50;
+					}
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.getPDNDetail( this.filterForm );
@@ -287,6 +327,7 @@
 				});
 			},
 			getOrdPackInfo( strOrderId ){
+				if( this.fieldData.bModDetail ) return 
 				let self = this;
 				this.$request.staff.stow.getOrdPackInfo( strOrderId ).then(res=>{
 					if( res.errorCode != '00000' ){
@@ -310,11 +351,14 @@
 					self.fieldData.strDNRemark = res.result.DNRemark;
 					self.fieldData.deliArea    = res.result.CusSubNo;
 					self.deliveryAddress.fit   = [];
-
-					for (var i = self.deliveryAddress.all.length - 1; i >= 0; i--) {
-						if( self.deliveryAddress.all[i].CusId === res.result.CusId){
-							self.deliveryAddress.fit.push(this.deliveryAddress.all[i]);
+					if( this.fieldData.orderType == 'x' ){
+						if( this.fieldData.strCusId == res.result.CusId ){
+							this.setCustomerDN( res.result.CusId );
 						}
+						this.config.cusPicker.isInit = true;
+						this.fieldData.strCusId = res.result.CusId;
+					}else{
+						this.setCustomerDN( res.result.CusId );
 					}
 					if( self.pageConfig.bPackAddODefSQ ){
 						self.fieldData.iDeliQty = self.fieldData.areaQty;
@@ -355,11 +399,15 @@
 				this.fieldData.strDNRemark  = rowData.DNRemark;
 				this.fieldData.strCusSubNo  = rowData.CusSubNo;
 				this.deliveryAddress.fit    = [];
-				this.fieldData.deliArea     = rowData.CusSubNo
-				for (var i = this.deliveryAddress.all.length - 1; i >= 0; i--) {
-					if( this.deliveryAddress.all[i].CusId === rowData.CusId  ){
-						this.deliveryAddress.fit.push(this.deliveryAddress.all[i]);
+				this.fieldData.deliArea     = rowData.CusSubNo;
+				if( this.fieldData.orderType == 'x' ){
+					if( this.fieldData.strCusId == rowData.CusId ){
+						this.setCustomerDN( rowData.CusId );
 					}
+					this.config.cusPicker.isInit = true;
+					this.fieldData.strCusId = rowData.CusId;
+				}else{
+					this.setCustomerDN( rowData.CusId );
 				}
 				this.fieldData.strStockArea = rowData.StockArea;
 				this.getStockArea( this.fieldData.strOrderId , false);
@@ -382,6 +430,7 @@
 				this.resetClick();
 			},
 			resetClick(){
+				this.fieldData.strCusId     = '';
 				this.fieldData.strStockArea = '';
 				this.fieldData.areaQty      = '';
 				this.fieldData.strOrderId   = '';
@@ -421,6 +470,7 @@
                     bModify      : this.fieldData.bModDetail,
                     strFactoryId : this.erpDelForm.strFactoryId,
                     strUserId    : this.erpDelForm.strUserId,
+                    strCusId     : this.fieldData.orderType == 'x' ? this.fieldData.strCusId : '',
 				};
 				if(JSON.stringify( this.validator ) == "{}"){
 					this.validator = new schema( this.rules );
@@ -455,6 +505,14 @@
 				}else{
 					this.$router.push( this.$store.state.staff.backPath );
 				}
+			},
+			setCustomerDN( custId ){
+				this.deliveryAddress.fit = [];
+				for (var i = this.deliveryAddress.all.length - 1; i >= 0; i--) {
+					if( this.deliveryAddress.all[i].CusId === custId  ){
+						this.deliveryAddress.fit.push(this.deliveryAddress.all[i]);
+					}
+				}
 			}
 		},
 		created(){
@@ -463,6 +521,7 @@
 			this.init();
 		},
 		mounted(){
+			this.config.table.height  = window.screen.height - 425;
 			this.detailConfig();
 		},
 		updated(){
@@ -477,6 +536,9 @@
 			},
 			strStockAreaChange(){
 				return this.fieldData.strStockArea;
+			},
+			cusNameChange(){
+				return this.fieldData.strCusId;
 			}
 		},
 		watch:{
@@ -497,6 +559,15 @@
 						}
 					});
 				}
+			},
+			cusNameChange( newV, oldV ){
+				this.deliveryAddress.fit = [];
+				if( !this.config.cusPicker.isInit ){
+					this.fieldData.deliArea = '';
+				}
+				this.config.cusPicker.isInit = false;
+				if( !newV ) return
+				this.setCustomerDN( newV );
 			}
 		}
 	}

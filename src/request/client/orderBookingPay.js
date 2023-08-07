@@ -30,6 +30,7 @@ const orderBookingPay = {
 			dSquarePrice          : data.dSquarePrice,
 			dUnitPrice            : data.dUnitPrice,
 			quotaId               : data.quotaId,
+			build_type            : data.buildType
 		};
 		return post( window.jpdn_domain_client + 'ordersBookingPay/sBuildSave', postData );
 	},
@@ -70,6 +71,7 @@ const orderBookingPay = {
 			dSquarePrice          : data.dSquarePrice,
 			dUnitPrice            : data.dUnitPrice,
 			quotaId               : data.quotaId,
+			build_type            : data.buildType
 		};
 		return post( window.jpdn_domain_client + 'ordersBookingPay/cBuildSave', postData );
 	},
@@ -97,6 +99,7 @@ const orderBookingPay = {
 			dSquarePrice          : data.dSquarePrice,
 			dUnitPrice            : data.dUnitPrice,
 			quotaId               : data.quotaId,
+			build_type            : data.buildType
 		};
 		return post( window.jpdn_domain_client + 'ordersBookingPay/checkBuild', postData );
 	},
@@ -132,6 +135,7 @@ const orderBookingPay = {
 			dSquarePrice          : data.dSquarePrice,
 			dUnitPrice            : data.dUnitPrice,
 			quotaId               : data.quotaId,
+			build_type            : data.buildType
 		};
 		return post( window.jpdn_domain_client + 'ordersBookingPay/checkBuild', postData );
 	},

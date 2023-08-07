@@ -12,6 +12,7 @@
 				<van-panel v-for="(item,index) in panelData" :key="index" style="font-size:0.8125rem;margin-top:0.8rem;background-color:#f5f5f5;">
 					<div slot="header" style="padding:0.5rem;">
 						<van-tag plain type="success" style="margin-left:1rem;margin-top:0.3125‬rem;font-size:0.75rem;">标识:{{ item.CardFlag }}</van-tag>
+						<van-tag mark type="primary" style="margin-left:1rem;" v-if="item.UsePay == 1">需要下单后支付</van-tag>
 					</div>
 					<div slot="default" style="padding-left:1.5rem;padding-bottom:0.5rem;">
 						<div class="van-row van-row--flex van-row--justify-center">
@@ -47,7 +48,7 @@
 					</div>
 					<div slot="footer" style="text-align:right;">
 						<van-button size="mini" plain type="danger" style="margin-right:15px;" @click="cancelClick( item.CusPoNo )">取消常用</van-button>
-						<van-button size="mini" plain type="primary" @click="fastBuild( item.CusPoNo, item.CType )">快速下单</van-button>
+						<van-button size="mini" plain type="primary" @click="fastBuild( item )">快速下单</van-button>
 					</div>
 				</van-panel>
 			</van-list>
@@ -146,20 +147,34 @@
 					});
 				});
 			},
-			fastBuild( cusPoNo, type ){
-				switch( type ){
-					case 's' :
-						this.$router.push({ name:'sBuild', params: { orderId: cusPoNo } })
-						break;
-					case 'c' :
-						this.$router.push({ name:'cBuild', params: { orderId: cusPoNo } })
-						break;
-					case 'x' : 
-						this.$router.push({ name:'xBuild', params: { orderId: cusPoNo } })
-						break;
-					default : 
-						Toast.fail('非法的订单类型');
+			fastBuild( item ){
+				if( item.UsePay == 1 ){
+					switch( item.CType ){
+						case 's' :
+							this.$router.push({ name:'sBuildPay', params: { orderId: item.CusPoNo, buildType: 2 } })
+							break;
+						case 'c' :
+							this.$router.push({ name:'cBuildPay', params: { orderId: item.CusPoNo, buildType: 2 } })
+							break;
+						default : 
+							Toast.fail('非法的订单类型');
+					}
+				}else{
+					switch( item.CType ){
+						case 's' :
+							this.$router.push({ name:'sBuild', params: { orderId: item.CusPoNo, buildType: 2 } })
+							break;
+						case 'c' :
+							this.$router.push({ name:'cBuild', params: { orderId: item.CusPoNo, buildType: 2 } })
+							break;
+						case 'x' : 
+							this.$router.push({ name:'xBuild', params: { orderId: item.CusPoNo, buildType: 2 } })
+							break;
+						default : 
+							Toast.fail('非法的订单类型');
+					}
 				}
+				
 			}
 		},
 		created(){
