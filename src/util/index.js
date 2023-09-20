@@ -110,6 +110,7 @@ export function urlWhiteList( roleName, type )
 			'支付宝支付页面'
 		];
 	}
+
 	for (var i = whiteList.length - 1; i >= 0; i--) {
 		if( whiteList[i] === roleName ){
 			return true;

@@ -14,6 +14,7 @@ import login from './login';
 import connecterp from './connecterp';
 import delivery from './delivery';
 import quo from './quo';
+import customer from './customer.js';
 export default {
 	calc,
 	frec,
@@ -30,5 +31,6 @@ export default {
 	login,
 	connecterp,
 	delivery,
-	quo
+	quo,
+	customer
 }

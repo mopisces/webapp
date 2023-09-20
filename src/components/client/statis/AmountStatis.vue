@@ -94,7 +94,7 @@
 						v-if="config.popup.timePicker.isFinishLoad" 
 						:dateTime.sync="filterForm.deliveryBeginDate" 
 						:minDate="pageConfig.deliveryMinDate" 
-						:maxDate="pageConfig.deliveryeMaxDate" 
+						:maxDate="pageConfig.deliveryMaxDate" 
 						label="开始日期">
 					</new-time-picker>
 					<new-time-picker 
@@ -166,21 +166,21 @@
 					deliveryEndDate: null
 				},
 				formData: {
-					dailyTotal: 1283129.012,
-					deliveryTotal: 1281.21,
-					pointTotal: 129181.1
+					dailyTotal: 0,
+					deliveryTotal: 0,
+					pointTotal: 0
 				}
 			}
 		},
 		methods:{
-			getConfig( isInit = true ){
+			getConfig( isReset = false, isInit = true ){
 				this.$request.client.statis.getStatisAmonutConfig().then(res=>{
 					if( res.errorCode == '00000' ){
 						this.pageConfig.dailyMinDate = res.result.ClientAmountStatisDailyMinDate;
 						this.pageConfig.dailyMaxDate = res.result.ClientAmountStatisDailyMaxDate;
 						this.pageConfig.deliveryMinDate = res.result.ClientAmountStatisDeliveryMinDate;
 						this.pageConfig.deliveryMaxDate = res.result.ClientAmountStatisDeliveryMaxDate;
-						if( isInit ){
+						if( isReset ){
 							this.filterForm.dailyBeginDate = res.result.ClientAmountStatisDailyBeginDate;
 							this.filterForm.dailyEndDate = res.result.ClientAmountStatisDailyEndDate;
 							this.filterForm.deliveryBeginDate = res.result.ClientAmountStatisDeliveryBeginDate;
@@ -190,17 +190,31 @@
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timePicker.isFinishLoad = true;
-						this.fetchData();
+						if( !isReset || isInit ){
+							this.fetchData();
+						}
 					});
 				});
 			},
 			fetchData(){
+				this.formData = this.$options.data().formData
+				this.config.table.data = this.$options.data().config.table.data
 				this.$request.client.statis.getStatisAmountData( this.filterForm ).then(res=>{
-					console.log(res)
+					if( res.errorCode == '00000' ){
+						this.formData.dailyTotal = res.result.daily_order_amount
+						this.formData.deliveryTotal = res.result.delivery_amount
+						this.formData.pointTotal = res.result.rebate_amount
+						this.config.table.data.refund = res.result.return_detail
+						this.config.table.data.rebate = res.result.rebate_detail
+					}
 				})
 			},
-			resetClick(){},
-			filterClick(){},
+			resetClick(){
+				this.getConfig( true, false );
+			},
+			filterClick(){
+				this.fetchData();
+			},
 			getTableConfig(){
 				this.$request.common.table.getTableConfig().then(res=>{
 					this.config.table.columns.refund = res.clientStatisAmountReturn;
@@ -221,13 +235,14 @@
 				let storageData = JSON.parse(getStorage('client/statis/amountStatis'));
 				this.filterForm = storageData;
 				this.config.switch.checked = true;
-				this.getConfig( false );
+				this.getConfig( false, true );
 			}else{
-				this.getConfig();
+				this.getConfig( true, true );
 			}
 		},
 		mounted(){
-			this.config.table.height  = window.screen.height - 205;
+			console.log(window.screen.height)
+			this.config.table.height = window.screen.height - 250;
 			this.getTableConfig();
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
@@ -249,7 +264,6 @@
 <style type="text/css">
 	.amount-statis-container{
 		background-color: #f1f1f1;
-		padding-bottom: 3.125rem;
 	}
 
 	.amount-statis-filter{

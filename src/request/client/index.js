@@ -10,6 +10,8 @@ import groupBuying from './groupBuying';
 import delivery from './delivery';
 import orderBookingPay from './orderBookingPay';
 import frec from './frec';
+import statis from './statis.js';
+import statement from './statement.js';
 export default {
 	cred,
 	makeOffers,
@@ -22,5 +24,7 @@ export default {
 	delivery,
 	orderBookingPay,
 	frec,
-	bill
+	bill,
+	statis,
+	statement
 };

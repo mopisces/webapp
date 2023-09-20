@@ -1,6 +1,6 @@
 {
-	"backStage":"http://lpkj.leaper.ltd:50001/",
-	"pageDomain":"http://localhost:50000/",
+	"backStage":"http://localhost:50001/",
+	"pageDomain":"http://lpkj.leaper.ltd:50000/",
 	"sgDomain":"",
 	"erpDomain":"http://localhost:38081/datasnap/rest/TServerMethods1/",
 	"demandType":""

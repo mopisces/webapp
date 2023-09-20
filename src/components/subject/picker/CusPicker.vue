@@ -70,6 +70,8 @@
 				if( this.showCHN ){
 					this.cusCHN = '';
 				}
+				this.searchData = '';
+				this.cusPickerSearch();
 				this.cusPickerOverlay();
 			},
 			findCus( cusId ){

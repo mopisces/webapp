@@ -51,6 +51,10 @@ const cBuildPay        = () => import('@/components/client/buildpay/C');
 const statisContact = () => import('@/components/client/frec/statisContact');
 //发票中心
 const billCenter = () => import('@/components/client/bill/BillCenter');
+//订单统计
+const amountStatis = ()=> import('@/components/client/statis/AmountStatis');
+//余额流水
+const balStatement = ()=> import('@/components/client/statement/BalStatement');
 
 export const asyncClientRouterMap = [
     {
@@ -159,7 +163,19 @@ export const asyncClientRouterMap = [
                 name: 'billCenter',
                 meta: { title: '开票信息', role:'开票信息' },
                 component: billCenter,
-            }
+            },
+            {
+                path:'statis/amountStatis',
+                name: 'amountStatis',
+                meta: { title: '订单统计', role:'订单统计' },
+                component: amountStatis,
+            },
+            {
+                path:'statement/balStatement',
+                name: 'balStatement',
+                meta: { title: '余额流水', role:'余额流水' },
+                component: balStatement,
+            },
         ]
     }
 ];

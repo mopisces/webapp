@@ -557,6 +557,28 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">订单统计</td>
+							<td>
+								下单金额（默认日期）&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientAmountStatisDailyBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientAmountStatisDailyEndDate"></el-input>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientAmountStatisDailyMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientAmountStatisDailyMaxDate"></el-input>
+								<div style="width:100%;height:10px;"></div>
+								送货金额（默认日期）&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientAmountStatisDeliveryBeginDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientAmountStatisDeliveryEndDate"></el-input>
+								日期范围&nbsp;&nbsp;&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientAmountStatisDeliveryMinDate"></el-input>
+								&nbsp;~&nbsp;
+								<el-input style="width: 100px;" v-model="form.ClientAmountStatisDeliveryMaxDate"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">是否需要设置下单时间段</td>
 							<td>
 								<el-checkbox v-model="form.NeedSetBuildTime" label="是否设置" border true-label="1" false-label="0"></el-checkbox>
@@ -976,7 +998,6 @@
 					GetOrderSumEndDate       : '',  //订单统计
 					GetOrderSumMinDate       : '',  //订单统计(日期范围)
 					GetOrderSumMaxDate       : '',  //订单统计
-
 					StaffAmountStatisDailyBeginDate: '', //订单统计2 下单金额(默认日期)
 					StaffAmountStatisDailyEndDate: '',   //订单统计2 下单金额
 					StaffAmountStatisDailyMinDate: '',   //订单统计2 下单金额(日期范围)
@@ -985,7 +1006,6 @@
 					StaffAmountStatisDeliveryEndDate: '',
 					StaffAmountStatisDeliveryMinDate: '', //订单统计2 送货(日期范围)
 					StaffAmountStatisDeliveryMaxDate: '',
-
 					GetOrdReturnSumBeginDate : '',  //退货统计(默认日期)
 					GetOrdReturnSumEndDate   : '',  //退货统计
 					GetOrdReturnSumMinDate   : '',  //退货统计(日期范围)
@@ -1075,10 +1095,18 @@
 					GetCusBillCenterEndDate    : '', //开票信息
 					GetCusBillCenterMinDate    : '', //开票信息(日期范围)
 					GetCusBillCenterMaxDate    : '', //开票信息
-					Wap0StatisContactBeginDate : '', //往来统计默认日期)
+					Wap0StatisContactBeginDate : '', //往来统计(默认日期)
 					Wap0StatisContactEndDate   : '', //往来统计
 					Wap0StatisContactMinDate   : '', //往来统计(日期范围)
 					Wap0StatisContactMaxDate   : '', //往来统计
+					ClientAmountStatisDailyBeginDate: '', //订单统计(下单金额)(默认日期)
+					ClientAmountStatisDailyEndDate: '',   //订单统计
+					ClientAmountStatisDailyMinDate: '',   //订单统计(日期范围)
+					ClientAmountStatisDailyMaxDate: '',   //订单统计
+					ClientAmountStatisDeliveryBeginDate: '', //订单统计(送货)(默认日期)
+					ClientAmountStatisDeliveryEndDate: '',   //订单统计
+					ClientAmountStatisDeliveryMinDate: '',   //订单统计(送货)(日期范围)
+					ClientAmountStatisDeliveryMaxDate: '',   //订单统计(送货)
 					//下单参数
 					UseQuoBoard               : '',  //常用材质使用报价价格材质
 					BuildMinLength            : '',  //板长范围

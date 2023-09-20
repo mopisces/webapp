@@ -173,14 +173,14 @@
 			}
 		},
 		methods:{
-			getConfig( isInit = true ){
+			getConfig( isReset = false, isInit = true ){
 				this.$request.staff.statis.getStatisAmonutConfig().then(res=>{
 					if( res.errorCode == '00000' ){
 						this.pageConfig.dailyMinDate = res.result.StaffAmountStatisDailyMinDate;
 						this.pageConfig.dailyMaxDate = res.result.StaffAmountStatisDailyMaxDate;
 						this.pageConfig.deliveryMinDate = res.result.StaffAmountStatisDeliveryMinDate;
 						this.pageConfig.deliveryMaxDate = res.result.StaffAmountStatisDeliveryMaxDate;
-						if( isInit ){
+						if( isReset ){
 							this.filterForm.dailyBeginDate = res.result.StaffAmountStatisDailyBeginDate;
 							this.filterForm.dailyEndDate = res.result.StaffAmountStatisDailyEndDate;
 							this.filterForm.deliveryBeginDate = res.result.StaffAmountStatisDeliveryBeginDate;
@@ -190,7 +190,9 @@
 				}).then(()=>{
 					this.$nextTick(()=>{
 						this.config.popup.timePicker.isFinishLoad = true;
-						this.fetchData();
+						if( !isReset || isInit ){
+							this.fetchData();
+						}
 					});
 				});
 			},
@@ -200,18 +202,17 @@
 				this.$request.staff.statis.getStatisAmountData( this.filterForm ).then(res=>{
 					if( res.errorCode == '00000' ){
 						this.formData.dailyTotal = res.result.daily_order_amount;
-						this.formData.deliveryTotal = res.result.delicery_amount;
+						this.formData.deliveryTotal = res.result.delivery_amount;
 						this.formData.pointTotal = res.result.rebate_amount;
 
 						this.config.table.data.return = res.result.return_detail;
 						this.config.table.data.rebate = res.result.rebate_detail;
 
-						console.log(res.result.rebate_detail)
 					}
 				})
 			},
 			resetClick(){
-				this.getConfig(false);
+				this.getConfig( true, false );
 			},
 			filterClick(){
 				this.fetchData();
@@ -236,9 +237,9 @@
 				let storageData = JSON.parse(getStorage('staff/statis/amountStatis'));
 				this.filterForm = storageData;
 				this.config.switch.checked = true;
-				this.getConfig( false );
+				this.getConfig( false, true );
 			}else{
-				this.getConfig();
+				this.getConfig( true, true );
 			}
 		},
 		mounted(){

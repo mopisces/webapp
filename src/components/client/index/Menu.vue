@@ -113,13 +113,14 @@
 			return {
 				config:{
 					gridItem:[
+						{text:'余额流水', role:'余额流水', iconName:'mianfeibaojia',  url:'/client/statement/balStatement'},
+						{text:'订单统计', role:'订单统计', iconName:'dingdan2',  url:'/client/statis/amountStatis'},
 						{text:'开票信息', role:'开票信息', iconName:'iconddsh',  url:'/client/bill/billCenter'},
 						{text:'客户信用余额明细', role:'客户信用余额明细', iconName:'yewutiaozhang2',  url:'/client/cred/wGetCusDetail'},
 						{text:'信用余额', role:'信用余额', iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt'},
 						{text:'报价规则', role:'报价查询', iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus'},
 						{text:'报价价格', role:'报价查询', iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus'},
 						{text:'对账单',   role:'对账单', iconName:'duizhang',    url:'/client/order/getCusFreeMB'},
-						/*{text:'对账单明细',role:'对账单2', iconName:'jiage1',    url:'/client/order/cusFreeMBTable'},*/
 						{text:'每日订单', role:'每日订单', iconName:'meiri',       url:'/client/order/getOrdersP'},
 						{text:'每日送货', role:'每日送货', iconName:'chanpin',       url:'/client/delivery/daily'},
 						{text:'ERP订单', role:'ERP订单', iconName:'erp',         url:'/client/order/getOrders'},

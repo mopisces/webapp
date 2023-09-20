@@ -127,6 +127,7 @@
 			return {
 				config:{
 					gridItem:[
+						{text:'客户查询',role:'客户查询',iconName:'kehu',url: '/staff/customer/customerInfo'},
 						{text:'客户往来统计',role:'客户往来统计',iconName:'kehu',url: '/staff/frec/cusContact'},
 						{text:'收款调账',role:'收款调账',iconName:'yewutiaozhang',url:'/staff/frec/recAdjust'},
 						{text:'订单试算',role:'订单试算',iconName:'jisuanqi',url:'/staff/calc/index'},

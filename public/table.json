@@ -43,9 +43,12 @@
 		{"field":"LeftArea","title":"剩余面积","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
 	"getOrdersP":[
-		{"field":"guige","title":"规格","width":"130","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
-		{"field":"OrdQty","title":"数量","width":"130","titleAlign":"center","columnAlign":"center","isResize":true},
-		{"field":"sstate","title":"状态","width":"115","titleAlign":"center","columnAlign":"center","isResize":true}
+		{"field":"guige","title":"规格","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"ScoreInfo","title":"压线信息","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ScoreType","title":"压线类型","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"BoardName","title":"材质名称","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"OrdQty","title":"数量","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"sstate","title":"状态","width":"75","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
 	"saleStatisCus":[
 		{"field":"CusShortName","title":"客户","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
@@ -184,7 +187,6 @@
 		{"field":"SalesLength","title":"销售长","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"SalesWidth","title":"销售宽","width":"80","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
-
 	"staffStatisAmountReturn":[
 		{"field":"OrderDate","title":"下单日期","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
 		{"field":"strOrderId","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
@@ -193,27 +195,36 @@
 		{"field":"ReturnProcess","title":"退款备注","width":"300","titleAlign":"left","columnAlign":"left","isResize":true}
 	],
 	"staffStatisAmountRebate":[
-		{"field":"PayId","title":"下单日期","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
-		{"field":"IssueDate","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"IssueDate","title":"下单日期","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"PayId","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
 		{"field":"Amount","title":"返利金额","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"Remark","title":"返利备注","width":"300","titleAlign":"left","columnAlign":"left","isResize":true}
-	],	
-
-
-	"sgBL":[
-		{"field":"sn","title":"序号","width":"50","isFrozen":true},
-		{"field":"width","title":"门幅","width":"75","isFrozen":false},
-		{"field":"paperMaterial","title":"生产纸质","width":"100","isFrozen":false},
-		{"field":"flute_type","title":"楞别","width":"50","isFrozen":false},
-		{"field":"total_len","title":"总长","width":"100","isFrozen":false}
 	],
-	"sgBLMS":[
-		{"field":"糊机备纸","title":"糊机备纸","width":"150","isFrozen":true},
-		{"field":"SF1芯纸","title":"SF1芯纸","width":"150","isFrozen":false},
-		{"field":"SF1面纸","title":"SF1面纸","width":"150","isFrozen":false},
-		{"field":"SF2芯纸","title":"SF2芯纸","width":"150","isFrozen":false},
-		{"field":"SF2面纸","title":"SF2面纸","width":"150","isFrozen":false},
-		{"field":"SF3芯纸","title":"SF3芯纸","width":"150","isFrozen":false},
-		{"field":"SF3面纸","title":"SF3面纸","width":"150","isFrozen":false}
+	"staffCustomerInfo":[
+		{"field":"CusId","title":"公司编号","width":"60","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"CusShortName","title":"客户简称","width":"80","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"CusSubChiName","title":"客户全称","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CusSubNo","title":"子公司编号","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"CusSubName","title":"子公司简称","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ZName","title":"子公司全称","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SubContactPerson","title":"联系人","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SubTelNo","title":"电话","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SubDNAddress","title":"送货地址","width":"300","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TaskId","title":"业务员编号","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TaskName","title":"业务员名称","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"TelNo","title":"业务员电话","width":"120","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
+	"clientStatisAmountReturn":[
+		{"field":"OrderDate","title":"下单日期","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"strOrderId","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"Guige","title":"订单尺寸","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"DNAmt","title":"退款金额","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ReturnProcess","title":"退款备注","width":"300","titleAlign":"left","columnAlign":"left","isResize":true}
+	],
+	"clientStatisAmountRebate":[
+		{"field":"IssueDate","title":"下单日期","width":"120","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"PayId","title":"订单编号","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"Amount","title":"返利金额","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"Remark","title":"返利备注","width":"300","titleAlign":"left","columnAlign":"left","isResize":true}
 	]
 }
