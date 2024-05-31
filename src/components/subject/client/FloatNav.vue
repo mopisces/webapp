@@ -133,6 +133,7 @@
 				let time = new Date();
 				newV.forEach((item,index)=>{
 					this.listData.forEach((col,indexCol)=>{
+						console.log(col.cost)
 						if( col.isover == false ){
 							this.listData[indexCol].isover = col.deadline * 1000 > time ? false : true
 						}
@@ -194,5 +195,9 @@
 	    bottom:4rem;
 	    left:0.625rem;
 	    text-align: center;
+	}
+	.floating-item {
+		font-size: 1rem;
+		line-height: 1rem;
 	}
 </style>

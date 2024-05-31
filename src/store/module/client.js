@@ -1,18 +1,26 @@
 import { asyncClientRouterMap } from '@/router/client';
 import { deepCopy, filterAsyncRouter } from '@/util/index';
+
+import { getStorage, setStorage } from '@/util/storage'
 const client = {
 	namespaced: true,
 	state: { 
-		layout : {
-			title : '首页'
+		layout: {
+			title: '首页'
 		},
-		navList      : null,
-		tabbarActive : 'menu',
-		isLogin      : false,
-		backPath     : '/client/index/menu',
-		backIsGroup  : true,
+		navList: null,
+		tabbarActive: 'menu',
+		isLogin: getStorage('jpdn-client-isLogin', 'sessionStorage'),
+		backPath: '/client/index/menu',
+		backIsGroup: true,
 		loginRedirect: '/client/index/menu',
-
+		headerTitle: '首页',
+	},
+	getters: {
+		isLogin: (state) => state.isLogin,
+		accessToken: (state) => state.accessToken,
+		headerTitle: (state) => state.headerTitle,
+		authMap: (state) => state.authMap
 	},
 	mutations:{ 
 		setHeaderTitle( state, title ){
@@ -24,14 +32,18 @@ const client = {
 		setTabbarActive( state, active ){
 			state.tabbarActive = active;
 		},
-		setIsLogin( state, isLogin ){
-			state.isLogin = isLogin;
+		async setIsLogin( state, isLogin ){
+			state.isLogin = isLogin
+			await setStorage('jpdn-client-isLogin', isLogin, 'sessionStorage') 
 		},
 		setBackIsGroup( state, isgroup ){
 			state.backIsGroup = isgroup
 		},
 		setLoginRedirect( state, path ){
 			state.loginRedirect = path;
+		},
+		setBackPath( state, path ) {
+			state.backPath = path
 		}
 	},
 	actions:{

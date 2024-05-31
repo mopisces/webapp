@@ -60,8 +60,7 @@ module.exports = {
   },
   devServer: {
     disableHostCheck: true,
-    port: 50000/*,
-    https: true*/
+    port: 50000
   },
   lintOnSave: false 
 }

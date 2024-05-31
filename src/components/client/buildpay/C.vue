@@ -1,74 +1,272 @@
 <template>
 	<div>
-		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成" :disabled="config.custIDField.disabled"/>
-		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @valueChange="materialTypeChange"></popup-select>
-		<!-- @materialConfirm="getClackAdjust( formData.materialType )" -->
-		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @valueChange="boxTypeChange"></popup-select>
-		<!-- @boxTypeConfirm="getBoxFormula( formData.boxType )" -->
+		<van-field 
+			v-model="formData.cusOrderId" 
+			input-align="center" 
+			label="客订单号" 
+			placeholder="未填写则系统自动生成" 
+			:disabled="config.custIDField.disabled"
+		/>
+		<popup-select 
+			:selectValue.sync="formData.materialType" 
+			:fieldConfig="config.fieldConfig.material" 
+			:radioData="config.radioData.material" 
+			selectType="material" 
+			@valueChange="materialTypeChange"
+		>
+		</popup-select>
+		<uni-check-box
+			label="箱型"
+			:localdata="config.radioData.boxType"
+			:radioData.sync="formData.boxType" 
+			:map="{text: 'BoxName', value: 'BoxId'}"
+			@change="boxTypeChange"
+		>
+		</uni-check-box>
+		<div style="width: 100%;height: 1rem;"></div>
 		<div class="van-cell" style="display: flex;align-items: center;">
 			<div class="van-cell__title van-field__label">箱规(mm)</div>
-			<input id="boxLength" type="number" class="karry-input" placeholder="长(L)" v-model="formData.boxLength" @focus="inputFocus('boxLength')" @blur=" inputBlur('boxLength') "/>
+			<input 
+				id="boxLength" 
+				type="number" 
+				class="karry-input" 
+				placeholder="长(L)" 
+				v-model="formData.boxLength" 
+				@focus="inputFocus('boxLength')" 
+				@blur=" inputBlur('boxLength') "
+			/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input id="boxWidth" type="number" class="karry-input" placeholder="宽(W)" v-model="formData.boxWidth" @focus="inputFocus('boxWidth')" @blur=" inputBlur('boxWidth') "/>
+			<input 
+				id="boxWidth" 
+				type="number" 
+				class="karry-input" 
+				placeholder="宽(W)" 
+				v-model="formData.boxWidth" 
+				@focus="inputFocus('boxWidth')" 
+				@blur=" inputBlur('boxWidth') "
+			/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input id="boxHeight" type="number" class="karry-input" placeholder="高(H)" v-model="formData.boxHeight" @focus="inputFocus('boxHeight')" @blur=" inputBlur('boxHeight') "/>
+			<input 
+				id="boxHeight" 
+				type="number" 
+				class="karry-input" 
+				placeholder="高(H)" 
+				v-model="formData.boxHeight" 
+				@focus="inputFocus('boxHeight')" 
+				@blur=" inputBlur('boxHeight') "
+			/>
 			<div class="van-field__right-icon">
 				<van-icon name="question-o" @click="clickQuestion(1)"/>
 			</div>
 		</div>
-		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @valueChange="tonLenChange" v-if="config.showTonLen"></popup-select>
-		<!--  @lenConfirm="calcBdLW()" -->
-		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @valueChange="lenChange" v-if="config.showULen"></popup-select>
-		<!--  @lenConfirm="calcBdLW()" -->
-		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
-		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
+		<div style="width: 100%;height: 1rem;"></div>
+		<uni-check-box
+			label="箱舌(T)"
+			:localdata="config.radioData.tonLen"
+			:radioData.sync="formData.tonLen" 
+			:map="{text: 'text', value: 'value'}"
+			@change="tonLenChange"
+		>
+		</uni-check-box>
+		<div style="width: 100%;height: 1rem;"></div>
+		<uni-check-box
+			label="封箱调整(U)"
+			:localdata="config.radioData.uLen"
+			:radioData.sync="formData.uLen" 
+			:map="{text: 'text', value: 'value'}"
+			@change="lenChange"
+		>
+		</uni-check-box>
+		<van-field 
+			v-model="formData.lengthF" 
+			input-align="center" 
+			label="横向公式" 
+			placeholder="待选择箱型" 
+			readonly
+			:error-message="pageConfig.lengthFDesc"
+			error-message-align="center"
+		/>
+		<van-field 
+			v-model="formData.widthF" 
+			input-align="center" 
+			label="纵向公式" 
+			placeholder="待选择箱型" 
+			readonly
+			:error-message="pageConfig.widthFDesc"
+			error-message-align="center"
+		/>
 		<div class="van-cell" style="display: flex;align-items: center;">
-			<div class="van-cell__title van-field__label">纸板规格(mm)</div>
-			<input type="number" class="karry-input" placeholder="板长" v-model="formData.length" readonly/>
+			<div class="van-cell__title van-field__label">纸板(mm)</div>
+			<input 
+				type="number" 
+				class="karry-input" 
+				placeholder="板长" 
+				v-model="formData.length"
+				readonly
+			/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input type="number" class="karry-input" placeholder="板宽" v-model="formData.width" readonly/>
+			<input 
+				type="number" 
+				class="karry-input" 
+				placeholder="板宽" 
+				v-model="formData.width" 
+				readonly
+			/>
 		</div>
-		<template v-if="formData.isCalc == 1">
-			<build-calc :lineInfo="config.lineInfo" :calcDefault="config.calcDefault" @buildCalc="buildCalc"></build-calc>
-		</template>
-		<template v-else>
-			<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
-		</template>
-		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
-		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="clickQuestion(2)"/>
-		<!-- <van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/> -->
+		<div style="width: 100%;height: 1rem;"></div>
+		<uni-check-box
+			label="压线压型"
+			:localdata="config.radioData.lineInfo"
+			:radioData.sync="formData.scoreEdge" 
+			:map="{text: 'text', value: 'value'}"
+			@change="scoreEdgeChange"
+		>
+		</uni-check-box>
+		<!-- <build-calc :lineInfo="config.lineInfo" :calcDefault="config.calcDefault" @buildCalc="buildCalc"></build-calc> -->
+		<van-field 
+			v-model="formData.lineBallFormula" 
+			input-align="center" 
+			:label="pageConfig.buildScoreInfoChiText" 
+			placeholder="由ERP系统自动计算" 
+			readonly
+		/>
+		<van-field 
+			v-model="formData.bdMultiple" 
+			input-align="center" 
+			label="张数" 
+			placeholder="待选择箱型" 
+			readonly 
+			right-icon="question-o" 
+			@click-right-icon="clickQuestion(2)"
+		/>
 		<div class="van-cell van-field">
 			<div class="van-cell__title van-field__label" >
 				<span>订单数</span>
 			</div>
 			<div class="van-cell__value">
 				<div class="van-field__body">
-					<input type="text" placeholder="输入订单数" v-model="formData.ordQty" class="van-field__control van-field__control--center karry-input" style="background-color:#f0f0f0;" v-on:focus="inputFocus('ordQty')" v-on:blur="inputBlur('ordQty')"/>
+					<input 
+						type="text" 
+						placeholder="输入订单数" 
+						v-model="formData.ordQty" 
+						class="van-field__control van-field__control--center karry-input" 
+						style="background-color:#f0f0f0;" 
+						v-on:focus="inputFocus('ordQty')" 
+						v-on:blur="inputBlur('ordQty')"
+					/>
 				</div>
 			</div>
 		</div>
-		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly :disabled=" true " />
-		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="clickQuestion(3)" :disabled=" true " />
-		<template v-if=" formData.isCalc == 1 ">
-			<field-label-variable :value.sync="formData.dOrdPrice" label="计价价格" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
-			<field-label-variable :value.sync="formData.dAmt" label="金额" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
-		</template>
-		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo" @valueChange="addressChange">
+		<van-field 
+			v-model="formData.bdQty" 
+			input-align="center" 
+			label="纸板数" 
+			placeholder="待计算" 
+			readonly 
+			:disabled=" true "
+		/>
+		<van-field 
+			v-model="formData.unitArea" 
+			input-align="center" 
+			label="单片面积(㎡)" 
+			placeholder="待计算" 
+			readonly 
+			:disabled=" true " 
+		/>
+		<van-field 
+			v-model="formData.area" 
+			input-align="center" 
+			label="下单面积(㎡)" 
+			placeholder="待计算" 
+			readonly 
+			right-icon="question-o" 
+			@click-right-icon="clickQuestion(3)" 
+			:disabled=" true " 
+		/>
+		<field-label-variable 
+			:value.sync="formData.dOrdPrice" 
+			label="计价价格" 
+			placeholder="待计算" 
+			type="number" 
+			readonly
+		></field-label-variable>
+		<field-label-variable 
+			:value.sync="formData.dAmt" 
+			label="金额" 
+			placeholder="待计算" 
+			type="number" 
+			readonly
+		>
+		</field-label-variable>
+		<popup-select 
+			v-if="pageConfig.showBuildCAddress == 1"
+			:selectValue.sync="formData.address" 
+			:fieldConfig="config.fieldConfig.address" 
+			:radioData="config.radioData.address" 
+			selectType="cusInfo" 
+			@valueChange="addressChange"
+		>
 		</popup-select>
-		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
-		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
-		<template  v-if="formData.isCalc == 1 ">
-			<van-button  type="warning" size="normal" style="width:50%;position:fixed;bottom:3.125rem;" @click="calcPriceInfo()" :disabled=" config.button.calcBtnDis ">试算</van-button>
-			<van-button  type="primary" size="normal" style="width:50%;position:fixed;bottom:3.125rem;left:50%;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
-		</template>
-		<template v-else>
-			<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
-		</template>
-		<!-- <van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button> -->
+		<new-time-picker 
+			v-if="config.popup.timeFilter.isFinishLoad"
+			:dateTime.sync="formData.date" 
+			:minDate="pageConfig.minDate" 
+			:maxDate="pageConfig.maxDate" 
+			label="交货日期" 
+		></new-time-picker>
+		<van-field 
+			v-if="config.showDeliveryRemark == 1" 
+			v-model="formData.deliveryRemark" 
+			autosize 
+			label="送货备注" 
+			type="textarea"  
+			maxlength="50" 
+			placeholder="填写送货备注" 
+			:rows="1"
+		/>
+		<van-field 
+			v-model="formData.productionRemark" 
+			autosize 
+			label="生产备注" 
+			type="textarea"  
+			maxlength="50" 
+			placeholder="填写生产备注" 
+			:rows="1"
+		/>
+		<van-button  
+			type="warning" 
+			size="normal" 
+			style="width:50%;position:fixed;bottom:3.125rem;" 
+			@click="calcPriceInfo()" 
+			:disabled=" config.button.calcBtnDis "
+		>试算
+		</van-button>
+		<van-button  
+			type="primary" 
+			size="normal" 
+			style="width:50%;position:fixed;bottom:3.125rem;left:50%;" 
+			@click="buildOrder()" 
+			:disabled=" config.button.disabled "
+		>下单</van-button>
 		<div style="width:100%;height:5.7rem;"></div>
-		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="false" :showULen="config.showULen" :showTonLen="config.showTonLen"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup="true" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
+		<build-sku 
+			:skuShow.sync="config.popup.sku.show" 
+			:orderInfo="formData" 
+			orderType="c" 
+			:isGroup="false" 
+			:showULen="config.showULen" 
+			:showTonLen="config.showTonLen" 
+			@saveOrder="saveOrder" 
+		/>
+		<build-result 
+			v-if="config.result.show" 
+			:resultShow.sync="config.result.show" 
+			:isGroup="true" 
+			:isSuccess="config.result.isSuccess" 
+			:cusOrderId="config.result.cusOrderId" 
+			:failMsg="config.result.failMsg"
+			@clearFormData="clearFormData()" 
+		/>
 	</div>
 </template>
 <script>
@@ -81,6 +279,8 @@
 	import BuildCalc from '@/components/subject/client/BuildCalc.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import { checkBuildTime } from '@/util';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -93,7 +293,9 @@
 			BuildSku,
 			BuildResult,
 			BuildCalc,
-			FieldLabelVariable
+			FieldLabelVariable,
+
+			UniCheckBox
 		},
 		data(){
 			return {
@@ -130,107 +332,131 @@
 						tonLen   : [],
 						uLen     : [],
 						lineBall : [],
-						address  : []
+						address  : [],
+						lineInfo: [
+							{
+								text: '净片-无压线',
+								value: '00'
+							},
+							{
+								text: '净片-普通压线',
+								value: '01'
+							},
+							{
+								text: '净片-平压线',
+								value: '02'
+							},
+							{
+								text: '毛片-无压线',
+								value: '10'
+							}
+						]
 					},
-					popup : {
+					popup: {
 						timeFilter : {
 							isFinishLoad : false
 						},
-						sku : {
+						sku: {
 							show : false
 						}
 					},
-					result : {
-						show       : false,
-						isSuccess  : false,
+					result: {
+						show: false,
+						isSuccess: false,
 						cusOrderId : '',
-						failMsg    : '下单失败'
+						failMsg: '下单失败'
 					},
-					isFastBuild : false,
+					isFastBuild: false,
 					button:{
-						disabled : true,
-						calcBtnDis:true
+						disabled: true,
+						calcBtnDis: true
 					},
-					showTonLen:true,
-					showULen:true,
-					lineInfo:[],
-					calcDefault:{
-						index:null,
-						name :null,
-						edgeType:'净片'
+					showTonLen: true,
+					showULen: true,
+					lineInfo: [],
+					calcDefault: {
+						index: null,
+						name: null,
+						edgeType: '净片'
 					},
 					showDeliveryRemark: 0,
 					lastToLen: null,
-					lastULen:null,
-					build:{
-						lenNeedToast:false,
-						widthNeedToast:false,
-						heightNeedToast:false,
-						lenToastDefault:null,
-						widthToastDefault:null,
-						heightToastDefault:null,
+					lastULen: null,
+					build: {
+						lenNeedToast: false,
+						widthNeedToast: false,
+						heightNeedToast: false,
+						lenToastDefault: null,
+						widthToastDefault: null,
+						heightToastDefault :null,
 					},
 					initClientHeight: document.documentElement.clientHeight,
-					buildTime:{
+					buildTime: {
 						NeedSetBuildTime: false,
-						BuildInTime1:[],
-						BuildInTime2:[]
+						BuildInTime1: [],
+						BuildInTime2: []
 					},
 					custIDField: {
 						disabled: false
 					}
 				},
 				formData:{
-					cusOrderId       : '',   //客订单号
-					materialType     : '',	 //材质
-					boxType          : '',	 //箱型
-					boxLength        : '',	 //箱长
-					boxWidth         : '',	 //箱宽
-					boxHeight        : '',   //箱高
-					tonLen           : null,   //箱舌
-					uLen             : null,   //封箱调整
-					length           : '',   //板长
-					width            : '',   //板宽
-					bdMultiple       : '',   //张数
-					ordQty           : null,    //订单数
-					bdQty            : '',   //纸板数
-					lineBallInfo     : '',   //压型名称
-					lineBallFormula  : null, //压线信息
-					area             : '',   //下单面积
-					address          : '',   //送货地址
-					date             : '',   //交货日期
-					deliveryRemark   : '',   //送货备注
-					productionRemark : '',   //生产备注
-					lengthF          : '',   //横向公式
-					widthF           : '',   //纵向公式
-					isEdge           : '净片', //是否毛片 
-					isCalc           : 0,      //是否开启始算参数
-					factoryId        : null,   
-					saAreaAddArea    : null,
-					saAreaAddTrim    : null,
-					dOrdPrice        : null,   //计价价格 
-					dAmt             : null,   //金额
-					buildType        : 0,      //0新增 1修改 2快速下单
+					cusOrderId: '',   //客订单号
+					materialType: '',	 //材质
+					boxType: '',	 //箱型
+					boxLength: '',	 //箱长
+					boxWidth: '',	 //箱宽
+					boxHeight: '',   //箱高
+					tonLen: null,   //箱舌
+					uLen: null,   //封箱调整
+					length: '',   //板长
+					width: '',   //板宽
+					bdMultiple: '',   //张数
+					ordQty: null,    //订单数
+					bdQty: '',   //纸板数
+					lineBallInfo: '',   //压型名称
+					lineBallFormula: null, //压线信息
+					area: '',   //下单面积
+					unitArea: null, //单片面积
+					address: '',   //送货地址
+					date: '',   //交货日期
+					deliveryRemark: '',   //送货备注
+					productionRemark: '',   //生产备注
+					lengthF: '',   //横向公式
+					widthF: '',   //纵向公式
+					isEdge: '净片', //是否毛片 
+					isCalc: 0,      //是否开启始算参数
+					factoryId: null,   
+					saAreaAddArea: null,
+					saAreaAddTrim: null,
+					dOrdPrice: null,   //计价价格 
+					dAmt: null,   //金额
+					buildType: 0,      //0新增 1修改 2快速下单
+					scoreEdge: null,
 				},
 				pageConfig:{
-					minDate     : '',
-					maxDate     : '',
-					minBoxH     : '',
-					maxBoxH     : '',
-					minBoxL     : '',
-					maxBoxL     : '',
-					minBoxW     : '',
-					maxBoxW     : '',
-					minArea     : '',
-					maxArea     : '',
-					lengthFCalc : '',
-					widthFCalc  : '',
-					buildAutoGetTonLenAndULen:true,
+					minDate: '',
+					maxDate: '',
+					minBoxH: '',
+					maxBoxH: '',
+					minBoxL: '',
+					maxBoxL: '',
+					minBoxW: '',
+					maxBoxW: '',
+					minArea: '',
+					maxArea: '',
+					lengthFCalc: '',
+					widthFCalc: '',
+					lengthFDesc: '',
+					widthFDesc: '',
+					buildAutoGetTonLenAndULen: true,
 					IsAddTrimArea: 0,
+					buildScoreInfoChiText: null,
+					showBuildCAddress: 0,
 				},
 				rules:{
 					calcBdLW : {
-						boxLength : [
+						boxLength: [
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( value != '' && ( Number(value) > this.pageConfig.maxBoxL || Number(value) < this.pageConfig.minBoxL ) ){
@@ -240,7 +466,7 @@
 								callback(errors);
 							} }
 						],
-						boxWidth : [
+						boxWidth: [
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( value != '' && ( Number(value) > this.pageConfig.maxBoxW || Number(value) < this.pageConfig.minBoxW ) ){
@@ -250,7 +476,7 @@
 								callback(errors);
 							}  }
 						],
-						boxHeight : [
+						boxHeight: [
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if(  value != '' && ( Number(value) > this.pageConfig.maxBoxH || Number(value) < this.pageConfig.minBoxH ) ){
@@ -261,8 +487,8 @@
 							} }
 						]
 					},
-					buildOrder:{
-						cusOrderId : [
+					buildOrder: {
+						cusOrderId: [
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( value != '' && (value.length > 56 || value.length <= 0) ){
@@ -271,17 +497,17 @@
 								callback(errors);
 							} }
 						],
-						materialType : [
-							{ required : true , message:'请选择材质' }
+						materialType: [
+							{ required: true , message: '请选择材质' }
 						],
-						length : [
-							{ required : true , message:'请填写相关信息获取板长' }
+						length: [
+							{ required: true , message: '请填写相关信息获取板长' }
 						],
-						width  : [
-							{ required : true , message:'请填写相关信息获取板宽' }
+						width: [
+							{ required: true , message: '请填写相关信息获取板宽' }
 						],
-						ordQty : [
-							{ required : true , message:'请填写订单数' },
+						ordQty: [
+							{ required: true , message: '请填写订单数' },
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( value == 0 ){
@@ -290,13 +516,13 @@
 								callback(errors);
 							}}
 						],
-						bdQty  : [
-							{ required : true , message:'请填写相关信息获取纸板数' }
+						bdQty: [
+							{ required: true , message: '请填写相关信息获取纸板数' }
 						],
 						lineBallInfo:[
-							{ required : true , message:'请选择压型' }
+							{ required: true , message: '请选择压型' }
 						],
-						area : [
+						area: [
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) > this.pageConfig.maxArea || Number(value) < this.pageConfig.minArea){
@@ -305,14 +531,14 @@
 								callback(errors);
 							} }
 						],
-						address : [
-							{ required : true , message:'请选择送货公司' }
+						address: [
+							{ required:true , message: '请选择送货公司' }
 						],
-						date : [
-							{ required : true , message:'请填写交货日期' }
+						date: [
+							{ required:true , message: '请填写交货日期' }
 						],
-						tonLen : [
-							{ required : true , message:'请选择箱舌' },
+						tonLen: [
+							{ required: true , message: '请选择箱舌' },
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( !this.inArray( 'tonLen', value ) ){
@@ -321,8 +547,8 @@
 								callback(errors);
 							}}
 						],
-						uLen :  [
-							{ required : true , message:'请选择封箱调整' },
+						uLen: [
+							{ required: true , message: '请选择封箱调整' },
 							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( !this.inArray( 'uLen', value ) ){
@@ -331,8 +557,8 @@
 								callback(errors);
 							}}
 						],
-						dOrdPrice:[
-							{ validator:(rule, value, callback, source, options)=>{
+						dOrdPrice: [
+							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) <= 0 ){
 									errors = '请先试算获取计价价格';
@@ -340,8 +566,8 @@
 								callback(errors);
 							}}
 						],
-						dAmt:[
-							{ validator:(rule, value, callback, source, options)=>{
+						dAmt: [
+							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) <= 0 ){
 									errors = '请先试算获取金额';
@@ -349,8 +575,8 @@
 								callback(errors);
 							}}
 						],
-						dSalesArea:[
-							{ validator:(rule, value, callback, source, options)=>{
+						dSalesArea: [
+							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) <= 0 ){
 									errors = '请先试算获取金额dSalesArea';
@@ -358,8 +584,8 @@
 								callback(errors);
 							}}
 						],
-						dSLength:[
-							{ validator:(rule, value, callback, source, options)=>{
+						dSLength: [
+							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) <= 0 ){
 									errors = '请先试算获取金额dSLength';
@@ -367,8 +593,8 @@
 								callback(errors);
 							}}
 						],
-						dSWidth:[
-							{ validator:(rule, value, callback, source, options)=>{
+						dSWidth: [
+							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) <= 0 ){
 									errors = '请先试算获取金额dSWidth';
@@ -376,8 +602,8 @@
 								callback(errors);
 							}}
 						],
-						dSquarePrice:[
-							{ validator:(rule, value, callback, source, options)=>{
+						dSquarePrice: [
+							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) <= 0 ){
 									errors = '请先试算获取金额dSquarePrice';
@@ -385,8 +611,8 @@
 								callback(errors);
 							}}
 						],
-						dUnitPrice:[
-							{ validator:(rule, value, callback, source, options)=>{
+						dUnitPrice: [
+							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) <= 0 ){
 									errors = '请先试算获取金额dUnitPrice';
@@ -394,8 +620,8 @@
 								callback(errors);
 							}}
 						],
-						quotaId:[
-							{ validator:(rule, value, callback, source, options)=>{
+						quotaId: [
+							{ validator: (rule, value, callback, source, options)=>{
 								let errors;
 								if( Number(value) <= 0 ){
 									errors = '请先试算获取金额QuotaId';
@@ -405,9 +631,9 @@
 						]
 					}
 				},
-				validator:{
-					calcBdLW   : {},
-					buildOrder : {}
+				validator: {
+					calcBdLW: {},
+					buildOrder: {}
 				}
 			}
 		},
@@ -473,6 +699,8 @@
 					self.pageConfig.minDate = res.result.config.BuildMinDate;
 					self.pageConfig.maxDate = res.result.config.BuildMaxDate;
 					self.pageConfig.IsAddTrimArea = res.result.config.IsAddTrimArea;
+					self.pageConfig.buildScoreInfoChiText = res.result.config.BuildScoreInfoChiText
+					self.pageConfig.showBuildCAddress = res.result.config.ShowBuildCAddress
 					self.formData.date      = res.result.config.BuildDeliveryDate;
 					self.formData.isCalc    = 1;
 					self.formData.factoryId = res.result.config.FactoryId;
@@ -494,8 +722,11 @@
 					self.config.buildTime.BuildInTime2 = res.result.config.BuildInTime2;
 					self.checkTime();
 
+					this.formData.scoreEdge = res.result.last_build_info.LastEdgeType + res.result.last_build_info.LastScoreType
+					//设置上次下单材质
+					this.formData.materialType = res.result.last_build_info.LastBoardId || ''
 					/*if( self.formData.isCalc == 1 ){*/
-						const jp = [];
+						/*const jp = [];
 						res.result.line_ball_config.forEach((item,index)=>{
 							jp.push( item );
 						});
@@ -511,7 +742,6 @@
 							let lastEdgeType = Number(res.result.last_build_info.LastEdgeType);
 							let lastScoreType = Number(res.result.last_build_info.LastScoreType);
 							self.config.calcDefault.edgeType = lastEdgeType == 1 ? '毛片':'净片';
-							//净片时需要设置对应的压线信息
 							if( lastScoreType <= jp.length && lastScoreType >= 0 && lastEdgeType == 0 ){
 								self.config.calcDefault.index = lastScoreType;
 								self.config.calcDefault.name = jp[lastScoreType ];
@@ -521,12 +751,11 @@
 						if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
 							let webEdgeType = Number(res.result.fast_order_booking.WebEdgeType);
 							let scoreType = Number(res.result.fast_order_booking.ScoreType);
-							//净片时需要设置对应的压线信息
 							if( webEdgeType == 0 && scoreType <= jp.length && scoreType>=0 ){
 								self.config.calcDefault.index = scoreType;
 								self.config.calcDefault.name = jp[scoreType ];
 							}
-						}
+						}*/
 						//设置formData参数
 						this.formData.isEdge = self.config.calcDefault.edgeType;
 						this.formData.lineBallInfo = self.config.calcDefault.name;
@@ -545,16 +774,17 @@
 							self.config.radioData.material.push({ value : item.BoardId , text: item.BoardName, tag:item.IsUsedBoard });
 						}
 					});
-					
 					res.result.cus_info.forEach((item,index)=>{
 						if( item.DefAddress == 1 ){
 							self.formData.address = item.CusSubNo;
 						}
 						self.config.radioData.address.push( { value : item.CusSubNo, text:item.SubDNAddress, tag : ''} );
 					});
-					res.result.box_type_availabel.forEach((item,index)=>{
+					/*res.result.box_type_availabel.forEach((item,index)=>{
 						self.config.radioData.boxType.push( { value : item.BoxId, text:item.BoxName, lengthF:item.LengthF, widthF:item.WidthF } )
-					});
+					});*/
+					self.config.radioData.boxType = JSON.parse(JSON.stringify(res.result.box_type_availabel))
+
 					res.result.config.BuildTonLen.forEach((item,index)=>{
 						self.config.radioData.tonLen.push({ value: item, text: item });
 					});
@@ -592,6 +822,9 @@
 						self.formData.address      = res.result.fast_order_booking.CusSubNo;
 						self.formData.deliveryRemark   = self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : '';
 						self.formData.productionRemark = res.result.fast_order_booking.ProRemark;
+
+						//
+						this.formData.scoreEdge = res.result.fast_order_booking.WebEdgeType + res.result.fast_order_booking.ScoreType
 					}
 					if( self.formData.buildType == 1 ){
 						self.formData.cusOrderId = res.result.fast_order_booking.CusPoNo;
@@ -714,6 +947,7 @@
 					this.$request.client.orderBooking.getCalcArea( postData ).then(res=>{
 						if( res.errorCode == '00000' ){
 							this.formData.area = res.result.area;
+							this.formData.unitArea = res.result.unitArea;
 							if( res.result.valid_area == '0' ){
 								Toast.fail({
 									message:'下单面积范围:' + self.pageConfig.minArea + '㎡~' + self.pageConfig.maxArea + '㎡',
@@ -735,24 +969,26 @@
 				}
 			},
 			getBoxFormula( boxType ){
-				if( this.formData.boxType ){
-					let self = this;
-					this.$request.client.orderBooking.getBoxFormula( boxType ).then(res=>{
-						self.pageConfig.lengthFCalc = res.result.LengthF;
-						self.pageConfig.widthFCalc  = res.result.WidthF;
-						if( self.formData.bdMultiple != Number(res.result.Multiple) ){
-							self.formData.bdMultiple = Number(res.result.Multiple);
-							self.calcBdQty(false);
-						}
-					}).then(()=>{
-						this.$nextTick(()=>{
-							this.calcBdLW();
-						})
-					});
+				let arr = this.config.radioData.boxType.find(item => item.BoxId === boxType)
+				this.pageConfig.lengthFCalc = ''
+				this.pageConfig.lengthFDesc = ''
+				this.pageConfig.widthFCalc = ''
+				this.pageConfig.widthFDesc = ''
+				this.formData.bdMultiple = ''
+				if (arr) {
+					this.pageConfig.lengthFCalc = arr.LengthF
+					this.pageConfig.lengthFDesc = arr.LengthFDesc || ''
+					this.pageConfig.widthFCalc = arr.WidthF
+					this.pageConfig.widthFDesc = arr.WidthFDesc || ''
+					this.formData.bdMultiple = Number(arr.Multiple)
+					this.calcBdQty(false)
+					this.$nextTick(()=>{
+						this.calcBdLW()
+					})
 				}
 			},
 			getClackAdjust( materialType, needConfig = false ){
-				if( !this.pageConfig.buildAutoGetTonLenAndULen ){
+				if( this.pageConfig.buildAutoGetTonLenAndULen == 0 ){
 					this.formData.tonLen = this.inArray('tonLen', this.config.lastToLen ) ? this.config.lastToLen : this.config.radioData.tonLen[0].value;
 					this.formData.uLen = this.inArray('uLen', this.config.lastULen ) ? this.config.lastULen : this.config.radioData.uLen[0].value;
 					this.calcBdLW();
@@ -802,24 +1038,10 @@
 				});
 			},
 			async clearFormData(){
-				/*let formDataInit = Object.assign({},this.$options.data().formData,{
-					materialType: this.formData.materialType,
-					isCalc: this.formData.isCalc,
-					address: this.formData.address,
-					date: this.formData.date,
-					tonLen: this.formData.tonLen
-				});
-				this.formData = formDataInit;
-				if( this.config.result.isSuccess ) 
-					this.config.lastToLen = this.formData.tonLen
-				this.config.result.isSuccess = this.$options.data().config.result.isSuccess;
-				this.pageConfig.lengthFCalc = '';
-				this.pageConfig.widthFCalc  = '';
-				this.getClackAdjust( this.formData.materialType, true );*/
 				if( this.config.result.isSuccess ){
 					let material = Object.assign({},{materialType:this.formData.materialType});
 					this.formData =  this.$options.data().formData;
-					this.pageConfig = this.$options.data().formData;
+					this.pageConfig = this.$options.data().pageConfig;
 					this.formData.materialType = material.materialType;
 					await this.getConfig( '', true );
 				}
@@ -830,6 +1052,18 @@
 			},
 			inArray( type, neddle ){
 				if( type == 'tonLen' ){
+					let tonlen = this.config.radioData.tonLen.find(item=> item.value == neddle)
+					if( !tonlen ) return false
+					this.formData.tonLen = tonlen.value 
+					return true
+				}
+				if( type == 'uLen' ){
+					let uLen = this.config.radioData.uLen.find(item=> item.value == neddle)
+					if( !uLen ) return false
+					this.formData.uLen = uLen.value 
+					return true
+				}
+				/*if( type == 'tonLen' ){
 					for (var i = this.config.radioData.tonLen.length - 1; i >= 0; i--) {
 						if( Number(this.config.radioData.tonLen[i].value) == neddle ){
 							this.formData.tonLen = this.config.radioData.tonLen[i].value
@@ -848,9 +1082,10 @@
 						}
 					}
 					return false;
-				}
+				}*/
 			},
 			buildCalc( data ){
+				console.log(data)
 				this.formData.isEdge = data[0];
 				this.formData.lineBallInfo = data[1];
 			},
@@ -954,23 +1189,25 @@
 				this.formData.materialType = newValue;
 				this.getClackAdjust( this.formData.materialType );
 			},
-			boxTypeChange( newValue ){
-				this.formData.boxType = newValue;
-				this.getBoxFormula(this.formData.boxType);
+			boxTypeChange(e) {
+				this.getBoxFormula(e.detail.value)
 			},
-			tonLenChange( newValue ){
-				this.formData.tonLen = newValue;
-				this.calcBdLW();
+			tonLenChange( e ) {
+				if( this.pageConfig.lengthFCalc && this.pageConfig.widthFCalc ) {
+					this.calcBdLW()
+				}
 			},
-			lenChange( newValue ){
-				this.formData.uLen = newValue;
-				this.calcBdLW();
+			lenChange( e ) {
+				if( this.pageConfig.lengthFCalc && this.pageConfig.widthFCalc ) {
+					this.calcBdLW()
+				}
+			},
+			scoreEdgeChange(e) {
+				this.formData.lineBallInfo = ['无压线', '普通压线', '平压线'][e.detail.value[1]]
+				this.formData.edgeType = e.detail.value[0]
 			},
 			addressChange( newValue ){
 				this.formData.address = newValue;
-			},
-			lineBallChange( newValue ){
-				this.formData.lineBallInfo = newValue;
 			},
 			sizeBlur( id ){
 				let tips = '';
@@ -1066,11 +1303,6 @@
 		},
 		mounted(){
 			this.fetchBuildType( this.$route.params );
-			/*if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
-				this.fastBuild( this.$route.params.orderId ); 
-			}else{
-				this.getConfig( '' );
-			}*/
 			this.validator.calcBdLW   = new schema(this.rules.calcBdLW);
 			this.validator.buildOrder = new schema(this.rules.buildOrder);
 
@@ -1093,7 +1325,14 @@
 				}else{
 					this.config.custIDField.disabled = false;
 				}
-			}
+			},
+			'config.result.show': {
+				handler( nVal, oVal ) {
+					if( nVal ) {
+						window.scrollTo(0,0)
+					}
+				}
+			},
 		}
 	}
 </script>

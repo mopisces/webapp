@@ -256,7 +256,13 @@
 			
 		},
 		watch:{
-
+			'config.result.show': {
+				handler( nVal, oVal ) {
+					if( nVal ) {
+						window.scrollTo(0,0)
+					}
+				}
+			},
 		}
 	}
 </script>

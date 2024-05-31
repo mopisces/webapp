@@ -1,5 +1,5 @@
 <template>
-	<van-popup v-model="show" position="bottom" :style="{ height: '100%' }">
+	<van-popup v-model="show" position="bottom" :style="{ height: '100%', backgroundColor: '#f1f1f1' }">
 		<van-sticky>
 			<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
 				<div class="van-nav-bar__left">
@@ -34,7 +34,115 @@
 				</div>
 			</van-card>
 		</template>
-		<template>
+		<web-card 
+			:title="orderDetail.CusPoNo" 
+			:subTitle="cTypeName(orderDetail.CType)"
+			:extra="orderDetail.BuildTime"
+			:is-shadow="true"
+		>
+			<div class="card-body-container">
+				<div 
+					v-if="orderDetail.CType === 's' || orderDetail.CType === 'c'"
+					class="card-body-item card-body-item-100"
+				>
+					<div class="card-body-txt">规格信息:</div>
+					<span class="mg-left-20">{{ orderDetail.Length }}×{{ orderDetail.Width }}</span>
+					<span class="mg-left-20">{{ orderDetail.BoardId }}</span>
+				</div>
+				<div 
+					v-if="orderDetail.CType === 'c'"
+					class="card-body-item card-body-item-100"
+				>
+					<div class="card-body-txt">纸箱尺寸:</div>
+					<span class="mg-left-20">{{ orderDetail.BoxL }}×{{orderDetail.BoxW}}×{{orderDetail.BoxH}}</span>
+				</div>
+				<div 
+					v-if="orderDetail.CType === 'c'"
+					class="card-body-item card-body-item-100"
+				>
+					<div class="card-body-txt red-color">箱舌</div>|
+					<div class="card-body-txt blue-color">封箱调整</div>:
+					<span class="mg-left-20 red-color">{{ orderDetail.TonLen }}mm</span>
+					<span class="mg-left-20 blue-color">{{ orderDetail.ULen }}mm</span>
+				</div>
+				<div 
+					v-if="orderDetail.CType === 's'"
+					class="card-body-item card-body-item-100"
+				>
+					<div class="card-body-txt">压线信息:</div>
+					<span class="mg-left-20">{{ orderDetail.ScoreInfo }}</span>
+					<span class="mg-left-20">{{ orderDetail.BuildScoreName }}</span>
+				</div>
+				<div 
+					v-if=" orderDetail.CType === 'x' || orderDetail.CType === 't' "
+					class="card-body-item card-body-item-100"
+				>
+					<span>PO号:
+						<span class="mg-left-20">{{ orderDetail.PON }}</span>
+					</span>
+				</div>
+				<div 
+					v-if=" orderDetail.CType === 'x' "
+					class="card-body-item card-body-item-100"
+				>
+					<span>套件名称:
+						<span class="mg-left-20">{{ orderDetail.ProductId }}</span>
+					</span>
+				</div>
+				<div 
+					v-if=" orderDetail.CType === 't' "
+					class="card-body-item card-body-item-100"
+				>
+					<span>货品编号:
+						<span class="mg-left-20">{{ orderDetail.MatNo }}</span>
+					</span>
+				</div>
+				<div class="card-body-item card-body-item-100">
+					<span>订单信息:
+						<span class="mg-left-20">
+							{{ orderDetail.OrdQty }}
+							<span v-if="orderDetail.CType === 's'">片</span>
+							<span v-else>个</span>
+						</span>
+						<span 
+							v-if="orderDetail.CType === 's' || orderDetail.CType === 'c'" 
+							class="mg-left-20"
+						>
+							{{ orderDetail.Area }}㎡
+						</span>
+					</span>
+				</div>
+				<div 
+					v-if="orderDetail.CType === 'c'"
+					class="card-body-item card-body-item-100"
+				>
+					<div class="card-body-txt">纸张信息:</div>
+					<span class="mg-left-20">{{ orderDetail.BdMultiple }}</span>
+					<span class="mg-left-20">{{ orderDetail.BdQty }}</span>
+				</div>
+				<div class="card-body-item card-body-item-100">
+					<span>送货地址:
+						<span class="mg-left-20">{{ orderDetail.SubDNAddress }}</span>
+					</span>
+				</div>
+				<div class="card-body-item card-body-item-100">
+					<span>送货备注:
+						<span class="mg-left-20">{{ orderDetail.DNRemark }}</span>
+					</span>
+				</div>
+				<div class="card-body-item card-body-item-100">
+					<span>生产备注:
+						<span class="mg-left-20">{{ orderDetail.ProRemark }}</span>
+					</span>
+				</div>
+				<div class="card-body-item card-body-item-100">
+					<span>交货日期:
+						<span class="mg-left-20">{{ orderDetail.DeliveryDate }}</span>
+					</span>
+				</div>
+			</div>
+		</web-card>
+		<!-- <template>
 			<van-field label="订单类型" readonly input-align="right">
 				<div slot="input">
 					{{ cTypeName(orderDetail.CType) }}
@@ -72,11 +180,12 @@
 			<van-field v-model="orderDetail.DNRemark" label="送货备注" readonly input-align="right"></van-field>
 			<van-field v-model="orderDetail.ProRemark" label="生产备注" readonly input-align="right"></van-field>
 			<van-field v-model="orderDetail.BuildTime" label="下单时间" readonly input-align="right"></van-field>
-		</template>
+		</template> -->
 	</van-popup>
 </template>
 <script>
 	import { Button, Image, Popup, Field, Sticky, Card } from 'vant';
+	import WebCard from '@/components/subject/card/Card.vue';
 	import { cTypeChange } from '@/util/index';
 	export default {
 		components:{
@@ -86,12 +195,17 @@
 			[Field.name]: Field,
 			[Sticky.name]: Sticky,
 			[Card.name]: Card,
+
+			WebCard
 		},
 		props:['detailShow','cusOrderId'],
 		data(){
 			return {
 				show        : this.detailShow,
-				orderDetail : {},
+				orderDetail : {
+					CType: null,
+
+				},
 				groupInfo   : {
 					boardId     : '',
 					matNo       : '',
@@ -125,7 +239,7 @@
 				let self = this;
 				this.$request.client.ordersManage.wechatGroupDetail( cusOrderId ).then(res=>{
 					if( res.errorCode == '00000' ){
-						self.groupInfo['pic']      = window.jpdn_domain_imgDomain + res.result.FirstPic;
+						self.groupInfo['pic']      = res.result.FirstPic
 						self.isGroup               = true;
 						self.groupInfo.boardId     = res.result.BoardId;
 						self.groupInfo.matNo       = res.result.MatNo;
@@ -167,3 +281,6 @@
 		}
 	}
 </script>
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

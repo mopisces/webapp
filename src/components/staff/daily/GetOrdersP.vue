@@ -66,9 +66,22 @@
 				<van-field label="板宽" v-model="filterForm.boardWidth" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<van-field label="压线" v-model="filterForm.scoreInfo" placeholder="模糊查询" input-align="center"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
-				<new-time-picker :dateTime.sync="filterCount.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker :dateTime.sync="filterCount.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
-				<radio-cell :radioInfo.sync="filterForm.sState" :radioColumns="config.filterStatus.status" title="订单状态" v-if="config.filterStatus.show"></radio-cell>
+				<time-range-picker
+					:beginDate.sync="filterCount.beginDate"
+					:endDate.sync="filterCount.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
+				<!-- <new-time-picker :dateTime.sync="filterCount.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker :dateTime.sync="filterCount.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker> -->
+				<uni-check-box
+					label="订单状态"
+					:localdata="config.filterStatus.status"
+					:radioData.sync="filterForm.sState" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<!-- <radio-cell :radioInfo.sync="filterForm.sState" :radioColumns="config.filterStatus.status" title="订单状态" v-if="config.filterStatus.show"></radio-cell> -->
 			</div>
 		</popup-filter>
 	</div>
@@ -77,10 +90,16 @@
 	import { Button, Icon, Popup, Field, Step, Steps, Sticky } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import { getStorage, setStorage } from '@/util/storage';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -92,10 +111,12 @@
 			[Sticky.name]: Sticky,
 			
 			PopupFilter,
-			NewTimePicker,
+			//NewTimePicker,
 			RadioCell,
 			PrevNext,
-			NewPopup
+			NewPopup,
+			UniCheckBox,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -219,7 +240,7 @@
 				});
 			},
 			radioConfirm( val ){
-				if( this.radioData.length != 0 ){
+				if( this.radioData ){
 					this.filterForm.orderDate = val;
 					this.getDailyDetail(this.filterForm);
 				}
@@ -258,21 +279,16 @@
 				this.getDailyDetail( this.filterForm );
 				this.config.popup.rightFilter.show = false;
 			},
-			getConfig(){
-				let self = this;
-				this.$request.staff.daily.dailyConfig().then(res=>{
-					if( res.errorCode != '00000' ){
-						return ;
+			async getConfig(){
+				const { result } = await getWebConfig({paramType: 'staffDaily'})
+				result.daily_order_status.forEach((item,index)=>{
+					this.config.filterStatus.status.push({ title:item, value:item });
+					if( item != '全部' ){
+						this.config.step.status.push({ title:item, value:item });
 					}
-					res.result.daily_order_status.forEach((item,index)=>{
-						self.config.filterStatus.status.push({ title:item, value:item });
-						if( item != '全部' ){
-							self.config.step.status.push({ title:item, value:item });
-						}
-					});
-					self.config.showOrdAmt = res.result.WGetCusOrderShowAmt == 1 ? true : false;
-					self.config.filterStatus.show = true;
-				});
+				})
+				this.config.showOrdAmt = result.WGetCusOrderShowAmt == 1 ? true : false
+				this.config.filterStatus.show = true
 			},
 			getTableConfig(){
 				this.$request.common.table.getTableConfig().then(res=>{

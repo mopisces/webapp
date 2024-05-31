@@ -12,54 +12,156 @@
 		</van-sticky>
 		<prev-next @radioConfirm="radioConfirm" :radioData="radioData" v-if="config.prevNext.show"></prev-next>
 		<template v-if="config.field.show">
-			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="fieldData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa" @on-custom-comp="fieldClick"></v-table>
+			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="fieldData" row-hover-color="#eee" row-click-color="#edf7ff" :height="viewH-config.table.commonH" even-bg-color="#fafafa" @on-custom-comp="fieldClick"></v-table>
 		</template>
-		<new-popup :leftShow.sync="config.popup.leftPopup.show" title="客户信息" position="left" :isClose="true">
-			<div slot="new-popup-1">
-				<van-field v-model="leftPopupData.CusShortName" input-align="center" label="客户简称" readonly/>
-				<van-field v-model="leftPopupData.Merchandiser" input-align="center" label="跟单员" readonly/>
-				<van-field v-model="leftPopupData.TaskName" input-align="center" label="业务员" readonly/>
-				<van-field v-model="filterForm.beginDate" input-align="center" label="开始日期" readonly/>
-				<van-field v-model="filterForm.endDate" input-align="center" label="结束日期" readonly/>
-				<van-field v-model="leftPopupData.OrdCount" input-align="center" label="下单笔数" readonly/>
-				<van-field v-model="leftPopupData.UnSelCount" input-align="center" label="未排笔数" readonly/>
-				<van-field v-model="leftPopupData.SelCount" input-align="center" label="已排笔数" readonly/>
-				<van-field v-model="leftPopupData.TOrdVol" input-align="center" label="下单立方" readonly/>
-				<van-field v-model="leftPopupData.TProVol" input-align="center" label="生产立方" readonly/>
-				<van-field v-model="leftPopupData.TStockVol" input-align="center" label="库存立方" readonly/>
-				<van-field v-model="leftPopupData.TUnDeliVol" input-align="center" label="未送立方" readonly/>
-				<template v-show="config.table.showOrdAmt">
-					<van-field v-model="leftPopupData.OrdAmt" input-align="center" label="排单未送金额" readonly/>
-				</template>
-			</div>
-		</new-popup>
-		<new-popup :leftShow.sync="config.popup.rightPopup.show" title="订单信息" position="right" :isClose="true">
-			<div slot="new-popup-1">
-				<van-field v-model="rightPopupData.OrderId" input-align="center" label="订单编号" readonly/>
-				<van-field v-model="rightPopupData.CusPoNo" input-align="center" label="客订单号" readonly/>
-				<van-field v-model="rightPopupData.guige" input-align="center" label="规格" readonly/>
-				<van-field v-model="rightPopupData.ScoreInfo" input-align="center" label="压线" readonly/>
-				<van-field v-model="rightPopupData.BoardName" input-align="center" label="材质名称" readonly/>
-				<van-field v-model="rightPopupData.OrdQty" input-align="center" label="订单数" readonly/>
-				<van-field v-model="rightPopupData.sstate" input-align="center" label="订单状态" readonly  @click="statusClick(rightPopupData.sstate)">
-					<van-icon name="arrow-down" slot="right-icon" v-if="!config.step.show"></van-icon>
-					<van-icon name="arrow-up" slot="right-icon" v-if="config.step.show"></van-icon>
-				</van-field>
-				<van-steps :active="config.step.active" v-if="config.step.show">
+		<!-- 客户信息弹窗 -->
+		<van-popup 
+			v-model="config.popup.cusInfo.show" 
+			round 
+			:style="{ height: '14rem', width: '95%', backgroundColor: '#f1f1f1' }"
+		>
+			<card
+				:title="cusInfo.CusShortName"
+				:subTitle="cusInfo.Merchandiser"
+				:extra="cusInfo.TaskName"
+				:is-shadow="true"
+			>
+				<div class="card-body-container">
+					<div class="card-body-item card-body-item-100">
+						<span>
+							日期区间:
+							<span class="mg-left-20">
+								{{ filterForm.beginDate }}~{{ filterForm.endDate }}
+							</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt blue-color">下单</div>|
+						<div class="card-body-txt red-color">未排</div>|
+						<div class="card-body-txt green-color">已排</div>:
+						<span class="mg-left-20 blue-color">{{ cusInfo.OrdCount }}</span>笔
+						<span class="mg-left-20 red-color">{{ cusInfo.UnSelCount }}</span>笔
+						<span class="mg-left-20 green-color">{{ cusInfo.SelCount }}</span>笔
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt green-color">下单</div>|
+						<div class="card-body-txt blue-color">生产</div>:
+						<span class="mg-left-20 green-color">{{ cusInfo.TOrdVol }}</span>m³
+						<span class="mg-left-20 blue-color">{{ cusInfo.TProVol }}</span>m³
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt yellow-color">库存</div>|
+						<div class="card-body-txt red-color">未送</div>:
+						<span class="mg-left-20 yellow-color">{{ cusInfo.TStockVol }}</span>m³
+						<span class="mg-left-20 red-color">{{ cusInfo.TUnDeliVol }}</span>m³
+					</div>
+					<div 
+						v-if="config.table.showOrdAmt" 
+						class="card-body-item card-body-item-100"
+					>
+						<span>
+							排单未送:
+							<span class="mg-left-20 red-color">{{ cusInfo.OrdAmt }}</span>元
+						</span>
+					</div>
+				</div>
+			</card>
+		</van-popup>
+		<!-- 订单信息弹窗 -->
+		<van-popup 
+			v-model="config.popup.ordInfo.show" 
+			round 
+			:style="{ height: '22.5rem', width: '98%', backgroundColor: '#f1f1f1' }"
+		>
+			<div style="margin: 1rem 0.2rem 0rem 0.2rem;">
+				<van-steps :active="config.step.active"  style="width:100%;">
 					<van-step v-for="(item,index) in config.step.status" :key="index">{{item.title}}</van-step>
 				</van-steps>
-				<van-field v-model="rightPopupData.InTime" input-align="center" label="完工时间" readonly v-if="rightPopupData.InTime" />
-				<van-field v-model="rightPopupData.TimeToGo" input-align="center" label="送货时间" readonly v-if="rightPopupData.TimeToGo" />
-				<van-field v-model="rightPopupData.ConfQty" input-align="center" label="回签数量" readonly v-if="rightPopupData.ConfQty" />
-				<van-field v-model="rightPopupData.CarPName" input-align="center" label="送货司机" readonly v-if="rightPopupData.CarPName" />
-				<van-field v-model="rightPopupData.Phone" input-align="center" label="电话" v-if="rightPopupData.Phone" >
-					<template slot="input">
-						<a :href="'tel:' + rightPopupData.Phone">{{rightPopupData.Phone}}</a>
-					</template>
-				</van-field>
-				<van-field v-model="rightPopupData.CarNo" input-align="center" label="送货车号" readonly v-if="rightPopupData.CarNo" />
 			</div>
-		</new-popup>
+			<card
+				:title="ordInfo.CusPoNo"
+				:extra="ordInfo.OrderId"
+				:is-shadow="true"
+			>
+				<div class="card-body-container">
+					<div class="card-body-item card-body-item-100">
+						<span>
+							规格信息:
+							<span class="mg-left-20">
+								{{ ordInfo.guige }}
+							</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>
+							压线信息:
+							<span class="mg-left-20">
+								{{ ordInfo.ScoreInfo }}
+							</span>
+							<span class="mg-left-20">
+								{{ ordInfo.BoardName }}
+							</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>
+							订单数量:
+							<span class="mg-left-20">
+								{{ ordInfo.OrdQty }}
+							</span>
+						</span>
+					</div>
+					
+					<div
+						v-if="ordInfo.InTime" 
+						class="card-body-item card-body-item-100"
+					>
+						<span>
+							完工时间:
+							<span class="mg-left-20">
+								{{ ordInfo.InTime }}
+							</span>
+						</span>
+					</div>
+					<div 
+						v-if="ordInfo.TimeToGo"  
+						class="card-body-item card-body-item-100"
+					>
+						<span>
+							送货时间:
+							<span class="mg-left-20">
+								{{ ordInfo.TimeToGo }}
+							</span>
+						</span>
+					</div>
+					<div 
+						v-if="ordInfo.ConfQty"  
+						class="card-body-item card-body-item-100"
+					>
+						<span>
+							回签数量:
+							<span class="mg-left-20">
+								{{ ordInfo.ConfQty }}
+							</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>
+							送货司机:
+							<span v-if="ordInfo.CarPName" class="mg-left-20">
+								{{ ordInfo.CarPName }}
+							</span>
+							<span v-if="ordInfo.Phone" class="mg-left-20">
+								<a :href="'tel:' + ordInfo.Phone">{{ ordInfo.Phone }}</a>
+							</span>
+							<span v-if="ordInfo.CarNo" class="mg-left-20">
+								{{ ordInfo.CarNo }}
+							</span>
+						</span>
+					</div>
+				</div>
+			</card>
+		</van-popup>
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<van-field label="订单编号" v-model="filterForm.orderId" placeholder="模糊查询" input-align="center"></van-field>
@@ -68,26 +170,44 @@
 				<van-field label="板宽" v-model="filterForm.boardWidth" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<van-field label="压线" v-model="filterForm.lineBall" placeholder="模糊查询" input-align="center"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
-				<new-time-picker :dateTime.sync="filterForm.beginDate" :minDate="filterForm.minDate" :maxDate="filterForm.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker :dateTime.sync="filterForm.endDate" :minDate="filterForm.minDate" :maxDate="filterForm.maxDate" label="结束日期"></new-time-picker>
-				<radio-cell :radioInfo.sync="filterForm.orderState" :radioColumns="config.filterStatus.status" title="订单状态" v-if="config.filterStatus.show"></radio-cell>
+			
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="filterForm.maxDate"
+					:minDate.sync="filterForm.minDate"
+				></time-range-picker>
+				<uni-check-box
+					label="订单状态"
+					:localdata="config.filterStatus.status"
+					:radioData.sync="filterForm.orderState" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
 	</div>
 </template>
 <script>
-	import { Button, Icon, Field, SwitchCell, Step, Steps, Sticky } from 'vant';
+	import { Button, Icon, Popup, Field, SwitchCell, Step, Steps, Sticky } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
-	import NewPopup from '@/components/subject/NewPopup.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import Card from '@/components/subject/card/Card.vue'
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Icon.name]: Icon,
+			[Popup.name]: Popup,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
 			[Step.name]: Step,
@@ -95,10 +215,12 @@
 			[Sticky.name]: Sticky,
 
 			PrevNext,
-			NewPopup,
 			RadioCell,
 			PopupFilter,
-			NewTimePicker
+			//NewTimePicker,
+			Card,
+			UniCheckBox,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -114,16 +236,17 @@
 						height     : 0,
 						showOrdAmt : false,
 						alreadyCalc: false,
+						commonH: 140
 					},
 					popup:{
-						leftPopup:{
-							show : false,
-						},
 						rightFilter:{
 							show : false
 						},
-						rightPopup:{
-							show : false
+						cusInfo: {
+							show: false,
+						},
+						ordInfo: {
+							show: false
 						}
 					},
 					prevNext:{
@@ -136,6 +259,9 @@
 						show   : false,
 						active : 0,
 						status : []
+					},
+					popover: {
+						show: false
 					},
 					switch:{
 						checked : false
@@ -162,8 +288,34 @@
 					minDate       : '',
 					showOrdAmt    : false
 				},
-				leftPopupData  : {},
-				rightPopupData : {},
+				cusInfo: {
+					CusShortName: null,
+					Merchandiser: null,
+					TaskName: null,
+					OrdCount: null,
+					UnSelCount: null,
+					SelCount: null,
+					TOrdVol: null,
+					TProVol: null,
+					TStockVol: null,
+					TUnDeliVol: null,
+					OrdAmt: null
+				},
+				ordInfo: {
+					OrderId: null,
+					CusPoNo: null,
+					guige: null,
+					ScoreInfo: null,
+					BoardName: null,
+					OrdQty: null,
+					sstate: null,
+					InTime: null,
+					TimeToGo: null,
+					ConfQty: null,
+					CarPName: null,
+					Phone: null,
+					CarNo: null
+				},
 				isReset : false
 			}
 		},
@@ -174,53 +326,51 @@
 					this.dailyOrders(this.filterForm);
 				}
 			},
-			getConfig( isInit = true ){
-				this.config.step.status         = [];
-				this.config.filterStatus.status = [];
-				let self = this;
-				this.$request.client.ordersManage.dailyOrdersConfig().then(res=>{
-					if( res.result.WGetCusOrderShowAmt == '1' ){
-						self.config.table.columns.splice(3,0,{field: 'OrdAmt', title: '金额', width: 70, titleAlign: 'center', columnAlign: 'center',isResize:true,formatter:(rowData)=>{
+			async getConfig( isInit = true ){
+				this.config.step.status = this.$options.data().config.step.status
+				this.config.filterStatus.status = this.$options.data().config.filterStatus.status
+				const { result } = await getWebConfig({paramType: 'clientOM'})
+				if( result.WGetCusOrderShowAmt == '1' ) {
+					this.config.table.columns.splice( 3, 0, {
+						field: 'OrdAmt', 
+						title: '金额', 
+						width: 70, 
+						titleAlign: 'center', 
+						columnAlign: 'center',
+						isResize:true,
+						formatter:(rowData)=>{
 							if( rowData.sstate == '未审核' ){
-								return '<span style="color:#ddd;">' + rowData.OrdAmt + '</span>';
+								return '<span style="color:#ddd;">' + rowData.OrdAmt + '</span>'
 							}else{
-								return rowData.OrdAmt;
+								return rowData.OrdAmt
 							}
-						}});
-						self.config.table.showOrdAmt = true;
-					}
-					if( isInit ){
-						self.filterForm.beginDate = res.result.GetOrdersPBeginDate;
-						self.filterForm.endDate   = res.result.GetOrdersPEndDate;
-					}
-					self.filterForm.maxDate   = res.result.GetOrdersPMaxDate;
-					self.filterForm.minDate   = res.result.GetOrdersPMinDate;
-					res.result.daily_order_status.forEach((item,index)=>{
-						if( item != '全部' ){
-							self.config.step.status.push({ title: item, value:item });
 						}
-					});
-					res.result.daily_order_status.forEach((item,index)=>{
-						self.config.filterStatus.status.push({ title: item, value:item });
-					});
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.optionalDate();
-						this.config.filterStatus.show = true;
-					});
-				});
+					})
+				}
+				if( isInit ){
+					this.filterForm.beginDate = result.GetOrdersPBeginDate
+					this.filterForm.endDate = result.GetOrdersPEndDate
+				}
+				this.filterForm.maxDate = result.GetOrdersPMaxDate
+				this.filterForm.minDate = result.GetOrdersPMinDate
+				result.daily_order_status.forEach((item,index)=>{
+					if( item != '全部' ){
+						this.config.step.status.push({ title: item, value:item })
+					}
+					this.config.filterStatus.status.push({ title: item, value:item })
+				})
+				await this.optionalDate()
+				this.config.filterStatus.show = true	
 			},
 			cusInfoClick(){
-				let self = this;
+				this.cusInfo = this.$options.data().cusInfo
 				this.$request.client.ordersManage.dailyOrdersCusInfo( this.filterForm ).then(res=>{
-					if( res.errorCode != '00000' ){
-						self.leftPopupData = [];
-						return ;
+					if( res.errorCode == '00000' ) {
+						this.cusInfo = res.result
 					}
-					self.leftPopupData = res.result;
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.config.popup.leftPopup.show = true;
+						this.config.popup.cusInfo.show = true
 					});
 				});
 			},
@@ -283,9 +433,11 @@
 					this.config.table.alreadyCalc = true;
 					return ;
 				}
-				this.rightPopupData   = this.fieldData[ params.index ];
-				this.config.step.show = false;
-				this.config.popup.rightPopup.show = true;
+				this.ordInfo = this.$options.data().ordInfo
+				this.config.step.active = this.$options.data().config.step.active
+				this.ordInfo = this.fieldData[ params.index ]
+				this.statusClick( this.ordInfo.sstate )
+				this.config.popup.ordInfo.show = true
 			},
 			statusClick( status ){
 				for (let i = this.config.step.status.length - 1; i >= 0; i--) {
@@ -327,6 +479,7 @@
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','每日订单');
+			console.log(this.$store.state.client)
 			if( getStorage('client-daily/getOrdersP') !== null ){
 				let storageData = JSON.parse(getStorage('client-daily/getOrdersP'));
 				this.filterForm = storageData;
@@ -337,7 +490,7 @@
 			}
 		},
 		mounted(){
-			this.config.table.height  = window.screen.height - 275;
+			this.config.table.height  = window.screen.height - 215;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
@@ -348,7 +501,9 @@
 			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
-			
+			...window.Vuex.mapGetters({
+				viewH: 'page/viewH',
+			}),
 		},
 		watch:{
 
@@ -356,7 +511,13 @@
 	}
 </script>
 <style>
-	.van-steps--horizontal{
-		padding: 0px;
+	@import '~@/assets/style/card.css';
+	/* .van-steps--horizontal{
+		padding: 0 !important;
 	}
+	
+	.van-steps__items {
+		margin: 0 !important;
+		padding-bottom: 0 !important; 
+	} */
 </style>

@@ -19,13 +19,27 @@
 			[DatetimePicker.name]: DatetimePicker,
 			[Field.name]: Field,
 		},
-		props:['dateTime','minDate','maxDate','label'],
+		props: {
+			dateTime: {
+				type: String,
+				default: ''
+			},
+			minDate: {
+				type: String,
+				default: ''
+			},
+			maxDate: {
+				type: String,
+				default: ''
+			},
+			label: {
+				type: String,
+				default: '日期'
+			}
+		},
 		data(){
 			return {
-				pickerTime : new Date(this.dateTime),
-				max  : new Date(this.maxDate),
-				min  : new Date(this.minDate),
-				show : false
+				show: false
 			}
 		},
 		methods:{
@@ -33,11 +47,10 @@
 				this.show = false;
 			},
 			onCancel(){
-				this.clickOverlay();
+				this.clickOverlay()
 			},
 			onConfirm( value ){
-				this.$emit("update:dateTime", dateTimeFormat(value,'yyyy-MM-dd'));
-				this.clickOverlay();
+				this.clickOverlay()
 			}
 		},
 		created(){
@@ -47,12 +60,33 @@
 
 		},
 		computed:{
-			
+			pickerTime: {
+				get() {
+					return new Date(this.$props.dateTime)
+				},
+				set(nVal) {
+					this.$emit("update:dateTime", dateTimeFormat(nVal,'yyyy-MM-dd'))
+				}
+			},
+			max: {
+				get() {
+					return new Date(this.$props.maxDate)
+				},
+				set(nVal) {
+					this.$emit("update:maxDate", dateTimeFormat(nVal,'yyyy-MM-dd'))
+				}
+			},
+			min: {
+				get() {
+					return new Date(this.$props.minDate)
+				},
+				set(nVal) {
+					this.$emit("update:minDate", dateTimeFormat(nVal,'yyyy-MM-dd'))
+				}
+			}
 		},
 		watch:{
-			dateTime(newV,oldV){
-				this.pickerTime = new Date(this.dateTime);
-			}
+		
 		}
 	}
 </script>

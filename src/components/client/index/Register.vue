@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="padding-bottom:3.125rem;">
 		<van-field v-model="formData.userName" label="账号" placeholder="大写字母,小写字母,数字,长度2-10位" required input-align="center" maxlength="10" show-word-limit/>
 		<van-field v-model="formData.passWord" label="密码" placeholder="请输入密码" type="password" required input-align="center" maxlength="20" show-word-limit/>
 		<van-field v-model="formData.confirmPass" label="确认密码" placeholder="请确认密码" type="password" required input-align="center" maxlength="20" show-word-limit/>
@@ -10,7 +10,7 @@
 		<van-field v-model="formData.contactPerson" label="联系人" placeholder="请输入联系人" required input-align="center" maxlength="10" show-word-limit/>
 		<van-field v-model="formData.contactPhone" label="联系电话" placeholder="请输入联系电话" required input-align="center"/>
 		<van-field v-model="formData.faxNo" label="联系传真" placeholder="请输入联系传真" input-align="center"/>
-		<van-button type="primary" style="width:100%;margin-top:1.25rem;" @click="checkData()">注册</van-button>
+		<van-button type="primary" style="width:100%;" @click="checkData()">注册</van-button>
 	</div>
 </template>
 <script>

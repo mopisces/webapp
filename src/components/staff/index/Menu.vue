@@ -1,101 +1,56 @@
 <template>
-	<!-- <div class="menu-container">
-		<div class="menu-content-box">
-			<div class="menu-box menu-center-box">
-				<van-cell title="单元格" is-link value="内容" :border="false" />
-				<div class="menu-center-list">
-					<div class="menu-center-item">
-						<div class="menu-icon-box">
-							<van-icon class-prefix="iconfont" size="28" name="iconfontmima"/>
-						</div>
-						<div class="menu-center-text">
-							更改密码
-						</div>
-					</div>
-					<div class="menu-center-item">
-						<div class="menu-icon-box">
-							<van-icon class-prefix="iconfont" size="28" name="erweima2"/>
-						</div>
-						<div class="menu-center-text">
-							登录二维码
-						</div>
-					</div>
-					<div class="menu-center-item">
-						<div class="menu-icon-box">
-							<van-icon class-prefix="iconfont" size="28" name="erweima2"/>
-						</div>
-						<div class="menu-center-text">
-							我的发票
-						</div>
+	<div clss="menu-container" :style="'min-height: '+ viewH/16 +'rem;background-color:#f1f1f'">
+		<div class="page-color menu-header">
+			<card :is-shadow="true">
+				<div class="card-body-container">
+					<div class="card-body-item card-body-item-100">
+						<span>
+							{{ userName }}
+						</span>
 					</div>
 				</div>
-			</div>
-			<div class="menu-box menu-tool-box">
-			</div>
-		</div>
-	</div> -->
-	<div style="min-height:100%;background-color:#f1f1f1;padding-bottom:3.125rem;">
-		<div class="inset-card">
-			<div class="inset-card-header">
-				<van-field >
-					<div slot="label" class="font-tips">
-						{{ userName }}
+				<div slot="actions" class="card-actions">
+					<div class="card-actions-item" @click="getChangePass()">
+						<van-icon color="#3c9cff" class-prefix="iconfont" name="iconfontmima" size="18"/>
+						<span class="card-actions-item-text blue-color">更改密码</span>
 					</div>
-					<div slot="input" class="font-tips">
-						<van-row slot="input" style="text-align:center;">
-							<van-col span="12">
-								<van-button type="info" plain hairline round size="small" @click="getChangePass()">
-									<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
-									更改密码
-								</van-button>
-							</van-col>
-							<van-col span="12">
-								<van-button type="info" plain hairline round size="small" @click="qrClick">
-									<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
-									登录二维码
-								</van-button>
-							</van-col>
-					</van-row>
+					<div class="card-actions-item" @click="qrClick">
+						<van-icon color="#3c9cff" class-prefix="iconfont" name="erweima2" size="18"/>
+						<span class="card-actions-item-text blue-color">登录二维码</span>
 					</div>
-				</van-field>
-			</div>
+					<div class="card-actions-item" @click="logout()">
+						<van-icon color="#3c9cff" class-prefix="iconfont" name="logout" size="18"/>
+						<span class="card-actions-item-text blue-color">退出登录</span>
+					</div>
+				</div>
+			</card>
 		</div>
 		<van-grid square :gutter="10" :column-num="4">
 			<van-grid-item v-for="(item,index) in config.authGrid" :key="index" :url="item.url" :text="item.text">
 				<van-icon class-prefix="iconfont" size="35" :name="item.iconName" slot="icon" color="#1a991d"/>
 			</van-grid-item>
 		</van-grid>
-		<van-popup v-model="config.popup.qrcode.show" position="top" :style="{ height : '100%', width: '100%'}">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
-				<div class="van-nav-bar__title van-ellipsis">
-					当前账号登录二维码
-				</div>
-			</div>
+		<van-popup 
+			v-model="config.popup.qrcode.show" 
+			:style="{ height : '45%', width: '85%'}"
+			round
+		>
 			<div id="qrcode" class="qrcode"></div>
-			<van-button type="primary" size="normal" style="position:fixed;bottom:0;width:100%;" @click="config.popup.qrcode.show = false">
-				关闭
-			</van-button>
 		</van-popup>
-		<van-popup v-model="config.popup.changePass.show" position="top" :style="{ height : '100%', width: '100%'}">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
-				<div class="van-nav-bar__title van-ellipsis">
-					修改密码
-				</div>
-			</div>
-			<div style="margin-top:46px;"></div>
-			<van-field v-model="formData.account" label="账号" input-align="center"  readonly />
-			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  type="password" required/>
-			<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" required/>
-			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6" required/>
-			<div class="van-row van-row--flex van-row--justify-space-between">
-				<div class="van-col van-col--12">
-					<van-button type="primary" size="normal" style="width:100%;" @click="changeClick()">
+		<van-popup 
+			v-model="config.popup.changePass.show" 
+			:style="{ height : '15rem', width: '85%'}" 
+			round
+			@closed="changePassClose"
+		>
+			<div style="padding: 0rem 0.75rem;">
+				<van-field v-model="formData.account" label="账号" input-align="center"  readonly />
+				<van-field v-model="formData.oldPass" label="原密码" input-align="center"  type="password" required/>
+				<van-field v-model="formData.newPass" label="新密码" input-align="center"  type="password" maxlength="6" required/>
+				<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" type="password" maxlength="6" required/>
+				<div style="text-align:center;padding-top:0.5rem;">
+					<van-button type="primary" size="normal" style="width:45%;" @click="changeClick()">
 						提交
-					</van-button>
-				</div>
-				<div class="van-col van-col--12">
-					<van-button type="primary" size="danger" style="width:100%;" @click="  onCancel() ">
-						取消
 					</van-button>
 				</div>
 			</div>
@@ -103,10 +58,12 @@
 	</div>
 </template>
 <script>
-	import { Button, Col, Row, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
+	import { Button, Col, Row, Cell, Icon, Popup, Field, Dialog, Toast, Grid, GridItem } from 'vant';
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
-	import { getStorage, setStorage } from '@/util/storage';
+	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	/*自定义卡片组件*/
+	import Card from "@/components/subject/card/Card.vue"
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -119,6 +76,8 @@
 			[Toast.name]: Toast,
 			[Grid.name]: Grid,
 			[GridItem.name]: GridItem,
+
+			Card
 		},
 		/*
 		state: #1a991d -> 已完成, #eff30c -> 正在开发 , #0b27f1 -> 未开发 
@@ -144,7 +103,7 @@
 						{text:'原纸收货',role:'原纸收货',iconName:'che2',url:'/staff/paperbuy/wGetPOIn'},
 						{text:'原纸采购',role:'原纸采购',iconName:'caigou',url:'/staff/paperbuy/wGetPOMain'},
 						{text:'生产分析总计',role:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo'},
-						{text:'生产分析总计2',role:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo2'},
+						/*{text:'生产分析总计2',role:'生产分析总计',iconName:'shengchan',url:'/staff/statis/getProInfo2'},*/
 						{text:'库存统计',role:'库存统计',iconName:'storage',url:'/staff/statis/getOrdStock'},
 						{text:'传单统计',role:'传单统计',iconName:'chuandan',url:'/staff/statis/getSchSum'},
 						{text:'退货统计',role:'退货统计',iconName:'tuihuo1',url:'/staff/statis/getOrdReturnSum'},
@@ -256,12 +215,10 @@
 						}
 					}
 				}
+
 			},
-			onCancel(){
-				this.formData.oldPass = '';
-				this.formData.newPass = '';
-				this.formData.confirmPass = '';
-				this.config.popup.changePass.show = false;
+			changePassClose() {
+				this.formData = this.$options.data().formData
 			},
 			getMenuUserName(){
 				let self = this;
@@ -285,19 +242,37 @@
 						this.authGrid( this.authUrl );
 					});
 				});
-			}
+			},
+			logout(){
+				Dialog.confirm({
+					message: '确认退出?'
+				}).then(() => {
+					removeStorage('jpdn-staff-token', 'sessionStorage');
+					removeStorage('jpdn-staff-refresh', 'sessionStorage');
+					removeStorage('staff-auth-url');
+					setStorage('jpdn-staff-isLogin', 0, 'sessionStorage');
+					this.$store.commit('staff/setIsLogin', 0);
+					this.$router.push('/group/staff/login');
+					this.$store.dispatch('user/logout')
+				}).catch(()=>{
+					Dialog.close()
+				});
+			},
 		},
 		created(){
 			this.$store.commit('staff/setHeaderTitle','菜单页面');
 			this.getMenuUserName();
-			this.authGrid( JSON.parse( getStorage('staff-auth-url') ) );
+			this.authGrid( this.$store.getters['user/authMap'] );
+			console.log(typeof(this.$store.getters['user/authMap']))
 			//this.getAuthName();
 		},
 		mounted(){
 			this.validator = new schema(this.rules);
 		},
 		computed:{
-			
+			...window.Vuex.mapGetters({
+				viewH: 'page/viewH',
+			})
 		},
 		watch:{
 
@@ -305,73 +280,20 @@
 	}
 </script>
 <style>
+	@import '~@/assets/style/card.css';
+	.menu-header {
+		padding-top: 0.25rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.menu-container {
+		display: flex;
+		flex-direction: column;
+		padding: 0.75rem;
+	}
+
 	.qrcode img{
 		margin:50% auto;
 		width:60%;
-	}
-	.inset-card{
-		height: 4.0625rem;
-		width: 100%;
-		padding-top: 0.7rem;
-	}
-	.inset-card-header{
-		padding: 0rem 0.8125rem;
-	}
-	.font-tips{
-		overflow: hidden;
-   		white-space: nowrap;
-   		text-overflow: ellipsis;
-	}
-</style>
-<style>
-	.menu-container{
-		min-height:100%;
-		background-color:#f1f1f1;
-		position: relative;
-		top: 0;
-	}
-	.menu-content-box{
-		width: 100%;
-		padding: 0.5rem 1rem;
-		box-sizing: border-box;
-	}
-	.menu-box{
-		width: 100%;
-	    background: #fff;
-	    box-shadow: 0 0.0625rem 0.625rem hsl(0deg 0% 72% / 10%);
-	    border-radius: 0.3125rem;
-	    overflow: hidden;
-	} 
-	.menu-center-list{
-		width: 100%;
-	    height: 4.1875rem;
-	    padding: 0 0.9375rem;
-	    box-sizing: border-box;
-	    display: flex;
-	    align-items: center;
-	    justify-content: space-between;
-	}
-	.menu-center-item{
-		flex: 1;
-    	display: flex;
-    	flex-direction: column;
-    	align-items: center;
-	}
-	.menu-icon-box{
-		position: relative;
-	}
-	.menu-center-text{
-		font-size: 0.8125rem;
-	    font-weight: 400;
-	    color: #666;
-	    padding-top: 0.125rem;
-	}
-	.menu-center-box{
-		height: 6.75rem;
-	}
-	.menu-tool-box{
-		height: 7.9375rem;
-		background-color: red;
-		margin-top: 0.625rem;
 	}
 </style>

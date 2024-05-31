@@ -109,11 +109,7 @@
 						self.cardInfo.marketPrice = res.result.group.MarketPrice;
 						self.cardInfo.cost        = res.result.group.Cost;
 						self.cardInfo.saveCost    = res.result.group.SaveCost;
-						if( res.result.order.IsGroup == 1 ){
-							self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.group.FirstPic;
-						}else{
-							self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.group.FirstPic;
-						}
+						self.cardInfo.pic = res.result.group.FirstPic;
 						self.config.steps.options = res.result.time_line;
 						self.config.steps.active  = res.result.time_line.length - 1;
 

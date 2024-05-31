@@ -3,9 +3,17 @@
 		<div v-if=" config.isEdit == 1 ">
 			<van-field v-model="fieldData.strOrderId" disabled label="订单号" input-align="center" v-if=" fieldData.bModDetail "></van-field>
 			<wx-scan :scanResult.sync="fieldData.strOrderId" urlType="3" v-else></wx-scan>
-			<van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="pageConfig.bMStockArea" @click=" config.popup.stockAreaShow = true ">
+			<!-- <van-field readonly clickable label="库区" v-model="fieldData.strStockArea" placeholder="选择库区" input-align="center" v-if="pageConfig.bMStockArea" @click=" config.popup.stockAreaShow = true ">
 				<van-icon slot="right-icon" size="16" name="arrow"/>
-			</van-field>
+			</van-field> -->
+			<uni-check-box
+				label="库区"
+				:localdata="strStockAreaAll"
+				:radioData.sync="fieldData.strStockArea" 
+				:map="{text: 'StockArea', value: 'StockArea'}"
+				@change="stockAreaChange"
+			>
+			</uni-check-box>
 			<van-field readonly v-model="fieldData.strOrderInfo" placeholder="订单信息" label="订单信息" input-align="left" type="textarea" autosize :rows="1" class="field-readonly">
 			</van-field>
 			<div class="van-row" style="text-align:left;">
@@ -88,7 +96,7 @@
 			</van-radio-group>
 			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0rem;" @click="config.popup.deliAreaShow = false">确定</van-button>
 		</van-popup>
-		<van-popup v-model="config.popup.stockAreaShow" position="top" :style="{ height: '100%', width:'100%' }">
+		<!-- <van-popup v-model="config.popup.stockAreaShow" position="top" :style="{ height: '100%', width:'100%' }">
 			<div class="header" style="width:100%;position:fixed;height:2.875rem;top:0rem;text-align:center;">
 				<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom">
 					<div class="van-nav-bar__title van-ellipsis">
@@ -108,7 +116,7 @@
 				</van-cell-group>
 			</van-radio-group>
 			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:0rem;" @click="config.popup.stockAreaShow = false">确定</van-button>
-		</van-popup>
+		</van-popup> -->
 	</div>
 </template>
 <script>
@@ -118,6 +126,10 @@
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
 	import schema from 'async-validator';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -131,7 +143,8 @@
 
 			FieldLabelVariable,
 			WxScan,
-			CusPicker
+			CusPicker,
+			UniCheckBox
 		},
 		data(){
 			return {
@@ -300,25 +313,19 @@
 					})
 				});
 			},
-			detailConfig(){
-				let self = this;
-				this.$request.staff.stow.detailConfig().then(res=>{
-					self.deliveryAddress.all       = res.result.cus_dn_select;
-					self.pageConfig.bMStockArea    = res.result.config_info.bMStockArea == 1 ? true : false;
-					self.pageConfig.bPackAddODefSQ = res.result.config_info.bPackAddODefSQ == 1 ? true : false;
-				}).then(()=>{
-					this.getUserInfo();
-					if( this.pageConfig.bMStockArea ){
-						this.config.table.height -=  50;
-					}
-					if( this.fieldData.orderType == 'x' ){
-						this.config.table.height  -= 50;
-					}
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.getPDNDetail( this.filterForm );
-					})
-				});
+			async detailConfig(){
+				const { result } = await getWebConfig({paramType: 'staffStow'})
+				this.deliveryAddress.all = result.customerDN
+				this.pageConfig.bMStockArea = result.bMStockArea == 1 ? true : false
+				this.pageConfig.bPackAddODefSQ = result.bPackAddODefSQ == 1 ? true : false
+				await this.getUserInfo()
+				if( this.pageConfig.bMStockArea ) {
+					this.config.table.height -=  50
+				}
+				if( this.fieldData.orderType == 'x' ) {
+					this.config.table.height  -= 50
+				}
+				await this.getPDNDetail( this.filterForm )
 			},
 			getPDNDetail( data ){
 				let self = this;
@@ -513,6 +520,10 @@
 						this.deliveryAddress.fit.push(this.deliveryAddress.all[i]);
 					}
 				}
+			},
+			stockAreaChange( e ) {
+				this.fieldData.areaQty = e.detail.data.Qty
+				//this.fieldData.areaQty = e.detail.data.Qty
 			}
 		},
 		created(){
@@ -534,9 +545,9 @@
 			strOrderIdChange(){
 				return this.fieldData.strOrderId;
 			},
-			strStockAreaChange(){
+			/*strStockAreaChange(){
 				return this.fieldData.strStockArea;
-			},
+			},*/
 			cusNameChange(){
 				return this.fieldData.strCusId;
 			}
@@ -551,7 +562,7 @@
 					this.getOrdPackInfo( newV );
 				}
 			},
-			strStockAreaChange( newV, oldV ){
+			/*strStockAreaChange( newV, oldV ){
 				if( newV !== '' ){
 					this.strStockAreaAll.forEach((item,index)=>{
 						if( item.StockArea === newV ){
@@ -559,7 +570,7 @@
 						}
 					});
 				}
-			},
+			},*/
 			cusNameChange( newV, oldV ){
 				this.deliveryAddress.fit = [];
 				if( !this.config.cusPicker.isInit ){

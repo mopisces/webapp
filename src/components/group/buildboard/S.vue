@@ -17,36 +17,82 @@
 					<span class="build-item">{{ timeData.seconds }}</span>
 				</template>
 			</van-count-down>
-			<div slot="price">¥{{ pageConfig.productPrice }}/㎡</div>
+			<div slot="price">
+				<span class="group-card-price-text">¥{{ pageConfig.productPrice }}</span>
+				/㎡
+			</div>
 			<div slot="origin-price">¥{{ pageConfig.marketPrice }}/㎡</div>
-			<van-image :src="pageConfig.pic" slot="thumb"/>
+			<van-image 
+				:src="pageConfig.pic" 
+				slot="thumb" 
+				width="85" 
+				height="85"
+			/>
 		</van-card>
 		<van-field v-model="formData.cusOrderId" label="客订单号" input-align="center" placeholder="未填写则系统自动生成"></van-field>
-		<van-field clearable label="纸板规格(mm)" right-icon="question-o" @click-right-icon="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth + 'mm~' + pageConfig.maxWidth + 'mm')">
-			<div class="van-row van-row--flex van-row--justify-center" slot="input">
-				<div class="van-col van-col--8">
-					<input type="number" placeholder="板长" v-model="formData.boardLength" class="van-field__control van-field__control--center" style="border:1px solid #000;" @focus="inputFocus()" @blur=" inputBlur() "/><!--  @blur="getAreaCost()" -->
-				</div>
-				<div class="van-col van-col--3" style="text-align:center;">
-					x 
-				</div>
-				<div class="van-col van-col--8">
-					<input type="number" placeholder="板宽" v-model="formData.boardWidth" class="van-field__control van-field__control--center" style="border:1px solid #000;" @focus="inputFocus()" @blur=" inputBlur() "/><!--  @blur="getAreaCost()" -->
-				</div>
+		<div class="van-cell" style="display: flex;align-items: center;">
+			<div class="van-cell__title van-field__label">纸板(mm)</div>
+			<input id="boardLength" type="number" class="karry-input" placeholder="长" v-model="formData.boardLength" @focus="inputFocus('boardLength')" @blur=" inputBlur('boardLength') "/>
+			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+			<input id="boardWidth" type="number" class="karry-input" placeholder="宽" v-model="formData.boardWidth" @focus="inputFocus('boardWidth')" @blur=" inputBlur('boardWidth') "/>
+			<div class="van-field__right-icon">
+				<van-icon name="question-o" @click="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth + 'mm~' + pageConfig.maxWidth + 'mm')"/>
 			</div>
-		</van-field>
-		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
+		</div>
+		<uni-check-box
+			label="压线压型"
+			:localdata="config.radioData.lineBall"
+			:radioData.sync="formData.lineBallInfo" 
+			:map="{text: 'text', value: 'value'}"
+			@change="lineBallChange"
+		>
+		</uni-check-box>
+		<!-- <popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select> -->
 		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="压线和=板宽(格式:x+x+x)"/>
-		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数"  @focus="inputFocus()" @blur=" inputBlur() " ref="orderQuantitiesField"/><!--  @blur="getAreaCost()" -->
+		<van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数"  @focus="inputFocus()" @blur=" inputBlur() " ref="orderQuantitiesField"/>
 		<van-field v-model="formData.area" clearable readonly input-align="center" label="下单面积(㎡)" placeholder="待计算" right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡')">
 		</van-field>
 		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.cusInfo" :radioData="config.radioData.cusInfo" selectType="cusInfo" @valueChange="addressChange"></popup-select>
 		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
 		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
 		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
-		<div style="height:3.5rem;width:100%;"></div>
+		<div style="height:5.5rem;width:100%;"></div>
 		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
-			<div slot="top" style="font-size:1rem;text-align:center;">
+			<div slot="default">
+				<div style="color: rgb(224, 24, 53);padding-left: 0.5rem;">
+					<van-tag 
+						mark 
+						type="danger" 
+						v-if=" formData.isRangePrice && helpInfo.sheetQuantities == 0 && helpInfo.price == 0 "
+					>
+						最低价
+					</van-tag>
+					¥
+					<span v-if="formData.isRangePrice && formData.price">{{ formData.price }}</span>
+					<span v-if="!formData.isRangePrice && cardInfo.productPrice">{{ cardInfo.productPrice }}</span>
+					/㎡
+				</div>
+			</div>
+			<div slot="tip" v-if="formData.saveCost || (formData.isRangePrice && helpInfo.sheetQuantities != 0 && helpInfo.price != 0)">
+				<span v-if="formData.saveCost">
+					节省:
+					<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
+				</span>
+				<span v-if="formData.isRangePrice && helpInfo.sheetQuantities != 0 && helpInfo.price != 0">
+					订单数满
+					<span 
+						style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" 
+						@click="maxOrderQty()"
+					>
+						{{ helpInfo.sheetQuantities }}
+					</span>
+					价格减至
+					<span style="color: rgb(224, 24, 53);">
+						¥{{ helpInfo.price }}/㎡
+					</span>
+				</span>
+			</div>
+			<!-- <div slot="top" style="font-size:1rem;text-align:center;">
 				<template v-if="formData.isRangePrice">
 					当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/㎡</span>
 					<van-tag mark type="danger" v-if=" helpInfo.sheetQuantities == 0 && helpInfo.price == 0 ">最低价</van-tag><br/>
@@ -57,10 +103,20 @@
 				<template>
 					节省金额：<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
 				</template>
-			</div>
+			</div> -->
 		</van-submit-bar>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder" :isGroup="true"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
+		<build-result 
+			v-if="config.result.show" 
+			:resultShow.sync="config.result.show" 
+			:isGroup.sync="config.result.isGroup" 
+			:isSuccess="config.result.isSuccess" 
+			:isPay="pageConfig.directCreditPay == 1 && pageConfig.useCreditPay == 1"
+			:cusOrderId="config.result.cusOrderId" 
+			:failMsg="config.result.failMsg"
+			@clearFormData="clearFormData()"
+		>
+		</build-result>
 	</div>
 </template>
 <script>
@@ -70,6 +126,8 @@
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
 	import BuildResult from '@/components/subject/build/BuildResult.vue';
 	import schema from 'async-validator';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
 	export default {
 		components:{
 			[Image.name]: Image,
@@ -84,7 +142,8 @@
 			PopupSelect,
 			NewTimePicker,
 			BuildSku,
-			BuildResult
+			BuildResult,
+			UniCheckBox
 		},
 		data(){
 			return {
@@ -152,11 +211,13 @@
 					maxWidth  : 0,
 					minArea   : 0,
 					maxArea   : 0,
-					pic       : window.jpdn_domain_imgDomain + 'zwtp.png',
+					pic       : null,
 					productPrice : '',
 					marketPrice  : '',
 					title        : '',
-					boardId      : ''
+					boardId      : '',
+					useCreditPay: 0,
+					directCreditPay: 0,
 				},
 				helpInfo:{
 					price           : 0,
@@ -273,9 +334,12 @@
 					self.pageConfig.maxLength = res.result.page_config.BuildMaxLength;
 					self.pageConfig.minWidth  = res.result.page_config.BuildMinWidth;
 					self.pageConfig.maxWidth  = res.result.page_config.BuildMaxWidth;
+					self.pageConfig.useCreditPay = res.result.page_config.UseCreditPay
+					self.pageConfig.directCreditPay =  res.result.page_config.DirectCreditPay
+
 					self.formData.date = res.result.page_config.BuildDeliveryDate;
 					res.result.page_config.BuildScoreName.forEach((item,index)=>{
-						self.config.radioData.lineBall.push( { value:item, text:'' } );
+						self.config.radioData.lineBall.push( { value:item, text: item } );
 					});
 					self.formData.lineBallInfo = res.result.page_config.DefaultScoreName ? res.result.page_config.DefaultScoreName : self.config.radioData.lineBall[0].value;
 					res.result.cus_info.forEach((item,index)=>{
@@ -289,9 +353,7 @@
 					}else{
 						self.config.countDown.time = ( res.result.product_info.EndTime - res.result.product_info.BeginTime ) * 1000;
 					}
-					if( res.result.product_info.Pic[0] ){
-						self.pageConfig.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];
-					}
+					self.pageConfig.pic = res.result.product_info.Pic
 					self.pageConfig.productPrice = res.result.product_info.Price;
 					self.pageConfig.marketPrice  = res.result.product_info.MarketPrice;
 					self.pageConfig.title        = res.result.product_info.Title;
@@ -433,8 +495,8 @@
 				});
 				this.getConfig( this.formData.productId );
 			},
-			lineBallChange( newValue ){
-				this.formData.lineBallInfo = newValue;
+			lineBallChange(  e ){
+				this.formData.lineBallInfo = e.detail.value
 			},
 			addressChange( newValue ){
 				this.formData.address = newValue;
@@ -462,15 +524,20 @@
 				this.getAreaCost();
 			}
 		},
-		created(){
-			this.$store.commit('client/setHeaderTitle','简单纸板下单');
+		async created(){
+			await this.$store.commit('client/setHeaderTitle', '简单纸板下单')
+			await this.$store.commit('client/setTabbarActive', 'group')
 			document.documentElement.scrollTop = 0;
 		},
 		mounted(){
-			if( typeof(this.$route.params.productId) != 'undefined' ){
-				this.formData.productId = this.$route.params.productId ;
+			if( this.$route.query ){
+				this.formData.productId = this.$route.query.productId
+				this.$store.commit('client/setBackPath', '/mall/product/detail?productId=' + this.$route.query.productId)
+				this.$store.commit('client/setLoginRedirect', '/group/build/s?productId=' + this.$route.query.productId)
 			}else if( sessionStorage.getItem('group-product-id') != null ){
 				this.formData.productId = sessionStorage.getItem('group-product-id');
+				this.$store.commit('client/setBackPath', '/mall/product/detail?productId=' + this.formData.productId)
+				this.$store.commit('client/setLoginRedirect', '/group/build/s?productId=' + this.formData.productId)
 			}else{
 				this.$router.go(-1);
 			}
@@ -487,7 +554,13 @@
 			
 		},
 		watch:{
-
+			'config.result.show': {
+				handler( nVal, oVal ) {
+					if( nVal ) {
+						window.scrollTo(0,0)
+					}
+				}
+			},
 		}
 	}
 </script>
@@ -500,4 +573,8 @@
 		background-color: #ee0a24;
 		border-radius: 0.1875rem;
 	}
+
+	.group-card-price-text {
+    	font-size: 1.25rem;
+    }
 </style>

@@ -4,76 +4,79 @@ const wxScan                 = () => import('@/components/common/WxScanRes');
 //staff权限页面
 //布局页面
 const staffLayout            = () => import('@/components/common/StaffLayout');
-//菜单
-const indexMenu              = () => import('@/components/staff/index/Menu');
+//const staffLayout = ()=> import('@/components/layout/staff')
+//菜单 @/components/staff/index/Menu
+const indexMenu = () => import('@/pages/staff/menu/menu.vue')
 //订单试算
 const clacIndex              = () => import('@/components/staff/calc/Index');
-//客户往来统计
-const frecCusContact         = () => import('@/components/staff/frec/CusContact');
-//收款调账
-const frecRecAdjust          = () => import('@/components/staff/frec/RecAdjust');
+//客户往来统计 @/components/staff/frec/CusContact
+const frecCusContact = () => import('@/pages/staff/customer/cusContact.vue')
+//收款调账 @/pages/staff/customer/recAdjust.vue
+const frecRecAdjust = () => import('@/components/staff/frec/RecAdjust')
 //库存修改
 const stockMStockDetailR     = () => import('@/components/staff/stock/MStockDetailR');
-//库区面积
-const stockDeliveryArea      = () => import('@/components/staff/stock/DeliveryArea');
-//安全库存
-const paperSafe              = () => import('@/components/staff/paper/PaperSafe');
+//库区面积 @/components/staff/stock/DeliveryArea
+const stockDeliveryArea = () => import('@/pages/staff/paper/getDeliArea.vue')
+//安全库存 @/components/staff/paper/PaperSafe
+const paperSafe = () => import('@/pages/staff/paper/getPaperSafe.vue')
 //原纸出库
 const paperDoStockOut        = () => import('@/components/staff/paper/DoStockOut');
-//原纸日用量
-const paperDailyUsed        = () => import('@/components/staff/paper/DailyUsed');
+//原纸日用量 @/components/staff/paper/DailyUsed
+const paperDailyUsed = () => import('@/pages/staff/paper/getDailyUsed.vue')
 //原纸入库
 const paperDoRStockIn        = () => import('@/components/staff/paper/DoRStockIn');
 //直接入库
 const paperDirectInStock     = () => import('@/components/staff/paper/DirectInStock');
-//原纸库存
-const paperGetSStocks        = () => import('@/components/staff/paper/GetSStocks');
+//原纸库存 @/components/staff/paper/GetSStocks
+const paperGetSStocks = () => import('@/pages/staff/paper/getPaperStock.vue')
 //库存预计
 //const getExpectStock         = () => import('@/components/staff/paper/GetExpectStock');
-//客户信用余额
-const credWGetCusAmt         = () => import('@/components/staff/cred/WGetCusAmt');
-//扫描装货
+//客户信用余额 @/components/staff/cred/WGetCusAmt
+const credWGetCusAmt = () => import('@/pages/staff/customer/getCusAmt.vue')
+//扫描装货@/pages/staff/tool/stow/stowList
 const stowLists              = () => import('@/components/staff/stow/Lists');
 //扫描装货/详情
 const stowDetail             = () => import('@/components/staff/stow/Detail');
-//生产分析总计
-const statisGetProInfo       = () => import('@/components/staff/statis/GetProInfo');
+//生产分析总计 @/components/staff/statis/GetProInfo
+const statisGetProInfo = () => import('@/pages/staff/statis/getProInfo.vue');
 //生产分析总计2
-const statisGetProInfo2       = () => import('@/components/staff/statis/GetProInfo2');
-//库存统计
-const statisGetOrdStock      = () => import('@/components/staff/statis/GetOrdStock');
-//订单统计
-const statisGetOrderSum      = () => import('@/components/staff/statis/GetOrderSum');
-//订单统计2
-const statisGetOrderSum2     = () => import('@/components/staff/statis/GetOrderSum2');
-//退货统计
-const statisGetOrdReturnSum  = () => import('@/components/staff/statis/GetOrdReturnSum');
-//传单统计
-const statisGetSchSum        = () => import('@/components/staff/statis/GetSchSum');
-//ERP订单
-const erpGetOrders           = () => import('@/components/staff/erp/GetOrders');
-//原纸收货
-const paperbuyWGetPOIn       = () => import('@/components/staff/paperbuy/WGetPOIn');
-//原纸采购
-const paperbuyWGetPOMain     = () => import('@/components/staff/paperbuy/WGetPOMain');
-//每日订单
-const dailyWGetCusOrder      = () => import('@/components/staff/daily/WGetCusOrder');
-//每日订单详细信息
-const dailyGetOrdersP        = () => import('@/components/staff/daily/GetOrdersP');
+//const statisGetProInfo2  = () => import('@/components/staff/statis/GetProInfo2');
+//库存统计 @/components/staff/statis/GetOrdStock
+const statisGetOrdStock = () => import('@/pages/staff/statis/getOrdStock.vue');
+//订单统计 @/components/staff/statis/GetOrderSum
+const statisGetOrderSum = () => import('@/pages/staff/statis/getOrdSum.vue');
+//订单统计2 @/components/staff/statis/GetOrderSum2
+const statisGetOrderSum2 = () => import('@/pages/staff/statis/getOrdSum2.vue');
+//退货统计 @/components/staff/statis/GetOrdReturnSum
+const statisGetOrdReturnSum  = () => import('@/pages/staff/statis/getOrdReturnSum.vue');
+//传单统计 @components/staff/statis/GetSchSum
+const statisGetSchSum = () => import('@/pages/staff/statis/getSchSum.vue'); 
+//统计模块详细列表
+const statisDetail = () => import('@/pages/staff/statis/ordDetail.vue')
+//ERP订单 @/components/staff/erp/GetOrders
+const erpGetOrders = () => import('@/pages/staff/tool/getErpOrder.vue')
+//原纸收货 @/components/staff/paperbuy/WGetPOIn
+const paperbuyWGetPOIn = () => import('@/pages/staff/paper/getPOIn.vue') 
+//原纸采购 @/components/staff/paperbuy/WGetPOMain
+const paperbuyWGetPOMain = () => import('@/pages/staff/paper/getPOMain.vue')
+//每日订单 @/components/staff/daily/WGetCusOrder
+const dailyWGetCusOrder = () => import('@/pages/staff/customer/daily/getDailyOrd.vue')
+//每日订单详细信息 @/components/staff/daily/GetOrdersP
+const dailyGetOrdersP = () => import('@/pages/staff/customer/daily/getDailyOrdDetail.vue');
 //用户管理
 const userManage             = () => import('@/components/staff/user/Manage');
-//接单统计
-const saleStatis             = () => import('@/components/staff/hide/SaleStatis');
-//客户每日送货
-const deliveryDaily          = () => import('@/components/staff/delivery/GetDNMain');
-//客户每日送货信息
-const deliveryOrdersList        = () => import('@/components/staff/delivery/GetCusOrdersList');
-//报价查询
-const customerQuo = () => import('@/components/staff/quo/CustomerQuo');
-//报价查询详细页
-const quoDetail = () => import('@/components/staff/quo/QuoDetail');
-//客户查询
-const customerInfo = () => import('@/components/staff/customer/CustomerInfo');
+//接单统计 @/components/staff/hide/SaleStatis
+const saleStatis = () => import('@/pages/staff/statis/saleStatis.vue');
+//客户每日送货 @/components/staff/delivery/GetDNMain
+const deliveryDaily = () => import('@/pages/staff/customer/delivery/getDeliDaily.vue')
+//客户每日送货详情 @/components/staff/delivery/GetCusOrdersList
+const deliveryOrdersList = () => import('@/pages/staff/customer/delivery/getDeliDailyDetail.vue');
+//报价查询 @/components/staff/quo/customerQuo
+const customerQuo = () => import('@/pages/staff/customer/quo/getQuoList.vue')
+//报价查询详细页 @/components/staff/quo/QuoDetail
+const quoDetail = () => import('@/pages/staff/customer/quo/getQuoDetail.vue')
+//客户查询 @/components/staff/customer/CustomerInfo
+const customerInfo = () => import('@/pages/staff/customer/custInfo.vue');
 export const asyncStaffRouterMap = [
     {
         path:'/staff',
@@ -135,11 +138,11 @@ export const asyncStaffRouterMap = [
                 meta: { title: '原纸库存', role:'原纸库存' },
                 component: paperGetSStocks,
             },
-            /*{
-                path:'paper/getExpectStock',
-                meta: { title: '库存预计', role:'库存预计' },
-                component: getExpectStock,
-            },*/
+            //{
+            //    path:'paper/getExpectStock',
+            //    meta: { title: '库存预计', role:'库存预计' },
+            //    component: getExpectStock,
+            //},
             {
                 path:'cred/wGetCusAmt',
                 meta: { title: '客户信用余额', role:'客户信用余额' },
@@ -158,14 +161,14 @@ export const asyncStaffRouterMap = [
             },
             {
                 path:'statis/getProInfo',
-                meta: { title: '生产分析总计', role:'生产分析总计' },
+                meta: { title: '生产分析总计', role:'生产分析总计'},
                 component: statisGetProInfo,
             },
-             {
-                path:'statis/getProInfo2',
-                meta: { title: '生产分析总计2', role:'生产分析总计' },
-                component: statisGetProInfo2,
-            },
+            //{
+            //    path:'statis/getProInfo2',
+            //    meta: { title: '生产分析总计2', role:'生产分析总计' },
+            //    component: statisGetProInfo2,
+            //},
             {
                 path:'statis/getOrdStock',
                 meta: { title: '库存统计', role:'库存统计' },
@@ -266,6 +269,11 @@ const staff = [
                 path:'index/menu',
                 meta: { title: '菜单页面', role:'菜单页面' },
                 component: indexMenu,
+            },
+            {
+                path: "statis/fetchDetail",
+                meta: { title: "统计详情", role: '内部人员使用' },
+                component: statisDetail
             }
         ]
     },

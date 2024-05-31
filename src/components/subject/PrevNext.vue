@@ -1,5 +1,5 @@
 <template>
-	<div style="font-size:0.75rem;">
+	<div style="font-size:0.75rem;background-color:#fff;">
 		<div class="van-row van-row--flex van-row--justify-space-around" style="margin-top:10px;height:60px;">
 			<div class="van-col van-col--8" style="text-align:center;border: 1px solid #ddd;" @click="headerChange('prev')">
 				<div style="padding-top:5px;">

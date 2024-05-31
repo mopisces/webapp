@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page-color">
 		<van-sticky :offset-top="46">
 			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 			<van-tabs v-model="filterForm.orderType">
@@ -14,7 +14,51 @@
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<van-panel v-for="(item,index) in listData" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
+				<card 
+					:title="item.strOrderId" 
+					:extra="item.CusPoNo"
+					:is-shadow="true"
+					v-for="(item,index) in listData" 
+					:key="index"
+				>
+					<div class="card-body-container">
+						<div v-if="item.MatName" class="card-body-item card-body-item-100">
+							<span>货品名称:
+								<span class="mg-left-20">{{ item.MatName }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>材质信息:
+								<span class="mg-left-20">{{ item.BoardId }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt">规格信息:</div>
+							<span class="mg-left-20">{{ item.GuiGe }}</span>
+							<span class="mg-left-20">{{ item.BoardId }}</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>压线信息:
+								<span class="mg-left-20">{{ item.ScoreInfo }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt blue-color">订单</div>|
+							<div class="card-body-txt green-color">送货</div>|
+							<div class="card-body-txt red-color">退货</div>:
+							<span class="mg-left-20 blue-color">{{ item.OrdQty }}</span>
+							<span class="mg-left-20 green-color">{{ item.DeliQty }}</span>
+							<span class="mg-left-20 red-color">{{ item.ReturnQty }}</span>
+						</div>
+					</div>
+					<div slot="actions" class="card-actions">
+						<div class="card-actions-item" @click="detailShowClick(item.strOrderId)">
+							<van-icon color="#3c9cff" name="bars" size="18"/>
+							<span class="card-actions-item-text blue-color">详情</span>
+						</div>
+					</div>
+				</card>
+				<!-- <van-panel v-for="(item,index) in listData" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
 					<div slot="default" style="padding:0.5rem;">
 						<div class="van-row van-row--flex van-row--justify-center">
 							<div class="van-col van-col--20">货品名称:{{ item.MatName }}</div>
@@ -41,7 +85,7 @@
 							<van-button size="mini" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>
 						</div>
 					</div>
-				</van-panel>
+				</van-panel> -->
 			</van-list>
 		</van-pull-refresh>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
@@ -53,10 +97,30 @@
 				<van-field label="箱宽" v-model="filterForm.boxWidth" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="箱高" v-model="filterForm.boxHeight" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="精确查询" input-align="center" type="number" maxlength="10"></van-field>
-				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.dateColumns" title="日期类型"></radio-cell>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
-				<radio-cell :radioInfo.sync="filterForm.isWx" :radioColumns="config.radio.wxColumns" title="是否微信下单"></radio-cell>
+				<!-- <radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.dateColumns" title="日期类型"></radio-cell> -->
+				<uni-check-box
+					label="日期"
+					:localdata="config.radio.dateColumns"
+					:radioData.sync="filterForm.dateType" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<!-- <new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker> -->
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
+				<!-- <radio-cell :radioInfo.sync="filterForm.isWx" :radioColumns="config.radio.wxColumns" title="是否微信下单"></radio-cell> -->
+				<uni-check-box
+					label="微信下单"
+					:localdata="config.radio.wxColumns"
+					:radioData.sync="filterForm.isWx" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
@@ -64,28 +128,39 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, PullRefresh, List, SwitchCell, Panel, Sticky, Tab, Tabs } from 'vant';
+	import { Button, Icon, Field, PullRefresh, List, SwitchCell,  Sticky, Tab, Tabs } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import Card from '@/components/subject/card/Card.vue'
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Icon.name]: Icon,
 			[Field.name]: Field,
 			[PullRefresh.name]: PullRefresh,
 			[List.name]: List,
 			[SwitchCell.name]: SwitchCell,
-			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 
 			PopupFilter,
-			NewTimePicker,
+			//NewTimePicker,
 			RadioCell,
-			OrderDetail
+			OrderDetail,
+
+			Card,
+			UniCheckBox,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -174,32 +249,19 @@
 				this.detailData.strOrderId   = strOrderId;
 				this.config.popup.detailShow = true;
 			},
-			getConfig( isReset = false ){
-				let self = this;
-				this.$request.client.ordersManage.erpOrdersConfig().then(res=>{
-					if( this.config.getConfig ){
-						self.filterForm.beginDate = res.result.Wap0GetOrdersBeginDate;
-						self.filterForm.endDate   = res.result.Wap0GetOrdersEndDate;
-					}
-					self.pageConfig.maxDate   = res.result.Wap0GetOrdersMaxDate;
-					self.pageConfig.minDate   = res.result.Wap0GetOrdersMinDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.$nextTick(()=>{
-						this.getErpOrders( this.filterForm );
-					});
-					
-				});
+			async getConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'clientOM'})
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.Wap0GetOrdersBeginDate
+					this.filterForm.endDate = result.Wap0GetOrdersEndDate
+				}
+				this.pageConfig.maxDate = result.Wap0GetOrdersMaxDate
+				this.pageConfig.minDate =result.Wap0GetOrdersMinDate
+				if( isReset ) return 
+				await this.getErpOrders( this.filterForm )
 			},
 			getErpOrders( data ){
 				let self = this;
-				//console.log(data)
 				this.$request.client.ordersManage.erpOrders( data ).then(res=>{
 					if( res.result == null || res.result.length < 6 ){
 						self.config.list.pushLoading.finished = true;
@@ -282,3 +344,6 @@
 		}
 	}
 </script>
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

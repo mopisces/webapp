@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-form :model="formData" :rules="rules" ref="addForm" label-width="150px" label-position="left">
+		<el-form :model="formData" :rules="rules" ref="addForm" label-width="96px" label-position="left" size="small">
 			<el-form-item label="货品编号" prop="matNo">
 				<el-select v-model="formData.matNo" placeholder="请选择" filterable>
 					<el-option v-for="(item,index) in config.select.options" :key="index" :label="item.MatNo" :value="item.MatNo"></el-option>

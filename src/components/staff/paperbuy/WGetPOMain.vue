@@ -47,8 +47,13 @@
 		</van-tabs>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
+				
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>
@@ -58,10 +63,14 @@
 <script>
 	import { Button, Field, SwitchCell, Sticky, Tab, Tabs } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PaperBuyDetail from '@/components/subject/PaperBuyDetail.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -72,9 +81,10 @@
 			[Tabs.name]: Tabs,
 
 			PopupFilter,
-			NewTimePicker,
 			PrevNext,
-			PaperBuyDetail
+			PaperBuyDetail,
+
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -121,23 +131,16 @@
 				this.config.popup.filterShow = false;
 				this.config.tabs.active = 0;
 			},
-			paperBuyConfig( isReset = false ){
-				let self = this;
-				this.$request.staff.paperbuy.paperBuyConfig().then(res=>{
-					if( self.config.getConfig ){
-						self.filterForm.beginDate = res.result.WGetPOMainBeginDate;
-						self.filterForm.endDate = res.result.WGetPOMainEndDate;
-					}
-					self.pageConfig.maxDate = res.result.WGetPOMainMaxDate;
-					self.pageConfig.minDate = res.result.WGetPOMainMinDate;
-				}).then(()=>{
-					this.config.popup.timePicker.isFinishLoad = true;
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.paperBuy( this.filterForm );
-				});
+			async paperBuyConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'staffPaperBuy'})
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.WGetPOMainBeginDate
+					this.filterForm.endDate = result.WGetPOMainEndDate
+				}
+				this.pageConfig.maxDate = result.WGetPOMainMaxDate
+				this.pageConfig.minDate = result.WGetPOMainMinDate
+				if( isReset ) return 
+				await this.paperBuy( this.filterForm )
 			},
 			paperBuy( data ){
 				let self = this;

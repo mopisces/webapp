@@ -143,9 +143,14 @@
 					this.alipay( this.info );
 				}
 				if( type == 'credit' ){
-					this.creditPay( this.info );
+					if( this.info.leftMinAmtCond < this.info.total ) {
+						Toast.fail('信用余额不足')
+					} else {
+						this.creditPay( this.info )
+					}
 				}
 				if( type == 'ysb' ){
+					//this.config.isWx = true
 					if( !this.config.isWx ){
 						Dialog.alert({
 							message: '非微信环境不支持易收宝!'
@@ -219,34 +224,35 @@
 			creditPay( data ){
 				if( data.cusOrderId == '' || data.total <= 0 ){
 					Toast.fail('参数不正确');
-					return ;
+					return false
 				}
 				if( data.leftMinAmtCond < data.total ){
 					Toast.fail('信用余额低于支付金额');
-					return ;
-				}
-				let self = this;
-				this.$request.payAll.payAll.creditPay( data ).then(res=>{
-					if( res.errorCode == '00000' ){
-						Toast.success({
-							message:'支付成功',
-							onClose:function (){
-								if( data.cusOrderId.indexOf(',') >= 0 ){
-									self.$router.push({
-										path:'/client/wxorder/lists'
-									});
-								}else{
-									self.$router.push({
-										name:'payDetail',
-										params:{
-											orderId:data.cusOrderId
-										}
-									});
+					return false
+				} else {
+					let self = this;
+					this.$request.payAll.payAll.creditPay( data ).then(res=>{
+						if( res.errorCode == '00000' ){
+							Toast.success({
+								message:'支付成功',
+								onClose:function (){
+									if( data.cusOrderId.indexOf(',') >= 0 ){
+										self.$router.push({
+											path:'/client/wxorder/lists'
+										});
+									}else{
+										self.$router.push({
+											name:'payDetail',
+											params:{
+												orderId:data.cusOrderId
+											}
+										});
+									}
 								}
-							}
-						});
-					}
-				})
+							});
+						}
+					})
+				}
 			},
 			wxpayMakeQrCode( data ){
 				if( data.cusOrderId == '' || data.tradeType != 1 ){

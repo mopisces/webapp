@@ -1,5 +1,5 @@
-//import Vue from 'vue';
-//import Vuex from 'vuex';
+/*import Vue from 'vue';
+import Vuex from 'vuex';*/
 import states from './state';
 import actions from './action';
 import mutations from './mutation';
@@ -7,7 +7,9 @@ import admin from './module/admin';
 import staff from './module/staff';
 import client from './module/client';
 import common from './module/common';
-import sg from './module/sg';
+
+import user from './module/user'
+import page from './module/page'
 Vue.use(Vuex);
 
 Vue.config.devtools = true
@@ -20,6 +22,7 @@ export default new Vuex.Store({
  		staff,
  		client,
  		common,
- 		sg
+ 		user,
+ 		page
  	}
 });	

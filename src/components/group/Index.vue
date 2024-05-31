@@ -60,6 +60,12 @@
 <script>
 	import { Image, Tag, Grid, GridItem } from 'vant';
 	import CopyRight from '@/components/subject/footer/CopyRight';
+
+	/*后台地址*/
+	import { backStageUrl } from '@/config/domain.js'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Image.name]: Image,
@@ -98,22 +104,20 @@
 			}
 		},
 		methods:{
-			getIndexConfig(){
-				let self = this;
-				this.$request.client.other.getIndexConfig().then(res=>{
-					if( res.result.UseBoardGroup == '1' ){
-						self.config.grid.groupBoard.img      = window.jpdn_domain_imgDomain + res.result.BoardGroupPic;
-						self.config.grid.groupBoardFlag.img  = window.jpdn_domain_imgDomain + res.result.FlagBoardGroupPic;
-						self.config.grid.groupBoardFlag.flag = res.result.BoardFlag;
-						self.boardGroupOpen = true;
-					}
-					if( res.result.UseBoxGroup == '1' ){
-						self.config.grid.groupBox.img      = window.jpdn_domain_imgDomain  + res.result.BoxGroupPic;
-						self.config.grid.groupBoxFlag.img  = window.jpdn_domain_imgDomain  +  res.result.FlagBoxGroupPic;
-						self.config.grid.groupBoxFlag.flag = res.result.BoxFlag;
-						self.boxGroupOpen = true;
-					}
-				});
+			async getIndexConfig(){
+				const { result } = await getWebConfig({paramType: 'clientIndex'})
+				if( result.UseBoardGroup == 1 ) {
+					this.config.grid.groupBoard.img = backStageUrl + '/upload/' + result.BoardGroupPic
+					this.config.grid.groupBoardFlag.img = backStageUrl + '/upload/' + result.FlagBoardGroupPic
+					this.config.grid.groupBoardFlag.flag = result.BoardFlag
+					this.boardGroupOpen = true
+				}
+				if( result.UseBoxGroup == 1 ) {
+					this.config.grid.groupBox.img = backStageUrl + '/upload/' + result.BoxGroupPic
+					this.config.grid.groupBoxFlag.img = backStageUrl + '/upload/' + result.FlagBoxGroupPic
+					this.config.grid.groupBoxFlag.flag = result.BoxFlag
+					this.boxGroupOpen = true
+				}
 			}
 		},
 		created(){

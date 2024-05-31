@@ -1,36 +1,36 @@
 //外部用户
 //布局页面
 const clientLayout     = () => import('@/components/common/ClientLayout');
-//菜单页面
-const menu             = () => import('@/components/client/index/Menu');
-//信用余额
-const wGetCusAmt       = () => import('@/components/client/cred/WGetCusAmt');
-//信用余额详情
-const wGetCusDetail    = () => import('@/components/client/cred/WGetCusDetail');
-//报价规则
-const getQuoRuleByCus  = () => import('@/components/client/quo/GetQuoRuleByCus');
-//报价价格
-const getQuoPriceByCus = () => import('@/components/client/quo/GetQuoPriceByCus');
-//ERP订单
-const getOrders        = () => import('@/components/client/order/GetOrders');
-//每日订单
-const getOrdersP       = () => import('@/components/client/order/GetOrdersP');
-//每日送货
-const deliveryDaily    = () => import('@/components/client/delivery/Index');
-//对账单
-const getCusFreeMB     = () => import('@/components/client/order/GetCusFreeMB');
+//菜单页面 @/components/client/index/Menu
+const menu = () => import('@/pages/client/menu/menu.vue');
+//信用余额 @/components/client/cred/WGetCusAmt
+const wGetCusAmt = () => import('@/pages/client/cred/getCusAmt.vue')
+//信用余额详情 @/components/client/cred/WGetCusDetail
+const wGetCusDetail    = () => import('@/pages/client/cred/getCusDetail.vue')
+//报价规则 @/components/client/quo/GetQuoRuleByCus
+const getQuoRuleByCus  = () => import('@/pages/client/quo/getQuoRuleByCus.vue')
+//报价价格 @/components/client/quo/GetQuoPriceByCus
+const getQuoPriceByCus = () => import('@/pages/client/quo/getQuoPriceByCus.vue')
+//ERP订单 @/components/client/order/GetOrders
+const getOrders = () => import('@/pages/client/getErpOrdList.vue')
+//每日订单 @/components/client/order/GetOrdersP
+const getOrdersP = () => import('@/pages/client/getDailyOrd.vue')
+//每日送货 @/components/client/delivery/Index
+const deliveryDaily = () => import('@/pages/client/getDeliOrd.vue')
+//对账单 @/components/client/order/GetCusFreeMB
+const getCusFreeMB = () => import('@/pages/client/getCusFreeMB.vue')
 //对账单明细
 //const cusFreeMBTable     = () => import('@/components/client/order/CusFreeMBTable');
-//常用材质
-const lists            = () => import('@/components/client/usedboard/Lists');
-//常用订单
-const orderList        = () => import('@/components/client/usedorder/Lists');
-//微信订单
-const wxList           = () => import('@/components/client/wxorder/Lists');
+//常用材质 @/components/client/usedboard/Lists
+const lists = () => import('@/pages/client/commonly/getMat.vue');
+//常用订单 @/components/client/usedorder/Lists
+const orderList = () => import('@/pages/client/commonly/getOrd.vue');
+//微信订单 @/components/client/wxorder/Lists
+const wxList = () => import('@/pages/client/wxOrd/getWxOrdList.vue');
 //简单纸板下单
-const sBuild           = () => import('@/components/client/build/S');
-//纸箱纸板下单
-const cBuild           = () => import('@/components/client/build/C');
+const sBuild = () => import('@/components/client/build/SBuild');
+//纸箱纸板下单 @/pages/client/build/buildC.vue
+const cBuild = () => import('@/components/client/build/CBuild');
 //纸箱下单
 const xBuild           = () => import('@/components/client/build/X');
 //支付方式
@@ -47,14 +47,14 @@ const aliReturnUrl     = () => import('@/components/pay/order/AliReturn');
 const sBuildPay        = () => import('@/components/client/buildpay/S');
 //纸箱纸板下单并支付
 const cBuildPay        = () => import('@/components/client/buildpay/C');
-//往来统计
-const statisContact = () => import('@/components/client/frec/statisContact');
-//发票中心
-const billCenter = () => import('@/components/client/bill/BillCenter');
-//订单统计
-const amountStatis = ()=> import('@/components/client/statis/AmountStatis');
-//余额流水
-const balStatement = ()=> import('@/components/client/statement/BalStatement');
+//往来统计 @/components/client/frec/statisContact 
+const statisContact = () => import('@/pages/client/getStatisContact.vue')
+//发票中心 @/components/client/bill/BillCenter
+const billCenter = () => import('@/pages/client/bill/getBillCenter.vue')
+//订单统计 @/components/client/statis/AmountStatis @/pages/cleint/statis/amountStatis.vue
+const amountStatis = ()=> import('@/pages/client/statis/amountStatis.vue');
+//余额流水 @/components/client/statement/BalStatement
+const balStatement = ()=> import('@/pages/client/cred/balStatement.vue');
 
 export const asyncClientRouterMap = [
     {
@@ -69,7 +69,7 @@ export const asyncClientRouterMap = [
             },
             {
                 path:'cred/wGetCusDetail',
-                meta: { title: '客户信用余额明细', role:'客户信用余额明细' },
+                meta: { title: '客户信用余额明细2', role:'客户信用余额明细' },
                 component: wGetCusDetail,
             },
             {
@@ -97,11 +97,11 @@ export const asyncClientRouterMap = [
                 meta: { title: '对账单', role:'对账单' },
                 component: getCusFreeMB,
             },
-            /*{
-                path:'order/cusFreeMBTable',
-                meta: { title: '对账单明细', role:'对账单2' },
-                component: cusFreeMBTable,
-            },*/
+            //{
+            //    path:'order/cusFreeMBTable',
+            //    meta: { title: '对账单明细', role:'对账单2' },
+            //    component: cusFreeMBTable,
+            //},
             {
                 path:'usedboard/lists',
                 meta: { title: '常用材质', role:'纸板下单' },
@@ -173,7 +173,7 @@ export const asyncClientRouterMap = [
             {
                 path:'statement/balStatement',
                 name: 'balStatement',
-                meta: { title: '余额流水', role:'余额流水' },
+                meta: { title: '客户信用余额明细', role:'客户信用余额明细' },
                 component: balStatement,
             },
         ]

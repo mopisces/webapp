@@ -23,6 +23,10 @@
 	import OpClassField from '@/components/subject/staff/OpClassField.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import schema from 'async-validator';
+
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -91,17 +95,12 @@
 			}
 		},
 		methods:{
-			getPageConfig(){
-				let self = this;
-				this.$request.staff.paper.paperConfig().then(res=>{
-					self.pageConfig.maxDate      = res.result.DoStockOutMaxDate;
-					self.pageConfig.minDate      = res.result.DoStockOutMinDate;
-					self.formData.stockOutOpTime = res.result.DoStockOutOpTime;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					})
-				});
+			async getPageConfig(){
+				const { result } = await getWebConfig({paramType: 'staffPaper'})
+				this.pageConfig.maxDate = result.DoStockOutMaxDate
+				this.pageConfig.minDate = result.DoStockOutMinDate
+				this.formData.stockOutOpTime = result.DoStockOutOpTime
+				this.config.popup.timePicker.isFinishLoad = true
 			},
 			getOutInfo( outNo ){
 				let self = this;

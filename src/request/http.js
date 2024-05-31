@@ -13,17 +13,18 @@ httpServer.interceptors.request.use(
 			loadingType: 'spinner'
 		});
 		let auth = '';
-		if( getStorage('jpdn-client-token', 'sessionStorage') ){
-			auth = getStorage('jpdn-client-token', 'sessionStorage');
+		if( store.getters['user/accessToken'] ) {
+			auth = store.getters['user/accessToken']
+		}
+		/*if( getStorage('jpdn-client-token', 'sessionStorage') ){
+			auth = getStorage('jpdn-client-token', 'sessionStorage')
 		}else if( getStorage('jpdn-staff-token', 'sessionStorage') ){
 			auth = getStorage('jpdn-staff-token', 'sessionStorage');
 		}else if( getStorage('jpdn-admin-token', 'sessionStorage') ){
 			auth = getStorage('jpdn-admin-token', 'sessionStorage');
-		}else if( getStorage('jpdn-sg-token', 'sessionStorage') ){
-			auth = getStorage('jpdn-sg-token', 'sessionStorage');
 		}else{
 			auth = '';
-		}
+		}*/
 		config.headers.Authentication = auth;
 		return config;
 	},

@@ -1,12 +1,19 @@
 <template>
 	<div style="padding-top:0.1rem;">
-		<template v-if="config.modifyAuth">
+		<drag-menu 
+			defpositon="rt" 
+			:pattern="{icon: 'plus'}"
+			:content="menuOptions"
+			@trigger="trigger"
+		>
+		</drag-menu>
+		<!-- <template v-if="config.modifyAuth">
 			<van-button plain hairline type="info" style="width:50%" @click="addData()">添加</van-button>
 			<van-button plain hairline type="info" style="width:50%" @click="config.popup.filterShow = true">筛选</van-button>
 		</template>
 		<template v-else>
 			<van-button plain hairline type="info" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
-		</template>
+		</template> -->
 		<van-tabs v-model="filterForm.adjustType" @change="tabsChange">
 			<van-tab title="收款" name="1"></van-tab>
 			<van-tab title="调账" name="0"></van-tab>
@@ -17,10 +24,28 @@
 			<div slot="filter-field-1">
 				<cus-picker :cusName.sync="filterForm.cusName" ></cus-picker>
 				<van-field label="业务员" v-model="filterForm.taskId" placeholder="精确查询" input-align="center"/>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
-				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell>
-				<radio-cell :radioInfo.sync="filterForm.payType" :radioColumns="pageConfig.payType" title="科目"></radio-cell>
+				
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
+
+				<uni-check-box
+					label="日期"
+					:localdata="config.radio.options"
+					:radioData.sync="filterForm.dateType" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<div class="cell-label">科目</div>
+				<uni-check-box
+					:localdata="pageConfig.payType"
+					:radioData.sync="filterForm.payType" 
+					:map="{text: 'shortName', value: 'shortName'}"
+				>
+				</uni-check-box>
 				<van-switch-cell v-model="info.switch.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>
@@ -33,8 +58,6 @@
 			<van-field :label="config.dialog.label + '金额'" v-model="formData.Amount" placeholder="请输入金额" input-align="center" :error-message="config.dialog.amountCHN" @blur="amountToCHN"/>
 			<van-field :label="config.dialog.label + '备注'" v-model="formData.Remark" autosize rows="1" maxlength="50" show-word-limit type="textarea" placeholder="请输入备注"/>
 			<van-field label="收据编号" v-model="formData.ReceiptNo" placeholder="请输入收据编号" input-align="center"/>
-			<!-- <van-button type="danger" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="config.dialog.delShow = true" v-if="config.dialog.type == 1">删除</van-button>
-			<van-button type="info" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="cancelClick" v-else>取消</van-button> -->
 			<van-button type="primary" :disabled="config.dialog.confirmBtn.submit" :loading="config.dialog.confirmBtn.submit" loading-text="提交" style="width:80%;margin-left:10%;margin-bottom:2%;margin-top:2%;" round @click="confirmClick()">确认</van-button>
 		</van-dialog>
 		<van-dialog v-model:show="config.dialog.delShow" title="删除原因" :show-confirm-button="false" :close-on-click-overlay="true" @close="delClose()">
@@ -42,8 +65,7 @@
 			<van-button type="info" style="width:45%;margin-left:2.5%;margin-bottom:2%" @click="config.dialog.delShow = false" >取消</van-button>
 			<van-button type="primary" :disabled="config.dialog.delBtn.submit" :loading="config.dialog.delBtn.submit" loading-text="删除" style="width:45%;margin-left:2.5%;margin-bottom:2%;" @click="delClick()">删除</van-button>
 		</van-dialog>
-		<!-- <van-dialog v-model:show="config.dialog.chooseShow" title="对该条记录进行审核或者修改" :showCancelButton="true" cancelButtonText="审核" confirmButtonText="修改" cancelButtonColor="#21e84f" :close-on-click-overlay="true" @confirm="doModify" @cancel="config.dialog.checkShow = true;">
-		</van-dialog> -->
+		
 		<van-dialog v-model:show="config.dialog.chooseShow" title="请选择操作" :showConfirmButton="false" :close-on-click-overlay="true" @close="cleanDialog()">
 			<van-field label="单号" :value="formData.PayId" readonly />
 			<template v-if="config.checkAuth">
@@ -75,11 +97,19 @@
 	import { digitUppercase } from '@/util';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import FrecSellPay from '@/components/subject/staff/FrecSellPay.vue';
 	import schema from 'async-validator';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*自定义拖动组件*/
+	import DragMenu from "@/components/subject/fab/DragMenu.vue"
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -92,9 +122,13 @@
 
 			CusPicker,
 			PopupFilter,
-			NewTimePicker,
 			RadioCell,
-			FrecSellPay
+			FrecSellPay,
+			NewTimePicker,
+
+			UniCheckBox,
+			TimeRangePicker,
+			DragMenu
 		},
 		data(){
 			return {
@@ -265,12 +299,6 @@
 					FactoryId : [
 						{ required : true, message : '该条记录不完整,请选择其他记录1' }
 					],
-					/*IsSell:[
-						{ required : true, message : '该条记录不完整,请选择其他记录2' }
-					],
-					IsPay:[
-						{ required : true, message : '该条记录不完整,请选择其他记录3' }
-					],*/
 					PayId:[
 						{ required : true, message : '该条记录不完整,请选择其他记录4' }
 					]
@@ -296,34 +324,33 @@
 			}
 		},
 		methods:{
-			recAdjustConfig( isReset = false ){
-				let self = this;
-				this.$request.staff.frec.recAdjustConfig().then(res=>{
-					if( this.config.getConfig ){
-						self.filterForm.beginDate = res.result.date.RecAdjustBeginDate;
-						//self.filterForm.beginDate = '2020-04-17';
-						self.filterForm.endDate = res.result.date.RecAdjustEndDate;
-					}
-					self.pageConfig.maxDate = res.result.date.RecAdjustMaxDate;
-					self.pageConfig.minDate = res.result.date.RecAdjustMinDate;
-					self.dialogTime.maxDate = res.result.date.defaultMaxDate;
-					self.dialogTime.minDate = res.result.date.defaultMinDate;
-					self.pageConfig.defaultDate = res.result.date.defaultDate;
-					self.formData.OpDate = self.pageConfig.defaultDate;
-					self.formData.IssueDate = self.pageConfig.defaultDate;
-					res.result.pay_type.forEach((item,index)=>{
-						self.pageConfig.payType.push({title:item.ShortName,value:item.ShortName});
-					});
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.recAdjustMain( this.filterForm );
-				});
+			/*菜单点击*/
+			async trigger({index, item}) {
+				if( index == 1 ) {
+					this.addData()
+				} else {
+					this.config.popup.filterShow = true
+				}
+			},
+			async recAdjustConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'staffFrec'})
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.RecAdjustBeginDate
+					this.filterForm.endDate = result.RecAdjustEndDate
+				}
+				this.pageConfig.maxDate = result.RecAdjustMaxDate
+				this.pageConfig.minDate = result.RecAdjustMinDate
+				this.dialogTime.maxDate = result.defaultMaxDate
+				this.dialogTime.minDate = result.defaultMinDate
+				this.pageConfig.defaultDate = result.defaultDate
+				this.formData.OpDate = this.pageConfig.defaultDate
+				this.formData.IssueDate = this.pageConfig.defaultDate
+				this.pageConfig.payType = result.payType
+				/*result.payType.forEach((item,index)=>{
+					this.pageConfig.payType.push({title:item.shortName,value:item.shortName});
+				})*/
+				if( isReset ) return 
+				this.recAdjustMain( this.filterForm )	
 			},
 			recAdjustMain( filterForm ){
 				let self = this;
@@ -437,38 +464,7 @@
 				}
 			},
 			doModify(){
-				//最后一行不弹框
-				/*if( this.info.table.data.length <= (rowIndex + 1) ){
-					return false;
-				}
-				if( rowData.State == 0 ){
-					Toast({
-						message:'已删除记录无法修改或删除',
-						duration:1000
-					});
-					return false;
-				}
-				if( rowData.Checked == 1 ){
-					Toast({
-						message:'已审核记录无法修改或删除',
-						duration:1000
-					});
-					return false;
-				}*/
 				this.config.dialog.type = 1;
-
-				/*this.formData.rowIndex  = rowIndex;
-				this.formData.CusId     = rowData.CusId;
-				this.formData.NeedInv   = Number(rowData.NeedInv);
-				this.formData.OpDate    = rowData.OpDate;
-				this.formData.PayTypeId = rowData.PayTypeId;
-				this.formData.IssueDate = rowData.IssueDate;
-				this.formData.Amount    = rowData.Amount;
-				this.formData.Remark    = rowData.Remark;
-				this.formData.ReceiptNo = rowData.ReceiptNo;
-				//删除或者修改必须
-				this.formData.FactoryId = rowData.FactoryId;
-				this.formData.PayId     = rowData.PayId;*/
 				this.amountToCHN();
 				this.config.dialog.show = true;
 			},
@@ -543,9 +539,6 @@
 				}
 				
 			},
-			/*cleanDelDialog(){
-				this.formData.delRemark = '';
-			},*/
 			//删除确认
 			delClick(){
 				let postData = Object.assign({},this.formData,{type:this.filterForm.adjustType});
@@ -598,15 +591,8 @@
 				this.config.getConfig = false;
 				this.info.switch.checked = true;
 			}
-			if( getStorage('staff-auth-url') !== null ){
-				let auth = JSON.parse(getStorage('staff-auth-url'));
-				if( auth.indexOf('收款调账维护') >= 0 ){
-					this.config.modifyAuth = true;
-				}
-				if( auth.indexOf('收款调账审核') >= 0 ){
-					this.config.checkAuth = true;
-				}
-			}
+			this.config.modifyAuth = this.authMap.includes('收款调账维护')
+			this.config.checkAuth = this.authMap.includes('收款调账审核')
 			this.config.dialog.label = this.filterForm.adjustType == 0 ? '调账' : '收款';
 			this.modifyVal = new schema( Object.assign({},this.delBase,this.addRules) );
 			this.addVal    = new schema(this.addRules);
@@ -623,7 +609,33 @@
 			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
-			
+			...window.Vuex.mapGetters({
+				authMap: 'user/authMap'
+			}),
+			menuOptions() {
+				if( this.authMap.includes('收款调账维护') ) {
+					return [
+						{
+							text: '筛选',
+							iconPath: 'filter-o',
+							active: false
+						},
+						{
+							text: '添加',
+							iconPath: 'plus',
+							active: false
+						}
+					]
+				} else {
+					return [
+						{
+							text: '筛选',
+							iconPath: 'filter-o',
+							active: false
+						}
+					]
+				}
+			}
 		},
 		watch:{
 			
@@ -631,7 +643,14 @@
 	}
 </script>
 <style>
-	.van-search:{
+	.cell-label {
+		line-height: 1rem;
+		font-size: 0.875rem;
+		text-align: left;
+		padding: 0.25rem 0rem 0.25rem 1rem;
+	}
+
+	.van-search {
 		width:60%;
 	}
 </style>

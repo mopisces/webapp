@@ -1,10 +1,16 @@
 <template>
-	<div style="padding-top:0.1rem;">
-		<template>
+	<div>
+		<drag-menu 
+			defpositon="rt" 
+			:pattern="{icon: 'plus'}"
+			:content="config.menu.content"
+			@trigger="trigger"
+		>
+		</drag-menu>
+		<!-- <template>
 			<van-button plain hairline type="info" style="width:50%" @click="config.add.show = true">添加</van-button>
 			<van-button plain hairline type="info" style="width:50%" @click="config.popup.filterShow = true">筛选</van-button>
-		</template>
-		
+		</template> -->
 		<v-table 
 			is-horizontal-resize 
 			:is-vertical-resize="true" 
@@ -15,12 +21,17 @@
 			row-hover-color="#eee" 
 			row-click-color="#edf7ff" 
 			even-bg-color="#fafafa"
-			@on-custom-comp="customCompFunc" >
+			@on-custom-comp="customCompFunc" 
+		>
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 				<van-cell>
 					<van-checkbox slot="icon" v-model="filterForm.showPack" shape="square">已准备</van-checkbox>
 				</van-cell>
@@ -30,7 +41,7 @@
 				<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件" />
 			</div>
 		</popup-filter>
-		<!--修改界面-->
+		
 		<van-dialog 
 			v-model="config.modify.show" 
 			show-cancel-button 
@@ -69,12 +80,6 @@
 			<carperson-picker 
 				:carPId.sync="addForm.carPId">
 			</carperson-picker>
-			<!-- <van-field 
-				v-model="addForm.loader" 
-				placeholder="装货员" 
-				input-align="center" 
-				label="装货员" 
-			></van-field> -->
 			<loader-checkbox :loader.sync="addForm.loader"></loader-checkbox>
 			<van-field 
 				v-model="addForm.remark" 
@@ -96,9 +101,8 @@
 	</div>
 </template>
 <script>
-	import { Button, Cell, Checkbox, Field, RadioGroup, Radio, SwitchCell, Dialog, Toast } from 'vant';
+	import { Button, Cell, Checkbox, Field,  SwitchCell, Dialog, Toast } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import CarPicker from '@/components/subject/picker/CarPicker.vue';
 	import CarpersonPicker from '@/components/subject/picker/CarpersonPicker.vue';
 	import ShipperPicker from '@/components/subject/picker/ShipperPicker.vue';
@@ -106,25 +110,31 @@
 	import LoaderCheckbox from '@/components/subject/checkbox/LoaderCheckbox.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	import schema from 'async-validator';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	import WebappPopupFilter from '@/components/subject/filter/WebappPopupFilter.vue'
+	/*自定义拖动组件*/
+	import DragMenu from "@/components/subject/fab/DragMenu.vue"
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Cell.name]: Cell,
 			[Checkbox.name]: Checkbox,
 			[Field.name]: Field,
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
 			[SwitchCell.name]: SwitchCell,
 			[Dialog.Component.name]: Dialog.Component,
 			[Toast.name]: Toast,
 
 			PopupFilter,
-			NewTimePicker,
 			CarPicker,
 			CarpersonPicker,
 			ShipperPicker,
 			StowaddPicker,
-			LoaderCheckbox
+			LoaderCheckbox,
+
+			TimeRangePicker,
+			WebappPopupFilter,
+			DragMenu
 		},
 		data(){
 			return {
@@ -200,7 +210,21 @@
 						PackDate: [
 							{ required : true , message : '请选择日期' },
 						]
-					}
+					},
+					menu: {
+						content: [
+							{
+								text: '筛选',
+								iconPath: 'filter-o',
+								active: false
+							},
+							{
+								text: '添加',
+								iconPath: 'plus',
+								active: false
+							}
+						]
+					},
 				},
 				table:{
 					data:[]
@@ -246,6 +270,14 @@
 			}
 		},
 		methods:{
+			/*菜单点击*/
+			trigger(e) {
+				if(e.index == 0) {
+					this.config.popup.filterShow = true
+				} else {
+					this.config.add.show = true
+				}
+			},
 			customCompFunc(params){
 				if( params.type == 'modify' ){
 					this.modifyForm = this.$options.data().modifyForm;
@@ -286,6 +318,7 @@
 			modifyConfirm(){
 				this.$request.staff.stow.stowListUpdate( this.modifyForm ).then((res)=>{
 					if( res.errorCode == '00000' ){
+						this.config.getConfig = false
 						this.getConfig();
 					}
 				})
@@ -423,44 +456,6 @@
 					done(false);
 				});
 			},
-			/*addConfirm(){
-				let postData = {
-					strFactoryId: this.addForm.factoryId,
-					strUserId: this.addForm.erpId,
-					strOrderId: this.addForm.type,
-					strPCarType: '',
-					strPCarArea: '',
-					strCarCode: this.addForm.carCode,
-					strCarPId: this.addForm.carPId,
-					strPackPerson: this.addForm.loader,
-					strAPPerson: this.addForm.taskName,
-					strRemark: this.addForm.remark,
-					strTransFeeId: '',
-					dChargeAdjust: this.addForm.carFee,
-					PackDate: this.addForm.addDate,
-					iPCarANum: 0
-				}
-				this.validator.validate(postData).then(()=>{
-					this.$request.staff.connecterp.addPackageList(postData).then((res)=>{
-						if( res.data.result[1] === false ){
-							Dialog.alert({
-								title   : '装货出错',
-								message : res.data.result[0]
-							}).then(()=>{
-								Dialog.close();
-							});
-						}else{
-							Dialog.alert({
-								message:'新增装货单成功'
-							}).then(()=>{
-								Dialog.close();
-							});
-						}
-					});
-				}).catch(({ errors, fields })=>{
-					Toast.fail(errors[0].message);
-				});
-			},*/
 			floatInput(val){
 				let checkPlan = "" + val;
 				checkPlan = checkPlan
@@ -490,7 +485,7 @@
 		},
 		mounted(){
 			this.getConfig();
-			this.config.table.height = window.screen.height - 144;
+			this.config.table.height = window.screen.height - 94;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 			this.validator = new schema( this.config.rules );
 		},

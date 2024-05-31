@@ -43,22 +43,7 @@
 						filterShow:false,
 					},
 					table:{
-						columns: [
-							/*{field: 'Cus', title: '客户', width: 140, titleAlign: 'center', columnAlign: 'center',isResize:true ,isFrozen: true},
-							{field: 'Task', title: '业务员', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'LastMBDate', title: '上次结算时间', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'LastAmt', title: '上期余额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'ConfAmtT', title: '确收金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'ConfArea', title: '确收面积', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'AdjustAmt', title: '调整金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'CusPayAmt', title: '本期收款', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'OrdNeedAmt', title: '订单未送', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'CurAmt', title: '当前欠款', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'PreAmt', title: '预警金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'MinAmtCond', title: '终止金额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'LeftMinAmtCond', title: '终止金额剩余', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},
-							{field: 'CurNeedPay', title: '当前需付总额', width: 100, titleAlign: 'center', columnAlign: 'center',isResize:true},*/
-						],
+						columns: [],
 		                height : 0
 					},
 					dialog:{
@@ -98,8 +83,7 @@
 		methods:{
 			cusContact( data ){
 				let self = this;
-				//this.config.table.columns = this.$options.data().config.table.columns;
-				this.formData =  this.$options.data().formData;
+				this.formData =  this.$options.data().formData
 				this.$request.staff.frec.cusContact( data ).then(res=>{
 					let columnNum = self.config.table.columns.length;
 					if(res.have_adjust == 1 && self.config.table.columns[columnNum-1].field != 'adjustCusContact' ){
@@ -164,7 +148,6 @@
 		},
 		mounted(){
 			this.validator = new schema(this.updateRules);
-			//this.cusContact( this.filterForm );
 			this.getTableConfig();
 			this.config.table.height  = window.screen.height - 136;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());

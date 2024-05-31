@@ -3,143 +3,88 @@
 		<van-sticky :offset-top="46">
 			<chart-header-select :show.sync="config.popup.chartSelect.show" :statisType="config.selectOption.statisType" :chartType="config.selectOption.chartType" :chartProperties="config.selectOption.chartProperties" @selectOption="selectOption">
 			</chart-header-select>
-			<div class="van-row">
-				<div class="van-col van-col--12">
-					<van-button plain hairline type="info" style="width:100%" @click="onRefresh()">刷新</van-button>
-				</div>
-				<div class="van-col van-col--12">
-					<van-button plain hairline type="info" style="width:100%"  @click="config.popup.filterShow = true">筛选</van-button>
-				</div>
-			</div>
 		</van-sticky>
-		<div v-if="!config.chart.show">
-			<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
-				<div slot="default" style="padding:0.5rem;">
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							坑型:    
-							<span style="color:#1da02b;">{{ item.Flutes }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							业务编码:
-							<span style="color:#1da02b;">{{ item.TaskId }}</span>
-						</div>
+		<drag-menu 
+			defpositon="rt" 
+			:popMenu="false"
+			:pattern="{icon: 'filter-o'}"
+			value="筛选"
+			@fabClick="menuClick"
+		>
+		</drag-menu>
+		<div class="page-color" v-if="!config.chart.show">
+			<card 
+				:title="item.title" 
+				:is-shadow="true"
+				v-for="(item,index) in listInfo" 
+				:key="index"
+			>
+				<div class="card-body-container">
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">总|订单面积:</div>
+						<span class="mg-left-20">{{ item.sumArea }}㎡</span>
+						<span class="mg-left-20">{{ item.sumOrdArea }}㎡</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							业务员:  
-							<span style="color:#1da02b;">{{ item.TaskName }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							客户编号:
-							<span style="color:#1da02b;">{{ item.CusId }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt red-color">体积</div>|
+						<div class="card-body-txt blue-color">长度</div>:
+						<span class="mg-left-20 red-color">{{ item.sumOrdVol }}m³</span>
+						<span class="mg-left-20 blue-color">{{ item.sumLength }}m</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							客户简称:
-							<span style="color:#1da02b;">{{ item.CusShortName }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							总面积:  
-							<span style="color:#1da02b;">{{ item.sumArea }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">总金额:</div>
+						<span class="mg-left-20">{{ item.sumAmt }}元</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							总订单面积:
-							<span style="color:#1da02b;">{{ item.sumOrdArea }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							总体积:    
-							<span style="color:#1da02b;">{{ item.sumOrdVol }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt red-color">订单总数</div>|
+						<div class="card-body-txt blue-color">总款数:</div>
+						<span class="mg-left-20 red-color">{{ item.sumQty }}</span>
+						<span class="mg-left-20 blue-color">{{ item.sumCount }}</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							总长度:
-							<span style="color:#1da02b;">{{ item.sumLength }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							总金额:
-							<span style="color:#1da02b;">{{ item.sumAmt }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">单坑面积|</div>
+						<div class="card-body-txt">长度:</div>
+						<span class="mg-left-20">{{ item.sumArea1 }}㎡</span>
+						<span class="mg-left-20">{{ item.sumLength1 }}m</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							订单总数:
-							<span style="color:#1da02b;">{{ item.sumQty }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							总款数:
-							<span style="color:#1da02b;">{{ item.sumCount }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">单坑金额|</div>
+						<div class="card-body-txt">款数:</div>
+						<span class="mg-left-20">{{ item.sumAmt1 }}元</span>
+						<span class="mg-left-20">{{ item.sumCount1 }}</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							单坑面积:
-							<span style="color:#1da02b;">{{ item.sumArea1 }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							单坑长度:
-							<span style="color:#1da02b;">{{ item.sumLength1 }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">双坑面积|</div>
+						<div class="card-body-txt">长度:</div>
+						<span class="mg-left-20">{{ item.sumArea2 }}㎡</span>
+						<span class="mg-left-20">{{ item.sumLength2 }}m</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							单坑金额:
-							<span style="color:#1da02b;">{{ item.sumAmt1 }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							单坑款数:
-							<span style="color:#1da02b;">{{ item.sumCount1 }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">双坑金额|</div>
+						<div class="card-body-txt">款数:</div>
+						<span class="mg-left-20">{{ item.sumAmt2 }}元</span>
+						<span class="mg-left-20">{{ item.sumCount2 }}</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							双坑面积:
-							<span style="color:#1da02b;">{{ item.sumArea2 }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							双坑长度:
-							<span style="color:#1da02b;">{{ item.sumLength2 }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">三坑面积|</div>
+						<div class="card-body-txt">长度:</div>
+						<span class="mg-left-20">{{ item.sumArea3 }}㎡</span>
+						<span class="mg-left-20">{{ item.sumLength3 }}m</span>
 					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							双坑金额:
-							<span style="color:#1da02b;">{{ item.sumAmt2 }}</span>
-							</div>
-						<div class="van-col van-col--10">
-							双坑款数:
-							<span style="color:#1da02b;">{{ item.sumCount2 }}</span>
-						</div>
-					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							三坑面积:
-							<span style="color:#1da02b;">{{ item.sumArea3 }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							三坑长度:
-							<span style="color:#1da02b;">{{ item.sumLength3 }}</span>
-						</div>
-					</div>
-					<div class="van-row van-row--flex van-row--justify-center">
-						<div class="van-col van-col--10">
-							三坑金额:
-							<span style="color:#1da02b;">{{ item.sumAmt3 }}</span>
-						</div>
-						<div class="van-col van-col--10">
-							三坑款数:
-							<span style="color:#1da02b;">{{ item.sumCount3 }}</span>
-						</div>
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">三坑金额|</div>
+						<div class="card-body-txt">款数:</div>
+						<span class="mg-left-20">{{ item.sumAmt3 }}元</span>
+						<span class="mg-left-20">{{ item.sumCount3 }}</span>
 					</div>
 				</div>
-				<div slot="footer" style="text-align: right;">
-					<van-button size="mini" type="info" @click="detailShowClick( item )">订单</van-button>
+				<div slot="actions" class="card-actions">
+					<div class="card-actions-item" @click="detailShowClick( item )">
+						<van-icon color="#3c9cff" class-prefix="iconfont" name="caidan" size="18"/>
+						<span class="card-actions-item-text blue-color">详情</span>
+					</div>
 				</div>
-			</van-panel>
+			</card>
 			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
 				我也是有底线的
 	  		</div>
@@ -148,37 +93,58 @@
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="returnQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<uni-check-box
+					label="日期"
+					:localdata="config.radio.options"
+					:radioData.sync="filterForm.dateType" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 				<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件"/>
 			</div>
 		</popup-filter>
 	</div>
 </template>
 <script>
-	import { Button, Field, SwitchCell, Panel, Sticky } from 'vant';
+	import { Button, Icon, Field, SwitchCell, Sticky } from 'vant';
 	import ChartHeaderSelect from '@/components/subject/ChartHeaderSelect.vue';
 	import StatisOrderList from '@/components/subject/StatisOrderList.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import HighChart from '@/components/subject/chart/HighChart';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import Card from '@/components/subject/card/Card.vue'
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	import DragMenu from '@/components/subject/fab/DragMenu.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+	
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Icon.name]: Icon,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
-			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 
 			ChartHeaderSelect,
 			StatisOrderList,
 			PopupFilter,
 			RadioCell,
-			NewTimePicker,
-			HighChart
+			HighChart,
+
+			Card,
+			UniCheckBox,
+			TimeRangePicker,
+			DragMenu
 		},
 		data(){
 			return {
@@ -261,6 +227,9 @@
 			}
 		},
 		methods:{
+			menuClick() {
+				this.config.popup.filterShow = true
+			},
 			onRefresh(){
 				this.getOrderSum( this.filterForm );
 			},
@@ -279,25 +248,18 @@
 				}
 				this.onRefresh( this.filterForm );
 			},
-			getOrderSumConfig( isReset = false ){
-				let self = this;
-				this.$request.staff.statis.getOrderSumConfig().then(res=>{
-					if( this.config.getConfig ){
-						self.filterForm.beginDate = res.result.GetOrderSumBeginDate;
-						self.filterForm.endDate = res.result.GetOrderSumEndDate;
-					}
-					self.pageConfig.minDate = res.result.GetOrderSumMinDate;
-					self.pageConfig.maxDate = res.result.GetOrderSumMaxDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.getOrderSum( this.filterForm );
-				});
+			async getOrderSumConfig( rePages = false ){
+				const { result } = await getWebConfig({paramType: 'staffStatis'})
+				if( this.config.getConfig ) {
+					this.filterForm.beginDate = result.GetOrderSumBeginDate
+					this.filterForm.endDate = result.GetOrderSumEndDate
+				}
+				this.pageConfig.minDate = result.GetOrderSumMinDate
+				this.pageConfig.maxDate = result.GetOrderSumMaxDate
+				//是否加载页面
+				if( rePages ) {
+					await this.getOrderSum( this.filterForm )
+				}
 			},
 			getOrderSum( data ){
 				let self = this;
@@ -398,7 +360,7 @@
 		},
 		mounted(){
 			this.filterForm.statisState = this.config.selectOption.statisType[0].value;
-			this.getOrderSumConfig();
+			this.getOrderSumConfig(true);
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
@@ -416,3 +378,7 @@
 		}
 	}
 </script>
+
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

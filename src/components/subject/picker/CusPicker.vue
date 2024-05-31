@@ -12,6 +12,10 @@
 </template>
 <script>
 	import { Icon, Popup, Picker, Field, Search } from 'vant';
+
+	/*api接口*/
+	import { fetchDataList } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Icon.name]: Icon,
@@ -23,7 +27,6 @@
 		props:['cusName', 'showCHN'],
 		data(){
 			return {
-				cusId:this.cusName,
 				popupShow:false,
 				columns:[],
 				defaultIndex:-1,
@@ -33,52 +36,46 @@
 		},
 		methods:{
 			cusPickerConfirm( value, index ){
-				this.defaultIndex = index;
-				this.cusId = value.key;
+				this.defaultIndex = index
+				this.cusId = value.key
 				if( this.showCHN ){
-					this.cusCHN = '客户名称：' + value.name;
+					this.cusCHN = value.name
 				}
-				this.cusPickerOverlay();
+				this.cusPickerOverlay()
 			},
-			cusPickerSearch(){
-				let self = this;
-				this.$request.staff.frec.cusPicker( this.searchData ).then(res=>{
-					self.columns = [];
-					if( res.result.length <= 0 ){
-						return 
+			async cusPickerSearch(){
+				this.columns = this.$options.data().columns
+				const { result } = await fetchDataList({
+					paramType: 'cus', 
+					keyWord: this.searchData
+				})
+				result.forEach((item,idx)=> {
+					if( this.cusId == item.CusId ){
+						this.cusCHN = item.name;
+						this.defaultIndex = idx;
 					}
-					res.result.forEach((item,index)=>{
-						if( self.cusId == item.CusId ){
-							self.cusCHN = '客户名称：' + item.name;
-							self.defaultIndex = index;
-						}
-						self.columns.push({text:item.CusName + '--' +item.CusId ,key:item.CusId, name:item.CusName});
-					});
-				}).then(()=>{
-					if( this.cusName ){
-						this.findCus(this.cusName)
-					}
-				});
-
+					this.columns.push({text:item.CusName + '--' +item.CusId ,key:item.CusId, name:item.CusName})
+				})
+				if( this.cusName ) await this.findCus(this.cusName)
 			},
 			cusPickerOverlay(){
 				this.popupShow = false;
 			},
 			cusPickerClean(){
-				this.defaultIndex = -1;
-				this.cusId = '';
+				this.defaultIndex = -1
+				this.cusId = ''
 				if( this.showCHN ){
-					this.cusCHN = '';
+					this.cusCHN = ''
 				}
-				this.searchData = '';
-				this.cusPickerSearch();
-				this.cusPickerOverlay();
+				this.searchData = ''
+				this.cusPickerSearch()
+				this.cusPickerOverlay()
 			},
 			findCus( cusId ){
 				if( this.columns.length <= 0 || !cusId ){
-					this.defaultIndex = -1;
-					this.cusCHN = '';
-					return false;
+					this.defaultIndex = -1
+					this.cusCHN = ''
+					return false
 				}
 				this.columns.forEach((item,index)=>{
 					if( item.key == cusId ){
@@ -88,22 +85,29 @@
 			}
 		},
 		mounted(){
-			this.cusPickerSearch();
+			this.cusPickerSearch()
 		},
 		created(){
 
 		},
 		computed:{
-
+			cusId: {
+				get() {
+					return this.$props.cusName
+				},
+				set( nVal ) {
+					this.$emit("update:cusName", nVal)
+				}
+			}
 		},
 		watch:{
-			cusName(newV,oldV){
+			/*cusName(newV,oldV){
 				this.cusId = newV;
 				this.findCus(newV)
 			},
 			cusId(newV,oldV){
 				this.$emit("update:cusName", newV);
-			}
+			}*/
 		}
 	}
 </script>

@@ -70,18 +70,20 @@ const paper = {
 	paperDailyUsedConfig(){
 		return post( window.jpdn_domain_staff + 'dailyUsed/config');
 	},
-	paperDailyUsedInfo( date, type ){
+	paperDailyUsedInfo( data, type ){
 		let postData;
 		if( type == 0 ){
 			postData = {
 				paper_daily_used_type : type,
-				paper_daily_used_info_date : date
+				paper_daily_used_info_date : data.outDate,
+				paper_daily_used_class: data.class
 			};
 		}else{
 			postData = {
 				paper_daily_used_type : type,
-				paper_daily_used_info_begin_date : date.beginDate,
-				paper_daily_used_info_end_date : date.endDate
+				paper_daily_used_info_begin_date : data.beginDate,
+				paper_daily_used_info_end_date : data.endDate,
+				paper_daily_used_class: data.class
 			};
 		}
 		return post( window.jpdn_domain_staff + 'dailyUsed/info',postData);
@@ -92,14 +94,16 @@ const paper = {
 			postData = {
 				paper_daily_used_type : type,
 				paper_daily_used_info_date : data.OutDate,
-				paper_daily_used_code: data.PaperCode
+				paper_daily_used_code: data.PaperCode,
+				paper_daily_used_class: data.class
 			};
 		}else{
 			postData = {
 				paper_daily_used_type : type,
 				paper_daily_used_info_begin_date : data.beginDate,
 				paper_daily_used_info_end_date : data.endDate,
-				paper_daily_used_code: data.PaperCode
+				paper_daily_used_code: data.PaperCode,
+				paper_daily_used_class: data.class
 			};
 		}
 		return post( window.jpdn_domain_staff + 'dailyUsed/detail', postData);
@@ -107,7 +111,8 @@ const paper = {
 	paperDailyUsedDateInfo(data){
 		let postData = {
 			paper_daily_used_beigin_date: data.beginDate,
-			paper_daily_used_end_date:data.endDate
+			paper_daily_used_end_date:data.endDate,
+			paper_daily_used_class: data.class
 		};
 		return post( window.jpdn_domain_staff + 'dailyUsed/dateInfo', postData);
 	},

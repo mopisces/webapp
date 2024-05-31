@@ -17,9 +17,17 @@
 					<span class="build-item">{{ timeData.seconds }}</span>
 				</template>
 			</van-count-down>
-			<div slot="price">¥{{ cardInfo.productPrice }}/㎡</div>
+			<div slot="price">
+				<span class="group-card-price-text">¥{{ cardInfo.productPrice }}</span>
+				/㎡
+			</div>
 			<div slot="origin-price">¥{{ cardInfo.marketPrice }}/㎡</div>
-			<van-image :src="cardInfo.pic" slot="thumb"/>
+			<van-image 
+				:src="cardInfo.pic" 
+				slot="thumb" 
+				width="85" 
+				height="85"
+			/>
 		</van-card>
 		<van-field v-model="formData.cusOrderId" label="客订单号" input-align="center" placeholder="未填写则系统自动生成"></van-field>
 		<van-field v-model="formData.poN" label="PO号" input-align="center" placeholder="输入PO号"></van-field>
@@ -44,7 +52,16 @@
 			</div>
 		</van-submit-bar>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="t" @saveOrder="saveOrder" :isGroup="true"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
+		<build-result 
+			v-if="config.result.show" 
+			:resultShow.sync="config.result.show" 
+			:isGroup.sync="config.result.isGroup" 
+			:isSuccess="config.result.isSuccess" 
+			:isPay="pageConfig.directCreditPay == 1 && pageConfig.useCreditPay == 1"
+			:cusOrderId="config.result.cusOrderId" 
+			:failMsg="config.result.failMsg"
+			@clearFormData="clearFormData()" 
+		></build-result>
 	</div>
 </template>
 <script>
@@ -120,13 +137,15 @@
 					title        : '',
 					productPrice : '',
 					marketPrice  : '',
-					pic          : window.jpdn_domain_imgDomain + 'zwtp.png',
+					pic          : null
 				},
 				pageConfig : {
 					minQty  : 0,
 					maxQty  : 0,
 					minDate : '',
-					maxDate : ''
+					maxDate : '',
+					useCreditPay: 0,
+					directCreditPay: 0,
 				},
 				helpInfo:{},
 				result : {
@@ -177,14 +196,14 @@
 						self.cardInfo.title        = res.result.product_info.Title;
 						self.cardInfo.productPrice = res.result.product_info.Price;
 						self.cardInfo.marketPrice  = res.result.product_info.MarketPrice;
-						if( res.result.product_info.Pic[0] ){
-							self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];
-						}
+						self.cardInfo.pic = res.result.product_info.Pic
 						self.pageConfig.minQty = parseInt(res.result.product_info.BuildMin);
 						self.pageConfig.maxQty = parseInt(res.result.product_info.BuildMax);
 						if( res.result.page_config.UseAliPay == 1 || res.result.page_config.UseWxPay == 1 ){
 							self.config.result.isGroup = true;
 						}
+						self.pageConfig.buildScoreInfoChiText = res.result.page_config.BuildScoreInfoChiText
+						self.pageConfig.showBuildCAddress = res.result.page_config.ShowBuildCAddress
 						self.pageConfig.minDate = res.result.page_config.BuildMinDate;
 						self.pageConfig.maxDate = res.result.page_config.BuildMaxDate;
 						self.formData.date      = res.result.page_config.BuildDeliveryDate;
@@ -289,15 +308,20 @@
 				this.getConfig( this.formData.productId );
 			}
 		},
-		created(){
-			this.$store.commit('client/setHeaderTitle','淘宝箱下单');
+		async created(){
+			await this.$store.commit('client/setHeaderTitle', '淘宝箱下单')
+			await this.$store.commit('client/setTabbarActive', 'group')
 			document.documentElement.scrollTop = 0;
 		},
 		mounted(){
-			if( typeof(this.$route.params.productId) != 'undefined' ){
-				this.formData.productId = this.$route.params.productId ;
+			if( this.$route.query ){
+				this.formData.productId = this.$route.query.productId
+				this.$store.commit('client/setBackPath', '/mall/product/detail?productId=' + this.$route.query.productId)
+				this.$store.commit('client/setLoginRedirect', 'group/build/t?productId=' + this.$route.query.productId)
 			}else if( sessionStorage.getItem('group-product-id') != null ){
 				this.formData.productId = sessionStorage.getItem('group-product-id');
+				this.$store.commit('client/setBackPath', '/mall/product/detail?productId=' + this.formData.productId)
+				this.$store.commit('client/setLoginRedirect', 'group/build/t?productId=' + this.formData.productId)
 			}else{
 				this.$router.go(-1);
 			}
@@ -319,7 +343,13 @@
 			
 		},
 		watch:{
-
+			'config.result.show': {
+				handler( nVal, oVal ) {
+					if( nVal ) {
+						window.scrollTo(0,0)
+					}
+				}
+			},
 		}
 	}
 </script>

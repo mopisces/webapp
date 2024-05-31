@@ -7,8 +7,46 @@
 			<van-button plain hairline type="info" size="normal" style="width:50%;" @click="config.popup.filterShow = true">筛选</van-button>
 		</van-sticky>
 		<high-chart v-if=" config.chart.show " :options="config.chart"></high-chart>
-		<div v-else>
-			<van-panel v-for="(item,index) in info.panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
+		<div class="page-color" v-else>
+			<card 
+				:title="item.title" 
+				:is-shadow="true"
+				v-for="(item,index) in info.panelList" 
+				:key="index"
+			>
+				<div class="card-body-container">
+					<div class="card-body-item card-body-item-100">
+						<span>库存数量:
+							<span class="mg-left-20">{{ item.StockQty }}</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>库存面积:
+							<span class="mg-left-20">{{ item.StockArea }}㎡</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>库存金额:
+							<span class="mg-left-20">{{ item.StockAmt}}元</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>合计数量:
+							<span class="mg-left-20">{{ sumCount }}</span>
+						</span>
+					</div>
+				</div>
+				<template v-if="filterForm.statisState!=0">
+					<div slot="actions" class="card-actions">
+						<div class="card-actions-item" @click="detailShowClick(item)">
+							<van-icon color="#3c9cff" class-prefix="iconfont" name="caidan" size="18"/>
+							<span class="card-actions-item-text blue-color">订单</span>
+						</div>
+					</div>
+				</template>
+				
+			</card>
+			<!-- <van-panel v-for="(item,index) in info.panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
 				<div slot="default" style="padding:0.5rem;">
 					<div class="van-row van-row--flex van-row--justify-center">
 						<div class="van-col van-col--10">客户编号:
@@ -47,18 +85,31 @@
 				<div slot="footer" style="text-align: right;">
 					<van-button size="mini" type="info" @click="detailShowClick(item)">订单</van-button>
 				</div>
-			</van-panel>
+			</van-panel> -->
 			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;" v-if="finished">
-				我也是有底线的
+				我也是有底线的1
 	  		</div>
   		</div>
 		<statis-order-list :show.sync="config.popup.detailShow" :filterForm="filterForm" type="stockQty" v-if="config.popup.detailShow"></statis-order-list>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<cus-picker ref="cusPicker" :cusName.sync="filterForm.cusName"></cus-picker>
-				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<!-- <radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell> -->
+				<uni-check-box
+					label="日期"
+					:localdata="config.radio.options"
+					:radioData.sync="filterForm.dateType" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
+				<!-- <new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker> -->
 				<van-field label="在库超期天数" input-align="center" v-model="filterForm.remainDay" slot="filter-field-4" type="number"></van-field>
 				<van-field label="交货超期天数" input-align="center" v-model="filterForm.diffDay" type="number"></van-field>
 				<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件"/>
@@ -67,30 +118,42 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, SwitchCell, Panel, Sticky } from 'vant';
+	import { Button, Icon, Field, SwitchCell, Sticky } from 'vant';
 	import ChartHeaderSelect from '@/components/subject/ChartHeaderSelect.vue';
 	import StatisOrderList from '@/components/subject/StatisOrderList.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import HighChart from '@/components/subject/chart/HighChart';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import Card from '@/components/subject/card/Card.vue'
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Icon.name]: Icon,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
-			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 
 			ChartHeaderSelect,
 			StatisOrderList,
 			PopupFilter,
 			RadioCell,
-			NewTimePicker,
+			//NewTimePicker,
 			HighChart,
-			CusPicker
+			CusPicker,
+			
+			Card,
+			UniCheckBox,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -179,27 +242,18 @@
 				}
 				this.onRefresh( this.filterForm );
 			},
-			getOrdStockConfig( isReset = false ){
-				let self = this;
-				this.$request.staff.statis.getOrdStockConfig().then(res=>{
-					if( this.config.getConfig ){
-						self.filterForm.beginDate = res.result.date_info.GetOrdStockBeginDate;
-						self.filterForm.endDate   = res.result.date_info.GetOrdStockEndDate;
-						self.filterForm.remainDay = res.result.limit_data.GetOrdStockiDiffDDay;
-						self.filterForm.diffDay   = res.result.limit_data.GetOrdStockiRemainDay;
-					}
-					self.pageConfig.maxDate   = res.result.date_info.GetOrdStockMaxDate;
-					self.pageConfig.minDate   = res.result.date_info.GetOrdStockMinDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.getOrdStock( this.filterForm );
-				});
+			async getOrdStockConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'staffStatis'})
+				if(this.config.getConfig) {
+					this.filterForm.beginDate = result.GetOrdStockBeginDate
+					this.filterForm.endDate = result.GetOrdStockEndDate
+					this.filterForm.remainDay = result.GetOrdStockiDiffDDay
+					this.filterForm.diffDay = result.GetOrdStockiRemainDay
+				}
+				this.pageConfig.maxDate = result.GetOrdStockMaxDate
+				this.pageConfig.minDate = result.GetOrdStockMinDate
+				if( isReset ) return 
+				await this.getOrdStock( this.filterForm )
 			},
 			getOrdStock( data ){
 				let self = this;
@@ -300,3 +354,6 @@
 		}
 	}
 </script>
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

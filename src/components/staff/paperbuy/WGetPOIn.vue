@@ -152,3 +152,7 @@
 		}
 	}
 </script>
+
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

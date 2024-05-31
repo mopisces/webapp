@@ -1,7 +1,6 @@
 <template>
 	<div>
 		<wx-scan :scanResult.sync="formData.stockInNo" urlType="1"></wx-scan>
-		<!-- <scan-code :scanResult.sync="formData.stockInNo"></scan-code> -->
 		<van-field readonly label="门幅(mm)" v-model="autoData.paperWidth" :placeholder="config.field.placeholder" input-align="center" :error="config.field.error" class="field-readonly"></van-field>
 		<van-field readonly label="纸质" v-model="autoData.paperCode" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error" class="field-readonly"></van-field>
 		<van-field readonly label="克重(g)" v-model="autoData.paperWt" input-align="center" :placeholder="config.field.placeholder" :error="config.field.error" class="field-readonly"></van-field>
@@ -16,8 +15,11 @@
 	import { Button, Field, Dialog, Toast } from 'vant';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import WxScan from '@/components/subject/WxScan.vue';
-	/*import ScanCode from '@/components/subject/scancode/ScanCode.vue';*/
 	import schema from 'async-validator';
+
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -25,7 +27,6 @@
 			[Toast.name]: Toast,
 
 			NewTimePicker,
-			/*ScanCode,*/
 			WxScan
 		},
 		data(){
@@ -58,7 +59,6 @@
 				rules:{
 					stockInNo : [
 						{  required: true, message: '请输入订单号'},
-						/*{  type: 'string', pattern:'^[a-zA-Z0-9]{12}$', message: '订单号格式错误' } */
 					],
 					inOpTime  : [
 						{ required : true, message : '请选择入库日期' },
@@ -82,17 +82,12 @@
 			}
 		},
 		methods:{
-			getPageConfig(){
-				let self = this;
-				this.$request.staff.paper.paperConfig().then(res=>{
-					self.pageConfig.maxDate = res.result.DoRStockInMaxDate;
-					self.pageConfig.minDate = res.result.DoRStockInMinDate;
-					self.formData.inOpTime  = res.result.DoRStockInOpTime;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					})
-				});
+			async getPageConfig(){
+				const { result } = await getWebConfig({paramType: 'staffPaper'})
+				this.pageConfig.maxDate = result.DoRStockInMaxDate
+				this.pageConfig.minDate = result.DoRStockInMinDate
+				this.formData.inOpTime  = result.DoRStockInOpTime
+				this.config.popup.timePicker.isFinishLoad = true
 			},
 			paperGetInInfo( data ){
 				let self = this;

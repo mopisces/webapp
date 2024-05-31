@@ -1,20 +1,56 @@
 <template>
-	<div>
+	<div class="page-color">
 		<van-sticky :offset-top="50">
 			<van-button plain hairline type="info" style="width:100%"  @click="config.popup.rightFilter.show = true">筛选</van-button>
 		</van-sticky>
-		<van-field label="客户" readonly v-model="info.Customer" input-align="center" style="line-height:36px;" />
-		<van-field label="业务员" readonly v-model="info.Manager" input-align="center" style="line-height:36px;" />
-		<van-field label="上次月结日期" readonly v-model="info.EndDate" input-align="center" style="line-height:36px;" />
-		<van-field label="上期余额" readonly v-model="info.LastAmt" input-align="center" style="line-height:36px;" />
-		<van-field label="确收金额" readonly v-model="info.ConfAmt" input-align="center" style="line-height:36px;" />
-		<van-field label="调整金额" readonly v-model="info.AdjustAmt" input-align="center" style="line-height:36px;" />
-		<van-field label="收款金额" readonly v-model="info.CusPayAmt" input-align="center" style="line-height:36px;" />
-		<van-field label="期末欠款" readonly v-model="info.CurAmt" input-align="center" style="line-height:36px;" />
+		<card 
+			:title="info.Customer"
+			:extra="info.Manager"
+			:is-shadow="true"
+		>
+			<div class="card-body-container">
+				<div class="card-body-item card-body-item-100">
+					<span>上次月结:
+						<span>{{ info.EndDate }}</span>
+					</span>
+				</div>
+				<div class="card-body-item card-body-item-50">
+					<span>上期余额:
+						<span>{{ info.LastAmt }}</span>
+					</span>
+				</div>
+				<div class="card-body-item card-body-item-50">
+					<span>确收金额:
+						<span>{{ info.ConfAmt }}</span>
+					</span>
+				</div>
+				<div class="card-body-item card-body-item-50">
+					<span>调整金额:
+						<span>{{ info.AdjustAmt }}</span>
+					</span>
+				</div>
+
+				<div class="card-body-item card-body-item-50">
+					<span>收款金额:
+						<span>{{ info.CusPayAmt }}</span>
+					</span>
+				</div>
+				<div class="card-body-item card-body-item-50">
+					<span>期末欠款:
+						<span>{{ info.CurAmt }}</span>
+					</span>
+				</div>
+			</div>
+		</card>
+		
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 				<van-switch-cell v-model="config.switchCell.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>
@@ -23,8 +59,15 @@
 <script>
 	import { Button, Field, SwitchCell, Sticky } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	import Card from '@/components/subject/card/Card.vue'
+
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -33,7 +76,9 @@
 			[Sticky.name]: Sticky,
 
 			PopupFilter,
-			NewTimePicker,
+			//NewTimePicker,
+			TimeRangePicker,
+			Card
 		},
 		data(){
 			return {
@@ -72,28 +117,16 @@
 			}
 		},
 		methods:{
-			getConfig( isReset = false ){
-				this.$request.client.frec.statisContactConfig().then(res=>{
-					if( res.errorCode == '00000' ){
-						this.pageConfig.maxDate = res.result.Wap0StatisContactMaxDate;
-						this.pageConfig.minDate = res.result.Wap0StatisContactMinDate;
-						if( this.config.getConfig ){
-							this.filterForm.beginDate = res.result.Wap0StatisContactBeginDate;
-							this.filterForm.endDate = res.result.Wap0StatisContactEndDate;
-						}
-					}
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.$nextTick(()=>{
-						this.fetchData();
-					});
-				})
+			async getConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'clientFrec'})
+				this.pageConfig.maxDate = result.maxDate
+				this.pageConfig.minDate = result.minDate
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.beginDate
+					this.filterForm.endDate = result.endDate
+				}
+				if( isReset ) return 
+				await this.fetchData()
 			},
 			fetchData(){
 				this.info = this.$options.data().info;
@@ -152,3 +185,7 @@
 		}
 	}
 </script>
+
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

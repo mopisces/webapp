@@ -18,9 +18,16 @@
 				<field-label-variable :value.sync="formData.strSchArea" label="传单库区" placeholder="传单库区" maxlength="10" readonly="readonly"></field-label-variable>
 			</div>
 		</div>
-		<van-field readonly clickable label="库区" placeholder="请选择入库库区" input-align="center" @click=" config.popup.area.show = true " v-model="formData.strStockArea" v-if="pageInfo.bMStockArea">
+		<uni-check-box
+			label="库区"
+			:localdata="pageInfo.stockAreaOpt"
+			:radioData.sync="formData.strStockArea" 
+			:map="{text: 'title', value: 'value'}"
+		>
+		</uni-check-box>
+		<!-- <van-field readonly clickable label="库区" placeholder="请选择入库库区" input-align="center" @click=" config.popup.area.show = true " v-model="formData.strStockArea" v-if="pageInfo.bMStockArea">
 			<van-icon name="arrow" slot="right-icon"/>
-		</van-field>
+		</van-field> -->
 		<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTimeShow.sync="config.popup.timePicker.show" :dateTime.sync="formData.dInDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="选择入库日期"></new-time-picker>
 	   	<van-field v-model="formData.strRemark" autosize label="备注" type="textarea" maxlength="50" placeholder="请输入备注" rows="1"/>
 	   	<div class="van-row" style="text-align:center;padding:0.625rem;" >
@@ -31,10 +38,16 @@
 				<van-button type="primary" size="small" style="width:60%" @click="resetClick">重置</van-button>
 			</div>
 		</div>
-		<van-popup v-model="config.popup.area.show" round position="bottom" :style="{ height: '50%' }" closeable>
+		<!-- <van-popup v-model="config.popup.area.show" round position="bottom" :style="{ height: '50%' }" closeable>
 			<div style="height:2.5rem;width100%;"></div>
 			<radio-cell :radioInfo.sync="formData.strStockArea" :radioColumns="pageInfo.stockAreaOpt" title=""></radio-cell>
-		</van-popup>
+			<uni-check-box
+				:localdata="pageInfo.stockAreaOpt"
+				:radioData.sync="formData.strStockArea" 
+				:map="{text: 'title', value: 'value'}"
+			>
+			</uni-check-box>
+		</van-popup> -->
 		<template v-if="pageInfo.bSAreaControl">
 			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" even-bg-color="#fafafa" :height="config.table.height" @on-custom-comp="customCompFunc"></v-table>
 		</template>
@@ -48,6 +61,8 @@
 	import OpClassField from '@/components/subject/staff/OpClassField.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import schema from 'async-validator';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue';
 	export default {
 		components:{
 			[Popup.name]: Popup,
@@ -61,7 +76,8 @@
 			WxScan,
 			RadioCell,
 			OpClassField,
-			FieldLabelVariable
+			FieldLabelVariable,
+			UniCheckBox
 		},
 		data(){
 			return {

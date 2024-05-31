@@ -35,8 +35,14 @@
 				<van-field label="板宽" v-model="filterForm.boardWidth" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<van-field label="压线" v-model="filterForm.scoreInfo" placeholder="模糊查询" input-align="center"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
-				<new-time-picker :dateTime.sync="filterCount.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker :dateTime.sync="filterCount.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<!-- <new-time-picker :dateTime.sync="filterCount.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker :dateTime.sync="filterCount.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker> -->
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 			</div>
 		</popup-filter>
 	</div>
@@ -45,8 +51,10 @@
 	import { Button, Icon, Popup, Field, Step, Steps, Sticky } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -58,9 +66,11 @@
 			[Sticky.name]: Sticky,
 			
 			PopupFilter,
-			NewTimePicker,
+			//NewTimePicker,
 			PrevNext,
-			NewPopup
+			NewPopup,
+
+			TimeRangePicker
 		},
 		data(){
 			return {

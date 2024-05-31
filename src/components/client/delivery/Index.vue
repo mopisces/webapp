@@ -14,18 +14,61 @@
 		<template v-if="config.field.show">
 			<v-table  is-horizontal-resize :is-vertical-resize="true" style="width:100%;"  :columns="config.table.columns" :table-data="fieldData" row-hover-color="#eee" row-click-color="#edf7ff" :height="config.table.height" even-bg-color="#fafafa"></v-table>
 		</template>
-		<new-popup :leftShow.sync="config.popup.leftPopup.show" title="客户信息" position="left" :isClose="true">
-			<div slot="new-popup-1">
-				<van-field v-model="leftPopupData.CusShortName" readonly label="客户简称" input-align="center"/>
-				<van-field v-model="leftPopupData.TaskName" readonly label="业务员" input-align="center"/>
-				<van-field v-model="filterForm.beginDate" readonly label="开始日期" input-align="center"/>
-				<van-field v-model="filterForm.endDate" readonly label="结束日期" input-align="center"/>
-				<van-field v-model="leftPopupData.iCount" readonly label="送货单笔数" input-align="center"/>
-				<van-field v-model="leftPopupData.DeliQty" readonly label="送货数" input-align="center"/>
-				<van-field v-model="leftPopupData.TSalesArea" readonly label="销售面积" input-align="center"/>
-				<van-field v-model="leftPopupData.TVolume" readonly label="送货立方" input-align="center"/>
-			</div>
-		</new-popup>
+		<van-popup 
+			v-model="config.popup.info.show" 
+			round 
+			:style="{ height: '14rem', width: '95%', backgroundColor: '#f1f1f1' }"
+		>
+			<card
+				:title="cusInfo.CusShortName"
+				:extra="cusInfo.TaskName"
+				:is-shadow="true"
+			>
+				<div class="card-body-container">
+					<div class="card-body-item card-body-item-100">
+						<span>
+							日期区间:
+							<span class="mg-left-20">
+								{{ filterForm.beginDate }}~{{ filterForm.endDate }}
+							</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>
+							送货单笔数:
+							<span class="mg-left-20">
+								{{ cusInfo.iCount }}
+							</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>
+							送货数量:
+							<span class="mg-left-20">
+								{{ cusInfo.DeliQty }}
+							</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>
+							销售面积:
+							<span class="mg-left-20">
+								{{ cusInfo.TSalesArea }}㎡
+							</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>
+							送货立方:
+							<span class="mg-left-20">
+								{{ cusInfo.TVolume }}m³
+							</span>
+						</span>
+					</div>
+				</div>
+			</card>
+		</van-popup>
+		
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<van-field label="订单编号" v-model="filterForm.orderId" placeholder="模糊查询" input-align="center"></van-field>
@@ -34,24 +77,37 @@
 				<van-field label="板宽" v-model="filterForm.boardWidth" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
 				<van-field label="压线" v-model="filterForm.lineBall" placeholder="模糊查询" input-align="center"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="模糊查询" input-align="center" type="number" maxlength="6"></van-field>
-				<new-time-picker :dateTime.sync="filterForm.beginDate" :minDate="filterForm.minDate" :maxDate="filterForm.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker :dateTime.sync="filterForm.endDate" :minDate="filterForm.minDate" :maxDate="filterForm.maxDate" label="结束日期"></new-time-picker>
+				<!-- <new-time-picker :dateTime.sync="filterForm.beginDate" :minDate="filterForm.minDate" :maxDate="filterForm.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker :dateTime.sync="filterForm.endDate" :minDate="filterForm.minDate" :maxDate="filterForm.maxDate" label="结束日期"></new-time-picker> -->
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="filterForm.maxDate"
+					:minDate.sync="filterForm.minDate"
+				></time-range-picker>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
 	</div>
 </template>
 <script>
-	import { Button, Icon, Field, SwitchCell, Step, Steps, Sticky } from 'vant';
+	import { Button, Icon, Popup, Field, SwitchCell, Step, Steps, Sticky } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
-	import NewPopup from '@/components/subject/NewPopup.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import Card from '@/components/subject/card/Card.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Icon.name]: Icon,
+			[Popup.name]: Popup,
 			[Field.name]: Field,
 			[SwitchCell.name]: SwitchCell,
 			[Step.name]: Step,
@@ -59,9 +115,10 @@
 			[Sticky.name]: Sticky,
 
 			PrevNext,
-			NewPopup,
 			PopupFilter,
-			NewTimePicker
+			//NewTimePicker,
+			Card,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -77,7 +134,9 @@
 						rightFilter:{
 							show : false
 						},
-						
+						info: {
+							show: false
+						}
 					},
 					prevNext:{
 						show : false
@@ -103,7 +162,14 @@
 					maxDate       : '',
 					minDate       : '',
 				},
-				leftPopupData  : {},
+				cusInfo: {
+					CusShortName: null,
+					TaskName: null,
+					iCount: null,
+					DeliQty: null,
+					TSalesArea: null,
+					TVolume: null,
+				},
 				isReset : false
 			}
 		},
@@ -114,32 +180,25 @@
 					this.dailyOrders(this.filterForm);
 				}
 			},
-			getConfig( isInit = true ){
-				let self = this;
-				this.$request.client.delivery.dailyConfig().then(res=>{
-					if( isInit ){
-						self.filterForm.beginDate = res.result.ClientDeliveryDailyBeginDate;
-						self.filterForm.endDate   = res.result.ClientDeliveryDailyEndDate;
-					}
-					self.filterForm.maxDate   = res.result.ClientDeliveryDailyMaxDate;
-					self.filterForm.minDate   = res.result.ClientDeliveryDailyMinDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.optionalDate();
-					});
-				});
+			async getConfig( isInit = true ){
+				const { result } = await getWebConfig({paramType: 'clientDeli'})
+				if( isInit ){
+					this.filterForm.beginDate = result.ClientDeliveryDailyBeginDate
+					this.filterForm.endDate = result.ClientDeliveryDailyEndDate
+				}
+				this.filterForm.maxDate = result.ClientDeliveryDailyMaxDate
+				this.filterForm.minDate = result.ClientDeliveryDailyMinDate
+				await this.optionalDate()
 			},
 			cusInfoClick(){
-				let self = this;
+				this.cusInfo = this.$options.data().cusInfo
 				this.$request.client.delivery.cusInfo( this.filterForm ).then(res=>{
-					if( res.errorCode != '00000' ){
-						self.leftPopupData = [];
-						return ;
+					if( res.errorCode == '00000' ){
+						this.cusInfo = res.result
 					}
-					self.leftPopupData = res.result;
 				}).then(()=>{
 					this.$nextTick(()=>{
-						this.config.popup.leftPopup.show = true;
+						this.config.popup.info.show = true
 					});
 				});
 			},
@@ -224,7 +283,7 @@
 		},
 		mounted(){
 			this.getTableConfig();
-			this.config.table.height  = window.screen.height - 275;
+			this.config.table.height  = window.screen.height - 210;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		updated(){
@@ -242,3 +301,6 @@
 		}
 	}
 </script>
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

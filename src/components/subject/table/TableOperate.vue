@@ -50,9 +50,9 @@
 			<van-button plain hairline type="primary" size="small" @click="dailyDetail()"  v-if=" rowData.last != 1 ">
 				详情
 			</van-button>
-			<van-button plain hairline type="primary" size="small" @click="clacAmtOrd()" v-else>
+			<!-- <van-button plain hairline type="primary" size="small" @click="clacAmtOrd()" v-else>
 				计算汇总金额
-			</van-button>
+			</van-button> -->
 		</div>
 		<!--导航模块-->
 		<div v-if=" field === 'amapPDNCus' ">
@@ -81,21 +81,14 @@
 				调整
 			</van-button>
 		</div>
-		<!-- 导航模块 单选
-		<div v-if=" field === 'amapPDNCusRadio' ">
-			<van-radio-group v-model="selectNo">
-				<van-radio name="1" shape="square">{{rowData.PListNo}}</van-radio>
-			</van-radio-group>
-		</div> -->
+		
 	</div>
 </template>
 <script>
-	import { Button, RadioGroup, Radio, Dialog, Toast  } from 'vant';
+	import { Button, Dialog, Toast  } from 'vant';
 	export default {
 		components:{
 			[Button.name]: Button,
-			[RadioGroup.name]: RadioGroup,
-			[Radio.name]: Radio,
 			[Toast.name]: Toast,
 		},
 		props:['rowData','field','index'],

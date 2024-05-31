@@ -29,6 +29,11 @@
 	import CopyRight from '@/components/subject/footer/CopyRight';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	import { clearLogin } from '@/util';
+	/*api接口*/
+	import { getSF, login, quickLogin, getUserInfo } from '@/api/common/index.js'
+	/*后台地址*/
+	import { backStageUrl } from '@/config/domain.js'
+	
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -99,12 +104,34 @@
 				this.formData.subFactoryId = value.key;
 				this.config.popup.show     = false;
 			},
-			getSF(){
-				let self = this;
+			async getSF(){
+				const { result } = await getSF()
+				const { factory_info, sub_factory } = result
+				this.pageInfo.factoryId = factory_info.FactoryId
+				this.pageInfo.factoryName = factory_info.FactoryName
+				this.pageInfo.factoryLogo = factory_info.FactoryLogo
+				this.config.field.show = false
+				if( sub_factory.length > 0 ) {
+					sub_factory.forEach((item,index)=>{
+						this.config.picker.columns.push({text:item.SShortName,key:item.SubFacId});
+						if( this.formData.subFactoryId == item.SubFacId ){
+							this.config.picker.defaultIndex = index
+						}
+					})
+					this.config.field.show = true
+				}
+
+				this.$nextTick(()=>{
+					if( this.config.field.show ){
+						this.formData.subFactory = this.config.picker.columns[this.config.picker.defaultIndex].text + '(' + this.config.picker.columns[this.config.picker.defaultIndex].key + ')'
+						this.formData.subFactoryId = this.config.picker.columns[this.config.picker.defaultIndex].key
+					}
+				})
+				/*let self = this;
 				this.$request.staff.login.getSF().then(res=>{
 					self.pageInfo.factoryId   = res.result.factory_info.FactoryId;
 					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
-					self.pageInfo.factoryLogo = window.jpdn_domain_imgDomain + res.result.factory_info.FactoryLogo;
+					self.pageInfo.factoryLogo = res.result.factory_info.FactoryLogo;
 					if( res.result.sub_factory.length !== 0 ){
 						res.result.sub_factory.forEach((item,index)=>{
 							self.config.picker.columns.push({text:item.SShortName,key:item.SubFacId});
@@ -125,7 +152,7 @@
 						}
 						
 					})
-				});
+				});*/
 			},
 			onLogin(){
 				let self = this;
@@ -138,54 +165,95 @@
 					Toast.fail(errors[0].message);
 				});				
 			},
-			login( data ){
-				let self = this;
+			async login( data ){
+				await this.$store.dispatch('user/login', {
+					user_name: data.userName.toUpperCase(),
+					user_pass: data.userPass,
+					user_type: data.userType,
+					sub_fac_id: data.subFactoryId
+				})
+				setTimeout(async ()=>{
+					if( this.$store.getters['user/accessToken'] && this.$store.getters['user/authMap'] ) {
+						await this.$store.dispatch('staff/permission', this.$store.getters['user/authMap'])
+						await this.$router.addRoutes(this.$store.state.staff.navList)
+						this.$router.push('/staff/index/menu')
+					}
+				}, 1000)
+
+				await setStorage('jpdn-staff-username', data.userName.toUpperCase())
+				await setStorage('jpdn-staff-userpwd', data.userPass)
+				/*let self = this;
 				this.$request.login.login.login( data ).then(res=>{
-					/*setStorage('jpdn-staff-token',res.result.access_token);
-					setStorage('jpdn-staff-refresh',res.result.refresh_token);
-					setStorage('jpdn-staff-username',res.result.user_name);
-					setStorage('jpdn-staff-userpwd',res.result.user_pwd);
-					setStorage('jpdn-staff-isLogin',true);
-					setStorage('jpdn-login-type','staff');*/
 					if( res.result.user_name != getStorage('jpdn-staff-username') ) removeStorage();
 					self.setLocalInfo(res.result);
 					self.result.userName = res.result.user_name;
-					//localStorage.setItem("staff-loginInfo",JSON.stringify( this.formData ));
-				});
+				});*/
+				/*const { result } = await login({
+					user_name: data.userName.toUpperCase(),
+					user_pass: data.userPass,
+					user_type: data.userType,
+					sub_fac_id: data.subFactoryId
+				})
+				if( result.user_name != getStorage('jpdn-staff-username') )
+					removeStorage()
+				await this.setLocalInfo(result)
+				this.result.userName = result.user_name
+
+				await this.getAuthName()*/
 			},
-			quickLogin(){
-				let self = this;
+			async quick(){
+				/*let self = this;
 				this.$request.login.login.quickLogin( this.$route.query.token ).then(res=>{
-					/*setStorage('jpdn-staff-token',res.result.access_token);
-					setStorage('jpdn-staff-refresh',res.result.refresh_token);
-					setStorage('jpdn-staff-username',res.result.user_name);
-					setStorage('jpdn-staff-userpwd',res.result.user_pwd);
-					setStorage('jpdn-staff-isLogin',true);
-					setStorage('jpdn-login-type','staff');*/
 					if( res.result.user_name != getStorage('jpdn-staff-username') ) removeStorage();
 					self.setLocalInfo(res.result);
 					self.result.userName = res.result.user_name;
-					
-				});
+				});*/
+				const { result } = await quickLogin({
+					get_user_secret: this.$route.query.token || null
+				})
+				await this.$store.commit('user/setUserType', 'staff')
+				await this.$store.commit("user/setAccessToken", result.access_token)
+				await this.$store.dispatch('user/getUserInfo')
+				setTimeout(async ()=>{
+					if( this.$store.getters['user/accessToken'] && this.$store.getters['user/authMap'] ) {
+						await this.$store.dispatch('staff/permission', this.$store.getters['user/authMap'])
+						await this.$router.addRoutes(this.$store.state.staff.navList)
+						this.$router.push('/staff/index/menu')
+					}
+				}, 1000)
+				
+				/*if( result.user_name != getStorage('jpdn-staff-username') ) 
+					removeStorage()
+				this.setLocalInfo(result)
+				this.result.userName = result.user_name
+
+				await this.getAuthName()*/
 			},
-			setLocalInfo( $info ){
-				setStorage('jpdn-staff-token',$info.access_token, 'sessionStorage');
-				setStorage('jpdn-staff-refresh',$info.refresh_token, 'sessionStorage');
-				setStorage('jpdn-staff-username',$info.user_name);
-				setStorage('jpdn-staff-userpwd',$info.user_pwd);
-				setStorage('jpdn-staff-isLogin',1, 'sessionStorage');
-				setStorage('jpdn-login-type','staff');
+			async setLocalInfo( info ){
+				await setStorage('jpdn-staff-token',info.access_token, 'sessionStorage');
+				await setStorage('jpdn-staff-refresh',info.refresh_token, 'sessionStorage');
+				await setStorage('jpdn-staff-username',info.user_name);
+				await setStorage('jpdn-staff-userpwd',info.user_pwd);
+				await setStorage('jpdn-login-type','staff');
+				await this.$store.commit('staff/setIsLogin', 1)
+				await this.$store.commit('user/setUserType', 'staff')
+				await this.$store.commit('user/setAccessToken', info.access_token)
 			},
-			getAuthName( data ){
-				let self = this;
+			async getAuthName( data ){
+				const { result } = await getUserInfo()
+				setStorage('staff-auth-url', result.available)
+				this.$store.dispatch('staff/permission', result.available)
+				this.$router.addRoutes(this.$store.state.staff.navList)
+
+				this.$nextTick(()=>{
+					this.$router.push('/staff/index/menu')
+				})
+				/*let self = this;
 				let authUrl = '';
 				this.$request.staff.user.getAuthName( data ).then(res=>{
 					if( res.errorCode != '00000' ){
 						return ;
 					}
-					/*res.result.available.forEach((item,index)=>{
-						authUrl += item + ',';
-					})*/
 					setStorage('staff-auth-url',res.result.available);
 					self.$store.dispatch('staff/permission', res.result.available);
 					self.$router.addRoutes(self.$store.state.staff.navList);
@@ -193,7 +261,8 @@
 					this.$nextTick(()=>{
 						this.$router.push('/staff/index/menu');
 					});
-				});
+				});*/
+
 			},
 			eyeClick(){
 				if( this.config.field.passIcon == 'eye-o'  ){
@@ -206,43 +275,25 @@
 			}
 		},
 		created(){
-			/*if( sessionStorage.getItem('jpdn-staff-username') !== null ){
-				this.formData.userName = sessionStorage.getItem('jpdn-staff-username')
-			}*/
-			/*try{
-				let loginInfo = JSON.parse(getStorage("staff-loginInfo"));
-				if( loginInfo != null ){
-					this.formData = loginInfo;
-				}
-			}catch(err){
-				console.log( err )
-			}*/
 			if( getStorage('jpdn-staff-username') ){
 				this.formData.userName = getStorage('jpdn-staff-username');
 			}
 			if( getStorage('jpdn-staff-userpwd') ){
 				this.formData.userPass = getStorage('jpdn-staff-userpwd');
 			}
-			//setStorage('jpdn-login-type','staff');
-			/*setStorage('jpdn-staff-isLogin', 0, 'sessionStorage');
-			removeStorage('staff-auth-url');
-			removeStorage('jpdn-staff-token', 'sessionStorage');
-			removeStorage('jpdn-staff-refresh', 'sessionStorage');
-			this.$store.commit('staff/setIsLogin',false);*/
-
 			clearLogin();
 
 			this.config.style.div = 'width:100%;height:' + (window.screen.height - 96 ) + 'px';
 			if( typeof (this.$route.query.token) != 'undefined' ){
 				if( this.$route.query.token.length > 100 ){
-					this.quickLogin();
+					this.quick()
 				}
 			}
 			if( typeof(this.$route.query.scanRes) == 'string' ){
 				this.formData.strOrderId = this.$route.query.scanRes;
 			}
-			this.$store.commit('client/setHeaderTitle','员工登陆');
-			this.$store.commit('client/setTabbarActive','slogin');
+			this.$store.commit('client/setHeaderTitle','员工登陆')
+			this.$store.commit('client/setTabbarActive','slogin')
 		},
 		mounted(){
 			this.validator = new schema(this.rules);
@@ -251,13 +302,14 @@
 		updated(){
 			
 		},
-		destroyed(){
-			
+		async destroyed(){
+			await setStorage('jpdn-staff-username', this.formData.userName)
+			await setStorage('jpdn-staff-userpwd', this.formData.userPass)
 		},
 		computed:{
-			usernameChange(){
+			/*usernameChange(){
 				return this.result.userName;
-			},
+			},*/
 			nameUpper:{
 				get :function(){
 					return this.formData.userName;
@@ -268,11 +320,11 @@
 			}
 		},
 		watch:{
-			usernameChange( newV, oldV ){
+			/*usernameChange( newV, oldV ){
 				if( typeof(newV) !== 'undefined' && newV.length > 0 ){
 					this.getAuthName( {UserName:newV} );
 				}
-			}
+			}*/
 		}
 	}
 </script>

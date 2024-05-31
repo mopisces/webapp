@@ -1,7 +1,6 @@
 <template>
-	<div style="padding-bottom:3.125rem;">
+	<div class="page-color" style="padding-bottom:3.125rem;">
 		<van-sticky :offset-top="46">
-			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 			<van-tabs v-model="filterForm.erpState">
 				<van-tab title="全部"></van-tab>
 				<van-tab title="未审核"></van-tab>
@@ -12,40 +11,63 @@
 				<van-tab title="有退货"></van-tab>
 			</van-tabs>
 		</van-sticky>
+		<drag-menu 
+			defpositon="rt" 
+			:popMenu="false"
+			:pattern="{icon: 'filter-o'}"
+			value="筛选"
+			@fabClick="menuClick"
+		>
+		</drag-menu>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<van-panel v-for="(item,index) in info.panelList" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
-					<div slot="default" style="padding:0.5rem;">
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">货品名称:{{ item.MatName }}</div>
+				<card 
+					:title="item.strOrderId" 
+					:extra="item.CusPoNo"
+					:is-shadow="true"
+					v-for="(item,index) in info.panelList" 
+					:key="index"
+				>
+					<div class="card-body-container">
+						<div class="card-body-item card-body-item-100">
+							<span>客户信息:
+								<span class="mg-left-20">{{ item.CusShortName }}({{ item.CusId}})</span>
+							</span>
 						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">订单编号:{{ item.strOrderId }}</div>
+						<div 
+							v-if="item.MatName"
+							class="card-body-item card-body-item-100"
+						>
+							<span>货品名称:
+								<span class="mg-left-20">{{ item.MatName }}</span>
+							</span>
 						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">客订单号:{{ item.CusPoNo }}</div>
-							<div class="van-col van-col--10">材质:{{ item.BoardId }}</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt">规格信息</div>:
+							<span class="mg-left-20">{{ item.GuiGe }}</span>
+							<span class="mg-left-20">{{ item.BoardId }}</span>
 						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--10">客户:{{ item.CusId}}</div>
-							<div class="van-col van-col--10">客户简称:{{ item.CusShortName }}</div>
+						<div class="card-body-item card-body-item-100">
+							<span>压线信息:
+								<span class="mg-left-20">{{ item.ScoreInfo }}</span>
+							</span>
 						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">规格:{{ item.GuiGe }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--20">压线:{{ item.ScoreInfo }}</div>
-						</div>
-						<div class="van-row van-row--flex van-row--justify-center">
-							<div class="van-col van-col--7">订单数:{{ item.OrdQty }}</div>
-							<div class="van-col van-col--6">送货数:{{ item.DeliQty }}</div>
-							<div class="van-col van-col--7">退货数:{{ item.ReturnQty }}</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt blue-color">订单</div>|
+							<div class="card-body-txt yellow-color">送货</div>|
+							<div class="card-body-txt red-color">退货</div>:
+							<span class="mg-left-20 blue-color">{{ item.OrdQty }}</span>
+							<span class="mg-left-20 yellow-color">{{ item.DeliQty }}</span>
+							<span class="mg-left-20 red-color">{{ item.ReturnQty }}</span>
 						</div>
 					</div>
-					<div slot="footer" style="text-align: right;">
-						<van-button size="mini" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>
+					<div slot="actions" class="card-actions">
+						<div class="card-actions-item" @click="detailShowClick(item.strOrderId)">
+							<van-icon color="#3c9cff" class-prefix="iconfont" name="caidan" size="18"/>
+							<span class="card-actions-item-text blue-color">详情</span>
+						</div>
 					</div>
-				</van-panel>
+				</card>
 			</van-list>
 		</van-pull-refresh>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
@@ -58,9 +80,19 @@
 				<van-field label="箱高" v-model="filterForm.boxHeight" placeholder="精确查询" input-align="center"  type="number" maxlength="10"></van-field>
 				<van-field label="订单数" v-model="filterForm.orderQuantity" placeholder="精确查询" input-align="center" type="number" maxlength="10"></van-field>
 				<cus-picker ref="cusPicker" :cusName.sync="filterForm.cusName" ></cus-picker>
-				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.radioColumns" title="日期类型"></radio-cell>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<uni-check-box
+					label="日期"
+					:localdata="config.radio.radioColumns"
+					:radioData.sync="filterForm.dateType" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
@@ -68,21 +100,29 @@
 	</div>
 </template>
 <script>
-	import { Button, Field, PullRefresh, List, SwitchCell, Panel, Sticky, Tab, Tabs } from 'vant';
+	import { Button, Icon, Field, PullRefresh, List, SwitchCell, Sticky, Tab, Tabs } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import Card from '@/components/subject/card/Card.vue'
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	import DragMenu from '@/components/subject/fab/DragMenu.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Icon.name]: Icon,
 			[Field.name]: Field,
 			[PullRefresh.name]: PullRefresh,
 			[List.name]: List,
 			[SwitchCell.name]: SwitchCell,
-			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
@@ -91,7 +131,12 @@
 			CusPicker,
 			RadioCell,
 			NewTimePicker,
-			OrderDetail
+			OrderDetail,
+
+			Card,
+			UniCheckBox,
+			TimeRangePicker,
+			DragMenu
 		},
 		data(){
 			return {
@@ -159,6 +204,9 @@
 			}
 		},
 		methods:{
+			menuClick(){
+				this.config.popup.filterShow = true
+			},
 			pullOnRefresh(){
 				this.filterForm.curPage = 0;
 				this.info.panelList     = [];
@@ -204,27 +252,16 @@
 				this.pullOnRefresh();
 				this.config.popup.filterShow = false;
 			},
-			getConfig( isReset = false ){
-				let self = this;
-				this.$request.staff.erp.erpConfig().then(res=>{
-					if( this.config.getConfig ){
-						self.filterForm.beginDate = res.result.Wap1GetOrdersBeginDate;
-						self.filterForm.endDate = res.result.Wap1GetOrdersEndDate;
-					}
-					self.pageConfig.maxDate = res.result.Wap1GetOrdersMaxDate;
-					self.pageConfig.minDate = res.result.Wap1GetOrdersMinDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.$nextTick(()=>{
-						this.getErpOrders( this.filterForm );
-					});
-				});
+			async getConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'staffErp'})
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.Wap1GetOrdersBeginDate
+					this.filterForm.endDate = result.Wap1GetOrdersEndDate
+				}
+				this.pageConfig.maxDate = result.Wap1GetOrdersMaxDate
+				this.pageConfig.minDate = result.Wap1GetOrdersMinDate
+				if( isReset ) return 
+				await this.getErpOrders( this.filterForm )
 			},
 			getErpOrders( data ){
 				let self = this;
@@ -292,3 +329,6 @@
 		}
 	}
 </script>
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

@@ -92,6 +92,7 @@ const board={
 			add_first_price    : data.firstPrice,
 			add_last_from      : data.lastFrom,
 			add_last_price     : data.lastPrice,
+			add_pic_name: data.picList.join(',')
 		};
 		return post( window.jpdn_domain_admin + 'adminBoardAdd',postData);
 	},

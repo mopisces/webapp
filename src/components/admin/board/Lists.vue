@@ -158,7 +158,7 @@
 							}
 						]
 					},
-					picSrc: window.jpdn_domain_imgDomain
+					picSrc: null
 				},
 				filterForm : {
 					orderType  : 1,
@@ -185,6 +185,7 @@
 					}else{
 						self.tableData    = res.result.list;
 						self.config.total = res.result.total;
+						self.config.picSrc = res.result.config.imgPreFix
 					}
 					self.config.pagination.show = true;
 				});

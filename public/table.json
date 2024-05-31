@@ -78,6 +78,14 @@
 		{"field":"InWt","title":"收货重量(kg)","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
 		{"field":"dPrice","title":"单价","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
 	],
+	"wGetPOMain": [
+		{"field":"PaperCode","title":"纸类","width":"40","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
+		{"field":"PaperWidth","title":"门幅","width":"50","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ActWeight","title":"克重","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"SumWeight","title":"重量(kg)","width":"80","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"PoPrice","title":"单价","width":"100","titleAlign":"center","columnAlign":"center","isResize":true},
+		{"field":"ratio","title":"收货/采购","width":"100","titleAlign":"center","columnAlign":"center","isResize":true}
+	],
 	"staffDeliveryDaily":[
 		{"field":"GuiGe","title":"规则","width":"100","titleAlign":"center","columnAlign":"center","isResize":true,"isFrozen":true},
 		{"field":"BoardName","title":"材质名称","width":"120","titleAlign":"center","columnAlign":"center","isResize":true},

@@ -17,7 +17,7 @@
 					header:{
 						Authentication : getStorage('jpdn-admin-token', 'sessionStorage')
 					},
-					action:window.jpdn_domain_admin + 'adminDefaultImgAdd' ,
+					action: null,
 					data:{
 						default_pic_type:'box'
 					}
@@ -69,8 +69,9 @@
 				this.$request.admin.config.getConfig().then((res)=>{
 					let arr = res.result.BoxDefaultPic.split(",");
 					arr.forEach((item,index)=>{
-						self.fileList.push({name:item,url:window.jpdn_domain_imgDomain + item})
+						self.fileList.push({name:item, url:'http://'+res.result.OriDomain+':'+res.result.ImgPort+'/'+ item})
 					})
+					self.upload.action = 'http://'+res.result.OriDomain+':'+ res.result.OriPort + '/v1/admin/adminDefaultImgAdd'
 				});
 			}
 		},

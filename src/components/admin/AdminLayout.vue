@@ -2,15 +2,15 @@
 	<el-container :style="'height: ' + config.height + 'px; border: 1px solid #eee'">
 	  	<el-aside width="200px" style="background-color: #f0f0f0">
 	    	<el-menu :default-active="config.activeIndex" :router="true" :unique-opened="true" @open="menuOpen" @select="menuSelect">
-	    		<el-menu-item index="/admin/config/lists">
+	    		<el-menu-item index="/admin/config/lists" v-if="userInfo.adminName=='admin'">
 					<i class="el-icon-setting"></i>
 					<span slot="title">项目配置</span>
 				</el-menu-item>
-				<el-menu-item index="/admin/img/info">
+				<el-menu-item index="/admin/img/info" v-if="userInfo.adminName=='admin'">
 					<i class="el-icon-picture"></i>
 					<span slot="title">图片配置</span>
 				</el-menu-item>
-				<el-submenu index="3">
+				<el-submenu index="3" v-if="userInfo.adminName=='admin'">
 					<template slot="title">
 						<i class="el-icon-phone"></i>
 						<span>联系方式管理</span>
@@ -71,7 +71,7 @@
 						<el-dropdown-menu slot="dropdown">
 							<el-dropdown-item command="logout">退出</el-dropdown-item>
 						</el-dropdown-menu>
-						<span>{{ adminName }}</span>
+						<span>{{ userInfo.adminName }}</span>
 					</el-dropdown>
 				</div>
 				<div style="clear:both;"></div>
@@ -138,7 +138,8 @@
 		created(){
 			this.config.height      = window.innerHeight;
 			//this.adminName          = sessionStorage.getItem('jpdn-admin-username');
-			this.adminName          = getStorage('jpdn-admin-username');
+			//this.adminName          = getStorage('jpdn-admin-username');
+			console.log(this.userInfo)
 			this.config.activeIndex = this.$store.state.admin.asideActive;
 			this.getConfig();
 		},
@@ -152,7 +153,11 @@
 			
 		},
 		computed:{
-			
+			userInfo: {
+				get() {
+					return this.$store.state.user.userInfo
+				},
+			}
 		},
 		watch:{
 			

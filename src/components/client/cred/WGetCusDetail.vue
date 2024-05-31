@@ -5,8 +5,12 @@
 		</van-sticky>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
@@ -16,9 +20,13 @@
 <script>
 	import { Button, SwitchCell, Sticky } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
-	import RadioCell from '@/components/subject/RadioCell.vue';
-	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	/*自定义方法*/
+	import { getStorage, setStorage, removeStorage } from '@/util/storage'
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfigJWT } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -26,8 +34,7 @@
 			[Sticky.name]: Sticky,
 
 			PopupFilter,
-			NewTimePicker,
-			RadioCell
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -64,27 +71,16 @@
 					this.config.table.columns = res.wGetCusDetail;
 				});
 			},
-			getConfig( isReset ){
-				this.$request.client.cred.cusCreditBalanceConfig().then((res)=>{
-					if( res.errorCode != '00000' ) return 
-					if( this.config.getConfig ){
-						this.filterForm.beginDate = res.result.GetCusFreeMBDetailBeginDate;
-						this.filterForm.endDate   = res.result.GetCusFreeMBDetailEndDate;
-					}
-					this.pageConfig.minDate   = res.result.GetCusFreeMBDetailMinDate;
-					this.pageConfig.maxDate   = res.result.GetCusFreeMBDetailMaxDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.$nextTick(()=>{
-						this.fetchList();
-					});
-				});
+			async getConfig( isReset ){
+				const { result } = await getWebConfigJWT({paramType: 'clientCB'})
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.GetCusFreeMBDetailBeginDate
+					this.filterForm.endDate = result.GetCusFreeMBDetailEndDate
+				}
+				this.pageConfig.minDate = result.GetCusFreeMBDetailMinDate
+				this.pageConfig.maxDate = result.GetCusFreeMBDetailMaxDate
+				if( isReset ) return 
+				await this.fetchList()
 			},
 			fetchList(){
 				this.config.table.data = [];
@@ -107,7 +103,6 @@
 				this.config.popup.filterShow = false;
 			},
 			beforeunloadHandler(){
-				console.log(this.config.switch.checked)
 				if( this.config.switch.checked ){
 					setStorage('cred/wGetCusDetail',this.filterForm);
 				}else{
@@ -116,7 +111,7 @@
 			}
 		},
 		created(){
-			this.$store.commit('client/setHeaderTitle','信用余额明细');
+			this.$store.commit('client/setHeaderTitle','信用余额明细2');
 			if( getStorage('cred/wGetCusDetail') !== null ){
 				let storageData = JSON.parse(getStorage('cred/wGetCusDetail'));
 				this.filterForm = storageData;
@@ -125,7 +120,7 @@
 			}
 		},
 		mounted(){
-			this.config.table.height = window.screen.height - 176;
+			this.config.table.height = window.screen.height - 126;
 			window.addEventListener('beforeunload', e => this.beforeunloadHandler());
 			this.getTableConfig();
 			this.getConfig();

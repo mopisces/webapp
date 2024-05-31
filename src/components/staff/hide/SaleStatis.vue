@@ -86,8 +86,13 @@
 		</van-tabs>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>
@@ -96,8 +101,12 @@
 <script>
 	import { Button, Col, Row, Tab, Tabs, SwitchCell } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -108,7 +117,8 @@
 			[SwitchCell.name]: SwitchCell,
 
 			PopupFilter,
-			NewTimePicker
+
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -163,29 +173,17 @@
 			}
 		},
 		methods:{
-			getConfig( isReset = false ){
-				let self = this;
-				this.$request.staff.statis.getSaleStatisConfig().then(res=>{
-					if( res.errorCode == '00000' ){
-						self.pageConfig.maxDate   = res.result.OrderTakeMaxDate;
-						self.pageConfig.minDate   = res.result.OrderTakeMinDate;
-						if( self.config.getConfig ){
-							self.filterForm.beginDate = res.result.OrderTakeBeginDate;
-							self.filterForm.endDate   = res.result.OrderTakeEndDate;
-						}
-						self.config.produce = res.produce;
-					}
-					self.config.popup.timePicker.isFinishLoad = true;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.getSaleStatisData();
-				});
+			async getConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'staffHide'})
+				this.pageConfig.maxDate = result.OrderTakeMaxDate
+				this.pageConfig.minDate = result.OrderTakeMinDate
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.OrderTakeBeginDate
+					this.filterForm.endDate   = result.OrderTakeEndDate
+				}
+				this.config.produce = result.produce
+				if( isReset ) return 
+				this.getSaleStatisData()
 			},
 			getSaleStatisData(){
 				for( let key in this.orderTakeData ){

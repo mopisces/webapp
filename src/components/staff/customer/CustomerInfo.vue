@@ -18,6 +18,7 @@
 			:table-data="config.table.data" 
 			row-hover-color="#eee" 
 			row-click-color="#edf7ff"
+			:row-click="rowClick"
 		>
 		</v-table>
 		<popup-filter 
@@ -39,7 +40,6 @@
 	export default {
 		components:{
 			[Button.name]: Button,
-
 			PopupFilter,
 			CusPicker
 		},
@@ -69,14 +69,40 @@
 			},
 			getTableConfig(){
 				this.$request.common.table.getTableConfig().then(res=>{
-					this.config.table.columns = res.staffCustomerInfo;
+					this.config.table.columns = res.staffCustomerInfo
 				});
 			},
 			resetClick(){
 				this.formData = this.$options.data().formData
 			},
 			filterClick(){
-				this.queryList();
+				this.queryList()
+			},
+			/*表格点击复制*/
+			rowClick(rowIndex, rowData, column){
+				var info = ''
+				for (var i = 0; i < this.config.table.columns.length; i++) {
+					var value = rowData[this.config.table.columns[i].field] || ''
+					info += this.config.table.columns[i].title + ':' + value
+					if( i <= this.config.table.columns.length ){
+						info += '\n'
+					}
+				}
+				this.$copyText(info).then(()=>{
+					this.$notify({
+						type: 'success',
+						color: '#ad0000',
+						background: '#ffe1e1',
+						message: '复制成功',
+						duration: 2000
+					})
+				}).catch((e)=>{
+					this.$notify({
+						type: 'fail',
+						message: e.message,
+						duration: 2000
+					})
+				})
 			},
 		},
 		created(){

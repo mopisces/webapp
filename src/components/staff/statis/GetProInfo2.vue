@@ -65,9 +65,22 @@
 		</div>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<!-- <radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.options" title="日期类型"></radio-cell> -->
+				<uni-check-box
+					label="日期"
+					:localdata="config.radio.options"
+					:radioData.sync="filterForm.dateType" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
+				<!-- <new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker> -->
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
@@ -76,9 +89,15 @@
 <script>
 	import {  Button, Col, Row, Cell, Icon, Field, SwitchCell, Dialog, Sticky } from 'vant';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -91,8 +110,11 @@
 			[Sticky.name]: Sticky,
 
 			PopupFilter,
-			NewTimePicker,
+			//NewTimePicker,
 			RadioCell,
+
+			UniCheckBox,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -151,25 +173,16 @@
 			onRefresh(){
 				this.getProInfo( this.filterForm );
 			},
-			getProInfoConfig( isReset = false ){
-				let self = this;
-				this.$request.staff.statis.getProInfoConfig().then(res=>{
-					if( this.config.getConfig ){
-						self.filterForm.beginDate = res.result.GetProInfoBeginDate;
-						self.filterForm.endDate = res.result.GetProInfoEndDate;
-					}
-					self.pageConfig.maxDate = res.result.GetProInfoMaxDate;
-					self.pageConfig.minDate = res.result.GetProInfoMinDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.getProInfo(this.filterForm);
-				});
+			async getProInfoConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'staffStatis'})
+				if( this.config.getConfig ) {
+					this.filterForm.beginDate = result.GetProInfoBeginDate
+					this.filterForm.endDate = result.GetProInfoEndDate
+				}
+				this.pageConfig.maxDate = result.GetProInfoMaxDate
+				this.pageConfig.minDate = result.GetProInfoMinDate
+				if( isReset ) return 
+				await this.getProInfo(this.filterForm)
 			},
 			getProInfo( data ){
 				let self = this;
@@ -197,7 +210,7 @@
 			},
 			clickQuestion(){
 				Dialog.alert({
-					message : '注:入库重量比例=(纸板入库重量+半成品入库重量)/原纸用量'
+					message: '注:入库重量比例=(纸板入库重量+半成品入库重量)/原纸用量'
 				}).then(()=>{
 					Dialog.close();
 				});

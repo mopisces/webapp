@@ -688,6 +688,18 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">箱舌＆封箱调整保留小数位</td>
+							<td>
+								<el-input style="width: 100px;" v-model="form.TonUDecimals"></el-input>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">纸箱纸板压线名称</td>
+							<td>
+								<el-input style="width: 300px;" v-model="form.BuildScoreInfoChiText"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">压型名称</td>
 							<td>
 								<el-input style="width: 300px;" v-model="form.BuildScoreName"></el-input>
@@ -745,9 +757,21 @@
 							</td>
 						</tr>
 						<tr>
+							<td style="width:150px;">纸箱纸板</td>
+							<td>
+								<el-input style="width: 300px;" v-model="form.BuildScoreInfoChiText"></el-input>
+							</td>
+						</tr>
+						<tr>
 							<td style="width:150px;">是否显示送货备注</td>
 							<td>
 								<el-checkbox v-model="form.ShowDeliveryRemark" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">是否显示送货公司</td>
+							<td>
+								<el-checkbox v-model="form.ShowBuildCAddress" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
 						<tr>
@@ -808,6 +832,12 @@
 							</tr>
 						</template>
 						<tr>
+							<td style="width:150px;">提示纸箱纸板下单箱长大于箱宽</td>
+							<td>
+								<el-checkbox v-model="form.HintBoxLBoxW" label="是否需要提示" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr>
 							<td>
 								<el-button type="primary" @click="saveConfig()">保存</el-button>
 							</td>
@@ -825,6 +855,12 @@
 							<td style="150px;">是否开启信用额度付款</td>
 							<td>
 								<el-checkbox v-model="form.UseCreditPay" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr v-if="form.UseCreditPay == 1">
+							<td style="150px;">信用额度下单直接扣款</td>
+							<td>
+								<el-checkbox v-model="form.DirectCreditPay" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
 						<tr>
@@ -849,6 +885,12 @@
 							<td style="150px;">纸板团购功能</td>
 							<td>
 								<el-checkbox v-model="form.UseBoardGroup" label="是否开启" border true-label="1" false-label="0"></el-checkbox>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:150px;">团购是否显示简单纸板下单</td>
+							<td>
+								<el-checkbox v-model="form.ShowGroupSimpleBuild" label="是否显示" border true-label="1" false-label="0"></el-checkbox>
 							</td>
 						</tr>
 						<template v-if="Number(form.UseBoardGroup)">
@@ -1120,6 +1162,8 @@
 					BuildMinBoxH              : '',  //箱高范围
 					BuildMaxBoxH              : '',  //箱高范围
 					BuildAutoGetTonLenAndULen : '',  //自动获取默认的箱舌＆封箱调整
+					TonUDecimals              : '',  //箱舌＆封箱调整保留小数位数
+					BuildScoreInfoChiText     : '',  //压线中文名称
 					BuildScoreName            : '',  //压型名称
 					DefaultScoreName          : '',  //默认压型名称
 					BuildMinArea              : '',  //纸板下单面积范围
@@ -1134,6 +1178,7 @@
 					BuildAddCalc              : 0,   //是否开启订单试算
 					IsAddTrimArea             : 0,   //是否开启订单试算毛片不加面积修边
 					ShowDeliveryRemark        : 0,   //是否显示送货备注
+					ShowBuildCAddress         : 0,   //纸箱纸板下单是否显示送货公司
 					BuildRadioNeedConfirm     : 1,   //选择弹出层时是否需要点击确认
 					BuildLenNeedToast         : 0,   //下单长度不满指定长度是否需要提示
 					BuildLenToastDefault      : '',  //下单长度提示指定长度
@@ -1144,8 +1189,11 @@
 					NeedSetBuildTime          : 0,   //是否需要设置下单时间范围
 					BuildInTime1              : '',  //下单时间范围1
 					BuildInTime2              : '',  //下单时间范围2
+					HintBoxLBoxW              : 0,    //提示纸箱纸板下单箱长大于箱宽
+
 					//团购参数
 					UseCreditPay     : '',  //是否开启信用额度付款
+					DirectCreditPay  : '',  //信用额度下单直接扣款
 					WebSalesWidth    : '',  //团购纸板销售宽默认值
 					MaxOverTimeOrder : '',  //最大超时未支付订单数量
 					MaxUnPaidOrder   : '',  //最大未支付订单数量
@@ -1161,7 +1209,8 @@
 					ValidPayTime     : '',  //有效支付时间(秒)
 					//淘宝箱按面积报价
 					OpenBoxForArea   : '',  //淘宝箱是否按面积报价
-					BoxForAreaDecimals : ''  //保留小数位数
+					BoxForAreaDecimals : '', //保留小数位数
+					ShowGroupSimpleBuild : 0 //团购是否显示简单纸板下单
 				}
 			}
 		},

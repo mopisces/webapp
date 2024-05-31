@@ -32,6 +32,10 @@
 </template>
 <script>
 	import { Button, Cell, CellGroup, Checkbox, CheckboxGroup, Search, SwitchCell, PullRefresh, Toast , List, Sticky, Tag } from 'vant';
+
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -87,16 +91,11 @@
 				this.checkBoxData       = [];
 				this.getConfig();
 			},
-			getConfig(){
-				let self = this;
-				this.$request.client.commonMaterial.getConfig().then(res=>{
-					self.config.list.returnType = res.result;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.checkBoxResult = [];
-						this.commonMaterial( this.filterForm );
-					});
-				});
+			async getConfig(){
+				const { result } = await getWebConfig({paramType: 'clientCM'})
+				this.config.list.returnType = result.UseQuoBoard
+				this.checkBoxResult = []
+				await this.commonMaterial( this.filterForm )
 			},
 			commonMaterial( data ){
 				let self = this;

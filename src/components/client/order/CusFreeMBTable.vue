@@ -9,8 +9,13 @@
 		</v-table>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
+				
 			</div>
 			<div slot="filter-field-2">
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
@@ -20,16 +25,20 @@
 </template>
 <script>
 	import { Button, Sticky } from 'vant';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
 			[Sticky.name]: Sticky,
 
-			NewTimePicker,
-			PopupFilter
+			PopupFilter,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -63,25 +72,16 @@
 			}
 		},
 		methods:{
-			getConfig( isReset = false ){
-				let self = this;
-				this.$request.client.cred.statementAccountConfig().then(res=>{
-					if( !self.config.isInit ){
-						self.filterForm.beginDate = res.result.CusFreeMBTableBeginDate;
-						self.filterForm.endDate   = res.result.CusFreeMBTableEndDate;
-					}
-					self.pageConfig.maxDate   = res.result.CusFreeMBTableMaxDate;
-					self.pageConfig.minDate   = res.result.CusFreeMBTableMinDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-						if( isReset ){
-							return ;
-						}
-					});
-				}).then(()=>{
-					this.config.isInit = false;
-				});
+			async getConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'clientCB'})
+				if( !this.config.isInit ){
+					this.filterForm.beginDate = result.CusFreeMBTableBeginDate
+					this.filterForm.endDate = result.CusFreeMBTableEndDate
+				}
+				this.pageConfig.maxDate = result.CusFreeMBTableMaxDate
+				this.pageConfig.minDate = result.CusFreeMBTableMinDate
+				if( isReset ) return 
+				this.config.isInit = false
 			},
 			getTableDate(){
 				let self = this;

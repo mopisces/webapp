@@ -30,8 +30,15 @@
 		</van-popup>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<van-field label="班次" v-model="classUpper" placeholder="请输入班次" input-align="center" maxlength="10"></van-field>
+				<!-- <new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
+				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker> -->
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>
@@ -42,8 +49,10 @@
 	import { Button, Icon, Popup, Field, NoticeBar, SwitchCell, Tab, Tabs } from 'vant';
 	import PrevNext from '@/components/subject/PrevNext.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
+	//import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -57,7 +66,8 @@
 
 			PrevNext,
 			PopupFilter,
-			NewTimePicker
+			//NewTimePicker,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -107,6 +117,7 @@
 					minDate:null,
 				},
 				filterForm:{
+					class: null,
 					beginDate:null,
 					endDate:null,
 					tabActive:0
@@ -116,7 +127,7 @@
 		methods:{
 			radioConfirm( value ){
 				this.filterMain.outDate = value;
-				this.paperDailyUsedInfo( this.filterMain.outDate );
+				this.paperDailyUsedInfo( {outDate:this.filterMain.outDate, class: this.filterForm.class} );
 			},
 			getPaperDailyUsedConfig( isReset = false ){
 				let self = this;
@@ -189,11 +200,11 @@
 			},
 			detailClick(rowIndex,rowData,column){
 				this.detailData.fieldData = rowData;
+				let postData = Object.assign({},rowData,this.filterForm);
 				if( this.filterForm.tabActive == 0 ){
-					this.paperDailyUsedDetail(rowData);
+					this.paperDailyUsedDetail(postData);
 				}
 				if( this.filterForm.tabActive == 1 ){
-					let postData = Object.assign({},rowData,this.filterForm);
 					this.paperDailyUsedDetail(postData);
 				}
 			},
@@ -251,7 +262,14 @@
 			window.removeEventListener('beforeunload', e => this.beforeunloadHandler());
 		},
 		computed:{
-			
+			classUpper:{
+				get(){
+					return this.filterForm.class
+				},
+				set(value){
+					this.filterForm.class = value.toUpperCase()
+				},
+			}
 		},
 		watch:{
 			

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page-color">
 		<van-sticky :offset-top="46">
 			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
 			<van-tabs v-model="filterForm.type">
@@ -9,7 +9,42 @@
 			</van-tabs>
 		</van-sticky>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
-			<van-panel v-for="(item,index) in listData" :key="index" style="font-size:0.8125rem;background-color:#f1f1f1;margin:0 0.5rem 0.1rem 0.5rem;">
+			<card 
+				:title="item.strOrderId" 
+				:subTitle="item.IssueDate"
+				:extra="item.CusPoNo"
+				:is-shadow="true"
+				v-for="(item, index) in listData" 
+				:key="index"
+			>
+				<div class="card-body-container">
+					<div class="card-body-item card-body-item-100">
+						<div class="card-body-txt">单号:</div>
+						<span class="mg-left-20">{{ item.DNStr }}</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>订单类型:
+							<span class="mg-left-20">{{ item.CTypeName }}</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>订单规格:
+							<span class="mg-left-20">{{ item.GuiGe }}</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>送货数量:
+							<span class="mg-left-20">{{ item.DeliQty }}</span>
+						</span>
+					</div>
+					<div class="card-body-item card-body-item-100">
+						<span>送货金额:
+							<span class="mg-left-20">{{ item.Amount }}元</span>
+						</span>
+					</div>
+				</div>
+			</card>
+			<!-- <van-panel v-for="(item,index) in listData" :key="index" style="font-size:0.8125rem;background-color:#f1f1f1;margin:0 0.5rem 0.1rem 0.5rem;">
 				<div slot="default" style="padding:0.5rem;">
 					<div class="van-row van-row--flex van-row--justify-center">
 						<div class="van-col van-col--22">
@@ -59,44 +94,53 @@
 						<van-button size="mini" type="info" @click="detailShowClick(item.strOrderId)">详情</van-button>
 					</div>
 				</div>
-			</van-panel>
+			</van-panel> -->
 		</van-pull-refresh>
 		<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0rem 1rem;">
       		我也是有底线的
   		</div>
   		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
   			<div slot="filter-field-1">
-  				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+  				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>				
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
-				<!-- <van-button size="mini" type="info" @click="download()">下载</van-button> -->
   			</div>
   		</popup-filter>
   		<order-detail :orderType="detailData.orderType" :orderId="detailData.orderId" :detailShow.sync="config.popup.detailShow" @detailClose="detailClose"></order-detail>
 	</div>
 </template>
 <script>
-	import { Button, PullRefresh, List, SwitchCell, Panel, Sticky, Tab, Tabs } from 'vant';
+	import { Button, PullRefresh, List, SwitchCell, Sticky, Tab, Tabs } from 'vant';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
 	import { exportExcel } from '@/util/exportToExcel'
 	import { dateTimeFormat } from '@/util'
+
+	import Card from '@/components/subject/card/Card.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
 			[PullRefresh.name]: PullRefresh,
 			[List.name]: List,
 			[SwitchCell.name]: SwitchCell,
-			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 
 			OrderDetail,
-			NewTimePicker,
-			PopupFilter
+			PopupFilter,
+
+			Card,
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -138,26 +182,17 @@
 			pullOnRefresh(){
 				this.statementAccount();
 			},
-			getConfig( isReset = false ){
-				let self = this;
-				this.$request.client.cred.statementAccountConfig().then(res=>{
-					if( !self.config.isInit ){
-						self.filterForm.beginDate = res.result.GetCusFreeMBBeginDate;
-						self.filterForm.endDate   = res.result.GetCusFreeMBEndDate;
-					}
-					self.pageConfig.maxDate   = res.result.GetCusFreeMBMaxDate;
-					self.pageConfig.minDate   = res.result.GetCusFreeMBMinDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-						if( isReset ){
-							return ;
-						}
-						this.statementAccount();
-					});
-				}).then(()=>{
-					this.config.isInit = false;
-				});
+			async getConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'clientCB'})
+				if( !this.config.isInit ){
+					this.filterForm.beginDate = result.GetCusFreeMBBeginDate
+					this.filterForm.endDate = result.GetCusFreeMBEndDate
+				}
+				this.pageConfig.maxDate = result.GetCusFreeMBMaxDate
+				this.pageConfig.minDate = result.GetCusFreeMBMinDate
+				if( isReset ) return 
+				await this.statementAccount()
+				this.config.isInit = false
 			},
 			statementAccount(){
 				let self = this;
@@ -228,3 +263,7 @@
 		}
 	}
 </script>
+
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

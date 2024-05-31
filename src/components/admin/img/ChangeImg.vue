@@ -16,12 +16,12 @@
 			return {
 				config:{
 					upload:{
-						action:window.jpdn_domain_admin + 'admiListImgAdd',
+						action: null,
 						header:{
-							Authentication : getStorage('jpdn-admin-token', 'sessionStorage')
+							Authentication: getStorage('jpdn-admin-token', 'sessionStorage')
 						},
 						data:{
-							img_id : ''
+							img_id: ''
 						}
 					},
 					dialog:{
@@ -41,12 +41,13 @@
 		methods:{
 			showImg(){
 				let self = this;
-				this.pic = [];
+				this.pic = this.$options.data().pic;
 				this.$request.admin.image.showListImg( this.formData.id ).then(res=>{
 					if( res.errorCode == '00000' ){
-						res.result.forEach((item,index)=>{
-							self.pic.push( {name:item,url:window.jpdn_domain_imgDomain + item});
+						res.result.list.forEach((item,index)=>{
+							self.pic.push( {name:item,url:item})
 						});
+						self.config.upload.action = res.result.uploadAction
 					}
 				});
 			},

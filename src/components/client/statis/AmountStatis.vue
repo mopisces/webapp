@@ -74,36 +74,20 @@
 			@filterClick="filterClick">
 			<div slot="filter-field-1">
 				<van-cell-group title="下单金额">
-					<new-time-picker 
-						v-if="config.popup.timePicker.isFinishLoad" 
-						:dateTime.sync="filterForm.dailyBeginDate" 
-						:minDate="pageConfig.dailyMinDate" 
-						:maxDate="pageConfig.dailyMaxDate" 
-						label="开始日期">
-					</new-time-picker>
-					<new-time-picker 
-						v-if="config.popup.timePicker.isFinishLoad" 
-						:dateTime.sync="filterForm.dailyEndDate" 
-						:minDate="pageConfig.dailyMinDate" 
-						:maxDate="pageConfig.dailyMaxDate" 
-						label="结束日期">
-					</new-time-picker>
+					<time-range-picker
+						:beginDate.sync="filterForm.dailyBeginDate"
+						:endDate.sync="filterForm.dailyEndDate"
+						:maxDate.sync="pageConfig.dailyMaxDate"
+						:minDate.sync="pageConfig.dailyMinDate"
+					></time-range-picker>
 				</van-cell-group>
 				<van-cell-group title="收货金额">
-					<new-time-picker 
-						v-if="config.popup.timePicker.isFinishLoad" 
-						:dateTime.sync="filterForm.deliveryBeginDate" 
-						:minDate="pageConfig.deliveryMinDate" 
-						:maxDate="pageConfig.deliveryMaxDate" 
-						label="开始日期">
-					</new-time-picker>
-					<new-time-picker 
-						v-if="config.popup.timePicker.isFinishLoad" 
-						:dateTime.sync="filterForm.deliveryEndDate" 
-						:minDate="pageConfig.deliveryMinDate" 
-						:maxDate="pageConfig.deliveryMaxDate" 
-						label="结束日期">
-					</new-time-picker>
+					<time-range-picker
+						:beginDate.sync="filterForm.deliveryBeginDate"
+						:endDate.sync="filterForm.deliveryEndDate"
+						:maxDate.sync="pageConfig.deliveryMaxDate"
+						:minDate.sync="pageConfig.deliveryMinDate"
+					></time-range-picker>
 				</van-cell-group>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
@@ -112,9 +96,13 @@
 </template>
 <script>
 	import { Button, CellGroup, SwitchCell, Tab, Tabs } from 'vant';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -123,8 +111,9 @@
 			[Tab.name]: Tab,
 			[Tabs.name]: Tabs,
 
-			NewTimePicker,
-			PopupFilter
+			PopupFilter,
+
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -173,28 +162,21 @@
 			}
 		},
 		methods:{
-			getConfig( isReset = false, isInit = true ){
-				this.$request.client.statis.getStatisAmonutConfig().then(res=>{
-					if( res.errorCode == '00000' ){
-						this.pageConfig.dailyMinDate = res.result.ClientAmountStatisDailyMinDate;
-						this.pageConfig.dailyMaxDate = res.result.ClientAmountStatisDailyMaxDate;
-						this.pageConfig.deliveryMinDate = res.result.ClientAmountStatisDeliveryMinDate;
-						this.pageConfig.deliveryMaxDate = res.result.ClientAmountStatisDeliveryMaxDate;
-						if( isReset ){
-							this.filterForm.dailyBeginDate = res.result.ClientAmountStatisDailyBeginDate;
-							this.filterForm.dailyEndDate = res.result.ClientAmountStatisDailyEndDate;
-							this.filterForm.deliveryBeginDate = res.result.ClientAmountStatisDeliveryBeginDate;
-							this.filterForm.deliveryEndDate = res.result.ClientAmountStatisDeliveryEndDate;
-						}
-					}
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-						if( !isReset || isInit ){
-							this.fetchData();
-						}
-					});
-				});
+			async getConfig( isReset = false, isInit = true ){
+				const { result } = await getWebConfig({paramType: 'clientStatis'})
+				this.pageConfig.dailyMinDate = result.ClientAmountStatisDailyMinDate
+				this.pageConfig.dailyMaxDate = result.ClientAmountStatisDailyMaxDate
+				this.pageConfig.deliveryMinDate = result.ClientAmountStatisDeliveryMinDate
+				this.pageConfig.deliveryMaxDate = result.ClientAmountStatisDeliveryMaxDate
+				if( isReset ){
+					this.filterForm.dailyBeginDate = result.ClientAmountStatisDailyBeginDate
+					this.filterForm.dailyEndDate = result.ClientAmountStatisDailyEndDate
+					this.filterForm.deliveryBeginDate = result.ClientAmountStatisDeliveryBeginDate
+					this.filterForm.deliveryEndDate = result.ClientAmountStatisDeliveryEndDate
+				}
+				if( !isReset || isInit ) {
+					await this.fetchData()
+				}
 			},
 			fetchData(){
 				this.formData = this.$options.data().formData

@@ -27,8 +27,13 @@
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick" id="popup-filter">
 			<div slot="filter-field-1">
 				<cus-picker ref="cusPicker" :cusName.sync="filterForm.cusName"></cus-picker>
-				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timeFilter.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
 				<van-switch-cell v-model="filterForm.addUserId" title="下单员" v-if=" false "/>
 				<van-switch-cell v-model="config.switch.rem.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
@@ -38,10 +43,14 @@
 <script>
 	import { Button, Cell, CellGroup, Popup, Field, SwitchCell, Sticky  } from 'vant';
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
-	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import NewPopup from '@/components/subject/NewPopup.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -53,9 +62,10 @@
 			[Sticky.name]: Sticky,
 
 			CusPicker,
-			NewTimePicker,
 			PopupFilter,
-			NewPopup
+			NewPopup,
+
+			TimeRangePicker
 		},
 		data(){
 			return {
@@ -118,33 +128,20 @@
 			},
 			cellClick(item){
 				let str  = JSON.stringify(Object.assign({},this.filterForm,item,this.pageConfig));
-				//sessionStorage.setItem('daily/wGetCusOrder/info',str);
 				setStorage('daily/wGetCusOrder/info',str);
 				this.$router.push('/staff/daily/getOrdersP');
 			},
-			getDailyConfig( isReset = false ){
-				let self = this;
-				this.$request.staff.daily.dailyConfig().then(res=>{
-					if( this.config.getConfig ){
-						self.filterForm.beginDate = res.result.WGetCusOrderBeginDate;
-						self.filterForm.endDate   = res.result.WGetCusOrderEndDate;
-					}
-					self.pageConfig.minDate = res.result.WGetCusOrderMinDate;
-					self.pageConfig.maxDate = res.result.WGetCusOrderMaxDate;
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timeFilter.isFinishLoad = true;
-					})
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.getDailyUser( this.filterForm );
-					})
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.getDailyOrder( this.filterForm );
-				});
+			async getDailyConfig( isReset = false ){
+				const { result } = await getWebConfig({paramType: 'staffDaily'})
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.WGetCusOrderBeginDate
+					this.filterForm.endDate   = result.WGetCusOrderEndDate
+				}
+				this.pageConfig.minDate = result.WGetCusOrderMinDate
+				this.pageConfig.maxDate = result.WGetCusOrderMaxDate
+				await this.getDailyUser( this.filterForm )
+				if( isReset ) return 
+				await this.getDailyOrder( this.filterForm )
 			},
 			getDailyOrder( data ){
 				let self = this;

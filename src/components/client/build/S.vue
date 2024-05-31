@@ -10,7 +10,7 @@
 		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @valueChange="materialTypeChange"></popup-select>
 		</van-field>
 		<div class="van-cell" style="display: flex;align-items: center;">
-			<div class="van-cell__title van-field__label">纸板规格(mm)</div>
+			<div class="van-cell__title van-field__label">纸板(mm)</div>
 			<input id="boardLength" type="number" class="karry-input" placeholder="长" v-model="formData.boardLength" @focus="inputFocus('boardLength')" @blur=" inputBlur('boardLength') "/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
 			<input id="boardWidth" type="number" class="karry-input" placeholder="宽" v-model="formData.boardWidth" @focus="inputFocus('boardWidth')" @blur=" inputBlur('boardWidth') "/>
@@ -19,13 +19,29 @@
 			</div>
 		</div>
 		<template v-if="formData.isCalc == 1 ">
-			<build-calc :lineInfo="config.lineInfo" :calcDefault="config.calcDefault" @buildCalc="buildCalc"></build-calc>
+			<!-- <build-calc :lineInfo="config.lineInfo" :calcDefault="config.calcDefault" @buildCalc="buildCalc"></build-calc> -->
+			<uni-check-box
+				label="压线压型"
+				:localdata="config.radioData.lineInfo"
+				:radioData.sync="formData.scoreEdge" 
+				:map="{text: 'text', value: 'value'}"
+				@change="scoreEdgeChange"
+			>
+			</uni-check-box>
 		</template>
 		<template v-else>
-			<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
+			<uni-check-box
+				label="压线压型"
+				:localdata="config.radioData.lineBall"
+				:radioData.sync="formData.lineBallInfo" 
+				:map="{text: 'text', value: 'value'}"
+				@change="lineBallChange"
+			>
+			</uni-check-box>
+			<!-- <popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select> -->
 		</template>
 		<van-field id="lineBallFormula" v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="压线和=板宽(格式:x+x+x)" @focus="inputFocus('lineBallFormula')" @blur=" inputBlur('lineBallFormula') "/>
-		<!-- <van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数" @blur=" calcArea() "/> -->
+
 		<div class="van-cell van-field">
 			<div class="van-cell__title van-field__label" >
 				<span>订单数</span>
@@ -68,6 +84,8 @@
 	import BuildCalc from '@/components/subject/client/BuildCalc.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import { checkBuildTime } from '@/util';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -81,7 +99,8 @@
 			BuildSku,
 			BuildResult,
 			BuildCalc,
-			FieldLabelVariable
+			FieldLabelVariable,
+			UniCheckBox
 		},
 		data(){
 			return {
@@ -101,9 +120,27 @@
 						}
 					},
 					radioData:{
-						material : [],
-						lineBall : [],
-						cusInfo  : []
+						material: [],
+						lineBall: [],
+						cusInfo: [],
+						lineInfo: [
+							{
+								text: '净片-无压线',
+								value: '00'
+							},
+							{
+								text: '净片-普通压线',
+								value: '01'
+							},
+							{
+								text: '净片-平压线',
+								value: '02'
+							},
+							{
+								text: '毛片-无压线',
+								value: '10'
+							}
+						]
 					},
 					popup:{
 						timeFilter: {
@@ -178,6 +215,7 @@
 					dOrdPrice        : null,   //计价价格 
 					dAmt             : null,   //金额
 					buildType        : 0,      //0新增 1修改 2快速下单
+					scoreEdge: null,
 				},
 				rules : {
 					cusOrderId : [
@@ -294,10 +332,13 @@
 							self.$router.push('/client/usedboard/lists')
 						});
 					}
-					self.config.radioData.material = [];
 					res.result.board_select_list.forEach((item,index)=>{
 						if( item.BoardName == null ){
-							self.config.radioData.material.push({ value : item.BoardId , text: '', tag:item.IsUsedBoard });
+							self.config.radioData.material.push({ 
+								value : item.BoardId, 
+								text: item.BoardId, 
+								tag:item.IsUsedBoard 
+							});
 						}else{
 							self.config.radioData.material.push({ value : item.BoardId , text: item.BoardName, tag:item.IsUsedBoard });
 						}
@@ -333,67 +374,35 @@
 					self.config.buildTime.BuildInTime2 = res.result.page_config.BuildInTime2;
 					self.checkTime();
 
-					let lastEdgeType = Number(res.result.last_build_info.LastEdgeType);
-					let lastScoreType = Number(res.result.last_build_info.LastScoreType);
+					//let lastEdgeType = Number(res.result.last_build_info.LastEdgeType);
+					let lastScoreType = Number(res.result.last_build_info.LastScoreType)
 
 					if( self.formData.isCalc == 1 ){
-						const jp = [];
-						res.result.line_ball_config.forEach((item,index)=>{
-							jp.push( item );
-						});
-
-						self.config.lineInfo = {
-							'净片':jp,
-							'毛片':['无压线']
-						};
-						
-						self.config.calcDefault.index = 0;
-						self.config.calcDefault.name = jp[0];
-
-						if( self.formData.buildType == 0 ){
-							
-							self.config.calcDefault.edgeType = lastEdgeType == 1 ? '毛片':'净片';
-							//净片时需要设置对应的压线信息
-							if( lastScoreType <= jp.length && lastScoreType >= 0 && lastEdgeType == 0 ){
-								self.config.calcDefault.index = lastScoreType;
-								self.config.calcDefault.name = jp[lastScoreType ];
-							}
-						}
-
-						if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
-							let webEdgeType = Number(res.result.fast_order_booking.WebEdgeType);
-							let scoreType = Number(res.result.fast_order_booking.ScoreType);
-							//净片时需要设置对应的压线信息
-							if( webEdgeType == 0 && scoreType <= jp.length && scoreType>=0 ){
-								self.config.calcDefault.index = scoreType;
-								self.config.calcDefault.name = jp[scoreType ];
-							}
-						}
+						this.formData.scoreEdge = res.result.last_build_info.LastEdgeType + res.result.last_build_info.LastScoreType
+						//设置上次下单材质
+						this.formData.materialType = res.result.last_build_info.LastBoardId || ''
 						//设置formData参数
 						this.formData.isEdge = self.config.calcDefault.edgeType;
 						this.formData.lineBallInfo = self.config.calcDefault.name;
 					}else{
 						res.result.line_ball_config.forEach((item,index)=>{
-							self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
+							self.config.radioData.lineBall.push( { value: item, text: item } );
 						});
 
 						self.formData.lineBallInfo = self.config.radioData.lineBall[lastScoreType].value;
 						
-						//self.formData.lineBallInfo = res.result.page_config.DefaultScoreName ? res.result.page_config.DefaultScoreName : self.config.radioData.lineBall[0].value;
 					}
 
 					if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
-						self.formData.materialType    = res.result.fast_order_booking.BoardId;
-						self.formData.boardLength     = res.result.fast_order_booking.Length;
-						self.formData.boardWidth      = res.result.fast_order_booking.Width;
-						self.formData.lineBallFormula = res.result.fast_order_booking.ScoreInfo;
-						self.formData.address         = res.result.fast_order_booking.CusSubNo;
-						self.formData.deliveryRemark  = self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : '';
-						self.formData.productionRemark= res.result.fast_order_booking.ProRemark;
-
-						self.formData.orderQuantities = res.result.fast_order_booking.OrdQty;
+						self.formData.materialType = res.result.fast_order_booking.BoardId
+						self.formData.boardLength = res.result.fast_order_booking.Length
+						self.formData.boardWidth = res.result.fast_order_booking.Width
+						self.formData.lineBallFormula = res.result.fast_order_booking.ScoreInfo
+						self.formData.address = res.result.fast_order_booking.CusSubNo
+						self.formData.deliveryRemark = self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : ''
+						self.formData.productionRemark= res.result.fast_order_booking.ProRemark
+						self.formData.orderQuantities = res.result.fast_order_booking.OrdQty
 					}
-
 					if( self.formData.buildType == 1 ){
 						self.formData.cusOrderId = res.result.fast_order_booking.CusPoNo;
 					}
@@ -467,15 +476,13 @@
 								Toast.fail({
 									message: '下单面积范围:' + self.pageConfig.minArea + '㎡\n' + self.pageConfig.maxArea + '㎡',
 									onClose:()=>{
-										self.formData.area            = '';
-										self.formData.orderQuantities = '';
-										//self.config.button.disabled   = true;
-										self.config.button.calcBtnDis = true;
-										self.checkFormula();
+										self.formData.area = ''
+										self.formData.orderQuantities = ''
+										self.config.button.calcBtnDis = true
+										self.checkFormula()
 									}
 								});
 							}else{
-								//self.config.button.disabled   = false;
 								self.config.button.calcBtnDis = false;
 								self.checkFormula();
 							}
@@ -631,9 +638,16 @@
 			materialTypeChange( newValue ){
 				this.formData.materialType = newValue;
 			},
-			lineBallChange( newValue ){
-				this.formData.lineBallInfo = newValue;
+			scoreEdgeChange(e) {
+				this.formData.lineBallInfo = ['无压线', '普通压线', '平压线'][e.detail.value[1]]
+				this.formData.edgeType = e.detail.value[0]
 			},
+			lineBallChange(e){
+				this.formData.lineBallInfo = e.detail.value
+			},
+			/*lineBallChange( newValue ){
+				this.formData.lineBallInfo = newValue;
+			},*/
 			addressChange( newValue ){
 				this.formData.address = newValue;
 			},
@@ -658,10 +672,6 @@
 				}
 			},
 			inputBlur( id ){
-				/*const ua = window.navigator.userAgent.toLocaleLowerCase();
-				const isAndroid = /android/.test(ua);
-				if (isAndroid)
-					return */
 				if( id == 'lineBallFormula' ){
 					this.checkFormula();
 				}
@@ -708,11 +718,6 @@
 		},
 		mounted(){
 			this.fetchBuildType( this.$route.params );
-			/*if( typeof( this.$route.params.orderId ) != 'undefined' && this.$route.params.orderId != null ){
-				this.fastBuild( this.$route.params.orderId );
-			}else{
-				this.getConfig( '' );
-			}*/
 			this.validator = new schema(this.rules);
 		},
 		updated(){

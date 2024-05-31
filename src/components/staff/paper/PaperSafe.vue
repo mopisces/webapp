@@ -10,7 +10,15 @@
 			</van-tabs>
 		</van-sticky>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
-			<radio-cell :radioInfo.sync="filterForm.safePaperType" :radioColumns="config.radio.options" :title="config.radio.title" slot="filter-field-1"></radio-cell>
+			<!-- <radio-cell :radioInfo.sync="filterForm.safePaperType" :radioColumns="config.radio.options" :title="config.radio.title" slot="filter-field-1"></radio-cell> -->
+			<uni-check-box
+				slot="filter-field-1"
+				:label="config.radio.title"
+				:localdata="config.radio.options"
+				:radioData.sync="filterForm.safePaperType" 
+				:map="{text: 'title', value: 'value'}"
+			>
+			</uni-check-box>
 			<van-field label="原纸代码" v-model="filterForm.safePaperCode" input-align="center" placeholder="精确查询"  slot="filter-field-2"></van-field>
 			<van-field label="门幅" v-model="filterForm.safePaperWidth" input-align="center" placeholder="精确查询"  slot="filter-field-3"></van-field>
 			<van-field label="纸种名称" v-model="filterForm.safePaperName" input-align="center" placeholder="精确查询"  slot="filter-field-4"></van-field>
@@ -26,6 +34,8 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -36,7 +46,8 @@
 			[Tabs.name]: Tabs,
 
 			PopupFilter,
-			RadioCell
+			RadioCell,
+			UniCheckBox
 		},
 		data(){
 			return {

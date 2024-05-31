@@ -1,55 +1,178 @@
 <template>
 	<div>
-		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成" :disabled="config.custIDField.disabled"/>
-		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @valueChange="materialTypeChange"></popup-select>
-		</van-field>
+		<van-field 
+			v-model="formData.cusOrderId" 
+			input-align="center" 
+			label="客订单号" 
+			placeholder="未填写则系统自动生成" 
+			:disabled="config.custIDField.disabled"
+		/>
+		<popup-select 
+			:selectValue.sync="formData.materialType" 
+			:fieldConfig="config.fieldConfig.material" 
+			:radioData="config.radioData.material" 
+			selectType="material" 
+			@valueChange="materialTypeChange"
+		></popup-select>
+		
 		<div class="van-cell" style="display: flex;align-items: center;">
-			<div class="van-cell__title van-field__label">纸板规格(mm)</div>
-			<input id="boardLength" type="number" class="karry-input" placeholder="长" v-model="formData.boardLength" @focus="inputFocus('boardLength')" @blur=" inputBlur('boardLength') "/>
+			<div class="van-cell__title van-field__label">纸板(mm)</div>
+			<input 
+				id="boardLength" 
+				type="number" 
+				class="karry-input" 
+				placeholder="长" 
+				v-model="formData.boardLength"
+				@focus="inputFocus('boardLength')" 
+				@blur=" inputBlur('boardLength') "
+			/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input id="boardWidth" type="number" class="karry-input" placeholder="宽" v-model="formData.boardWidth" @focus="inputFocus('boardWidth')" @blur=" inputBlur('boardWidth') "/>
+			<input 
+				id="boardWidth" 
+				type="number" 
+				class="karry-input" 
+				placeholder="宽" 
+				v-model="formData.boardWidth" 
+				@focus="inputFocus('boardWidth')" 
+				@blur=" inputBlur('boardWidth') "
+			/>
 			<div class="van-field__right-icon">
-				<van-icon name="question-o" @click="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth +'mm~' + pageConfig.maxWidth + 'mm' )"/>
+				<van-icon 
+					name="question-o" 
+					@click="$toast('板长范围:' + pageConfig.minLength + 'mm~' + pageConfig.maxLength + 'mm\n板宽范围:' + pageConfig.minWidth +'mm~' + pageConfig.maxWidth + 'mm' )"
+				/>
 			</div>
 		</div>
-		<template v-if="formData.isCalc == 1 ">
-			<build-calc :lineInfo="config.lineInfo" :calcDefault="config.calcDefault" @buildCalc="buildCalc"></build-calc>
-		</template>
-		<template v-else>
-			<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
-		</template>
-		<van-field id="lineBallFormula" v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="压线和=板宽(格式:x+x+x)" @focus="inputFocus('lineBallFormula')" @blur=" inputBlur('lineBallFormula') "/>
-		<!-- <van-field v-model="formData.orderQuantities" input-align="center" type="number" label="订单数" placeholder="输入订单数" @blur=" calcArea() "/> -->
+		<div style="width: 100%;height: 1rem;"></div>
+		<uni-check-box
+			label="压线压型"
+			:localdata="config.radioData.lineInfo"
+			:radioData.sync="formData.scoreEdge" 
+			:map="{text: 'text', value: 'value'}"
+			@change="scoreEdgeChange"
+		>
+		</uni-check-box>
+		<div style="width: 100%;height: 1rem;"></div>
+		<van-field 
+			id="lineBallFormula" 
+			v-model="formData.lineBallFormula" 
+			input-align="center" 
+			label="压线信息" 
+			placeholder="压线和=板宽(格式:x+x+x)" 
+			@focus="inputFocus('lineBallFormula')" 
+			@blur=" inputBlur('lineBallFormula') "
+		/>
 		<div class="van-cell van-field">
 			<div class="van-cell__title van-field__label" >
 				<span>订单数</span>
 			</div>
 			<div class="van-cell__value">
 				<div class="van-field__body">
-					<input id="orderQuantities" type="text" placeholder="输入订单数" v-model="formData.orderQuantities" class="van-field__control van-field__control--center karry-input" style="background-color:#f0f0f0;" v-on:focus="inputFocus('orderQuantities')" v-on:blur="inputBlur('orderQuantities')"/>
+					<input 
+						id="orderQuantities" 
+						type="text" 
+						placeholder="输入订单数" 
+						v-model="formData.orderQuantities" 
+						class="van-field__control van-field__control--center karry-input"
+						style="background-color:#f0f0f0;" 
+						v-on:focus="inputFocus('orderQuantities')" 
+						v-on:blur="inputBlur('orderQuantities')"
+					/>
 				</div>
 			</div>
 		</div>
-		<van-field v-model="formData.area" clearable readonly input-align="center" label="下单面积(㎡)" placeholder="待计算" right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡' ) ">
+		<van-field 
+			v-model="formData.area" 
+			clearable 
+			readonly 
+			input-align="center" 
+			label="下单面积(㎡)" 
+			placeholder="待计算" 
+			right-icon="question-o" 
+			@click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡' ) "
+		>
 		</van-field>
-		<template v-if=" formData.isCalc == 1 ">
-			<field-label-variable :value.sync="formData.dOrdPrice" label="计价价格" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
-			<field-label-variable :value.sync="formData.dAmt" label="金额" placeholder="待计算" type="number" readonly="readonly"></field-label-variable>
-		</template>
-		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.cusInfo" :radioData="config.radioData.cusInfo" selectType="cusInfo" @valueChange="addressChange"></popup-select>
-		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" :rows="1"/>
-		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" :rows="1"/>
+		<field-label-variable 
+			:value.sync="formData.dOrdPrice" 
+			label="计价价格" 
+			placeholder="待计算" 
+			type="number" 
+			readonly="readonly">
+		</field-label-variable>
+		<field-label-variable 
+			:value.sync="formData.dAmt" 
+			label="金额" 
+			placeholder="待计算" 
+			type="number" 
+			readonly="readonly">
+		</field-label-variable>
+		<popup-select 
+			:selectValue.sync="formData.address" 
+			:fieldConfig="config.fieldConfig.cusInfo" 
+			:radioData="config.radioData.cusInfo" 
+			selectType="cusInfo" 
+			@valueChange="addressChange">
+		</popup-select>
+		<new-time-picker 
+			v-if="config.popup.timeFilter.isFinishLoad"
+			:dateTime.sync="formData.date" 
+			:minDate="pageConfig.minDate" 
+			:maxDate="pageConfig.maxDate" 
+			label="交货日期" 
+		>
+		</new-time-picker>
+		<van-field 
+			v-if="config.showDeliveryRemark == 1" 
+			v-model="formData.deliveryRemark" 
+			autosize 
+			label="送货备注" 
+			type="textarea"  
+			maxlength="50" 
+			placeholder="填写送货备注" 
+			:rows="1"
+		/>
+		<van-field 
+			v-model="formData.productionRemark" 
+			autosize 
+			label="生产备注" 
+			type="textarea"  
+			maxlength="50" 
+			placeholder="填写生产备注" 
+			:rows="1"
+		/>
 		<div style="width:100%;height:5.7rem;"></div>
-		<template  v-if="formData.isCalc == 1 ">
-			<van-button  type="warning" size="normal" style="width:50%;position:fixed;bottom:3.125rem;" @click="calcPriceInfo()" :disabled=" config.button.calcBtnDis ">试算</van-button>
-			<van-button  type="primary" size="normal" style="width:50%;position:fixed;bottom:3.125rem;left:50%;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
-		</template>
-		<template v-else>
-			<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
-		</template>
-		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="s" @saveOrder="saveOrder" :isGroup="false"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup="true" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
+		
+		<van-button  
+			type="warning" 
+			size="normal" 
+			style="width:50%;position:fixed;bottom:3.125rem;" 
+			@click="calcPriceInfo()" 
+			:disabled="config.button.calcBtnDis"
+		>试算</van-button>
+		<van-button  
+			type="primary" 
+			size="normal" 
+			style="width:50%;position:fixed;bottom:3.125rem;left:50%;" 
+			@click="buildOrder()" 
+			:disabled=" config.button.disabled "
+		>下单</van-button>
+		
+		<build-sku 
+			:skuShow.sync="config.popup.sku.show" 
+			:orderInfo="formData" 
+			orderType="s" 
+			@saveOrder="saveOrder" 
+			:isGroup="false" 
+		/>
+		<build-result 
+			v-if="config.result.show" 
+			:resultShow.sync="config.result.show" 
+			:isGroup="true" 
+			:isSuccess="config.result.isSuccess" 
+			:cusOrderId="config.result.cusOrderId" 
+			:failMsg="config.result.failMsg"
+			@clearFormData="clearFormData()" 
+		/>
 	</div>
 </template>
 <script>
@@ -62,6 +185,8 @@
 	import BuildCalc from '@/components/subject/client/BuildCalc.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import { checkBuildTime } from '@/util';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -75,7 +200,8 @@
 			BuildSku,
 			BuildResult,
 			BuildCalc,
-			FieldLabelVariable
+			FieldLabelVariable,
+			UniCheckBox
 		},
 		data(){
 			return {
@@ -95,9 +221,27 @@
 						}
 					},
 					radioData:{
-						material : [],
-						lineBall : [],
-						cusInfo  : []
+						material: [],
+						lineBall: [],
+						cusInfo: [],
+						lineInfo: [
+							{
+								text: '净片-无压线',
+								value: '00'
+							},
+							{
+								text: '净片-普通压线',
+								value: '01'
+							},
+							{
+								text: '净片-平压线',
+								value: '02'
+							},
+							{
+								text: '毛片-无压线',
+								value: '10'
+							}
+						]
 					},
 					popup:{
 						timeFilter: {
@@ -174,6 +318,7 @@
 					dUnitPrice       : null,   //单价
 					quotaId          : null,   //
 					buildType        : 0,      //0新增 1修改 2快速下单
+					scoreEdge: null
 				},
 				rules : {
 					cusOrderId : [
@@ -210,12 +355,12 @@
 							callback(errors);
 						}}
 					],
-					lineBallInfo : [
-						{ required  : true, message : '请选择压线名称' },
+					lineBallInfo: [
+						{ required: true, message : '请选择压线名称' },
 					],
-					lineBallFormula : [
-						{ pattern   : '^\\\d+([.]{1}[5]{1}){0,1}(\\\+\\\d+([.]{1}[5]{1}){0,1})+$', message : '压线信息错误' },
-						{ validator : (rule, value, callback, source, options)=>{
+					lineBallFormula: [
+						{ pattern: '^\\\d+([.]{1}[5]{1}){0,1}(\\\+\\\d+([.]{1}[5]{1}){0,1})+$', message : '压线信息错误' },
+						{ validator: (rule, value, callback, source, options)=>{
 							let errors;
 							if( this.formData.lineBallInfo != '无压线' &&  Number( this.formData.boardWidth ) !=  eval(value) ){
 								errors = '压线和不等于板宽';
@@ -392,70 +537,12 @@
 					self.config.buildTime.BuildInTime2 = res.result.page_config.BuildInTime2;
 					self.checkTime();
 
-					/*if( self.formData.isCalc == 1 ){*/
-						//console.log( res.result.fast_order_booking)
-						const jp = [];
-						res.result.line_ball_config.forEach((item,index)=>{
-							/*if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
-								
-							}
-							if( self.formData.buildType == 0 && res.result.page_config.DefaultScoreName && res.result.page_config.DefaultScoreName == item ){
-								self.config.calcDefault.index = index;
-								self.config.calcDefault.name = item;
-							}
-							if( self.formData.buildType == 0 && res.result.last_build_info.LastScoreName && res.result.last_build_info.LastEdgeType ){
-								if( res.result.last_build_info.LastEdgeType == 0 && res.result.last_build_info.LastScoreName == index ){
-									self.config.calcDefault.index = index;
-									self.config.calcDefault.name = item;
-								}
-								if( res.result.last_build_info.LastEdgeType == 1 ){
-									self.config.calcDefault.index = 0;
-									self.config.calcDefault.name = item;
-								}
-							}
-							if( self.formData.buildType == 1 && res.result.fast_order_booking.ScoreType && res.result.last_build_info.ScoreType == item ){
-								self.config.calcDefault.index = index;
-								self.config.calcDefault.name = item;
-								self.config.calcDefault.edgeType = res.result.fast_order_booking.WebEdgeType == 1 ? '毛片': '净片';
-							}
-							if( self.formData.buildType == 2 && index == res.result.fast_order_booking.ScoreType){
-								self.config.calcDefault.index = index;
-								self.config.calcDefault.name = item;
-								self.config.calcDefault.edgeType = res.result.fast_order_booking.WebEdgeType == 1 ? '毛片': '净片';
-							}*/
-							jp.push( item );
-						});
-
-						self.config.lineInfo = {
-							'净片':jp,
-							'毛片':['无压线']
-						};
-
-						self.config.calcDefault.index = 0;
-						self.config.calcDefault.name = jp[0];
-						if( self.formData.buildType == 0 ){
-							let lastEdgeType = Number(res.result.last_build_info.LastEdgeType);
-							let lastScoreType = Number(res.result.last_build_info.LastScoreType);
-							self.config.calcDefault.edgeType = lastEdgeType == 1 ? '毛片':'净片';
-							//净片时需要设置对应的压线信息
-							if( lastScoreType <= jp.length && lastScoreType >= 0 && lastEdgeType == 0 ){
-								self.config.calcDefault.index = lastScoreType;
-								self.config.calcDefault.name = jp[lastScoreType ];
-							}
-						}
-
-						if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
-							let webEdgeType = Number(res.result.fast_order_booking.WebEdgeType);
-							let scoreType = Number(res.result.fast_order_booking.ScoreType);
-							//净片时需要设置对应的压线信息
-							if( webEdgeType == 0 && scoreType <= jp.length && scoreType>=0 ){
-								self.config.calcDefault.index = scoreType;
-								self.config.calcDefault.name = jp[scoreType ];
-							}
-						}
-						//设置formData参数
-						this.formData.isEdge = self.config.calcDefault.edgeType;
-						this.formData.lineBallInfo = self.config.calcDefault.name;
+					this.formData.scoreEdge = res.result.last_build_info.LastEdgeType + res.result.last_build_info.LastScoreType
+					//设置上次下单材质
+					this.formData.materialType = res.result.last_build_info.LastBoardId || ''
+					//设置formData参数
+					this.formData.isEdge = self.config.calcDefault.edgeType;
+					this.formData.lineBallInfo = self.config.calcDefault.name;
 
 						
 					if( self.formData.buildType == 2 || self.formData.buildType == 1 ){
@@ -469,7 +556,8 @@
 						self.formData.address         = res.result.fast_order_booking.CusSubNo;
 						self.formData.deliveryRemark  = self.config.showDeliveryRemark == 1 ? res.result.fast_order_booking.DNRemark : '';
 						self.formData.productionRemark= res.result.fast_order_booking.ProRemark;
-						
+
+						self.formData.scoreEdge = res.result.fast_order_booking.WebEdgeType + res.result.fast_order_booking.ScoreType
 					}
 					if( self.formData.buildType == 1 ){
 						self.formData.cusOrderId = res.result.fast_order_booking.CusPoNo;
@@ -487,9 +575,7 @@
 			buildOrder(){
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
-					if( this.formData.isCalc == 1 ){
-						this.calcPriceInfo(false, true);
-					}
+					this.calcPriceInfo(false, true);
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
 				});
@@ -616,22 +702,12 @@
 				});
 			},
 			clearFormData(){
-				/*Object.keys( this.formData ).forEach((item,index)=>{
-					if( item != 'materialType' ){
-						this.formData[item] = '';
-					}
-					this.formData.isEdge = '净片';
-				});*/
 				let formDataInit = Object.assign({},this.$options.data().formData,{
 					materialType: this.formData.materialType
 				});
 				this.formData = formDataInit;
 				this.getConfig();
 			},
-			/*fastBuild( orderId ){
-				this.config.isFastBuild = true;
-				this.getConfig( orderId );
-			},*/
 			buildCalc( data ){
 				this.formData.isEdge = data[0];
 				this.formData.lineBallInfo = data[1];
@@ -734,6 +810,10 @@
 			},
 			lineBallChange( newValue ){
 				this.formData.lineBallInfo = newValue;
+			},
+			scoreEdgeChange(e) {
+				this.formData.lineBallInfo = ['无压线', '普通压线', '平压线'][e.detail.value[1]]
+				this.formData.edgeType = e.detail.value[0]
 			},
 			addressChange( newValue ){
 				this.formData.address = newValue;
@@ -846,7 +926,14 @@
 				}else{
 					this.config.custIDField.disabled = false;
 				}
-			}
+			},
+			'config.result.show': {
+				handler( nVal, oVal ) {
+					if( nVal ) {
+						window.scrollTo(0,0)
+					}
+				}
+			},
 		}
 	}
 </script>

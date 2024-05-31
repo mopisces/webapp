@@ -17,7 +17,7 @@
 				{{ failMsg }}
 			</div>
 		</div>
-		<van-button type="primary" style="width:100%;" v-if=" group && isSuccess " @click="goPay()">去付款</van-button>
+		<van-button type="primary" style="width:100%;" v-if=" group && isSuccess && !isPay " @click="goPay()">去付款</van-button>
 		<van-button plain type="default" style="width:100%;margin-top:10px;" @click="wxOrderClick()
 		">查看微信订单</van-button>
 		<van-button plain type="primary" style="width:100%;margin-top:10px;" @click="continueOrder()">继续下单</van-button>
@@ -31,11 +31,10 @@
 			[Icon.name]: Icon,
 			[Popup.name]: Popup,
 		},
-		props : ['resultShow','isGroup','isSuccess','cusOrderId','failMsg'],
+		props : ['resultShow','isGroup','isSuccess','cusOrderId','failMsg','isPay'],
 		data(){
 			return {
-				show : this.resultShow,
-				group : this.isGroup
+				
 			}
 		},
 		methods:{
@@ -63,21 +62,22 @@
 			
 		},
 		computed:{
-			
+			group: {
+				get() {
+					return this.$props.isGroup
+				},
+				set( nVal ) {
+					this.$emit("update:isGroup", nVal)
+				}
+			},
+			show: {
+				get() {
+					return this.$props.resultShow
+				},
+				set( nVal ) {
+					this.$emit("update:resultShow", nVal)
+				}
+			},
 		},
-		watch:{
-			resultShow(newV,oldV){
-				this.show = newV;
-			},
-			show(newV,oldV){
-				this.$emit("update:resultShow", newV);
-			},
-			isGroup(newV,oldV){
-				this.group = newV;
-			},
-			group(newV,oldV){
-				this.$emit("update:isGroup", newV);
-			},
-		}
 	}
 </script>

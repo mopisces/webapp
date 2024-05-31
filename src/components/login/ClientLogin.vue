@@ -1,8 +1,8 @@
 <template>
-	<div>
+	<div :style="'min-height: '+ viewH/16 +'rem;background-color: #fff;'">
 		<div>
 			<div style="padding: 5%;  height: 100%;text-align:center;">
-				{{ pageInfo.factoryName }}
+				{{ pageInfo.factoryName }}1
 			</div>
 			<div style="width: 100%; text-align: center;">
 				<van-image :src="pageInfo.factoryLogo" width="40%" height="50%"/>
@@ -18,12 +18,17 @@
 	</div>
 </template>
 <script>
-	import login from '@/request/staff/login';
-	import { Button, Image, Field, Toast, Divider } from 'vant';
-	import schema from 'async-validator';
-	import CopyRight from '@/components/subject/footer/CopyRight';
-	import { getStorage, setStorage, removeStorage } from '@/util/storage';
-	import { clearLogin } from '@/util';
+	//import login from '@/request/staff/login'
+	import { Button, Image, Field, Toast, Divider } from 'vant'
+	import schema from 'async-validator'
+	import CopyRight from '@/components/subject/footer/CopyRight'
+	import { getStorage, setStorage, removeStorage } from '@/util/storage'
+	import { clearLogin } from '@/util'
+
+	/*api接口*/
+	import { getSF, login, quickLogin, getUserInfo, fetchConfig } from '@/api/common/index.js'
+	/*后台地址*/
+	import { backStageUrl } from '@/config/domain.js'
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -82,49 +87,113 @@
 			onLogin(){
 				let self = this;
 				this.validator.validate(this.formData).then(()=>{
-					self.login( self.formData );
+					self.goLogin( self.formData )
 				}).catch(({ errors, fields })=>{
-					Toast.fail(errors[0].message);
+					Toast.fail(errors[0].message)
 				});				
 			},
-			login( data ){
-				let self = this;
+			async goLogin( data ){
+				await this.$store.dispatch('user/login', {
+					user_name: data.userName.toUpperCase(),
+					user_pass: data.userPass,
+					user_type: data.userType,
+					sub_fac_id: data.subFactoryId
+				})
+				setTimeout(async ()=>{
+					if( this.$store.getters['user/accessToken'] && this.$store.getters['user/authMap'] ) {
+						await this.$store.dispatch('client/permission', this.$store.getters['user/authMap'])
+						await this.$router.addRoutes(this.$store.state.client.navList)
+						if( this.config.redirect.name ) {
+							this.$router.replace({ 
+								name: this.config.redirect.name, 
+								params: { productId: this.config.redirect.params }
+							})
+						} else {
+							this.$router.push(this.$store.state.client.loginRedirect)
+						}
+						this.$store.commit('client/setLoginRedirect','/client/index/menu')
+					}
+				}, 1000)
+
+				await setStorage('jpdn-client-username', data.userName.toUpperCase())
+				await setStorage('jpdn-client-userpwd', data.userPass)
+				
+				/*const { result } = await login({
+					user_name: data.userName.toUpperCase(),
+					user_pass: data.userPass,
+					user_type: data.userType,
+					sub_fac_id: data.subFactoryId
+				})
+				if( result.user_name != getStorage('jpdn-client-username') ) 
+					removeStorage()
+				this.setLocalInfo(result);
+				this.result.userName = result.user_name;*/
+				/*let self = this;
 				this.$request.login.login.login( data ).then(res=>{
-					/*setStorage('jpdn-client-token',res.result.access_token);
-					setStorage('jpdn-client-refresh',res.result.refresh_token);
-					setStorage('jpdn-client-username',res.result.user_name);
-					setStorage('jpdn-client-userpwd',res.result.user_pwd);
-					setStorage('jpdn-client-isLogin',true);*/
 					if( res.result.user_name != getStorage('jpdn-client-username') ) removeStorage();
 					self.setLocalInfo(res.result);
 					self.result.userName = res.result.user_name;
-					//localStorage.setItem("client-loginInfo",JSON.stringify( this.formData ));
-				});
+				});*/
 			},
-			quickLogin(){
-				let self = this;
+			async quick(){
+				/*let self = this;
 				this.$request.login.login.quickLogin( this.$route.query.token ).then(res=>{
-					/*setStorage('jpdn-client-token',res.result.access_token);
-					setStorage('jpdn-client-refresh',res.result.refresh_token);
-					setStorage('jpdn-client-username',res.result.user_name);
-					setStorage('jpdn-client-userpwd',res.result.user_pwd);
-					setStorage('jpdn-client-isLogin',true);*/
 					if( res.result.user_name != getStorage('jpdn-client-username') ) removeStorage();
 					self.setLocalInfo(res.result);
 					self.result.userName = res.result.user_name;
-				});
+				});*/
+				const { result } = await quickLogin({
+					get_user_secret: this.$route.query.token || null
+				})
+				await this.$store.commit('user/setUserType', 'client')
+				await this.$store.commit("user/setAccessToken", result.access_token)
+				await this.$store.dispatch('user/getUserInfo')
+				setTimeout(async ()=>{
+					if( this.$store.getters['user/accessToken'] && this.$store.getters['user/authMap'] ) {
+						await this.$store.dispatch('client/permission', this.$store.getters['user/authMap'])
+						await this.$router.addRoutes(this.$store.state.client.navList)
+						this.$router.push('/client/index/menu')
+					}
+				}, 1000)
+				/*if( result.user_name != getStorage('jpdn-client-username') ) 
+					removeStorage()
+				this.setLocalInfo(res.result);
+				this.result.userName = result.user_name;*/
 			},
-			async setLocalInfo( $info ){
-				setStorage('jpdn-client-token',$info.access_token, 'sessionStorage');
-				setStorage('jpdn-client-refresh',$info.refresh_token, 'sessionStorage');
-				setStorage('jpdn-client-username',$info.user_name);
-				setStorage('jpdn-client-userpwd',$info.user_pwd);
-				setStorage('jpdn-client-isLogin',1, 'sessionStorage');
-				setStorage('jpdn-login-type','client');
-				await this.fetchConfig();
+			async setLocalInfo( info ){
+				await setStorage('jpdn-client-token', info.access_token, 'sessionStorage')
+				await setStorage('jpdn-client-refresh', info.refresh_token, 'sessionStorage')
+				await setStorage('jpdn-client-username',info.user_name)
+				await setStorage('jpdn-client-userpwd', info.user_pwd)
+				//await setStorage('jpdn-client-isLogin',1, 'sessionStorage')
+				await setStorage('jpdn-login-type', 'client')
+				await this.$store.commit('user/setAccessToken', info.access_token)
+				await this.$store.commit('user/setUserType', 'client')
+				await this.$store.commit('client/setIsLogin', 1)
+				await this.getConfig()
+				await this.getAuthName()
 			},
-			getAuthName( data ){
-				let self = this;
+			async getAuthName(){
+				const { result } = await getUserInfo()
+				setStorage('client-auth-url', result.available)
+				this.$store.dispatch('client/permission', result.available)
+				this.$router.addRoutes(this.$store.state.client.navList)
+
+				this.$nextTick(()=>{
+					setStorage('jpdn-client-isLogin', 1, 'sessionStorage')
+					if( this.config.redirect.name != '' ) {
+						this.$store.commit('client/setTabbarActive','group');
+						this.$router.replace({ 
+							name: this.config.redirect.name, 
+							params: { productId: this.config.redirect.params }
+						})
+					} else {
+						this.$store.commit('client/setTabbarActive','menu');
+						this.$router.push(this.$store.state.client.loginRedirect);
+						this.$store.commit('client/setLoginRedirect','/client/index/menu')
+					}
+				})
+				/*let self = this;
 				this.$request.staff.user.getAuthName( data ).then(res=>{
 					if( res.errorCode != '00000' ){
 						return ;
@@ -140,23 +209,27 @@
 							this.$router.replace({ name : this.config.redirect.name , params : { productId : this.config.redirect.params } }); 
 						}else{
 							this.$store.commit('client/setTabbarActive','menu');
-							//this.$router.push('/client/index/menu');
 							this.$router.push(this.$store.state.client.loginRedirect);
 							this.$store.commit('client/setLoginRedirect','/client/index/menu')
 						}
 					});
-				});
+				});*/
 			},
 			registerClick(){
 				this.$router.push('/group/register');
 			},
-			getLogo(){
-				let self = this;
+			async getLogo(){
+				const { result } = await getSF()
+				const { factory_info, group_open } = result
+				this.config.groupOpen = group_open == 1 ? true : false
+				this.pageInfo.factoryName = factory_info.FactoryName
+				this.pageInfo.factoryLogo = factory_info.FactoryLogo
+				/*let self = this;
 				this.$request.staff.login.getSF().then(res=>{
 					self.config.groupOpen = res.result.group_open == 1 ? true : false;
-					self.pageInfo.factoryLogo = window.jpdn_domain_imgDomain + res.result.factory_info.FactoryLogo;
+					self.pageInfo.factoryLogo = res.result.factory_info.FactoryLogo;
 					self.pageInfo.factoryName = res.result.factory_info.FactoryName;
-				});
+				});*/
 			},
 			eyeClick(){
 				if( this.config.field.passIcon == 'eye-o'  ){
@@ -167,32 +240,27 @@
 					this.config.field.type = 'text';
 				}
 			},
-			fetchConfig(){
-				this.$request.staff.login.fetchConfig().then(res=>{
+			async getConfig(){
+				const { result } = await fetchConfig()
+				setStorage('jpdn_webapp_config',{ selectNeedConfirm: result.BuildRadioNeedConfirm })
+				/*this.$request.staff.login.fetchConfig().then(res=>{
 					if( res.errorCode == '00000' ){
 						setStorage('jpdn_webapp_config',{ selectNeedConfirm:res.result.BuildRadioNeedConfirm });
 					}
-				});
+				});*/
 			}
 		},
-		created(){
+		async created(){
 			if( getStorage('jpdn-client-username') ){
 				this.formData.userName = getStorage('jpdn-client-username');
 			}
 			if( getStorage('jpdn-client-userpwd') ){
 				this.formData.userPass = getStorage('jpdn-client-userpwd');
 			}
-			/*setStorage('jpdn-client-isLogin',0,'sessionStorage');
-			removeStorage('client-auth-url');
-			removeStorage('jpdn-client-token', 'sessionStorage');
-			removeStorage('jpdn-client-refresh', 'sessionStorage');
-			this.$store.commit('client/setIsLogin',false);*/
-			clearLogin();
-			let height = window.screen.height - 96;
-			this.config.style.div = 'width:100%;height:' + height + 'px';
+			await clearLogin()
 			if( typeof (this.$route.query.token) != 'undefined' ){
 				if( this.$route.query.token.length > 100 ){
-					this.quickLogin();
+					this.quick()
 				}
 			}
 			if( typeof(this.$route.query.scanRes) == 'string' ){
@@ -202,12 +270,12 @@
 				this.config.redirect.name   = this.$route.params.redirectName;
 				this.config.redirect.params = this.$route.params.productId;
 			}
-			this.getLogo();
-			this.$store.commit('client/setHeaderTitle','客户登录');
-			this.$store.commit('client/setTabbarActive','clogin');
+			await this.getLogo()
 		},
 		mounted(){
 			this.validator = new schema(this.rules);
+			this.$store.commit('client/setTabbarActive', 'clogin')
+			this.$store.commit('client/setHeaderTitle', '客户登录')
 		},
 		updated(){
 			
@@ -216,9 +284,12 @@
 			
 		},
 		computed:{
-			usernameChange(){
+			...window.Vuex.mapGetters({
+				viewH: 'page/viewH'
+			}),
+			/*usernameChange(){
 				return this.result.userName;
-			},
+			},*/
 			nameUpper:{
 				get :function(){
 					return this.formData.userName;
@@ -226,14 +297,22 @@
 				set : function(newV){
 					this.formData.userName = newV.toUpperCase();
 				}
+			},
+			loginRedirect: {
+				get() {
+					return this.$store.state.client.loginRedirect
+				},
+				set( nVal ) {
+					this.$store.commit('client/setLoginRedirect', nVal)
+				}
 			}
 		},
 		watch:{
-			usernameChange( newV, oldV ){
+			/*usernameChange( newV, oldV ){
 				if( typeof(newV) !== 'undefined' && newV.length > 0 ){
 					this.getAuthName( {UserName:newV} );
 				}
-			}
+			}*/
 		}
 	}
 </script>

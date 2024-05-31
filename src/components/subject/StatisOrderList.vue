@@ -22,9 +22,68 @@
 					<span v-if="filterForm.diffDay">交货超期天数:{{ filterForm.diffDay }}</span>
 				</van-notice-bar>
 			</van-sticky>
-			<van-pull-refresh v-model="pullRefresh.reloading" @refresh="pullOnRefresh">
+			<van-pull-refresh class="page-color" v-model="pullRefresh.reloading" @refresh="pullOnRefresh">
 				<van-list v-model="pushLoading.loading" :finished="pushLoading.finished"  finished-text="没有更多了" @load="onLoad">
-					<van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
+					<card 
+						v-for="(item,index) in listInfo" 
+						:key="index"
+						:title="item.strOrderId"
+						:extra="item.CusPoNo"
+						:subTitle="item.CusShortName+'('+item.CusId+')'"
+						:is-shadow="true"
+						@click="detailOnClick(item)"
+					>
+						<div class="card-body-container">
+							<div 
+								v-if="item.MatName"
+								class="card-body-item card-body-item-100"
+							>
+								<span>货品名称:
+									<span class="mg-left-20">{{ item.MatName }}</span>
+								</span>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								<span>规格信息:
+									<span class="mg-left-20">{{ item.GuiGe }}</span>
+									<span class="mg-left-20">{{ item.BoardId }}</span>
+								</span>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								<span>压线信息:
+									<span class="mg-left-20">{{ item.ScoreInfo }}</span>
+								</span>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								<div class="card-body-txt blue-color">订单</div>|
+								<div class="card-body-txt green-color">送货:</div>
+								<span class="mg-left-20 red-color">{{ item.OrdQty }}</span>
+								<span class="mg-left-20 green-color">{{ item.DeliQty }}</span>
+							</div>
+							<div
+								v-if=" type === 'stockQty' " 
+								class="card-body-item card-body-item-100"
+							>
+								<span>库存数量:
+									<span class="mg-left-20">{{ item.StockQty }}</span>
+								</span>
+							</div>
+							<div 
+								v-if=" type === 'returnQty' "
+								class="card-body-item card-body-item-100"
+							>
+								<span>退货数量:
+									<span class="mg-left-20">{{ item.ReturnQty }}</span>
+								</span>
+							</div>
+						</div>
+						<div slot="actions" class="card-actions">
+							<div class="card-actions-item" @click="detailOnClick(item)">
+								<van-icon color="#3c9cff" class-prefix="iconfont" name="caidan" size="18"/>
+								<span class="card-actions-item-text blue-color">详情</span>
+							</div>
+						</div>
+					</card>
+					<!-- <van-panel v-for="(item,index) in listInfo" :key="index" style="font-size:0.8125rem;background-color:#f5f7fa;margin:0 0.5rem 0.1rem 0.5rem;">
 						<div slot="default" style="padding:0.5rem;">
 							<van-row type="flex" justify="center">
 								<van-col span="20"  style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">货品名称:{{ item.MatName }}</van-col>
@@ -58,7 +117,7 @@
 						<div slot="footer" style="text-align: right;">
 							<van-button size="mini" type="info" @click="detailOnClick(item)">详情</van-button>
 						</div>
-					</van-panel>
+					</van-panel> -->
 				</van-list>
 			</van-pull-refresh>
 		</van-popup>
@@ -66,11 +125,13 @@
 	</div>
 </template>
 <script>
-	import { Button, Row, Col, Popup, PullRefresh, List, NoticeBar, Panel, Sticky  } from 'vant';
+	import { Button, Icon, Row, Col, Popup, PullRefresh, List, NoticeBar, Panel, Sticky  } from 'vant';
 	import OrderDetail from '@/components/subject/OrderDetail.vue';
+	import Card from '@/components/subject/card/Card.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Icon.name]: Icon,
 			[Row.name]: Row,
 			[Col.name]: Col,
 			[Popup.name]: Popup,
@@ -80,7 +141,8 @@
 			[Panel.name]: Panel,
 			[Sticky.name]: Sticky,
 
-			OrderDetail
+			OrderDetail,
+			Card
 		},
 		props:['show','filterForm','type'],
 		data(){
@@ -222,3 +284,6 @@
 		}
 	}
 </script>
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

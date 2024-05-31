@@ -21,6 +21,13 @@ const image={
 			pic_type : data.type
 		};
 		return post( window.jpdn_domain_admin + 'admiListImgDel', postData );
+	},
+	delImg( data, delType = 1 ) {
+		let postData = {
+			picName: data,
+			delType: delType,
+		};
+		return post( window.jpdn_domain_admin + 'img/delImg', postData );
 	}
 };
 

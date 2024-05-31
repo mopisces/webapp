@@ -11,7 +11,283 @@
 				</div>
 			</div>
 		</van-sticky>
-		<div v-if=" info.orderDNRe != null">
+		<van-collapse 
+			v-model="config.collapse.active" 
+			accordion
+		>
+			<van-collapse-item 
+				v-if=" info.orderDNRe != null" 
+				title="退货明细" 
+				name="1"
+			>
+				<card 
+					:title="info.orderDNRe.DNStr" 
+					:extra="info.orderDNRe.OrderId"
+					:subTitle="info.orderDNRe.IssueDate"
+					:is-shadow="true"
+				>
+					<div class="card-body-container">
+						<div class="card-body-item card-body-item-100">
+							<span>送货数量:
+								<span class="mg-left-20">{{ info.orderDNRe.DeliQty }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>销售面积:
+								<span class="mg-left-20">{{ info.orderDNRe.TSalesArea }}㎡</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>送货金额:
+								<span class="mg-left-20">{{ info.orderDNRe.DeliAmt }}元</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt green-color">价格</div>|
+							<div class="card-body-txt blue-color">平方价:</div>
+							<span class="mg-left-20 green-color">{{ info.orderDNRe.Price }}元</span>
+							<span class="mg-left-20 blue-color">{{ info.orderDNRe.SquarePrice }}元/㎡</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>退货原因:
+								<span class="mg-left-20 red-color">{{ info.orderDNRe.ReturnCause }}</span>
+							</span>
+						</div>
+					</div>
+				</card>
+			</van-collapse-item>
+			<van-collapse-item 
+				v-if="info.orderDN != null" 
+				title="送货明细" 
+				name="2"
+			>
+				<card 
+					:title="info.orderDN.DNStr" 
+					:extra="info.orderDN.OrderId"
+					:subTitle="info.orderDN.DNDate"
+					:is-shadow="true"
+				>
+					<div class="card-body-container">
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt">回签状态:</div>
+							<div v-if="info.orderDN.Signed==1" class="mg-left-20">
+								<van-icon color="#5ac725" class-prefix="iconfont" name="gou" size="16"/>
+							</div>
+							<div v-else class="mg-left-20">
+								<van-icon color="#f56c6c" class-prefix="iconfont" name="guanbi" size="12"/>
+							</div>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>装货日期:
+								<span class="mg-left-20">{{ info.orderDN.PackDate }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>生效日期:
+								<span class="mg-left-20">{{ info.orderDN.IssueDate }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>送货数量:
+								<span class="mg-left-20">{{ info.orderDN.DeliQty }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>销售面积:
+								<span class="mg-left-20">{{ info.orderDN.TSalesArea }}㎡</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>送货金额:
+								<span class="mg-left-20">{{ info.orderDN.DeliAmt }}元</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt green-color">价格</div>|
+							<div class="card-body-txt blue-color">平方价:</div>
+							<span class="mg-left-20 green-color">{{ info.orderDN.Price }}元</span>
+							<span class="mg-left-20 blue-color">{{ info.orderDN.SquarePrice }}元/㎡</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>送货公司:
+								<span class="mg-left-20">
+									{{ info.orderDN.CusSubName }}({{ info.orderDN.CusSubNo }})
+								</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>送货地址:
+								<span class="mg-left-20">{{ info.orderDN.SubDNAddress }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>送货备注:
+								<span class="mg-left-20">{{ info.orderDN.DNRemark }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>客户联系:
+								<span class="mg-left-20">{{ info.orderDN.SubContactPerson }}</span>
+								<span 
+									class="mg-left-20" 
+									@click="phoneClick(info.orderDN.SubTelNo)"
+								>
+									{{ info.orderDN.SubTelNo }}
+								</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>司机信息:
+								<span class="mg-left-20">{{ info.orderDN.CarPName }}</span>
+								<span class="mg-left-20">{{ info.orderDN.CarNo }}</span>
+								<span 
+									class="mg-left-20" 
+									@click="phoneClick(info.orderDN.Phone)"
+								>
+									{{ info.orderDN.Phone }}
+								</span>
+							</span>
+						</div>
+					</div>
+				</card>
+			</van-collapse-item>
+			<van-collapse-item 
+				v-if=" info.orderSch != null "
+				title="传单明细" 
+				name="3"
+			>
+				<card 
+					title="传单明细" 
+					:subTitle="info.orderSch.AddTime"
+					:is-shadow="true"
+				>
+					<div class="card-body-container">
+						<div class="card-body-item card-body-item-100">
+							<span>工单状态:
+								<span class="mg-left-20">{{ info.orderSch.SState }}</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>门幅信息:
+								<span class="mg-left-20">{{ info.orderSch.SPaperWidth }}mm</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>传单数量:
+								<span class="mg-left-20">{{ info.orderSch.SQty }}</span>
+							</span>
+						</div>
+					</div>
+				</card>
+			</van-collapse-item>
+			<van-collapse-item 
+				v-if=" info.orderDetail != null "
+				title="订单详情" 
+				name="4"
+			>
+				<card 
+					:title="info.orderDetail.strOrderId" 
+					:extra="info.orderDetail.CusPoNo"
+					:is-shadow="true"
+				>
+					<div class="card-body-container">
+						<div class="card-body-item card-body-item-100">
+							<span>客户信息:
+								<span class="mg-left-20">
+									{{ info.orderDetail.CusShortName }}({{ info.orderDetail.CusId }})
+								</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt">材质信息:</div>
+							<span class="mg-left-20">{{ info.orderDetail.BoardId }}</span>
+							<span class="mg-left-20">{{ info.orderDetail.BoardName }}</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt">压线信息:</div>
+							<span class="mg-left-20">{{ info.orderDetail.ScoreInfo }}</span>
+							<span class="mg-left-20">{{ info.orderDetail.ScoreType }}</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>送货备注:
+								<span class="mg-left-20">
+									{{ info.orderDetail.DNRemark }}
+								</span>
+							</span>
+						</div>
+						<div 
+							v-if="info.orderDetail.MatName"
+							class="card-body-item card-body-item-100"
+						>
+							<span>货品名称:
+								<span class="mg-left-20">
+									{{ info.orderDetail.MatName }}
+								</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>箱型信息:
+								<span class="mg-left-20">
+									{{ info.orderDetail.BoxName }}
+								</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>纸箱尺寸:
+								<span class="mg-left-20">
+									{{ info.orderDetail.BoxL }}×{{info.orderDetail.BoxW}}×{{ info.orderDetail.BoxH }}
+								</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>纸板尺寸:
+								<span class="mg-left-20">
+									{{ info.orderDetail.Length }}×{{info.orderDetail.Width}}
+								</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>工艺流程:
+								<span class="mg-left-20">
+									{{ info.orderDetail.ProFlow }}
+								</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt blue-color">订单</div>|
+							<div class="card-body-txt green-color">送货</div>|
+							<div class="card-body-txt red-color">退货</div>:
+							<span class="mg-left-20 blue-color">{{ info.orderDetail.OrdQty }}</span>
+							<span class="mg-left-20 green-color">{{ info.orderDetail.DeliQty }}</span>
+							<span class="mg-left-20 red-color">{{ info.orderDetail.ReturnQty }}</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt blue-color">传单</div>|
+							<div class="card-body-txt green-color">完工</div>:
+							<span class="mg-left-20 blue-color">{{ info.orderDetail.SchQty }}</span>
+							<span class="mg-left-20 green-color">{{ info.orderDetail.FinishedQty }}</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>销售面积:
+								<span class="mg-left-20">{{ info.orderDetail.TSalesArea }}㎡</span>
+							</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<div class="card-body-txt green-color">价格</div>|
+							<div class="card-body-txt blue-color">平方价:</div>
+							<span class="mg-left-20 green-color">{{ info.orderDetail.Price }}元</span>
+							<span class="mg-left-20 blue-color">{{ info.orderDetail.SquarePrice }}元/㎡</span>
+						</div>
+						<div class="card-body-item card-body-item-100">
+							<span>合计金额:
+								<span class="mg-left-20">{{ info.orderDetail.Amt }}元</span>
+							</span>
+						</div>
+					</div>
+				</card>
+			</van-collapse-item>
+		</van-collapse>
+		<!-- <div v-if=" info.orderDNRe != null">
 			<div role="separator" class="van-divider van-divider--hairline van-divider--content-center" style="border-color: rgb(25, 137, 250); color: rgb(25, 137, 250); padding: 0px 16px;">
       		退货明细
   			</div>
@@ -618,23 +894,38 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</van-popup>
 </template>
 <script>
-	import { Popup, Sticky  } from 'vant';
+	import { Icon, Popup, Collapse, CollapseItem, Sticky  } from 'vant';
+	import Card from '@/components/subject/card/Card.vue';
 	export default {
 		components:{
+			[Icon.name]: Icon,
 			[Popup.name]: Popup,
-			[Sticky.name]: Sticky
+			[Collapse.name]: Collapse,
+			[CollapseItem.name]: CollapseItem,
+			[Sticky.name]: Sticky,
+
+			Card
 		},
 		props:['orderId','orderType','detailShow'],
 		data(){
 			return {
+				config: {
+					collapse: {
+						active: '1'
+					}
+				},
 				info:{
-					orderDNRe:null,
+					/*退货明细*/
+					orderDNRe: null,
+					/*送货明细*/
 					orderDN:null,
+					/*传单明细*/
 					orderSch:null,
+					/*订单明细*/
 					orderDetail:null
 				},
 				show:this.detailShow,
@@ -694,3 +985,11 @@
 		}
 	}
 </script>
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+
+	.van-collapse-item__content {
+		background-color: #f1f1f1 !important;
+		padding: 0.2rem 0rem 0.2rem 0rem !important;
+	}
+</style>

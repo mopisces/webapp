@@ -59,8 +59,15 @@
 		</van-pull-refresh>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<radio-cell :radioInfo.sync="formData.filterName" :radioColumns="config.radio.filterName.options" :title="config.radio.filterName.title" v-if="config.radio.filterName.show">
-				</radio-cell>
+				<!-- <radio-cell :radioInfo.sync="formData.filterName" :radioColumns="config.radio.filterName.options" :title="config.radio.filterName.title" v-if="config.radio.filterName.show">
+				</radio-cell> -->
+				<uni-check-box
+					label="条件"
+					:localdata="config.radio.filterName.options"
+					:radioData.sync="formData.filterName" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
 				<van-field label="长度(mm)">
 					<div class="van-row van-row--flex van-row--justify-center" slot="input">
 						<div class="van-col van-col--11">
@@ -109,6 +116,7 @@
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import schema from 'async-validator';
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -126,7 +134,8 @@
 			[Card.name]: Card,
 
 			PopupFilter,
-			RadioCell
+			RadioCell,
+			UniCheckBox
 		},
 		data(){
 			return {

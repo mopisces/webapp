@@ -173,6 +173,18 @@ const connecterp = {
 	 */
 	addPackageList( postData ){
 		return axios.post( window.jpdn_domain_erp + 'WebCommon/AddPackage', QS.stringify(postData) );
+	},
+	formulaCalcScore( postData ) {
+		return axios({
+			method: 'post',  
+			url: window.jpdn_domain_erp + 'WebCommonF/FormulaCalcScore',
+			data: postData,
+			headers: {
+				'Content-Type': 'text/plain'
+			}
+		})
+		//return axios.post( window.jpdn_domain_erp + 'WebCommonF/FormulaCalcScore', QS.stringify(postData))
 	}
+
 };
 export default connecterp;

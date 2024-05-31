@@ -19,22 +19,22 @@ const orderBooking = {
 	 */
 	sBuildCheck( data ){
 		let postData = {
-			check_data_type          : 's',
-			cus_order_id             : data.cusOrderId,
-			simple_board_length      : data.boardLength,
-			simple_board_width       : data.boardWidth,
-			simple_material_type     : data.materialType,
-			line_ball_info           : data.lineBallInfo,
-			line_ball_formula        : data.lineBallFormula,
-			order_quantities         : data.orderQuantities,
-			simple_delivery_address  : data.address,
-			simple_delivery_date     : data.date,
-			simple_delivery_remark   : data.deliveryRemark,
-			simple_production_remark : data.productionRemark,
-			simple_is_calc : data.isCalc,
-			simple_is_edge : data.isEdge == '净片' ? 0 : 1,
+			check_data_type: 's',
+			cus_order_id: data.cusOrderId,
+			simple_board_length: data.boardLength,
+			simple_board_width: data.boardWidth,
+			simple_material_type: data.materialType,
+			line_ball_info: data.lineBallInfo,
+			line_ball_formula: data.lineBallFormula,
+			order_quantities: data.orderQuantities,
+			simple_delivery_address: data.address,
+			simple_delivery_date: data.date,
+			simple_delivery_remark: data.deliveryRemark,
+			simple_production_remark: data.productionRemark,
+			simple_is_calc: data.isCalc,
+			simple_is_edge: data.isEdge == '净片' ? 0 : 1,
 			simple_dOrdPrice: data.dOrdPrice,
-			simple_dAmt : data.dAmt
+			simple_dAmt: data.dAmt
 		};
 		return post( window.jpdn_domain_client + 'checkBuildData', postData);
 	},
@@ -45,21 +45,21 @@ const orderBooking = {
 	 */
 	sBuildSave( data ){
 		let postData = {
-			cus_order_id             : data.cusOrderId,
-			simple_board_length      : data.boardLength,
-			simple_board_width       : data.boardWidth,
-			simple_material_type     : data.materialType,
-			line_ball_info           : data.lineBallInfo,
-			line_ball_formula        : data.lineBallFormula,
-			order_quantities         : data.orderQuantities,
-			simple_delivery_address  : data.address,
-			simple_delivery_date     : data.date,
-			simple_delivery_remark   : data.deliveryRemark,
-			simple_production_remark : data.productionRemark,
-			simple_is_calc : data.isCalc,
-			simple_is_edge : data.isEdge == '净片' ? 0 : 1,
+			cus_order_id: data.cusOrderId,
+			simple_board_length: data.boardLength,
+			simple_board_width: data.boardWidth,
+			simple_material_type: data.materialType,
+			line_ball_info: data.lineBallInfo,
+			line_ball_formula: data.lineBallFormula,
+			order_quantities: data.orderQuantities,
+			simple_delivery_address: data.address,
+			simple_delivery_date: data.date,
+			simple_delivery_remark: data.deliveryRemark,
+			simple_production_remark: data.productionRemark,
+			simple_is_calc: data.isCalc,
+			simple_is_edge: data.isEdge == '净片' ? 0 : 1,
 			simple_dOrdPrice: data.dOrdPrice,
-			simple_dAmt : data.dAmt
+			simple_dAmt: data.dAmt
 		};
 		return post( window.jpdn_domain_client + 'simpleSave', postData)
 	},

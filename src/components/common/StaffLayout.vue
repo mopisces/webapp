@@ -1,25 +1,23 @@
 <template>
 	<div id="page">
 		<div class="header">
-			<van-nav-bar :title="config.headerTitle" left-text="返回" right-text="按钮" left-arrow @click-left="onClickLeft" @click-right="reload" :fixed="true" style="z-index:-1">
-				<div slot="right">
-					<span class="van-nav-bar__text">刷新</span>
-					<van-icon class-prefix="iconfont" name="refresh" size="18" class="van-icon van-icon-arrow-right"/>
-				</div>
-			</van-nav-bar>
+			<van-nav-bar 
+				:title="title" 
+				left-text="返回" 
+				right-text="刷新" 
+				left-arrow 
+				:fixed="true" 
+				style="z-index:-1"
+				@click-left="onClickLeft" 
+				@click-right="reload"
+			></van-nav-bar>
 		</div>
-		<!-- <div class="header-box"></div> -->
-		<div class="container" :style=" 'min-height:' + height + 'px;padding-bottom:3.125rem;' ">
+		<div class="container" :style=" 'min-height:' + viewH/16 + 'rem;background-color: #f1f1f1;margin-bottom: 3.125rem;' ">
 			<router-view v-if="isRouterAlive" />
 		</div>
-		<!-- <div class="footer-box"></div> -->
 		<div class="footer">
 			<van-tabbar v-model="active">
 				<van-tabbar-item icon="home-o" to="/staff/index/menu">首页</van-tabbar-item>
-				<van-tabbar-item @click="logout">
-					退出
-					<van-icon class-prefix="iconfont" name="logout" slot="icon"  size="18"/>
-				</van-tabbar-item>
 			</van-tabbar>
 		</div>
 	</div>
@@ -47,14 +45,7 @@
 						showIndex:false
 					}
 				},
-				options:{
-					scrollbar :true,
-					fade: false ,
-					bounce:true,
-				},
-				active:0,
-				userName : '',
-				height : window.innerHeight - 96
+				
 			};
 		},
 		methods:{
@@ -68,47 +59,23 @@
 					this.isRouterAlive = true;
 				});
 			},
-			logout(){
-				Dialog.confirm({
-					message: '确认退出?'
-				}).then(() => {
-					/*this.userName = getStorage('jpdn-staff-username');
-					removeStorage();
-					setStorage( 'jpdn-staff-username', this.userName );
-					this.$router.push('/group/staff/login');*/
-					if( getStorage('jpdn-login-type') == 'staff' ){
-						removeStorage('jpdn-staff-token', 'sessionStorage');
-						removeStorage('jpdn-staff-refresh', 'sessionStorage');
-						removeStorage('staff-auth-url');
-						setStorage('jpdn-staff-isLogin',0, 'sessionStorage') ;
-						this.$store.commit('staff/setIsLogin',false);
-						this.$store.commit('client/setIsLogin',false);
-						this.$router.push('/group/staff/login');
-					}
-				}).catch(()=>{
-					Dialog.close();
-				});
-				
-			},
 		},
-		created(){
-			this.$store.commit('client/setHeaderTitle','首页');
-			this.config.headerTitle = this.$store.state.staff.layout.title;
-		},
-		mounted(){
-
+		async created(){
+			await this.$store.commit('client/setHeaderTitle', '首页')
+			await this.$store.commit('page/setPageH', (window.innerHeight - 96)/16 )
 		},
 		computed:{
-			setTitle(){
-				return this.$store.state.staff.layout.title;
-			}
-		},
-		watch:{
-			'setTitle':{
-				handler:function(newV,oldV){
-					this.config.headerTitle = newV;
+			...window.Vuex.mapGetters({
+				viewH: 'page/viewH',
+			}),
+			title: {
+				get() {
+					return this.$store.state.staff.layout.title
+				},
+				set( nVal ) {
+					this.$store.commit('staff/headerTitle', nVal)
 				}
-			}
+			},
 		},
 		provide(){
 			return {
@@ -139,4 +106,4 @@
 		margin-top: 2.875rem;
 	}
 </style>
-
+	

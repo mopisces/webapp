@@ -1,42 +1,150 @@
 <template>
 	<div>
-		<van-field v-model="formData.cusOrderId" input-align="center" label="客订单号" placeholder="未填写则系统自动生成"/>
-		<popup-select :selectValue.sync="formData.materialType" :fieldConfig="config.fieldConfig.material" :radioData="config.radioData.material" selectType="material" @valueChange="materialTypeChange"></popup-select>
-		<!-- @materialConfirm="getClackAdjust( formData.materialType )" -->
-		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @valueChange="boxTypeChange"></popup-select>
-		<!-- @boxTypeConfirm="getBoxFormula( formData.boxType )" -->
+		<van-field 
+			v-model="formData.cusOrderId" 
+			input-align="center" 
+			label="客订单号" 
+			placeholder="未填写则系统自动生成"
+		/>
+		<popup-select 
+			:selectValue.sync="formData.materialType" 
+			:fieldConfig="config.fieldConfig.material" 
+			:radioData="config.radioData.material"
+			selectType="material" 
+			@valueChange="materialTypeChange"
+		>
+		</popup-select>
+		<uni-check-box
+			label="箱型"
+			:localdata="config.radioData.boxType"
+			:radioData.sync="formData.boxType" 
+			:map="{text: 'BoxName', value: 'BoxId'}"
+			@change="boxTypeChange"
+		>
+		</uni-check-box>
 		<div class="van-cell" style="display: flex;align-items: center;">
 			<div class="van-cell__title van-field__label">箱规(mm)</div>
-			<input id="boxLength" type="number" class="karry-input" placeholder="长(L)" v-model="formData.boxLength" @focus="inputFocus('boxLength')" @blur=" inputBlur('boxLength') "/><!--calcBdLW()-->
+			<input 
+				id="boxLength" 
+				type="number" 
+				class="karry-input" 
+				placeholder="长(L)" 
+				v-model="formData.boxLength" 
+				@focus="inputFocus('boxLength')" 
+				@blur=" inputBlur('boxLength') "
+			/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input id="boxWidth" type="number" class="karry-input" placeholder="宽(W)" v-model="formData.boxWidth" @focus="inputFocus('boxWidth')" @blur=" inputBlur('boxWidth') "/>
+			<input 
+				id="boxWidth" 
+				type="number" 
+				class="karry-input" 
+				placeholder="宽(W)" 
+				v-model="formData.boxWidth" 
+				@focus="inputFocus('boxWidth')" 
+				@blur=" inputBlur('boxWidth') "
+			/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input id="boxHeight" type="number" class="karry-input" placeholder="高(H)" v-model="formData.boxHeight" @focus="inputFocus('boxHeight')" @blur=" inputBlur('boxHeight') "/>
+			<input 
+				id="boxHeight" 
+				type="number" 
+				class="karry-input" 
+				placeholder="高(H)" 
+				v-model="formData.boxHeight" 
+				@focus="inputFocus('boxHeight')" 
+				@blur=" inputBlur('boxHeight') "
+			/>
 			<div class="van-field__right-icon">
 				<van-icon name="question-o" @click="clickQuestion(1)"/>
 			</div>
 		</div>
-		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @valueChange="tonLenChange" v-if="config.showTonLen"></popup-select>
-		<!--  @lenConfirm="calcBdLW()" -->
-		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @valueChange="lenChange" v-if="config.showULen"></popup-select>
-		<!--  @lenConfirm="calcBdLW()" -->
-		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
-		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
+		<uni-check-box
+			label="箱舌(T)"
+			:localdata="config.radioData.tonLen"
+			:radioData.sync="formData.tonLen" 
+			:map="{text: 'text', value: 'value'}"
+			@change="tonLenChange"
+		>
+		</uni-check-box>
+		<uni-check-box
+			label="封箱调整(U)"
+			:localdata="config.radioData.uLen"
+			:radioData.sync="formData.uLen" 
+			:map="{text: 'text', value: 'value'}"
+			@change="lenChange"
+		>
+		</uni-check-box>
+		<van-field 
+			v-model="formData.lengthF" 
+			input-align="center" 
+			label="横向公式" 
+			placeholder="待选择箱型" 
+			readonly
+			:error-message="pageConfig.lengthFDesc"
+			error-message-align="center"
+		/>
+		<van-field 
+			v-model="formData.widthF" 
+			input-align="center" 
+			label="纵向公式" 
+			placeholder="待选择箱型" 
+			readonly
+			:error-message="pageConfig.widthFDesc"
+			error-message-align="center"
+		/>
 		<div class="van-cell" style="display: flex;align-items: center;">
-			<div class="van-cell__title van-field__label">纸板规格(mm)</div>
-			<input type="number" class="karry-input" placeholder="板长" v-model="formData.length" readonly/>
+			<div class="van-cell__title van-field__label">纸板(mm)</div>
+			<input 
+				type="number" 
+				class="karry-input" 
+				placeholder="板长" 
+				readonly
+				v-model="formData.length" 
+			/>
 			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
-			<input type="number" class="karry-input" placeholder="板宽" v-model="formData.width" readonly/>
+			<input 
+				type="number" 
+				class="karry-input" 
+				placeholder="板宽" 
+				readonly
+				v-model="formData.width" 
+			/>
 		</div>
 		<template v-if="formData.isCalc == 1">
-			<build-calc :lineInfo="config.lineInfo" :calcDefault="config.calcDefault" @buildCalc="buildCalc"></build-calc>
+			<uni-check-box
+				label="压线压型"
+				:localdata="config.radioData.lineInfo"
+				:radioData.sync="formData.scoreEdge" 
+				:map="{text: 'text', value: 'value'}"
+				@change="scoreEdgeChange"
+			>
+			</uni-check-box>
 		</template>
 		<template v-else>
-			<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
+			<uni-check-box
+				label="压线压型"
+				:localdata="config.radioData.lineBall"
+				:radioData.sync="formData.lineBallInfo" 
+				:map="{text: 'text', value: 'value'}"
+				@change="lineBallChange"
+			>
+			</uni-check-box>
 		</template>
-		<van-field v-model="formData.lineBallFormula" input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
-		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="clickQuestion(2)"/>
-		<!-- <van-field v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" @blur="calcBdQty()"/> -->
+		<van-field 
+			v-model="formData.lineBallFormula" 
+			input-align="center" 
+			label="压线信息" 
+			placeholder="由ERP系统自动计算" 
+			readonly
+		/>
+		<van-field 
+			v-model="formData.bdMultiple" 
+			input-align="center" 
+			label="张数" 
+			placeholder="待选择箱型" 
+			readonly 
+			right-icon="question-o" 
+			@click-right-icon="clickQuestion(2)"
+		/>
 		<div class="van-cell van-field">
 			<div class="van-cell__title van-field__label" >
 				<span>订单数</span>
@@ -63,9 +171,8 @@
 			<van-button  type="primary" size="normal" style="width:50%;position:fixed;bottom:3.125rem;left:50%;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
 		</template>
 		<template v-else>
-			<van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
+			<van-button type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button>
 		</template>
-		<!-- <van-button  type="primary" size="normal" style="width:100%;position:fixed;bottom:3.125rem;" @click="buildOrder()" :disabled=" config.button.disabled ">下单</van-button> -->
 		<div style="width:100%;height:5.7rem;"></div>
 		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="false" :showULen="config.showULen" :showTonLen="config.showTonLen"></build-sku>
 		<build-result :resultShow.sync="config.result.show" :isGroup="false" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
@@ -81,6 +188,8 @@
 	import BuildCalc from '@/components/subject/client/BuildCalc.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import { checkBuildTime } from '@/util';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -93,7 +202,8 @@
 			BuildSku,
 			BuildResult,
 			BuildCalc,
-			FieldLabelVariable
+			FieldLabelVariable,
+			UniCheckBox
 		},
 		data(){
 			return {
@@ -125,12 +235,30 @@
 						}
 					},
 					radioData : {
-						material : [],
-						boxType  : [],
-						tonLen   : [],
-						uLen     : [],
-						lineBall : [],
-						address  : []
+						material: [],
+						boxType: [],
+						tonLen: [],
+						uLen: [],
+						lineBall: [],
+						address: [],
+						lineInfo: [
+							{
+								text: '净片-无压线',
+								value: '00'
+							},
+							{
+								text: '净片-普通压线',
+								value: '01'
+							},
+							{
+								text: '净片-平压线',
+								value: '02'
+							},
+							{
+								text: '毛片-无压线',
+								value: '10'
+							}
+						]
 					},
 					popup : {
 						timeFilter : {
@@ -208,6 +336,7 @@
 					dOrdPrice        : null,   //计价价格 
 					dAmt             : null,   //金额
 					buildType        : 0,      //0新增 1修改 2快速下单
+					scoreEdge: null,
 				},
 				pageConfig:{
 					minDate     : '',
@@ -222,6 +351,8 @@
 					maxArea     : '',
 					lengthFCalc : '',
 					widthFCalc  : '',
+					lengthFDesc : '',
+					widthFDesc  : '',
 					buildAutoGetTonLenAndULen:true,
 					IsAddTrimArea : 0,
 				},
@@ -408,6 +539,7 @@
 				let self = this;
 				this.$request.client.orderBooking.cBuildConfig( fastOrderId ).then(res=>{
 					self.pageConfig.buildAutoGetTonLenAndULen = res.result.config.BuildAutoGetTonLenAndULen == 1 ? true : false;
+					//客户上次下单选择箱舌及封箱调整
 					self.config.lastToLen = res.result.last_build_info.LastTonLen;
 					self.config.lastULen  = res.result.last_build_info.LastULen;
 					self.pageConfig.minBoxH = res.result.config.BuildMinBoxH;
@@ -442,28 +574,22 @@
 					self.config.buildTime.BuildInTime2 = res.result.config.BuildInTime2;
 					self.checkTime();
 
-					let lastEdgeType = Number(res.result.last_build_info.LastEdgeType);
-					let lastScoreType = Number(res.result.last_build_info.LastScoreType);
+					let lastScoreType = Number(res.result.last_build_info.LastScoreType)
 					if( self.formData.isCalc == 1 ){
-						const jp = [];
+						this.formData.scoreEdge = res.result.last_build_info.LastEdgeType + res.result.last_build_info.LastScoreType
+						//设置上次下单材质
+						this.formData.materialType = res.result.last_build_info.LastBoardId || ''
+						/*const jp = [];
 						res.result.line_ball_config.forEach((item,index)=>{
-							/*if( res.result.config.DefaultScoreName && res.result.config.DefaultScoreName == item ){
-								self.config.calcDefault.index = index;
-								self.config.calcDefault.name = item;
-							}*/
 							jp.push( item );
 						});
-/*
-						if( !res.result.config.DefaultScoreName ){
-							self.config.calcDefault.index = 0;
-							self.config.calcDefault.name = jp[0];
-						}*/
+
 
 						self.config.lineInfo = {
 							'净片':jp,
 							'毛片':['无压线']
 						};
-						/*self.formData.lineBallInfo = res.result.config.DefaultScoreName ? res.result.config.DefaultScoreName : jp[0].value;*/
+						
 
 						self.config.calcDefault.index = 0;
 						self.config.calcDefault.name = jp[0];
@@ -471,7 +597,6 @@
 						if( self.formData.buildType == 0 ){
 							
 							self.config.calcDefault.edgeType = lastEdgeType == 1 ? '毛片':'净片';
-							//净片时需要设置对应的压线信息
 							if( lastScoreType <= jp.length && lastScoreType >= 0 && lastEdgeType == 0 ){
 								self.config.calcDefault.index = lastScoreType;
 								self.config.calcDefault.name = jp[lastScoreType ];
@@ -481,21 +606,20 @@
 						if( self.formData.buildType == 1 || self.formData.buildType == 2 ){
 							let webEdgeType = Number(res.result.fast_order_booking.WebEdgeType);
 							let scoreType = Number(res.result.fast_order_booking.ScoreType);
-							//净片时需要设置对应的压线信息
 							if( webEdgeType == 0 && scoreType <= jp.length && scoreType>=0 ){
 								self.config.calcDefault.index = scoreType;
 								self.config.calcDefault.name = jp[scoreType ];
 							}
-						}
+						}*/
 						//设置formData参数
 						this.formData.isEdge = self.config.calcDefault.edgeType;
 						this.formData.lineBallInfo = self.config.calcDefault.name;
 
 					}else{
 						res.result.line_ball_config.forEach((item,index)=>{
-							self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
+							self.config.radioData.lineBall.push( { value:item, text:item } );
 						});
-						/*self.formData.lineBallInfo = res.result.config.DefaultScoreName ? res.result.config.DefaultScoreName : self.config.radioData.lineBall[0].value;*/
+						
 						self.formData.lineBallInfo = self.config.radioData.lineBall[lastScoreType].value;
 					}
 					res.result.board_select_list.forEach((item,index)=>{
@@ -512,9 +636,10 @@
 						}
 						self.config.radioData.address.push( { value : item.CusSubNo, text:item.SubDNAddress, tag : ''} );
 					});
-					res.result.box_type_availabel.forEach((item,index)=>{
+					/*res.result.box_type_availabel.forEach((item,index)=>{
 						self.config.radioData.boxType.push( { value : item.BoxId, text:item.BoxName, lengthF:item.LengthF, widthF:item.WidthF } )
-					});
+					});*/
+					self.config.radioData.boxType = JSON.parse(JSON.stringify(res.result.box_type_availabel))
 					res.result.config.BuildTonLen.forEach((item,index)=>{
 						self.config.radioData.tonLen.push({ value: item, text: item });
 					});
@@ -534,8 +659,7 @@
 						self.formData.boxLength    = res.result.fast_order_booking.BoxL;
 						self.formData.boxWidth     = res.result.fast_order_booking.BoxW;
 						self.formData.boxHeight    = res.result.fast_order_booking.BoxH;
-						/*self.formData.tonLen       = res.result.fast_order_booking.TonLen;
-						self.formData.uLen         = res.result.fast_order_booking.ULen;*/
+					
 						
 						self.config.lastToLen = res.result.fast_order_booking.TonLen;
 						self.config.lastULen = res.result.fast_order_booking.ULen;
@@ -630,7 +754,6 @@
 					self.calcArea();
 				}).catch(({ errors, fields })=>{
 					Toast.fail(errors[0].message);
-					//console.log(errors[0].message)
 				});
 			},
 			calcBdQty( needCalcArea = true ){
@@ -694,20 +817,23 @@
 				}
 			},
 			getBoxFormula( boxType ){
-				if( this.formData.boxType ){
-					let self = this;
-					this.$request.client.orderBooking.getBoxFormula( boxType ).then(res=>{
-						self.pageConfig.lengthFCalc = res.result.LengthF;
-						self.pageConfig.widthFCalc  = res.result.WidthF;
-						if( self.formData.bdMultiple != Number(res.result.Multiple) ){
-							self.formData.bdMultiple = Number(res.result.Multiple);
-							self.calcBdQty(false);
-						}
-					}).then(()=>{
-						this.$nextTick(()=>{
-							this.calcBdLW();
-						})
-					});
+				let arr = this.config.radioData.boxType.find(item => item.BoxId === boxType)
+				this.pageConfig.lengthFCalc = ''
+				this.pageConfig.lengthFDesc = ''
+				this.pageConfig.widthFCalc = ''
+				this.pageConfig.widthFDesc = ''
+				this.formData.bdMultiple = ''
+				if (arr) {
+					this.pageConfig.lengthFCalc = arr.LengthF
+					this.pageConfig.lengthFDesc = arr.LengthFDesc || ''
+					this.pageConfig.widthFCalc = arr.WidthF
+					this.pageConfig.widthFDesc = arr.WidthFDesc || ''
+					this.formData.bdMultiple = Number(arr.Multiple)
+					this.calcBdQty(false)
+					this.$nextTick(()=>{
+						this.calcBdLW()
+					})
+					
 				}
 			},
 			getClackAdjust( materialType ){
@@ -903,23 +1029,30 @@
 				this.formData.materialType = newValue;
 				this.getClackAdjust( this.formData.materialType );
 			},
-			boxTypeChange( newValue ){
-				this.formData.boxType = newValue;
-				this.getBoxFormula(this.formData.boxType);
+			boxTypeChange(e) {
+				this.getBoxFormula(e.detail.value)
 			},
-			tonLenChange( newValue ){
-				this.formData.tonLen = newValue;
-				this.calcBdLW();
+			/*箱舌*/
+			tonLenChange( e ) {
+				if( this.pageConfig.lengthFCalc && this.pageConfig.widthFCalc ) {
+					this.calcBdLW()
+				}
 			},
-			lenChange( newValue ){
-				this.formData.uLen = newValue;
-				this.calcBdLW();
+			lenChange( e ) {
+				if( this.pageConfig.lengthFCalc && this.pageConfig.widthFCalc ) {
+					this.calcBdLW()
+				}
+			},
+			scoreEdgeChange(e) {
+				this.formData.lineBallInfo = ['无压线', '普通压线', '平压线'][e.detail.value[1]]
+				this.formData.edgeType = e.detail.value[0]
 			},
 			addressChange( newValue ){
 				this.formData.address = newValue;
 			},
-			lineBallChange( newValue ){
-				this.formData.lineBallInfo = newValue;
+			lineBallChange( e ){
+				/*console.log(e.detail.value)*/
+				this.formData.lineBallInfo = e.detail.value
 			},
 			sizeBlur( id ){
 				let tips = '';

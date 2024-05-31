@@ -11,13 +11,6 @@
 					<van-switch-cell v-model="commonForm.bAddArea" title="加面积" />
 					<van-switch-cell v-model="commonForm.bEdge" title="毛片" />
 					<template v-if="config.tabs.active == 0 ">
-						<!-- <van-field label="规格(mm)">
-							<div slot="input">
-								<input v-model="boardForm.length" type="number" placeholder="板长" class="cell-input">
-							                    		x
-							                    		<input v-model="boardForm.width" type="number" placeholder="板宽" class="cell-input">
-							</div>
-						</van-field> -->
 						<div class="van-cell" style="display: flex;align-items: center;">
 							<div class="van-cell__title van-field__label">规格(mm)</div>
 							<input type="number" class="karry-input" placeholder="板长" v-model="boardForm.length" />
@@ -30,15 +23,7 @@
 						<van-field readonly clickable label="箱型" :value="boxForm.boxId"  placeholder="选择箱型" @click="boxPicker()" required input-align="center">
 							<van-icon name="arrow" slot="right-icon"/>
 						</van-field>
-						<!-- <van-field label="规格" >
-							<div slot="input">
-								<input type="number" placeholder="箱长(mm)" class="cell-input" v-model="boxForm.boxL">
-							                    		x
-							                    		<input type="number" placeholder="箱宽(mm)" class="cell-input"  v-model="boxForm.boxW">
-							                    		x
-							                    		<input type="number" placeholder="箱高(mm)" class="cell-input"  v-model="boxForm.boxH">
-							</div>
-						</van-field> -->
+						
 						<div class="van-cell" style="display: flex;align-items: center;">
 							<div class="van-cell__title van-field__label">规格</div>
 							<input type="number" class="karry-input" placeholder="箱长(mm)" v-model="boxForm.boxL" />
@@ -89,6 +74,9 @@
 	import CusPicker from '@/components/subject/picker/CusPicker.vue';
 	import FieldLabelVariable from '@/components/subject/staff/FieldLabelVariable.vue';
 	import schema from 'async-validator';
+	/*api接口*/
+	import { getWebConfig, fetchDataList } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -258,14 +246,12 @@
 			}
 		},
 		methods:{
-			getCalcConfig(){
-				let self = this;
-				this.$request.staff.calc.getCalcConfig().then(res=>{
-					self.commonForm.factoryId = res.result.factory_id;
-					self.pageConfig.calcAutoGetdOriPrice = res.result.config.CalcAutoGetdOriPrice == '1' ? true : false;
-					self.pageConfig.calcAutoGetTonLenAndULen = res.result.config.CalcAutoGetTonLenAndULen == '1' ? true : false;
-					self.pageConfig.calcAutoGetTrimAndAreaByCus = res.result.config.CalcAutoGetTrimAndAreaByCus == '1' ? true : false;
-				});
+			async getCalcConfig(){
+				const { result } = await getWebConfig({paramType: 'staffCalc'})
+				this.commonForm.factoryId = result.factory_id
+				this.pageConfig.calcAutoGetdOriPrice = result.CalcAutoGetdOriPrice == '1' ? true : false
+				this.pageConfig.calcAutoGetTonLenAndULen = result.CalcAutoGetTonLenAndULen == '1' ? true : false
+				this.pageConfig.calcAutoGetTrimAndAreaByCus =result.CalcAutoGetTrimAndAreaByCus == '1' ? true : false
 			},
 			getTrimAndArea( cusName ){
 				let self = this;
@@ -299,17 +285,18 @@
 				this.config.popup.show = true;
 				this.config.picker.type = 1;
 				if( this.info.texPicker.columns.length == 0 ){
-					this.texPickerSearch();
+					this.texPickerSearch()
 				}
 			},
-			texPickerSearch(){
-				let self = this;
-				this.$request.staff.calc.boardPicker( this.config.search.texName ).then(res=>{
-					self.info.texPicker.columns = [];
-					res.result.forEach((item,index)=>{
-						self.info.texPicker.columns.push({text:item.BoardId,key:item.BoardId});
-					});
-				});
+			async texPickerSearch(){
+				this.info.texPicker.columns = this.$options.data().info.texPicker.columns
+				const { result } = await fetchDataList({
+					paramType: 'bd', 
+					keyWord: this.config.search.texName
+				})
+				result.forEach(( item,idx )=> {
+					this.info.texPicker.columns.push({text:item.BoardId, key:item.BoardId})
+				})
 			},
 			texConfirm( value, index ){
 				this.commonForm.texName = value.key;
@@ -323,14 +310,15 @@
 					this.boxPickerSearch();
 				}
 			},
-			boxPickerSearch(){
-				let self = this;
-				this.$request.staff.calc.boxPicker( this.config.search.boxId ).then(res=>{
-					self.info.boxPicker.columns = [];
-					res.result.forEach((item,index)=>{
-						self.info.boxPicker.columns.push({text:item.BoxId + '--' + item.BoxName,key:item.BoxId});
-					});
-				});
+			async boxPickerSearch(){
+				this.info.boxPicker.columns = this.$options.data().info.boxPicker.columns
+				const { result } = await fetchDataList({
+					paramType: 'box', 
+					keyWord: this.config.search.boxId
+				})
+				result.forEach((item,idx)=> {
+					this.info.boxPicker.columns.push({text:item.BoxId + '--' + item.BoxName, key:item.BoxId})
+				})
 			},
 			boxConfirm( value, index ){
 				this.boxForm.boxId = value.key;
@@ -426,9 +414,7 @@
 				});
 			},
 			clearCalcRes(){
-				Object.keys( this.calcResult ).forEach((item,index)=>{
-					this.calcResult[item] = '';
-				});
+				this.calcResult = this.$options.data().calcResult
 			}
 		},
 		created(){

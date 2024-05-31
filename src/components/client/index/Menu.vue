@@ -1,49 +1,31 @@
 <template>
-	<div style="min-height:100%;background-color:#f1f1f1;padding-bottom:3.125rem;">
-		<div class="inset-card">
-			<div class="inset-card-header">
-				<van-field>
-					<div slot="label" class="font-tips">
-						{{ userName }}
+	<div clss="menu-container" :style="'min-height: '+ viewH/16 +'rem;background-color:#f1f1f1;'">
+		<div class="page-color menu-header">
+			<card :is-shadow="true">
+				<div class="card-body-container">
+					<div class="card-body-item card-body-item-100">
+						<span>
+							{{ userName }}
+						</span>
 					</div>
-					<div slot="input" class="font-tips">
-						<van-row style="text-align:center;">
-							<van-col span="12">
-								<van-button type="info" plain hairline round size="small" @click="getChangePass()">
-									<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
-									<span class="font-tips">更改密码</span>
-								</van-button>
-							</van-col>
-							<van-col span="12">
-								<van-button type="info" plain hairline round size="small" @click="qrClick">
-									<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
-									<span class="font-tips">登录二维码</span>
-								</van-button>
-							</van-col>
-						</van-row>
-					</div>
-				</van-field>
-			</div>
-		</div>
-		<!-- <div class="vant-row" style="height:3.125rem;padding-top:0.7rem;">
-			<div class="van-col van-col--8" style="line-height:1.875rem;text-align:center;">
-				<div style="font-size:0.875rem;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-					<span style="color:rgb(26, 173, 25);">{{ userName }}</span>
 				</div>
-			</div>
-			<div class="van-col van-col--8" style="text-align:center;">
-				<van-button type="info"  plain hairline round @click="getChangePass()" size="small">
-					<van-icon class-prefix="iconfont" size="16" name="iconfontmima"/>
-					更改密码
-				</van-button>
-			</div>
-			<div class="van-col van-col--8" style="text-align:center;">
-				<van-button type="info" plain hairline round @click="qrClick" size="small">
-					<van-icon class-prefix="iconfont" size="16" name="erweima2"/>
-					登录二维码
-				</van-button>
-			</div>
-		</div> -->
+				<div slot="actions" class="card-actions">
+					<div class="card-actions-item" @click="getChangePass()">
+						<van-icon color="#3c9cff" class-prefix="iconfont" name="iconfontmima" size="18"/>
+						<span class="card-actions-item-text blue-color">更改密码</span>
+					</div>
+					<div class="card-actions-item" @click="qrClick">
+						<van-icon color="#3c9cff" class-prefix="iconfont" name="erweima2" size="18"/>
+						<span class="card-actions-item-text blue-color">登录二维码</span>
+					</div>
+					<div class="card-actions-item" @click="logout()">
+						<van-icon color="#3c9cff" class-prefix="iconfont" name="logout" size="18"/>
+						<span class="card-actions-item-text blue-color">退出登录</span>
+					</div>
+				</div>
+			</card>
+		</div>
+		
 		<van-grid square :gutter="10" :column-num="4">
 			<van-grid-item 
 				v-for="(item,index) in config.authGrid" 
@@ -54,45 +36,39 @@
 				<van-icon class-prefix="iconfont" size="28" :name="item.iconName" slot="icon" color="#1a991d"/>
 			</van-grid-item>
 		</van-grid>
-		<van-popup v-model="config.popup.qrcode.show" position="top" :style="{ height : '100%', width: '100%'}">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
-				<div class="van-nav-bar__title van-ellipsis">
-					当前账号登录二维码
-				</div>
-			</div>
+		<van-popup v-model="config.popup.qrcode.show" :style="{ height: '45%', width: '85%'}" round>
 			<div id="qrcode" class="qrcode"></div>
-			<van-button type="primary" size="normal" style="position:fixed;bottom:0;width:100%;" @click="config.popup.qrcode.show = false">
-				关闭
-			</van-button>
 		</van-popup>
-		<van-popup v-model="config.popup.changePass.show" position="top" :style="{ height : '100%', width: '100%'}">
-			<div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom" style="z-index: 1;">
-				<div class="van-nav-bar__title van-ellipsis">
-					修改密码
+		<van-popup 
+			v-model="config.popup.changePass.show" 
+			:style="{ height : '15rem', width: '85%'}" 
+			round 
+			@closed="changePassClose"
+		>
+			<div style="padding: 0rem 0.75rem;">
+				<van-field v-model="formData.account" label="账号" input-align="center"  readonly required/>
+				<van-field v-model="formData.oldPass" label="原密码" input-align="center"  required />
+				<van-field v-model="formData.newPass" label="新密码" input-align="center"  maxlength="6" required/>
+				<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" maxlength="6" required/>
+				<div style="text-align:center;padding-top:0.5rem;">
+					<van-button type="primary" size="normal" style="width:45%;" @click="changeClick()">
+						提交
+					</van-button>
 				</div>
 			</div>
-			<div style="height:2.875rem;width:100%;"></div>
-			<van-field v-model="formData.account" label="账号" input-align="center"  readonly required/>
-			<van-field v-model="formData.oldPass" label="原密码" input-align="center"  required />
-			<van-field v-model="formData.newPass" label="新密码" input-align="center"  maxlength="6" required/>
-			<van-field v-model="formData.confirmPass" label="确认新密码" input-align="center" maxlength="6" required/>
-			<div style="text-align:center;padding-top:2rem;">
-				<van-button type="primary" size="normal" style="width:40%;" @click="changeClick()">
-					提交
-				</van-button>&nbsp;&nbsp;&nbsp;&nbsp;
-				<van-button type="primary" size="danger" style="width:40%;" @click=" onCancel()">
-					取消
-				</van-button>
-			</div>
+			
 		</van-popup>
 	</div>
 </template>
 <script>
-	import { Button, Col, Row, Cell, Icon, Popup, Field, Toast, Grid, GridItem } from 'vant';
-	import { urlWhiteList } from '@/util';
+	import { Button, Col, Row, Cell, Icon, Popup, Field, Dialog, Toast, Grid, GridItem } from 'vant';
+	import { urlWhiteList, clearLogin } from '@/util'
 	import QRCode from 'qrcodejs2';
 	import schema from 'async-validator';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+	/*自定义卡片组件*/
+	import Card from "@/components/subject/card/Card.vue"
+
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -105,6 +81,8 @@
 			[Toast.name]: Toast,
 			[Grid.name]: Grid,
 			[GridItem.name]: GridItem,
+
+			Card
 		},
 		/*
 		state: #1a991d -> 已完成, #eff30c -> 正在开发 , #0b27f1 -> 未开发 
@@ -113,10 +91,10 @@
 			return {
 				config:{
 					gridItem:[
-						{text:'余额流水', role:'余额流水', iconName:'mianfeibaojia',  url:'/client/statement/balStatement'},
+						{text:'客户信用余额明细', role:'客户信用余额明细', iconName:'mianfeibaojia',  url:'/client/statement/balStatement'},
 						{text:'订单统计', role:'订单统计', iconName:'dingdan2',  url:'/client/statis/amountStatis'},
 						{text:'开票信息', role:'开票信息', iconName:'iconddsh',  url:'/client/bill/billCenter'},
-						{text:'客户信用余额明细', role:'客户信用余额明细', iconName:'yewutiaozhang2',  url:'/client/cred/wGetCusDetail'},
+						{text:'客户信用余额明细2', role:'客户信用余额明细', iconName:'yewutiaozhang2',  url:'/client/cred/wGetCusDetail'},
 						{text:'信用余额', role:'信用余额', iconName:'xinyongyue',  url:'/client/cred/wGetCusAmt'},
 						{text:'报价规则', role:'报价查询', iconName:'tichengguize',url:'/client/quo/getQuoRuleByCus'},
 						{text:'报价价格', role:'报价查询', iconName:'jiagechaxun', url:'/client/quo/getQuoPriceByCus'},
@@ -173,25 +151,25 @@
 						}}
 					]
 				},
-				authUrl:[], //后台权限
+				authUrl: [], //后台权限
 			}
 		},
 		methods:{
 			qrClick(){
-				this.config.popup.qrcode.show = true;
-				this.getQrcode();
+				this.config.popup.qrcode.show = true
+				this.getQrcode()
 			},
 			getQrcode(){
 				let self = this;
 				this.$request.staff.user.getQrcode().then(res=>{
-					self.loginUrl = window.jpdn_domain_wxRediect + 'group/client/login?token=' + res.result;
+					self.loginUrl = window.jpdn_domain_wxRediect + 'group/client/login?token=' + res.result
 				}).then(()=>{
-					document.getElementById('qrcode').innerHTML = '';
+					document.getElementById('qrcode').innerHTML = ''
 					new QRCode('qrcode',{
-						text         : this.loginUrl,
-				     	colorDark    : '#000000',
-				      	colorLight   : '#ffffff',
-				      	correctLevel : QRCode.CorrectLevel.H
+						text: this.loginUrl,
+				     	colorDark: '#000000',
+				      	colorLight: '#ffffff',
+				      	correctLevel: QRCode.CorrectLevel.H
 					});
 				});
 			},
@@ -208,19 +186,18 @@
 				});
 			},
 			changePass( data ){
-				let self = this;
 				this.$request.client.other.changePass( data ).then(res=>{
 					if( res.errorCode === '00000' ){
-						Toast.success('密码更新成功');
-						self.config.popup.changePass.show = false;
-						self.$router.push('/group/client/login');
+						Toast.success('密码更新成功')
+						this.config.popup.changePass.show = false
+						this.$router.push('/group/client/login')
 					}else{
-						Toast.fail('密码更新失败');
+						Toast.fail('密码更新失败')
 					}
 				}),then(()=>{
-					this.formData.oldPass     = '';
-					this.formData.newPass     = '';
-					this.formData.confirmPass = '';
+					this.formData.oldPass= ''
+					this.formData.newPass= ''
+					this.formData.confirmPass = ''
 				});
 			},
 			authGrid( authName ){
@@ -233,11 +210,8 @@
 					}
 				}
 			},
-			onCancel(){
-				this.formData.oldPass = '';
-				this.formData.newPass = '';
-				this.formData.confirmPass = '';
-				this.config.popup.changePass.show = false ;
+			changePassClose() {
+				this.formData = this.$options.data().formData
 			},
 			getAuthMap(){
 				let self = this;
@@ -262,15 +236,33 @@
 					}
 				});
 			},
+			/*外部用户退出登录*/
+			logout() {
+				Dialog.confirm({
+					message: '确认退出?'
+				}).then(() => {
+					clearLogin()
+					this.$router.push('/group/client/login')
+					this.$store.commit('client/setTabbarActive', 'clogin')
+					this.$store.dispatch('user/logout')
+				}).catch(()=>{
+					Dialog.close()
+				})
+			},
 		},
-		created(){
+		async created(){
 			this.$store.commit('client/setHeaderTitle','菜单页面');
 			this.$store.commit('client/setTabbarActive','menu');
-			this.getAuthMap();
-			this.getMenuUserName();
+			await this.getAuthMap();
+			await this.getMenuUserName();
 		},
 		mounted(){
-			this.validator = new schema(this.rules);
+			this.validator = new schema(this.rules)
+		},
+		computed:{
+			...window.Vuex.mapGetters({
+				viewH: 'page/viewH',
+			})
 		},
 		computed:{
 			
@@ -281,26 +273,21 @@
 	}
 </script>
 <style>
+	@import '~@/assets/style/card.css';
+
 	.qrcode img{
-		margin:50% auto;
-		width:60%;
+		margin: 15% auto;
+		width: 60%;
 	}
-	.inset-card{
-		height: 4.0625rem;
-		width: 100%;
-		padding-top: 0.7rem;
+	.menu-container {
+		display: flex;
+		flex-direction: column;
+		padding: 0.75rem;
 	}
-	.inset-card-header{
-		padding: 0rem 0.8125rem;
+
+	.menu-header {
+		padding-top: 0.25rem;
+		margin-bottom: 0.5rem;
 	}
-	.font-tips{
-		overflow: hidden;
-   		white-space: nowrap;
-   		text-overflow: ellipsis;
-	}
-	/* .van-field__label{
-		overflow: hidden;
-	   		white-space: nowrap;
-	   		text-overflow: ellipsis;
-	} */
+	
 </style>

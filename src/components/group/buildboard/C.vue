@@ -5,7 +5,12 @@
 				{{ cardInfo.boardId }}
 				<span style="color:#000;" v-if="cardInfo.title">,{{ cardInfo.title }}</span>
 			</div>
-			<van-count-down :time="cardInfo.countDown.time" slot="desc" v-if="cardInfo.countDown.show">
+			<van-count-down 
+				v-if="cardInfo.countDown.show" 
+				:time="cardInfo.countDown.time" 
+				slot="desc" 
+				@finish="finish()"
+			>
 				<template v-slot="timeData">
 					<span>距团购结束：</span>
 					<span class="build-item">{{ timeData.days }}</span>
@@ -17,78 +22,314 @@
 					<span class="build-item">{{ timeData.seconds }}</span>
 				</template>
 			</van-count-down>
-			<div slot="price">¥{{ cardInfo.productPrice }}/㎡</div>
+			<div slot="price">
+				<span class="group-card-price-text">¥{{ cardInfo.productPrice }}</span>
+				/㎡
+			</div>
 			<div slot="origin-price">¥{{ cardInfo.marketPrice }}/㎡</div>
-			<van-image :src="cardInfo.pic" slot="thumb"/>
+			<van-image 
+				:src="cardInfo.pic" 
+				slot="thumb" 
+				width="85" 
+				height="85"
+			/>
 		</van-card>
-		<van-field v-model="formData.cusOrderId" label="客订单号" input-align="center" placeholder="未填写则系统自动生成"></van-field>
-		<popup-select :selectValue.sync="formData.boxType" :fieldConfig="config.fieldConfig.boxType" :radioData="config.radioData.boxType" selectType="boxType" @valueChange="boxTypeChange"></popup-select>
-		<!-- @boxTypeConfirm="getBoxFormula( formData.boxType )" -->
-		<van-field label="纸箱规格(mm)" right-icon="question-o" @click-right-icon="$toast('箱长范围:' + pageConfig.minBoxL + 'mm~'+ pageConfig.maxBoxL  + 'mm\n箱宽范围:' + pageConfig.minBoxW + 'mm~' + pageConfig.maxBoxW + 'mm\n' + '箱高范围:' + pageConfig.minBoxH + 'mm~' + pageConfig.maxBoxH + 'mm'  )">
-			<div class="van-row van-row--flex van-row--justify-center" slot="input">
-				<div class="van-col van-col--7" >
-					<input id="boxLength" placeholder="箱长(L)" v-model="formData.boxLength" style="width:100%;" @focus="inputFocus('boxLength')" @blur=" inputBlur('boxLength') "/>
-				</div>
-				<div class="van-col van-col--1">
-					x
-				</div>
-				<div class="van-col van-col--7">
-					<input id="boxWidth" placeholder="箱宽(W)" v-model="formData.boxWidth" style="width:100%;" @focus="inputFocus('boxWidth')" @blur=" inputBlur('boxWidth') "/>
-				</div>
-				<div class="van-col van-col--1">
-					x
-				</div>
-				<div class="van-col van-col--8">
-					<input id="boxHeight" placeholder="箱高(H)" v-model="formData.boxHeight" style="width:100%;" @focus="inputFocus('boxHeight')" @blur=" inputBlur('boxHeight') "/>
-				</div>
-			</div>	
+		<van-field 
+			v-model="formData.cusOrderId" 
+			label="客订单号" 
+			input-align="center" 
+			placeholder="未填写则系统自动生成"
+		>
 		</van-field>
-		<popup-select :selectValue.sync="formData.tonLen" :fieldConfig="config.fieldConfig.tonLen" :radioData="config.radioData.tonLen" selectType="tonLen" @valueChange="tonLenChange" v-if="config.showTonLen"></popup-select>
-		<!--  @lenConfirm="calcBdLW()" -->
-		<popup-select :selectValue.sync="formData.uLen" :fieldConfig="config.fieldConfig.uLen" :radioData="config.radioData.uLen" selectType="uLen" @valueChange="lenChange" v-if="config.showULen"></popup-select>
-		<!--  @lenConfirm="calcBdLW()" -->
-		<van-field v-model="formData.lengthF" input-align="center" label="横向公式" placeholder="待选择箱型" readonly/>
-		<van-field v-model="formData.widthF" input-align="center" label="纵向公式" placeholder="待选择箱型" readonly/>
-		<van-field label="纸板规格(mm)">
-			<div class="van-row van-row--flex van-row--justify-center" slot="input">
-				<div class="van-col van-col--8" >
-					<input placeholder="板长" v-model="formData.length" style="width:100%;" disabled/>
-				</div>
-				<div class="van-col van-col--1">
-					x
-				</div>
-				<div class="van-col van-col--8" >
-					<input placeholder="板宽" v-model="formData.width" style="width:100%;" disabled/>
+		<uni-check-box	
+			label="箱型"
+			:localdata="config.radioData.boxType"
+			:radioData.sync="formData.boxType" 
+			:map="{text: 'BoxName', value: 'BoxId'}"
+			@change="boxTypeChange"
+		>
+		</uni-check-box>
+		<div class="van-cell" style="display: flex;align-items: center;">
+			<div class="van-cell__title van-field__label">箱规(mm)</div>
+			<input 
+				id="boxLength" 
+				type="number" 
+				class="karry-input" 
+				placeholder="长(L)" 
+				v-model="formData.boxLength" 
+				@focus="inputFocus('boxLength')" 
+				@blur=" inputBlur('boxLength') "
+			/>
+			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+			<input 
+				id="boxWidth" 
+				type="number" 
+				class="karry-input" 
+				placeholder="宽(W)" 
+				v-model="formData.boxWidth" 
+				@focus="inputFocus('boxWidth')" 
+				@blur=" inputBlur('boxWidth') "
+			/>
+			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+			<input 
+				id="boxHeight" 
+				type="number" 
+				class="karry-input"
+				placeholder="高(H)" 
+				v-model="formData.boxHeight" 
+				@focus="inputFocus('boxHeight')" 
+				@blur=" inputBlur('boxHeight') "
+			/>
+			<div class="van-field__right-icon">
+				<van-icon 
+					name="question-o" 
+					@click="$toast(
+					'箱长范围:' + pageConfig.minBoxL + 'mm~'+ pageConfig.maxBoxL  + 'mm\n箱宽范围:' + pageConfig.minBoxW + 'mm~' + pageConfig.maxBoxW + 'mm\n' + '箱高范围:' + pageConfig.minBoxH + 'mm~' + pageConfig.maxBoxH + 'mm'  
+					)"
+				/>
+			</div>
+		</div>
+		<uni-check-box
+			label="箱舌(T)"
+			:localdata="config.radioData.tonLen"
+			:radioData.sync="formData.tonLen" 
+			:map="{text: 'text', value: 'value'}"
+			@change="tonLenChange"
+		>
+		</uni-check-box>
+		<uni-check-box
+			label="封箱调整(U)"
+			:localdata="config.radioData.uLen"
+			:radioData.sync="formData.uLen" 
+			:map="{text: 'text', value: 'value'}"
+			@change="lenChange"
+		>
+		</uni-check-box>
+		<van-field 
+			v-if="!pageConfig.isWeb"
+			v-model="formData.lengthF" 
+			input-align="center" 
+			label="横向公式" 
+			placeholder="待选择箱型" 
+			readonly
+		/>
+		<van-field 
+			v-if="!pageConfig.isWeb"
+			v-model="formData.widthF" 
+			input-align="center" 
+			label="纵向公式" 
+			placeholder="待选择箱型" 
+			readonly
+		/>
+		<div class="van-cell" style="display: flex;align-items: center;">
+			<div class="van-cell__title van-field__label">纸板(mm)</div>
+			<input 
+				type="number" 
+				class="karry-input" 
+				placeholder="板长" 
+				v-model="formData.length" 
+				:readonly="!pageConfig.isWeb"
+				@focus="inputFocus('length')" 
+				@blur="inputBlur('length')"
+			/>
+			<div style="margin-left:0.2rem;margin-right:0.2rem;">x</div>
+			<input 
+				type="number" 
+				class="karry-input" 
+				placeholder="板宽" 
+				v-model="formData.width" 
+				:readonly="!pageConfig.isWeb"
+				@focus="inputFocus('width')" 
+				@blur="inputBlur('width')"
+			/>
+		</div>
+		<van-field 
+			v-model="formData.scoreInfo"
+			input-align="center" 
+			:label="pageConfig.buildScoreInfoChiText" 
+			:placeholder="!pageConfig.isWeb?'由ERP系统自动计算':'请输入压线'" 
+			:readonly="!pageConfig.isWeb"
+			@focus="inputFocus('scoreInfo')" 
+			@blur="inputBlur('scoreInfo')"
+		/>
+		<uni-check-box
+			label="压线压型"
+			:localdata="config.radioData.lineBall"
+			:radioData.sync="formData.lineBallInfo" 
+			:map="{text: 'text', value: 'value'}"
+			@change="lineBallChange"
+		>
+		</uni-check-box>
+		<van-field 
+			v-model="formData.bdMultiple" 
+			input-align="center" 
+			label="张数" 
+			placeholder="待选择箱型" 
+			readonly 
+			right-icon="question-o" 
+			@click-right-icon="$toast('正数:几个纸板=>1个纸箱\n负数:1个纸板=>几个纸箱' )"
+		/>
+		<van-field 
+			id="ordQty" 
+			ref="orderQuantitiesField" 
+			v-model="formData.ordQty" 
+			input-align="center" 
+			label="订单数" 
+			placeholder="输入订单数" 
+			@focus="inputFocus('ordQty')" 
+			@blur="inputBlur('ordQty')"
+		/>
+		<van-field 
+			v-model="formData.bdQty" 
+			input-align="center" 
+			label="纸板数" 
+			placeholder="待计算" 
+			readonly
+		/>
+		<van-field 
+			v-model="formData.unitArea" 
+			input-align="center" 
+			label="单片面积(㎡)" 
+			placeholder="待计算" 
+			readonly 
+		/>
+		<van-field 
+			v-model="formData.area" 
+			input-align="center" 
+			label="下单面积(㎡)" 
+			placeholder="待计算" 
+			readonly 
+			right-icon="question-o" 
+			@click-right-icon="$toast('下单面积范围:'+pageConfig.minArea+'㎡~'+pageConfig.maxArea+'㎡')" 
+		/>
+		<popup-select 
+			v-if="pageConfig.showBuildCAddress == 1"
+			:selectValue.sync="formData.address" 
+			:fieldConfig="config.fieldConfig.address" 
+			:radioData="config.radioData.address" 
+			selectType="cusInfo" 
+			@valueChange="addressChange">
+		</popup-select>
+		<new-time-picker 
+			v-if="config.popup.timeFilter.isFinishLoad"
+			:dateTime.sync="formData.date" 
+			:minDate="pageConfig.minDate" 
+			:maxDate="pageConfig.maxDate" 
+			label="交货日期" 
+		></new-time-picker>
+		<van-field 
+			v-if="config.showDeliveryRemark == 1" 
+			v-model="formData.deliveryRemark" 
+			rows="1" 
+			autosize 
+			label="送货备注" 
+			type="textarea"  
+			maxlength="50" 
+			placeholder="填写送货备注" 
+			show-word-limit
+		/>
+		<van-field 
+			v-model="formData.productionRemark" 
+			rows="1" 
+			autosize 
+			label="生产备注" 
+			type="textarea"  
+			maxlength="50" 
+			placeholder="填写生产备注" 
+			show-word-limit
+		/>
+		<div style="height:2.5rem;width:100%;"></div>
+		<van-submit-bar 
+			:price=" formData.cost * 100 " 
+			button-text="提交订单" 
+			:disabled=" !(pageConfig.erpCalcScoreInfoSuccess && !config.submitBar.disabled)"
+			@submit="checkFormData()"
+		>
+			<div slot="default">
+				<div style="color: rgb(224, 24, 53);padding-left: 0.5rem;">
+					<van-tag 
+						mark 
+						type="danger" 
+						v-if=" formData.isRangePrice && helpInfo.sheetQuantities == 0 && helpInfo.price == 0 "
+					>
+						最低价
+					</van-tag>
+					¥
+					<span v-if="formData.isRangePrice && formData.price">{{ formData.price }}</span>
+					<span v-if="!formData.isRangePrice && cardInfo.productPrice">{{ cardInfo.productPrice }}</span>
+					/㎡
 				</div>
 			</div>
-		</van-field>
-		<van-field input-align="center" label="压线信息" placeholder="由ERP系统自动计算" readonly/>
-		<popup-select :selectValue.sync="formData.lineBallInfo" :fieldConfig="config.fieldConfig.lineBall" :radioData="config.radioData.lineBall" selectType="lineBall" @valueChange="lineBallChange"></popup-select>
-		<van-field v-model="formData.bdMultiple" input-align="center" label="张数" placeholder="待选择箱型" readonly right-icon="question-o" @click-right-icon="$toast('正数:几个纸板=>1个纸箱\n负数:1个纸板=>几个纸箱' )"/>
-		<van-field id="ordQty" v-model="formData.ordQty" input-align="center" label="订单数" placeholder="输入订单数" ref="orderQuantitiesField" @focus="inputFocus('ordQty')" @blur="inputBlur('ordQty')"/>
-		<van-field v-model="formData.bdQty" input-align="center" label="纸板数" placeholder="待计算" readonly/>
-		<van-field v-model="formData.area" input-align="center" label="下单面积(㎡)" placeholder="待计算" readonly right-icon="question-o" @click-right-icon="$toast('下单面积范围:' + pageConfig.minArea + '㎡~' + pageConfig.maxArea + '㎡')" />
-		<popup-select :selectValue.sync="formData.address" :fieldConfig="config.fieldConfig.address" :radioData="config.radioData.address" selectType="cusInfo" @valueChange="addressChange"></popup-select>
-		<new-time-picker :dateTime.sync="formData.date" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="交货日期" v-if="config.popup.timeFilter.isFinishLoad"></new-time-picker>
-		<van-field v-if="config.showDeliveryRemark == 1" v-model="formData.deliveryRemark" rows="1" autosize label="送货备注" type="textarea"  maxlength="50" placeholder="填写送货备注" show-word-limit/>
-		<van-field v-model="formData.productionRemark" rows="1" autosize label="生产备注" type="textarea"  maxlength="50" placeholder="填写生产备注" show-word-limit/>
-		<div style="height:3.5rem;width:100%;"></div>
-		<van-submit-bar :price=" formData.cost * 100 " button-text="提交订单" @submit="checkFormData()">
-			<div slot="top" style="font-size:1rem;text-align:center;">
+			<div slot="tip" v-if="formData.saveCost || (formData.isRangePrice && helpInfo.sheetQuantities != 0 && helpInfo.price != 0)">
+				<span v-if="formData.saveCost">
+					节省:
+					<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
+				</span>
+				<span v-if="formData.isRangePrice && helpInfo.sheetQuantities != 0 && helpInfo.price != 0">
+					订单数满
+					<span 
+						style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" 
+						@click="maxOrderQty()"
+					>
+						{{ helpInfo.sheetQuantities }}
+					</span>
+					价格减至
+					<span style="color: rgb(224, 24, 53);">
+						¥{{ helpInfo.price }}/㎡
+					</span>
+				</span>
+			</div>
+			<!-- <div slot="top" style="font-size:0.75rem;text-align:center;">
 				<template v-if="formData.isRangePrice">
-					当前价格:<span style="color: rgb(224, 24, 53);">¥{{ formData.price }}/㎡</span>
-					<van-tag mark type="danger" v-if=" helpInfo.sheetQuantities == 0 && helpInfo.price == 0 ">最低价</van-tag><br/>
-					<template  v-if=" helpInfo.sheetQuantities != 0 && helpInfo.price != 0 ">
-						订单数满<span style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" @click="maxOrderQty()">{{ helpInfo.sheetQuantities }}</span>价格减至 <span style="color: rgb(224, 24, 53);">¥{{ helpInfo.price }}/㎡</span><br/>
+					<van-tag 
+						mark 
+						type="danger" 
+						v-if=" helpInfo.sheetQuantities == 0 && helpInfo.price == 0 "
+					>
+						最低价
+					</van-tag>
+					<br/>
+					<template v-if=" helpInfo.sheetQuantities != 0 && helpInfo.price != 0 ">
+						订单数满
+						<span 
+							style="color: rgb(68, 187, 0); text-decoration: underline; cursor: pointer;font-size:1rem;" 
+							@click="maxOrderQty()"
+						>
+							{{ helpInfo.sheetQuantities }}
+						</span>
+						价格减至 
+						<span style="color: rgb(224, 24, 53);">
+							¥{{ helpInfo.price }}/㎡
+						</span>
+						<br/>
 					</template>
 				</template>
 				<template>
 					节省金额：<span style="color:rgb(224, 24, 53);">¥{{ formData.saveCost }}</span>
 				</template>
-			</div>
+			</div> -->
 		</van-submit-bar>
-		<build-sku :skuShow.sync="config.popup.sku.show" :orderInfo="formData" orderType="c" @saveOrder="saveOrder" :isGroup="true" :showULen="config.showULen" :showTonLen="config.showTonLen"></build-sku>
-		<build-result :resultShow.sync="config.result.show" :isGroup.sync="config.result.isGroup" :isSuccess="config.result.isSuccess" @clearFormData="clearFormData()" v-if="config.result.show" :cusOrderId="config.result.cusOrderId" :failMsg="config.result.failMsg"></build-result>
+		<build-sku 
+			:skuShow.sync="config.popup.sku.show" 
+			:orderInfo="formData" 
+			orderType="c" 
+			:isGroup="true" 
+			:showULen="config.showULen" 
+			:showTonLen="config.showTonLen"
+			@saveOrder="saveOrder" 
+		>
+		</build-sku>
+		<build-result 
+			v-if="config.result.show" 
+			:resultShow.sync="config.result.show" 
+			:isGroup.sync="config.result.isGroup" 
+			:isSuccess="config.result.isSuccess" 
+			:cusOrderId="config.result.cusOrderId" 
+			:failMsg="config.result.failMsg"
+			:isPay="pageConfig.directCreditPay == 1 && pageConfig.useCreditPay == 1"
+			@clearFormData="clearFormData()" 
+		>
+		</build-result>
 	</div>
 </template>
 <script>
@@ -98,6 +339,11 @@
 	import BuildSku from '@/components/subject/build/BuildSku.vue';
 	import BuildResult from '@/components/subject/build/BuildResult.vue';
 	import schema from 'async-validator';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	/*api接口*/
+	import { getBuildOrdConfig } from "@/api/common/webConfig"
+
 	export default {
 		components:{
 			[Image.name]: Image,
@@ -112,138 +358,173 @@
 			PopupSelect,
 			NewTimePicker,
 			BuildSku,
-			BuildResult
+			BuildResult,
+			UniCheckBox
 		},
 		data(){
 			return {
 				config : {
-					fieldConfig:{
-						boxType : {
-							label       : '箱型',
-							placeholder : '选择箱型'
-						},
-						tonLen : {
-							label       : '箱舌(T)',
-							placeholder : '选择箱舌'
-						},
-						uLen : {
-							label       : '封箱调整(U)',
-							placeholder : '选择封箱调整'
-						},
-						lineBall : {
-							label       : '压型名称',    //压线名称
-							placeholder : '选择压型名称'  //选择压线名称
-						},
-						address : {
-							label       : '送货公司',
-							placeholder : '选择送货公司'
-						}
+					submitBar: {
+						disabled: false
 					},
-					radioData : {
-						boxType : [],
-						tonLen  : [],
-						uLen    : [],
+					fieldConfig: {
+						boxType: {
+							label: '箱型',
+							placeholder: '选择箱型'
+						},
+						tonLen: {
+							label: '箱舌(T)',
+							placeholder: '选择箱舌'
+						},
+						uLen: {
+							label: '封箱调整(U)',
+							placeholder: '选择封箱调整'
+						},
+						lineBall: {
+							label: '压型名称',    //压线名称
+							placeholder: '选择压型名称'  //选择压线名称
+						},
+						address: {
+							label: '送货公司',
+							placeholder: '选择送货公司'
+						},
+					},
+					radioData: {
+						boxType: [],
+						tonLen: [],
+						uLen: [],
 						lineBall: [],
-						address : [],
+						address: [],
 					},
-					popup:{
-						timeFilter : {
+					popup: {
+						timeFilter: {
 							isFinishLoad : false
 						},
-						sku : {
-							show : false,
+						sku: {
+							show: false,
 						}
 					},
-					result : {
-						show       : false,
-						isSuccess  : false,
-						cusOrderId : '',
-						isGroup    : false,
-						failMsg : '下单失败'
+					result: {
+						show: false,
+						isSuccess: false,
+						cusOrderId: '',
+						isGroup: false,
+						failMsg: '下单失败'
 					},
-					showTonLen:true,
-					showULen:true,
-					showDeliveryRemark:0,
+					showTonLen: true,
+					showULen: true,
+					showDeliveryRemark: 0,
 					lastToLen: null,
-					lastULen:null,
-					build:{
-						lenNeedToast:false,
-						widthNeedToast:false,
-						heightNeedToast:false,
-						lenToastDefault:null,
-						widthToastDefault:null,
-						heightToastDefault:null,
+					lastULen: null,
+					build: {
+						lenNeedToast: false,
+						widthNeedToast: false,
+						heightNeedToast: false,
+						lenToastDefault: null,
+						widthToastDefault: null,
+						heightToastDefault: null,
 					},
 					initClientHeight: document.documentElement.clientHeight
 				},
-				cardInfo:{
-					boardId      : '',
-					title        : '',
+				cardInfo: {
+					boardId: '',
+					title: '',
 					productPrice : '',
-					marketPrice  : '',
-					pic          : window.jpdn_domain_imgDomain + 'zwtp.png',
-					countDown    :{
-						time : 0,
-						show : false,
+					marketPrice: '',
+					pic: null,
+					countDown: {
+						time: 0,
+						show: false,
 					}
 				},
-				formData : {
-					productId        : '',
-					cusOrderId       : '',
-					boxType          : '',
-					boxLength        : '',
-					boxWidth         : '',
-					boxHeight        : '',
-					tonLen           : '',
-					uLen             : '',
-					lengthF          : '',
-					widthF           : '',
-					length           : '',
-					width            : '',
-					bdMultiple       : '',  //张数
-					ordQty           : '',  //订单数
-					bdQty            : '',  //纸板数
-					lineBallInfo     : '',  //压型名称
-					area             : '',
-					address          : '',
-					date             : '',
-					deliveryRemark   : '',
-					productionRemark : '',
-					isRangePrice     : false,
-					isValidArea      : false,
-					cost             : '',
-					price            : '',
-					saveCost         : '',
+				formData: {
+					productId: '',
+					cusOrderId: '',
+					boxType: '',
+					boxLength: '',
+					boxWidth: '',
+					boxHeight: null,
+					tonLen: '',
+					uLen: '',
+					lengthF: '',
+					widthF: '',
+					length: '',
+					width: '',
+					bdMultiple: '',  //张数
+					ordQty: '',  //订单数
+					bdQty: '',  //纸板数
+					lineBallInfo: '',  //压型名称
+					scoreInfo: '', //压线信息
+					area: '',
+					unitArea: null,
+					address: '',
+					date: '',
+					deliveryRemark: '',
+					productionRemark: '',
+					isRangePrice: false,
+					isValidArea: false,
+					cost: '',
+					price: '',
+					saveCost: '',
 				},
-				pageConfig : {
-					minDate : '',
-					maxDate : '',
-					minBoxL : '',
-					maxBoxL : '',
-					minBoxW : '',
-					maxBoxW : '',
-					minBoxH : '',
-					maxBoxH : '',
-					minArea : '',
-					maxArea : '',
-					lengthF : '',
-					widthF  : '',
-					buildAutoGetTonLenAndULen:true,
+				//箱型对应信息
+				boxInfo: {
+					//长度公式
+					lengthFCalc: null,
+					//宽度公式
+					widthFCalc: null,
+					//长度提示信息
+					lengthFDesc: null,
+					//宽度提示信息
+					widthFDesc: null,
+					//备注信息
+					remark: null,
 				},
-				helpInfo:{
-					sheetQuantities : '',
-					price           : '',
+				pageConfig: {
+					minDate: '',
+					maxDate: '',
+					minBoxL: '',
+					maxBoxL: '',
+					minBoxW: '',
+					maxBoxW: '',
+					minBoxH: '',
+					maxBoxH: '',
+					minArea: '',
+					maxArea: '',
+					lengthF: '',
+					widthF: '',
+					buildAutoGetTonLenAndULen: true,
+					buildScoreInfoChiText: null,
+					showBuildCAddress: 0,
+
+					useCreditPay: 0,
+					directCreditPay: 0,
+					factoryId: null,
+					erpId: null,
+					subFacId: null,
+					/*请求压线是否可用*/
+					inProgress: false,
+					/*自由输入板长板宽压线*/
+					isWeb: false,
+					/*erp计算压线是否成功*/
+					erpCalcScoreInfoSuccess: true,
+					/*erp计算的压线*/
+					erpCalcScoreInfo: null
 				},
-				validator : {},
-				rules : {
-					productId : [
-						{ required : true, message : '产品信息不能为空' }
+				helpInfo: {
+					sheetQuantities: 0,
+					price: 0,
+				},
+				validator: {},
+				rules: {
+					productId: [
+						{ required: true, message: '产品信息不能为空' }
 					],
-					boxType : [
-						{ required:true, message : '请选择箱型' }
+					boxType: [
+						{ required: true, message: '请选择箱型' }
 					],
-					boxLength : [
-						{ required:true, message : '请填写箱长' },
+					boxLength: [
+						{ required: true, message : '请填写箱长' },
 						{ validator: (rule, value, callback, source, options)=>{
 							let errors;
 							if( Number(value) > this.pageConfig.maxBoxL || Number(value) < this.pageConfig.minBoxL){
@@ -253,8 +534,8 @@
 							callback(errors);
 						} }
 					],
-					boxWidth : [
-						{ required:true, message : '请填写箱宽' },
+					boxWidth: [
+						{ required: true, message: '请填写箱宽' },
 						{ validator: (rule, value, callback, source, options)=>{
 							let errors;
 							if( Number(value) > this.pageConfig.maxBoxW || Number(value) < this.pageConfig.minBoxW){
@@ -264,37 +545,110 @@
 							callback(errors);
 						} }
 					],
-					boxHeight : [
-						{ required:true, message : '请填写箱高' },
+					boxHeight: [
+						{ required: true, message: '请填写箱高' },
 						{ validator: (rule, value, callback, source, options)=>{
-							let errors;
-							if( Number(value) > this.pageConfig.maxBoxH || Number(value) < this.pageConfig.minBoxH){
-								errors = '箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm';
-								this.formData.boxHeight = null;
+							let errors
+							if( /^\d+$/.test(value ) ) {
+								if( Number(value) != 0) {
+									if( Number(value) > this.pageConfig.maxBoxH || Number(value) < this.pageConfig.minBoxH){
+										errors = '箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm'
+										this.formData.boxHeight = null
+									}
+								}
+							} else {
+								errors = "请输入箱高"
 							}
-							callback(errors);
+							callback(errors)
 						} }
 					],
-					tonLen : [
-						{ required:true, message : '请选择箱舌'  }
+					tonLen: [
+						{ required: true, message: '请选择箱舌'  }
 					],
-					uLen : [
-						{ required:true, message : '请选择封箱调整'  }
+					uLen: [
+						{ required: true, message: '请选择封箱调整'  }
 					],
-					length : [
-						{ required:true, message : '请填写相关信息获取板长'  }
+					length: [
+						{ required: true, message: '板长不能为空'  },
+						{
+							validator: (rule, value, callback, source, options)=> {
+								let errors
+								if( !( /^\d+$/.test(value )) ) {
+									errors = "板长格式错误"
+								}
+								callback(errors)
+							}
+						}
 					],
-					width : [
-						{ required:true, message : '请填写相关信息获取板宽'  }
+					width: [
+						{ required: true, message: '板宽不能为空'  },
+						{
+							validator: (rule, value, callback, source, options)=> {
+								let errors
+								if( !( /^\d+$/.test(value )) ) {
+									errors = "板宽格式错误"
+								}
+								callback(errors)
+							}
+						}
 					],
-					bdQty : [
-						{ required:true, message : '请填写相关信息获取纸板数'  }
+					bdQty: [
+						{ required: true, message: '请填写相关信息获取纸板数'  },
+						{
+							validator: (rule, value, callback, source, options)=> {
+								let errors
+								if( !( /(^[1-9]\d*$)/.test( value )) ) {
+									errors = "纸板数格式错误"
+								}
+								callback(errors)
+							}
+						}
 					],
-					lineBallInfo:[
-						{ required : true , message:'请选择压型' }
+					ordQty: [
+						{ required: true, message: '请输入订单数量' },
+						{
+							validator: (rule, value, callback, source, options)=> {
+								let errors
+								if( !( /(^[1-9]\d*$)/.test( value )) ) {
+									errors = "请输入正确的订单数量"
+								}
+								callback(errors)
+							}
+						}
 					],
-					area : [
-						{ required:true, message : '请填写相关信息获取下单面积'  },
+					lineBallInfo: [
+						{ required: true , message: '请选择压型' },
+						{
+							validator: (rule, value, callback, source, options)=> {
+								let errors
+								if( value == "无压线" && this.formData.scoreInfo ) {
+									errors = "无法选择无压线"
+								}
+								if( value != "无压线" && !this.formData.scoreInfo ) {
+									errors = "无法选择当前压型"
+								}
+								callback(errors)
+							}
+						}
+					],
+					scoreInfo: [
+						{ 
+							validator: (rule, value, callback, source, options)=>{
+								let errors
+								console.log(this.formData.lineBallInfo)
+								try {
+									if( this.formData.lineBallInfo != "无压线" && Math.round(eval(value)) != this.formData.width ) {
+										errors = this.pageConfig.isWeb ? "当前压型与压线不匹配" : "当前压型与压线不匹配"
+									}
+								} catch( err ) {
+									errors = this.pageConfig.isWeb ? "当前压型与压线不匹配" : "当前压型与压线不匹配"
+								}
+								callback(errors)
+							}
+						}
+					],
+					area: [
+						{ required: true, message: '请填写相关信息获取下单面积'  },
 						{ validator: (rule, value, callback, source, options)=>{
 							let errors;
 							if( Number(value) > this.pageConfig.maxArea || Number(value) < this.pageConfig.minArea){
@@ -303,11 +657,11 @@
 							callback(errors);
 						} }
 					],
-					address : [
-						{ required:true, message : '请选择送货公司'  },
+					address: [
+						{ required: true, message: '请选择送货公司'  },
 					],
-					date : [
-						{ required:true, message : '请选择送货日期'  },
+					date: [
+						{ required: true, message: '请选择送货日期'  },
 					]
 				}
 			}
@@ -315,13 +669,6 @@
 		methods:{
 			getConfig( goodsId ){
 				let self = this;
-				
-				this.config.radioData.boxType = [];
-				this.config.radioData.lineBall = [];
-				this.config.radioData.tonLen = [];
-				this.config.radioData.uLen = [];
-				this.config.radioData.address = [];
-
 				this.$request.client.groupBuying.getCConfig( goodsId ).then(res=>{
 					if( res.errorCode == '20260' ){
 						Dialog.alert({
@@ -335,10 +682,7 @@
 						self.config.result.isGroup = true;
 					}
 					self.pageConfig.buildAutoGetTonLenAndULen = res.result.page_config.BuildAutoGetTonLenAndULen == 1 ? true : false;
-					/*if( res.result.page_config.BuildAutoGetTonLenAndULen == 1 ){
-						self.pageConfig.buildAutoGetTonLenAndULen = true;
-						self.formData.u
-					}*/
+					
 					self.config.lastToLen = res.result.last_tolen;
 					self.config.lastULen  = res.result.last_ulen;
 					self.pageConfig.minDate = res.result.page_config.BuildMinDate;
@@ -351,6 +695,15 @@
 					self.pageConfig.maxBoxH = res.result.page_config.BuildMaxBoxH;
 					self.pageConfig.minArea = res.result.product_info.BuildMin;
 					self.pageConfig.maxArea = res.result.product_info.BuildMax;
+					self.pageConfig.buildScoreInfoChiText = res.result.page_config.BuildScoreInfoChiText
+					self.pageConfig.showBuildCAddress = res.result.page_config.ShowBuildCAddress
+
+					self.pageConfig.useCreditPay = res.result.page_config.UseCreditPay
+					self.pageConfig.directCreditPay =  res.result.page_config.DirectCreditPay
+					//用户信息
+					self.pageConfig.erpId = res.result.userInfo.ERPId
+					self.pageConfig.factoryId = res.result.userInfo.FactoryId
+					self.pageConfig.subFacId = res.result.userInfo.SubFacId
 
 					self.cardInfo.boardId      = res.result.product_info.BoardId;
 					self.cardInfo.title        = res.result.product_info.Title;
@@ -358,7 +711,8 @@
 					self.cardInfo.marketPrice  = res.result.product_info.MarketPrice;
 
 					self.formData.date    = res.result.page_config.BuildDeliveryDate;
-					self.formData.address = res.result.ERPId;
+
+					self.formData.address = res.result.userInfo.ERPId;
 					self.formData.tonLen  = res.result.adjust_info.TonLen;
 					self.formData.uLen    = res.result.adjust_info.ULen;
 
@@ -371,31 +725,29 @@
 					self.config.build.heightNeedToast = res.result.page_config.BuildHeightNeedToast == 1 ? true : false;
 					self.config.build.heightToastDefault = Number(res.result.page_config.BuildWidthToastDefault);
 
-					if( res.result.product_info.Pic[0] ){
-						self.cardInfo.pic = window.jpdn_domain_imgDomain + res.result.product_info.Pic[0];
-					}
+					self.cardInfo.pic = res.result.product_info.Pic
 					if( res.result.product_info.BeginTime * 1000 < (new Date()).valueOf()  ){
 						self.cardInfo.countDown.time = res.result.product_info.EndTime * 1000 - (new Date()).valueOf();
 					}else{
 						self.cardInfo.countDown.time = ( res.result.product_info.EndTime - res.result.product_info.BeginTime ) * 1000;
 					}
 					res.result.page_config.BuildTonLen.forEach((item,index)=>{
-						self.config.radioData.tonLen.push({ value:item, text:''});
+						self.config.radioData.tonLen.push({ value: item, text: item });
 					});
 					res.result.page_config.BuildULen.forEach((item,index)=>{
-						self.config.radioData.uLen.push({ value : item, text: '' })
+						self.config.radioData.uLen.push({ value: item, text: item })
 					});
+					self.config.radioData.boxType = JSON.parse(JSON.stringify(res.result.box_type_available))
+
 					if( res.result.page_config.BuildTonLen.length == 1 && res.result.page_config.BuildTonLen[0] == 0 ){
 						self.config.showTonLen = false;
 					}
 					if( res.result.page_config.BuildULen.length == 1 && res.result.page_config.BuildULen[0] == 0 ){
 						self.config.showULen = false;
 					}
-					res.result.box_type_available.forEach((item,index)=>{
-						self.config.radioData.boxType.push({ value : item.BoxId, text:item.BoxName, lengthF:item.LengthF, widthF:item.WidthF });
-					});
+					
 					res.result.page_config.line_ball_config.forEach((item,index)=>{
-						self.config.radioData.lineBall.push( { value:item, text:'', tag:'' } );
+						self.config.radioData.lineBall.push( { value: item, text: item } );
 					});
 					self.formData.lineBallInfo = res.result.page_config.DefaultScoreName ? res.result.page_config.DefaultScoreName : self.config.radioData.lineBall[0].value;
 					res.result.cus_info.forEach((item,index)=>{
@@ -408,12 +760,32 @@
 					})
 				});
 			},
-			getBoxFormula( boxType ){
-				/*if( !this.pageConfig.buildAutoGetTonLenAndULen ){
-					this.formData.uLen = this.config.radioData.uLen[0].value;
-					this.formData.tonLen = this.config.radioData.tonLen[0].value;
-				}*/
-				let self = this;
+			async getBoxFormula( boxType ){
+				this.boxInfo = this.$options.data().boxInfo
+				let arr = this.config.radioData.boxType.find(item => item.BoxId === boxType)
+				this.formData.bdMultiple = 0
+				if( arr ) {
+					this.boxInfo.remark = arr.Remark
+					this.pageConfig.isWeb = arr.Remark.includes('WEB') ? true : false
+					this.boxInfo.lengthFCalc = arr.LengthF
+					this.boxInfo.lengthFDesc = arr.LengthFDesc || ''
+					this.boxInfo.widthFCalc = arr.WidthF
+					this.boxInfo.widthFDesc = arr.WidthFDesc || ''
+					this.formData.bdMultiple = Number(arr.Multiple)
+					if( !this.boxInfo.lengthFCalc.includes('L') && !this.boxInfo.widthFCalc.includes('L') ) {
+						this.formData.boxLength = 0
+					}
+					if( !this.boxInfo.lengthFCalc.includes('W') && !this.boxInfo.widthFCalc.includes('W') ) {
+						this.formData.boxWidth = 0
+					}
+					if( !this.boxInfo.lengthFCalc.includes('H') && !this.boxInfo.widthFCalc.includes('H') ) {
+						this.formData.boxHeight = 0
+					}
+
+					await this.calcBdLW(false)
+					await this.calcBdQty()
+				}
+				/*let self = this;
 				this.$request.client.groupBuying.getBoxFormula( boxType ).then(res=>{
 					self.formData.lengthF    = res.result.LengthF;
 					self.formData.widthF     = res.result.WidthF;
@@ -425,15 +797,17 @@
 						this.calcBdLW();
 						this.calcBdQty();
 					});
-				});
+				});*/
 			},
 			checkFormData(){
-				let self = this;
-				this.validator.validate(this.formData).then(()=>{
-					self.checkData(self.formData);
+				let validator = new schema( this.rules )
+				validator.validate(this.formData).then(()=>{
+					this.checkData(this.formData)
+				}).then(()=> {
+					if( !this.pageConfig.isWeb )  this.fetchScoreInfo()
 				}).catch(({ errors, fields })=>{
-					Toast.fail(errors[0].message);
-				});
+					Toast.fail(errors[0].message)
+				})
 			},
 			checkData( postData ){
 				let self = this;
@@ -458,192 +832,203 @@
 						self.config.result.isSuccess = false;
 						self.config.result.failMsg = res.msg;
 					}
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.result.show = true;
-					});
+					this.config.result.show = true;
 				});
 			},
 			async clearFormData(){
 				if( this.config.result.isSuccess ){
-					let productId = Object.assign({},{productId:this.formData.productId});
-					this.formData =  this.$options.data().formData;
-					this.pageConfig = this.$options.data().formData;
-					this.formData.productId = productId.productId;
-					await this.getConfig( this.formData.productId );
+					window.location.reload()
 				}
-				/*Object.keys( this.formData ).forEach((item,index)=>{
-					if( item != 'productId' ){
-						this.formData[item] = '';
-					}
-					if( item == 'isRangePrice' || item == 'isValidArea' ){
-						this.formData[item] = false;
-					}
-				});
-				this.getConfig( this.formData.productId );*/
 			},
-			calcBdLW(){
+			async calcBdLW( needCalcArea = true ){
+				if( this.pageConfig.isWeb ) return false
 				if( Number(this.formData.boxLength) && ( Number(this.formData.boxLength) <  Number(this.pageConfig.minBoxL) ||  Number(this.formData.boxLength) >  Number(this.pageConfig.maxBoxL)) ){
-                    this.formData.boxLength = '';
-                    Toast('箱长范围:' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm');
+                    this.formData.boxLength = ''
+                    Toast('箱长范围:' + this.pageConfig.minBoxL + 'mm~' + this.pageConfig.maxBoxL + 'mm')
                 }
                 if(  Number(this.formData.boxWidth) && (  Number(this.formData.boxWidth) <  Number(this.pageConfig.minBoxW) ||  Number(this.formData.boxWidth) >  Number(this.pageConfig.maxBoxW) )){
-                    this.formData.boxWidth = '';
-                    Toast('箱宽范围:' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm');
+                    this.formData.boxWidth = ''
+                    Toast('箱宽范围:' + this.pageConfig.minBoxW + 'mm~' + this.pageConfig.maxBoxW + 'mm')
                 }
                 if( Number(this.formData.boxHeight) && ( Number(this.formData.boxHeight) <  Number(this.pageConfig.minBoxH) ||  Number(this.formData.boxHeight) >  Number(this.pageConfig.maxBoxH ) )){
-                    this.formData.boxHeight = '';
-                    Toast('箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm');
+                    this.formData.boxHeight = ''
+                    Toast('箱高范围:' + this.pageConfig.minBoxH + 'mm~' + this.pageConfig.maxBoxH + 'mm')
                 }
-                var LengthF_exp = this.pageConfig.lengthF;
-                var WidthF_exp  = this.pageConfig.widthF;
+                var lengthExp = this.boxInfo.lengthFCalc
+                var widthExp  = this.boxInfo.widthFCalc
+                if( !lengthExp || !widthExp ) return false
                 if(this.formData.boxLength){
-                    LengthF_exp = LengthF_exp.replace(/L/g,this.formData.boxLength);
-                    WidthF_exp  = WidthF_exp.replace(/L/g,this.formData.boxLength);
+                    lengthExp = lengthExp.replace(/L/g,this.formData.boxLength);
+                    widthExp  = widthExp.replace(/L/g,this.formData.boxLength);
                 }
                 if(this.formData.boxWidth){
-                    LengthF_exp = LengthF_exp.replace(/W/g,this.formData.boxWidth);
-                    WidthF_exp  = WidthF_exp.replace(/W/g,this.formData.boxWidth);
+                    lengthExp = lengthExp.replace(/W/g,this.formData.boxWidth)
+                    widthExp  = widthExp.replace(/W/g,this.formData.boxWidth)
                 }
                 if(this.formData.boxHeight){
-                    LengthF_exp = LengthF_exp.replace(/H/g,this.formData.boxHeight);
-                    WidthF_exp  = WidthF_exp.replace(/H/g,this.formData.boxHeight);
+                    lengthExp = lengthExp.replace(/H/g,this.formData.boxHeight)
+                    widthExp  = widthExp.replace(/H/g,this.formData.boxHeight)
                 }
+
                 if(this.formData.tonLen){
-                    LengthF_exp = LengthF_exp.replace(/T/g,this.formData.tonLen);
-                    WidthF_exp  = WidthF_exp.replace(/T/g,this.formData.tonLen);
+                    lengthExp = lengthExp.replace(/T/g,this.formData.tonLen)
+                    widthExp  = widthExp.replace(/T/g,this.formData.tonLen)
                 }
                 if(this.formData.uLen){
-                    LengthF_exp = LengthF_exp.replace(/U/g,this.formData.uLen);
-                    WidthF_exp  = WidthF_exp.replace(/U/g,this.formData.uLen);
+                    lengthExp = lengthExp.replace(/U/g,this.formData.uLen)
+                    widthExp  = widthExp.replace(/U/g,this.formData.uLen)
                 }
-                this.formData.lengthF = LengthF_exp;
-                this.formData.widthF  = WidthF_exp;
-                if(LengthF_exp && LengthF_exp.indexOf('L') === -1 && LengthF_exp.indexOf('W') === -1 && LengthF_exp.indexOf('H') === -1 && LengthF_exp.indexOf('T') === -1 && LengthF_exp.indexOf('U') === -1){
-                    this.formData.length = Math.round(eval(LengthF_exp.replace(/<\/?.+?>/g,'')));
+                this.formData.lengthF = lengthExp
+                this.formData.widthF  = widthExp
+                if(lengthExp && lengthExp.indexOf('L') === -1 && lengthExp.indexOf('W') === -1 && lengthExp.indexOf('H') === -1 && lengthExp.indexOf('T') === -1 && lengthExp.indexOf('U') === -1){
+                    this.formData.length = Math.round(eval(lengthExp.replace(/<\/?.+?>/g,'')))
                 }else{
-                    this.formData.length = '';
+                    this.formData.length = this.$options.data().formData.length
                 }
-                if(WidthF_exp && WidthF_exp.indexOf('L') === -1 && WidthF_exp.indexOf('W') === -1 && WidthF_exp.indexOf('H') === -1 && WidthF_exp.indexOf('T') === -1 && WidthF_exp.indexOf('U') === -1){
-                    this.formData.width = Math.round(eval(WidthF_exp.replace(/<\/?.+?>/g,'')));
+                if(widthExp && widthExp.indexOf('L') === -1 && widthExp.indexOf('W') === -1 && widthExp.indexOf('H') === -1 && widthExp.indexOf('T') === -1 && widthExp.indexOf('U') === -1){
+                    this.formData.width = Math.round(eval(widthExp.replace(/<\/?.+?>/g,'')))
                 }else{
-                    this.formData.width = '';
+                    this.formData.width = this.$options.data().formData.width
                 }
-                this.calcAreaCost();
+                /*计算压线*/
+                if( this.formData.length && this.formData.width && !this.pageConfig.isWeb ) {
+                	await this.fetchScoreInfo()
+                }
+                if( needCalcArea ) await this.calcAreaCost()
 			},
-			calcBdQty(){
+			async calcBdQty(){
 				if( /^\d$/.test(this.formData.bdMultiple) && this.formData.ordQty ){
 					if(this.formData.bdMultiple > 0){
-                        this.formData.bdQty = this.formData.ordQty * this.formData.bdMultiple;
+                        this.formData.bdQty = this.formData.ordQty * this.formData.bdMultiple
                     }else if(this.formData.bdMultiple < 0){
-                        this.formData.bdQty = this.formData.ordQty / this.formData.bdMultiple * -1;
+                        this.formData.bdQty = this.formData.ordQty / this.formData.bdMultiple * -1
                     }else{
-                        this.formData.bdQty = '';
+                        this.formData.bdQty = ''
                     }
 				}else{
-					this.formData.bdQty = '';
+					this.formData.bdQty = ''
 				}
-				this.calcAreaCost();
+				await this.calcAreaCost()
 			},
 			beforeCalcAreaCost(){
-				this.formData.isRangePrice    = false;
-				this.formData.isValidArea     = false;
-				this.formData.area            = '';
-				this.formData.cost            = '';
-				this.formData.saveCost        = '',
-				this.formData.price           = '';
-				this.helpInfo.price           = 0;
-				this.helpInfo.sheetQuantities = 0;
+				this.config.submitBar.disabled = true
+				
+				this.formData.isRangePrice = false
+				this.formData.isValidArea = false
+				this.formData.area = this.$options.data().formData.area
+				this.formData.cost = ''
+				this.formData.saveCost = ''
+				this.formData.price = ''
+				this.helpInfo = this.$options.data().helpInfo
+				this.formData.unitArea = this.$options.data().formData.unitArea
 			},
 			calcAreaCost(){
 				this.beforeCalcAreaCost();
 				if( this.formData.ordQty && !( /(^[1-9]\d*$)/.test(this.formData.ordQty) ) ){
-					Toast.fail('订单数错误');
-					this.formData.ordQty = '';
-					this.formData.bdQty  = '';
-					return ;
+					Toast.fail('订单数错误')
+					this.formData.ordQty = ''
+					this.formData.bdQty  = ''
+					return 
 				}
 				if( this.formData.bdQty && !( /(^[1-9]\d*$)/.test(this.formData.bdQty) ) ){
-					Toast.fail('纸板数错误');
-					this.formData.ordQty = '';
-					this.formData.bdQty  = '';
-					return ;
+					Toast.fail('纸板数错误')
+					this.formData.ordQty = ''
+					this.formData.bdQty  = ''
+					return 
 				}
-				if( typeof( this.formData.length ) === 'number' && typeof( this.formData.width ) === 'number' && this.formData.bdQty ){
-					let data = {
-						productId       : this.formData.productId,
-						sheetQuantities : this.formData.bdQty,
-						boardLength     : this.formData.length,
-						boardWidth      : this.formData.width
-					};
-					let self = this;
-					this.$request.client.groupBuying.getAreaCost( data ).then(res=>{
+				if( /^\d+$/.test(this.formData.length) && /^\d+$/.test(this.formData.width) && this.formData.bdQty ){
+					if( this.formData.lineBallInfo != "无压线" && this.pageConfig.isWeb ) {
+						try {
+							if ( this.formData.width != Math.round(eval(this.formData.scoreInfo))) {
+								Toast.fail("请填写正确压线")
+								return false
+							}
+						} catch(err) {
+							Toast.fail("请填写正确压线")
+							return false
+						}
+					}
+					this.$request.client.groupBuying.getAreaCost({
+						productId: this.formData.productId,
+						sheetQuantities: this.formData.bdQty,
+						boardLength: this.formData.length,
+						boardWidth: this.formData.width
+					}).then(res=>{
 						if( res.errorCode != '00000' ){
-							self.formData.isValidArea     = false;
-							self.formData.isRangePrice    = false;
-							self.formData.ordQty          = '';
-							self.formData.bdQty           = '';
-							self.helpInfo.price           = 0;
-							self.helpInfo.sheetQuantities = 0;
+							this.formData.isValidArea     = false;
+							this.formData.isRangePrice    = false;
+							this.formData.ordQty          = '';
+							this.formData.bdQty           = '';
+							this.helpInfo = this.$options.data().helpInfo
 							return ;
 						}
-						self.formData.area = res.result.area_size;
+						this.formData.area = res.result.area_size;
+						this.formData.unitArea = res.result.unitArea
 						if( res.result.valid_area == '1' ){
-							self.formData.isValidArea = true;
-							self.formData.cost        = res.result.cost;
-							self.formData.saveCost    = res.result.save_cost;
+							this.formData.isValidArea = true;
+							this.formData.cost        = res.result.cost;
+							this.formData.saveCost    = res.result.save_cost;
 							if( res.result.is_range_price == '1' ){
-								self.formData.isRangePrice    = true;
-								self.formData.price           = res.result.price;
+								this.formData.isRangePrice = true;
+								this.formData.price = res.result.price;
 								if( res.result.help_info.length != 0 ){
-									self.helpInfo.price           = res.result.help_info.price;
-									self.helpInfo.sheetQuantities = res.result.help_info.sheet_quantities;
+									this.helpInfo.price = res.result.help_info.price;
+									this.helpInfo.sheetQuantities = res.result.help_info.sheet_quantities;
 								}
 							}else{
-								self.formData.isRangePrice    = false;
-								self.formData.price           = '';
-								self.helpInfo.price           = 0;
-								self.helpInfo.sheetQuantities = 0;
+								this.formData.isRangePrice = false;
+								this.formData.price = '';
+								this.helpInfo = this.$options.data().helpInfo
 							}
+							this.config.submitBar.disabled = false
 						}else{
-  							Toast.fail('下单面积范围：' + self.pageConfig.minArea + '㎡~' + self.pageConfig.maxArea + '㎡');
-  							self.formData.isValidArea     = false;
-  							self.formData.orderQuantities = 0;
-  							self.formData.area            = 0
+  							Toast.fail('下单面积范围：' + this.pageConfig.minArea + '㎡~' + this.pageConfig.maxArea + '㎡');
+  							this.formData.isValidArea = false
+  							this.formData.orderQuantities = 0
+  							this.formData.area = 0
+  							this.formData.unitArea = null
+  							this.config.submitBar.disabled = true
 						}
 					});
 				}
 			},
 			maxOrderQty(){
-				this.formData.orderQuantities = this.getOrdQtyByBdQty( this.helpInfo.sheetQuantities );
-				this.$refs.orderQuantitiesField.focus();
+				this.formData.ordQty = this.getOrdQtyByBdQty( this.helpInfo.sheetQuantities )
+				this.$refs.orderQuantitiesField.focus()
 			},
 			getOrdQtyByBdQty( bdQty ){
 				if(this.formData.bdMultiple > 0){
-                    return bdQty / this.formData.bdMultiple;
+                    return Math.ceil(bdQty / this.formData.bdMultiple)
                 }else if(this.formData.bdMultiple < 0){
                     return bdQty * this.formData.bdMultiple * -1;
                 }
 			},
-			boxTypeChange( newValue ){
-				this.formData.boxType = newValue;
-				this.getBoxFormula(this.formData.boxType);
+			boxTypeChange(e) {
+				this.formData.scoreInfo = this.$options.data().formData.scoreInfo
+				this.pageConfig.isWeb = this.$options.data().pageConfig.isWeb
+				this.pageConfig.erpCalcScoreInfoSuccess = this.$options.data().pageConfig.erpCalcScoreInfoSuccess 
+				this.pageConfig.erpCalcScoreInfo = this.$options.data().pageConfig.erpCalcScoreInfo
+				this.formData.length = this.$options.data().formData.length
+				this.formData.width = this.$options.data().formData.width
+				this.getBoxFormula(e.detail.value)
 			},
-			tonLenChange( newValue ){
-				this.formData.tonLen = newValue;
-				this.calcBdLW();
+			tonLenChange( e ) {
+				if( this.boxInfo.lengthFCalc && this.boxInfo.widthFCalc ) {
+					this.calcBdLW()
+				}
 			},
-			lenChange( newValue ){
-				this.formData.uLen = newValue;
-				this.calcBdLW();
+			lenChange( e ) {
+				if( this.boxInfo.lengthFCalc && this.boxInfo.widthFCalc ) {
+					this.calcBdLW()
+				}
 			},
 			addressChange( newValue ){
 				this.formData.address = newValue;
 			},
-			lineBallChange( newValue ){
-				this.formData.lineBallInfo = newValue;
+			lineBallChange( e ){
+				this.formData.lineBallInfo = e.detail.value
 			},
-			sizeBlur( id ){
+			async sizeBlur( id ){
 				let tips = '';
 				if( id == 'boxLength' && this.config.build.lenNeedToast ){
 					if( this.config.build.lenToastDefault > this.formData.boxLength )
@@ -664,14 +1049,14 @@
 						icon:'warning-o',
 					});
 				}
-				this.calcBdLW();
+				await this.calcBdLW()
 			},
 			inputFocus( id ){
 				const ua = window.navigator.userAgent.toLocaleLowerCase();
 				const isAndroid = /android/.test(ua);
 				let that = this;
 				if( isAndroid ){
-					window.onresize = () => {
+					window.onresize = async () => {
 						const curClientHeight = document.documentElement.clientHeight;
 						//安卓键盘收起
 						if (curClientHeight >= that.config.initClientHeight) {
@@ -679,40 +1064,119 @@
 								that.sizeBlur(id);
 							}
 							if( id == 'ordQty' ){
-								that.calcBdQty();
+								await that.calcBdQty();
+							}
+							if( (id == 'scoreInfo' || id == 'width')  && that.pageConfig.isWeb && that.formData.lineBallInfo != "无压线" && that.formData.width ) {
+								try {
+									if (that.formData.width != Math.round(eval(that.formData.scoreInfo))) {
+										Toast.fail("请填写正确压线")
+									}
+									await that.calcBdQty()
+								} catch(err) {
+									Toast.fail("请填写正确压线")
+								}
+							}
+							if( id == 'length'  ) {
+								await that.calcBdQty()
 							}
 							window.onresize = null;
 						}
 					}
 				}
 			},
-			inputBlur( id ){
-				/*const ua = window.navigator.userAgent.toLocaleLowerCase();
-				const isAndroid = /android/.test(ua);
-				if (isAndroid)
-					return */
+			async inputBlur( id ){
 				if( id == 'ordQty' ){
-					this.calcBdQty();
+					await this.calcBdQty()
 				}
 				if( id == 'boxLength' || id == 'boxWidth' || id == 'boxHeight'){
-					this.sizeBlur(id);
+					await this.sizeBlur(id)
 				}
+				if( (id == 'scoreInfo' || id == 'width') && this.pageConfig.isWeb && this.formData.lineBallInfo != "无压线" && this.formData.width ) {
+					try {
+						if ( this.formData.width != Math.round(eval(this.formData.scoreInfo))) {
+							Toast.fail("请填写正确压线")
+						}
+						await this.calcBdQty()
+					} catch(err) {
+						Toast.fail("请填写正确压线")
+					}
+				}
+				if( id == 'length'  ) {
+					await this.calcBdQty()
+				}
+			},
+			/*倒计时结束*/
+			finish() {
+				this.config.submitBar.disabled = true
+			},
+			/*获取压线*/
+			async fetchScoreInfo() {
+				if( !this.pageConfig.inProgress ) {
+					this.pageConfig.inProgress = true
+					this.$request.staff.connecterp.formulaCalcScore({
+						strFactoryId: this.pageConfig.factoryId,
+						strSubFacId: this.pageConfig.subFacId,
+						strCusId: this.pageConfig.erpId || '',
+						strBoxId: this.formData.boxType,
+						iBoxL: this.formData.boxLength,
+						iBoxW: this.formData.boxWidth,
+						iBoxH: this.formData.boxHeight,
+						iLength: this.formData.length,
+						iWidth: this.formData.width,
+						iTonLen: this.formData.tonLen,
+						iULen: this.formData.uLen
+					}).then((res)=>{
+						let dataRow = res.data.result[0] || null
+						if( dataRow ) {
+							dataRow = JSON.parse(dataRow)
+							if ( dataRow.code == 200   ) {
+								this.formData.scoreInfo = dataRow.data.ScoreInfo.includes('noscoreinfo') ? this.$options.data().formData.scoreInfo : dataRow.data.ScoreInfo
+								this.pageConfig.erpCalcScoreInfo = dataRow.data.ScoreInfo
+								this.pageConfig.erpCalcScoreInfoSuccess = true
+							}else {
+								this.pageConfig.erpCalcScoreInfoSuccess = false
+								Toast({
+									type: "fail",
+									message: "ERP压线计算失败",
+									duration: 2000
+								})
+							}
+						} else {
+							this.pageConfig.erpCalcScoreInfoSuccess = false
+							Toast({
+								type: "fail",
+								message: "ERP压线计算失败",
+								duration: 2000
+							})
+						}
+					}).catch((err)=> {
+						this.pageConfig.erpCalcScoreInfoSuccess = false
+						Toast.fail('ERP压线计算失败')
+					}).finally(()=>{
+						this.pageConfig.inProgress = false 
+					})
+				}
+				
 			}
 		},
-		created(){
-			this.$store.commit('client/setHeaderTitle','纸箱纸板下单');
-			document.documentElement.scrollTop = 0;
+		async created(){
+			await this.$store.commit('client/setHeaderTitle', '纸箱纸板下单')
+			await this.$store.commit('client/setTabbarActive', 'group')
 		},
 		mounted(){
-			if( typeof(this.$route.params.productId) != 'undefined' ){
-				this.formData.productId = this.$route.params.productId ;
+			if( this.$route.query ){
+				this.formData.productId = this.$route.query.productId;
+				this.$store.commit('client/setBackPath', '/mall/product/detail?productId=' + this.$route.query.productId)
+				this.$store.commit('client/setLoginRedirect', '/group/build/c?productId=' + this.$route.query.productId)
 			}else if( sessionStorage.getItem('group-product-id') != null ){
 				this.formData.productId = sessionStorage.getItem('group-product-id');
+				this.$store.commit('client/setBackPath', '/mall/product/detail?productId=' + this.formData.productId)
+				this.$store.commit('client/setLoginRedirect', '/group/build/c?productId=' + this.formData.productId)
 			}else{
 				this.$router.go(-1);
 			}
 			this.getConfig( this.formData.productId );
-			this.validator = new schema( this.rules );
+			
 		},
 		updated(){
 			
@@ -721,10 +1185,31 @@
 			
 		},
 		computed:{
-			
+			calcAreaKey() {
+				return {
+					productId: this.formData.productId,
+					sheetQuantities: this.formData.bdQty,
+					boardLength: this.formData.length,
+					boardWidth: this.formData.width
+				}
+			}
 		},
 		watch:{
-
+			calcAreaKey(nVal, oVal) {
+				this.beforeCalcAreaCost()
+			}
+			/*'config.result.show': {
+				handler( nVal, oVal ) {
+					if( nVal ) {
+						window.scrollTo(0,0)
+					}
+				}
+			},*/
 		}
 	}
 </script>
+<style>
+	.van-submit-bar {
+		background-color: #f1f1f1 !important;
+	}
+</style>

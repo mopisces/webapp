@@ -1,16 +1,224 @@
 <template>
-	<div>
+	<div class="page-color">
 		<van-sticky :offset-top="46">
-			<van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button>
+			<!-- <van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button> -->
 			<van-tabs v-model="filterForm.orderState">
 				<van-tab title="未审核" name="1"></van-tab>
 				<van-tab title="已审核" name="2"></van-tab>
 				<van-tab title="已删除" name="3"></van-tab>
 			</van-tabs>
 		</van-sticky>
+		<!-- 筛选按钮 -->
+		<drag-menu 
+			defpositon="rt" 
+			:popMenu="false"
+			:pattern="{icon: 'filter-o'}"
+			value="筛选"
+			@fabClick="menuClick"
+		></drag-menu>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
 			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<van-panel  v-for="(item,index) in wxOrdersList" :key="index" style="font-size:0.8125rem;">
+				<van-swipe-cell 
+					v-for="(item,index) in wxOrdersList" 
+					:key="index"
+				>
+					<template 
+						slot="right"  
+						v-if="item.IsDel === '0' && item.Checked === '0' && (( item.IsGroup === '0' && item.UsePay == null  )  || ( item.UsePay == '1' && item.Refund == 1 ) || ( item.UsePay == '1' && item.Paid == 0 ) )"
+						>
+						<van-button 
+							square 
+							text="删除" 
+							type="danger" 
+							style="height:100%;" 
+							@click="delClick(item.CusPoNo)"
+						/>
+					</template>
+					<template 
+						slot="left"
+						v-if="item.IsDel === '0' && item.Checked === '0' && ((item.UsePay == '1' && item.Paid == 0 && item.IsGroup == 0))"
+					>
+						<van-button 
+							square 
+							text="修改" 
+							type="primary" 
+							style="height:100%;" 
+							@click="modifyClick(item)"
+						/>
+					</template>
+					<card 
+						:title="item.CusPoNo"
+						:extra="item.Title"
+						:thumbnail="item.IsGroup === '1' && item.PayDeadlineTime?item.pic:''"
+						:is-shadow="true"
+					>
+						<div class="card-body-container">
+							<div class="card-body-item card-body-item-100">
+								<div>付款状态:
+									<span 
+										class="mg-left-20" 
+										v-if=" item.UsePay === '1' && item.Paid === '0' "
+									>
+										<span v-if=" item.IsOverTime ">超时</span>未付款
+									</span>
+									<span 
+										class="mg-left-20 blue-color" 
+										v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " 
+									>
+										已付款
+									</span>
+									<span 
+										class="mg-left-20 red-color" 
+										v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' ">
+										申请退款中
+									</span>
+									<span class="mg-left-20 gray-color" v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' ">
+										已退款
+									</span>
+								</div>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								<div class="card-body-txt">订单标识</div>:
+								<van-tag class="mg-left-20" type="primary">
+									{{ cTypeName(item.CType) }}
+								</van-tag>
+								<van-tag 
+								 	v-if=" item.IsCard === '1' " 
+								 	class="mg-left-20"  
+								 	type="warning" 
+								 >
+									{{ item.CardFlag }}
+								</van-tag>
+							</div>
+							<!-- <div 
+								v-if="item.IsGroup === '1' && item.PayDeadlineTime && item.Title" 
+								class="card-body-item card-body-item-100"
+							>
+								<span>团购标题:
+									<span class="mg-left-20">{{ item.Title }}</span>
+								</span>
+							</div> -->
+							<div v-if="item.IsDel==='1'" class="card-body-item card-body-item-100">
+								<span>删除原因:
+									<span class="mg-left-20 red-color" >{{ item.DelRemark }}</span>
+								</span>
+							</div>
+							<div v-if="item.CType === 's'||item.CType === 'c'" class="card-body-item card-body-item-100">
+								<span>纸板规格:
+									<span class="mg-left-20">{{ item.Length }}×{{ item.Width }}</span>
+									<span class="mg-left-20">{{ item.BoardId }}</span>
+								</span>
+							</div>
+							<div v-if="item.CType === 'c'" class="card-body-item card-body-item-100">
+								<span>纸箱规格:
+									<span class="mg-left-20">{{ item.BoxL }}×{{ item.BoxW }}×{{ item.BoxH }}</span>
+								</span>
+							</div>
+							<div v-if="item.CType === 'c'" class="card-body-item card-body-item-100">
+								<span>箱型信息:
+									<span class="mg-left-20">{{ item.BoxName }}</span>
+								</span>
+							</div>
+							<div v-if="item.CType === 'x'" class="card-body-item card-body-item-100">
+								<span>套件信息:
+									<span class="mg-left-20" >{{ item.ProductId }}</span>
+									<span class="mg-left-20" >{{ item.ProductName }}</span>
+								</span>
+							</div>
+							<div v-if="item.CType === 't'" class="card-body-item card-body-item-100">
+								<span>货品编号:
+									<span class="mg-left-20" >{{ item.MatNo }}</span>
+								</span>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								<span>订单信息:
+									<span class="mg-left-20">
+										{{ item.OrdQty }}
+										<span v-if="item.CType === 's'">片</span>
+										<span v-else>个</span>
+									</span>
+									<span 
+										v-if="item.CType === 's' || item.CType === 'c'" 
+										class="mg-left-20"
+									>
+										{{ item.Area }}㎡
+									</span>
+								</span>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								<span>压线信息:
+									<span class="mg-left-20">{{ item.ScoreInfo }}</span>
+								</span>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								<span>送货地址:
+									<span class="mg-left-20">{{ item.SubDNAddress }}</span>
+								</span>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								<div class="card-body-txt green-color">下单</div>|
+								<div class="card-body-txt red-color">交货</div>:
+								<span class="mg-left-20 green-color">{{ item.BuildDate }}</span>
+								<span class="mg-left-20 red-color">{{ item.DeliveryDate }}</span>
+							</div>
+							<div v-if="item.IsGroup == 0&&pageConfig.isCalc" class="card-body-item card-body-item-100">
+								<div class="card-body-txt blue-color">价格</div>|
+								<div class="card-body-txt yellow-color">金额</div>:
+								<span class="mg-left-20 blue-color">{{ item.WebCalPrice }}元/㎡</span>
+								<span class="mg-left-20 yellow-color">{{ item.WebCalAmt }}元</span>
+							</div>
+							<div v-if="item.IsGroup == 1" class="card-body-item card-body-item-100">
+								<div class="card-body-txt blue-color">价格</div>|
+								<div class="card-body-txt yellow-color">金额</div>:
+								<span class="mg-left-20 blue-color">{{ item.Price }}元/㎡</span>
+								<span class="mg-left-20 yellow-color">{{ item.Cost }}元</span>
+							</div>
+
+						</div>
+						<div slot="actions" class="card-actions">
+							<div 
+								v-if=" filterForm.orderState == 1 && item.UsePay === '1' "
+								class="card-actions-item" 
+								@click="payDetailClick(item.CusPoNo)"
+							>
+								<van-icon color="#3c9cff" name="peer-pay" size="18"/>
+								<span class="card-actions-item-text blue-color">支付信息</span>
+							</div>
+							<div 
+								class="card-actions-item" 
+								@click="wxDetailClick(item.CusPoNo)"
+							>
+								<van-icon color="#3c9cff" name="bars" size="18"/>
+								<span class="card-actions-item-text blue-color">详情</span>
+							</div>
+							<div 
+								v-if=" item.Checked === '1' && item.IsCard === '0' && item.CType !== 't' "
+								class="card-actions-item" 
+								@click="setCommon( item.CusPoNo )"
+							>
+								<van-icon color="#f9ae3d" name="star" size="18"/>
+								<span class="card-actions-item-text yellow-color">设为常用</span>
+							</div>
+							<div 
+								v-if=" item.Checked === '1' && item.IsCard === '1' && item.CType !== 't' "
+								class="card-actions-item" 
+								@click="cancelCommon( item.CusPoNo )"
+							>
+								<van-icon color="#f56c6c" name="star-o" size="18"/>
+								<span class="card-actions-item-text red-color">取消常用</span>
+							</div>
+							<div 
+								v-if=" item.Checked === '1' && item.IsCard === '1' "
+								class="card-actions-item" 
+								@click="buildOrder( item )"
+							>
+								<van-icon color="#3c9cff" class-prefix="iconfont" name="xiadan" size="18"/>
+								<span class="card-actions-item-text blue-color">快速下单</span>
+							</div>
+						</div>
+					</card>
+				</van-swipe-cell>
+				<!-- <van-panel  v-for="(item,index) in wxOrdersList" :key="index" style="font-size:0.8125rem;">
 					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if="item.IsGroup === '1' && item.PayDeadlineTime ">
 						<div style="height:3.125rem;width:100%;display: flex;" @click="headerClick(item)">
 							<div style="display: inline-flex;line-height:3.125rem;width:75%;overflow: hidden;">
@@ -168,9 +376,6 @@
 						<van-button size="small" type="primary" @click="wxDetailClick(item.CusPoNo)">
 							详情
 						</van-button>
-						<!-- <van-button size="small" type="danger" v-if="item.IsDel === '0' && item.Checked === '0' && (( item.IsGroup === '0' && item.UsePay == null  )  || ( item.UsePay == '1' && item.Refund == 1 ) || ( item.UsePay == '1' && item.Paid == 0 ) )" @click="delClick(item.CusPoNo)">
-							删除
-						</van-button> -->
 						<van-button size="small" type="warning" v-if=" item.Checked === '1' && item.IsCard === '0' && item.CType !== 't' " @click="setCommon( item.CusPoNo )">
 							设为常用
 						</van-button>
@@ -181,19 +386,42 @@
 							快速下单
 						</van-button>
 					</div>
-				</van-panel>
-				<!-- </van-swipe-cell> -->
+				</van-panel> -->
 			</van-list>
 		</van-pull-refresh>
 		<float-nav v-if=" config.floatNav.show && config.floatNav.isFinish && filterForm.orderState==1" :listData=" config.floatNav.listData " :selectNum=" config.floatNav.selectNum "></float-nav>
 		<wx-order-detail :detailShow.sync="config.popup.detailShow" :cusOrderId="detailForm.cusOrderId" v-if="config.popup.detailShow"></wx-order-detail>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
-				<radio-cell :radioInfo.sync="filterForm.orderType" :radioColumns="config.radio.orderType" title="订单类型"></radio-cell>
-				<radio-cell :radioInfo.sync="filterForm.groupBy" :radioColumns="config.radio.groupBy" title="是否团购"></radio-cell>
-				<radio-cell :radioInfo.sync="filterForm.dateType" :radioColumns="config.radio.dateType" title="日期类型"></radio-cell>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.beginDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="开始日期"></new-time-picker>
-				<new-time-picker v-if="config.popup.timePicker.isFinishLoad" :dateTime.sync="filterForm.endDate" :minDate="pageConfig.minDate" :maxDate="pageConfig.maxDate" label="结束日期"></new-time-picker>
+				<uni-check-box
+					label="订单类型"
+					:localdata="config.radio.orderType"
+					:radioData.sync="filterForm.orderType" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<uni-check-box
+					label="是否团购"
+					:localdata="config.radio.groupBy"
+					:radioData.sync="filterForm.groupBy" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<uni-check-box
+					label="日期"
+					:localdata="config.radio.dateType"
+					:radioData.sync="filterForm.dateType" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+			
+				<time-range-picker
+					:beginDate.sync="filterForm.beginDate"
+					:endDate.sync="filterForm.endDate"
+					:maxDate.sync="pageConfig.maxDate"
+					:minDate.sync="pageConfig.minDate"
+				></time-range-picker>
+				
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)" />
 			</div>
 		</popup-filter>
@@ -203,7 +431,12 @@
 				<div class="van-ellipsis van-picker__title" style="color:#4bb0ff">请选择删除原因</div>
 				<button type="button" class="van-picker__confirm"></button>
 			</div>
-			<radio-cell :radioInfo.sync="delForm.delRemak" :radioColumns="config.radio.defaultDelRemark"></radio-cell>
+			<uni-check-box
+				:localdata="config.radio.defaultDelRemark"
+				:radioData.sync="delForm.delRemak" 
+				:map="{text: 'title', value: 'value'}"
+			>
+			</uni-check-box>
 			<van-field value="其他原因" size="large" readonly input-align="center" @click="otherReason()"/>
 			<van-button type="primary" size="normal" style="width:50%" @click="delConfirm()">确认</van-button>
 			<van-button type="info" size="normal" style="width:50%" @click="config.popup.del.show = false">取消</van-button>
@@ -217,18 +450,30 @@
 	</div>
 </template>
 <script>
-	import { Button, Image, Popup, Field, Dialog, PullRefresh, SwipeCell, Toast, List, SwitchCell, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
+	import { Button, Icon, Image, Popup, Field, Dialog, PullRefresh, SwipeCell, Toast, List, SwitchCell, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
 	import WxOrderDetail from '@/components/subject/client/WxOrderDetail.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
-	import FloatNav from '@/components/subject/client/FloatNav.vue';
+	/*import FloatNav from '@/components/subject/client/FloatNav.vue';*/
+	import FloatNav from '@/components/karry/floatNav/KarryFloatNav.vue';
 	import schema from 'async-validator';
 	import { cTypeChange } from '@/util/index';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import Card from '@/components/subject/card/Card.vue'
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue'
+	import TimeRangePicker from '@/components/subject/time/TimeRangePicker.vue'
+	/*自定义拖动菜单组件*/
+	import DragMenu from "@/components/subject/fab/DragMenu.vue"
+
+	/*api接口*/
+	import { getWebConfig } from '@/api/common/webConfig.js'
+
 	export default {
 		components:{
 			[Button.name]: Button,
+			[Icon.name]: Icon,
 			[Image.name]: Image,
 			[Popup.name]: Popup,
 			[Field.name]: Field,
@@ -248,7 +493,12 @@
 			NewTimePicker,
 			PopupFilter,
 			RadioCell,
-			FloatNav
+			FloatNav,
+
+			Card,
+			UniCheckBox,
+			TimeRangePicker,
+			DragMenu
 		},
 		data(){
 			return {
@@ -288,39 +538,37 @@
 							{title:'是' ,  value:1},
 							{title:'否',   value:0},
 						],
-						dateType  : [
+						dateType : [
 							{title:'下单日期', value:0},
 							{title:'交货日期', value:1}
 						],
-						defaultDelRemark : [
-
-						]
+						defaultDelRemark: []
 					},
-					switch : {
-						checked : false
+					switch: {
+						checked: false
 					},
-					dialog : {
-						show : false
+					dialog: {
+						show: false
 					},
-					setCommon : {
-						show : false
+					setCommon: {
+						show: false
 					},
-					floatNav : {
-						show     : false,
-						isFinish : false,
-						listData : [],
-						now      : new Date(),
-						selectNum  : 0
+					floatNav: {
+						show: false,
+						isFinish: false,
+						listData: [],
+						now: new Date(),
+						selectNum : 0
 					}
 				},
 				filterForm:{
-					beginDate  : '',
-					endDate    : '',
-					dateType   : 0,
-					groupBy    : 2,
-					orderType  : 'all',
-					orderState : '1',
-					curPage    : 0,
+					beginDate: '',
+					endDate: '',
+					dateType: 0,
+					groupBy: 2,
+					orderType: 'all',
+					orderState: '1',
+					curPage: 0,
 				},
 				detailForm : {
 					cusOrderId : ''
@@ -351,6 +599,10 @@
 			}
 		},
 		methods:{
+			/*筛选按钮*/
+			menuClick() {
+				this.config.popup.filterShow = true
+			},
 			onLoad(){
 				if( this.config.list.pullRefresh.isInit ){
 					this.filterForm.curPage = 1;
@@ -369,35 +621,23 @@
 				this.config.list.pushLoading.loading   = true;
 				this.onLoad();
 			},
-			getConfig( isReset = false ){
-				let self = this;
-				this.$request.client.ordersManage.wechatOrdersConfig().then(res=>{
-					if( this.config.getConfig ){
-						self.filterForm.beginDate = res.result.WeborderBeginDate;
-						self.filterForm.endDate   = res.result.WeborderEndDate;
-					}
-					self.pageConfig.minDate   = res.result.WeborderMinDate;
-					self.pageConfig.maxDate   = res.result.WeborderMaxDate;
-					self.pageConfig.isCalc   = res.result.BuildAddCalc == 1 ? true : false;
-					self.config.radio.defaultDelRemark = [];
-					res.result.WeborderDefaultDelRemark.split(',').forEach((item,index)=>{
-						self.config.radio.defaultDelRemark.push({title:item,value:item});
-					});
-					if( res.result.UseWxPay == '1' || res.result.UseAliPay == '1' || res.result.UseYSBPay == '1'){
-						self.config.floatNav.show = true;
-					}
-				}).then(()=>{
-					this.$nextTick(()=>{
-						this.config.popup.timePicker.isFinishLoad = true;
-					});
-				}).then(()=>{
-					if( isReset ){
-						return ;
-					}
-					this.$nextTick(()=>{
-						this.getWxOrders( this.filterForm );
-					});
-				});
+			async getConfig( isReset = false ){
+				this.config.radio.defaultDelRemark = this.$options.data().config.radio.defaultDelRemark
+				const { result } = await getWebConfig({paramType: 'clientOM'})
+				if( this.config.getConfig ){
+					this.filterForm.beginDate = result.WeborderBeginDate
+					this.filterForm.endDate = result.WeborderEndDate
+				}
+				this.pageConfig.minDate = result.WeborderMinDate
+				this.pageConfig.maxDate = result.WeborderMaxDate
+				this.pageConfig.isCalc = result.BuildAddCalc == 1 ? true : false
+				result.WeborderDefaultDelRemark.split(',').forEach((item,index)=>{
+					this.config.radio.defaultDelRemark.push({title:item,value:item})
+				})
+				if(result.UseWxPay == 1 || result.UseAliPay == 1 || result.UseYSBPay == 1 || result.UseCreditPay == 1)
+					this.config.floatNav.show = true
+				if( isReset ) return 
+				await this.getWxOrders( this.filterForm )
 			},
 			getWxOrders( data ){
 				let self = this;
@@ -411,7 +651,7 @@
 					}
 					res.result.order_data.forEach((item,index)=>{
 						if( item['FirstPic'] != null ){
-							item['pic'] = window.jpdn_domain_imgDomain + item.FirstPic;
+							item['pic'] = item.FirstPic;
 						}
 						self.wxOrdersList.push(item);
 					});
@@ -423,9 +663,9 @@
 								boardId : item.BoardId,
 								matNo   : item.MatNo,
 								title   : item.Title,
-								cost    : item.Cost,
+								cost    : Number(item.Cost),
 								id      : item.Id,
-								pic     : item.FirstPic == null ? '' : window.jpdn_domain_imgDomain + item.FirstPic,
+								pic     : item.FirstPic == null ? '' : item.FirstPic,
 								isover  : item.PayDeadlineTime * 1000 > self.config.floatNav.now ? false : true,
 								cusPoNo : item.CusPoNo,
 								isGroup : item.WebProductId == 0 ? 0 : 1,
@@ -510,6 +750,7 @@
 				this.$request.client.ordersManage.wechatDelete( data ).then(res=>{
 					if( res.errorCode === '00000' ){
 						Toast.success(res.msg);
+						this.delForm = this.$options.data().delForm
 					}
 				}).then(()=>{
 					var self = this;
@@ -618,7 +859,8 @@
 			}
 		},
 		created(){
-			this.$store.commit('client/setHeaderTitle','微信订单');
+			this.$store.commit('client/setHeaderTitle','微信订单')
+			this.$store.commit('client/setBackPath', '/client/wxorder/lists')
 			if( getStorage('client/wxOrders') ){
 				let storageData = JSON.parse(getStorage('client/wxOrders'));
 				this.filterForm            = storageData;
@@ -646,6 +888,9 @@
 			},
 			setCommonShow(){
 				return this.config.setCommon.show;
+			},
+			delShow() {
+				return this.config.popup.del.show;
 			}
 		},
 		watch:{
@@ -688,7 +933,15 @@
 				if( newV == false ){
 					this.setCommonForm.cardFlag = '';
 				}
+			},
+			delShow( newV,oldV ) {
+				if( !newV ){
+					this.delForm = this.$options.data().delForm
+				}
 			}
 		}
 	}
 </script>
+<style type="text/css">
+	@import '~@/assets/style/card.css';
+</style>

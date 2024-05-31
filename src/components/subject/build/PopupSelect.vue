@@ -3,7 +3,7 @@
 		<van-field v-model="value" input-align="center" clickable readonly :label="fieldConfig.label" :placeholder="fieldConfig.placeholder" @click=" show = true ">
 			<van-icon slot="right-icon" name="arrow"/>
 		</van-field>
-		<van-popup v-model="show" position="top" :style="{ height: '100%' }">
+		<van-popup v-model="show" :style="{ height: '75%', width: '95%' }" round>
 			<van-sticky :offset="46">
 				<div class="van-nav-bar van-hairline--bottom" style="z-index: 1;">
 					<div class="van-nav-bar__left">
@@ -74,7 +74,7 @@
 		props:['selectValue','fieldConfig','radioData','selectType'],
 		data(){
 			return {
-				needConfirm: 1,
+				needConfirm: 0,
 				show  : false,
 				value : this.selectValue,
 			}
@@ -94,24 +94,24 @@
 				}*/
 			},
 			itemClick(){
-				if( this.needConfirm == 0 ){
+				this.confirmClick()
+				/*if( this.needConfirm == 0 ){
 					this.confirmClick();
-				}
+				}*/
 			}
 		},
 		created(){
 			//console.log(this.selectValue)
 		},
 		mounted(){
-			try{
+			/*try{
 				let config = JSON.parse(getStorage('jpdn_webapp_config'));
-				//console.log(typeof(config.selectNeedConfirm) == 'string')
 				if( typeof(config.selectNeedConfirm) == 'string' ){
 					this.needConfirm = config.selectNeedConfirm;
 				}
 			}catch(err){
 				this.needConfirm = 1;
-			}
+			}*/
 		},
 		updated(){
 			
@@ -140,3 +140,12 @@
 		}
 	}
 </script>
+<style type="text/css">
+	.van-radio__label {
+		margin: 0rem !important;
+	}
+
+	.van-icon {
+		display: inline-block !important;
+	}
+</style>

@@ -27,8 +27,20 @@
 		<popup-filter :filterShow.sync="config.popup.rightFilter.show" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<cus-picker ref="cusPicker" :cusName.sync="filterForm.cusId" ></cus-picker>
-				<radio-cell :radioInfo.sync="filterForm.isStopped" :radioColumns="config.radio.isStopped.options" :title="config.radio.isStopped.title"></radio-cell>
-				<radio-cell :radioInfo.sync="filterForm.isSettleDay" :radioColumns="config.radio.isSettleDay.options" :title="config.radio.isSettleDay.title"></radio-cell>
+				<uni-check-box
+					:label="config.radio.isStopped.title"
+					:localdata="config.radio.isStopped.options"
+					:radioData.sync="filterForm.isStopped" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
+				<uni-check-box
+					:label="config.radio.isSettleDay.title"
+					:localdata="config.radio.isSettleDay.options"
+					:radioData.sync="filterForm.isSettleDay" 
+					:map="{text: 'title', value: 'value'}"
+				>
+				</uni-check-box>
 				<van-switch-cell v-model="config.switch.checked" title="记住筛选条件(本次登录有效)"/>
 			</div>
 		</popup-filter>
@@ -43,6 +55,8 @@
 	import RadioCell from '@/components/subject/RadioCell.vue';
 	import CusAmtDetail from '@/components/subject/cred/CusAmtDetail.vue';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
+
+	import UniCheckBox from '@/components/subject/checkbox/UniCheckBox.vue';
 	export default {
 		components:{
 			[Button.name]: Button,
@@ -55,7 +69,8 @@
 			CusPicker,
 			PopupFilter,
 			RadioCell,
-			CusAmtDetail
+			CusAmtDetail,
+			UniCheckBox
 		},
 		data(){
 			return {
