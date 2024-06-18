@@ -252,6 +252,7 @@
 			},
 			/*获取日期*/
 			async fetchDate() {
+				await this.$refs.dailyUsed.complete([])
 				this.config.dateList = this.$options.data().config.dateList
 				this.formData.outDate = this.$options.data().formData.outDate
 				this.formData.dataType = 5

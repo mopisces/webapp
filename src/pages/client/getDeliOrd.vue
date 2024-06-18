@@ -302,6 +302,7 @@
 			async fetchDateList() {
 				this.formData.dataType = 9
 				this.config.indexList = this.$options.data().config.indexList
+				await this.$refs.deliDailyDate.complete([])
 				const { result } = await fetchList(this.formData)
 				this.$refs.deliDailyDate.complete(result)
 			},

@@ -23,6 +23,7 @@
 				</van-cell>
 			</van-cell-group>
 		</van-checkbox-group>
+		<div class="box-item"></div>
 		<div class="commonly-mat-footer">
 			<van-row>
 				<van-col span="16">
@@ -151,5 +152,10 @@
 
 	.van-search {
 		padding: 0rem 0.8rem 0.2rem 0.8rem !important;
+	}
+
+	.box-item {
+		width: 100%;
+		height: 2.5rem;
 	}
 </style>

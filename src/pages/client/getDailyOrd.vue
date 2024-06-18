@@ -480,6 +480,7 @@
 			},
 			/*获取日期数据*/
 			async fetchDateList() {
+				await this.$refs.dailyDate.complete([])
 				this.config.indexList = this.$options.data().config.indexList
 				this.formData.dataType = 12
 				const { result } = await fetchList(this.formData)
