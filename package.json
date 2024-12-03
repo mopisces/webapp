@@ -54,7 +54,7 @@
     "@babel/preset-env": "^7.6.3",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-eslint": "^3.9.0",
-    "@vue/cli-service": "^3.9.0",
+    "@vue/cli-service": "^5.0.8",
     "babel-eslint": "^10.0.1",
     "babel-plugin-import": "^1.13.0",
     "eslint": "^5.16.0",
@@ -66,7 +66,7 @@
     "vue-cli-plugin-cube-ui": "^0.2.5",
     "vue-easytable": "^1.7.2",
     "vue-template-compiler": "^2.6.10",
-    "webpack-bundle-analyzer": "^3.6.1"
+    "webpack-bundle-analyzer": "^4.7.0"
   },
   "eslintConfig": {
     "root": true,
