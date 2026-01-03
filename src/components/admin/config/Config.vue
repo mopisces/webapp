@@ -961,12 +961,22 @@
 								</td>
 							</tr>
 						</template>
-						<tr v-if="(Number(form.UseBoardGroup) || Number(form.UseBoxGroup)) && (Number(form.UseWxPay) || Number(form.UseAliPay))">
-							<td style="150px;">有效支付时间（秒）</td>
-							<td>
-								<el-input style="width: 150px;" v-model="form.ValidPayTime" ></el-input>
-							</td>
-						</tr>
+						<template v-if="(Number(form.UseBoardGroup) || Number(form.UseBoxGroup)) && (Number(form.UseWxPay) || Number(form.UseAliPay) || Number(form.UseYSBPay))">
+							<tr>
+								<td style="150px;">有效支付时间（秒）</td>
+								<td>
+									<el-input style="width: 150px;" v-model="form.ValidPayTime" ></el-input>
+								</td>
+							</tr>
+							<tr>
+								<td style="150px;">支付防抖时间（秒）</td>
+								<td>
+									<el-input style="width: 150px;" v-model="form.WebPayGapTime" ></el-input>
+								</td>
+							</tr>
+						</template>
+
+						
 						<tr>
 							<td>
 								<el-button type="primary" @click="saveConfig()">保存</el-button>
@@ -1207,6 +1217,7 @@
 					UseAliPay        : '',  //支付宝支付功能
 					UseYSBPay        : '',  //易收宝支付功能
 					ValidPayTime     : '',  //有效支付时间(秒)
+					WebPayGapTime    : 60,  // 防抖时间
 					//淘宝箱按面积报价
 					OpenBoxForArea   : '',  //淘宝箱是否按面积报价
 					BoxForAreaDecimals : '', //保留小数位数

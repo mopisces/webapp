@@ -77,6 +77,7 @@ const customerQuo = () => import('@/pages/staff/customer/quo/getQuoList.vue')
 const quoDetail = () => import('@/pages/staff/customer/quo/getQuoDetail.vue')
 //客户查询 @/components/staff/customer/CustomerInfo
 const customerInfo = () => import('@/pages/staff/customer/custInfo.vue');
+
 export const asyncStaffRouterMap = [
     {
         path:'/staff',
@@ -254,7 +255,7 @@ export const asyncStaffRouterMap = [
                 path:'customer/customerInfo',
                 meta: { title: '客户查询', role:'客户查询' },
                 component: customerInfo,
-            }
+            },
         ]
     }
 ];

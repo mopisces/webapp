@@ -25,7 +25,7 @@
 			>
 				<van-checkbox
 					class="card-goods-item"
-					v-for="(item,index) in listData"
+					v-for="(item,index) in _listData"
 					:key="index"
 					:name="item.cusPoNo"
 					shape="square"
@@ -129,6 +129,9 @@
 			//console.log(this.listData)
 		},
 		computed: {
+			_listData() {
+				return this.$props.listData
+			},
 			totalPrice() {
 				return this.listData.reduce((total, item) => {
 					if(this.checkedList.indexOf(item.cusPoNo) !== -1) {

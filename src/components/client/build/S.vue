@@ -563,6 +563,7 @@
 				this.formData.lineBallInfo = data[1];
 			},
 			calcPriceInfo( showToast = true, isCheck = false ){
+				console.log(this.formData)
 				if( this.formData.isCalc == 0 ) return true;
 				delete this.rules.dOrdPrice
 				delete this.rules.dAmt

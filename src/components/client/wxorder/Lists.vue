@@ -1,9 +1,10 @@
 <template>
 	<div class="page-color">
 		<van-sticky :offset-top="46">
-			<!-- <van-button plain hairline type="info" size="small" style="width:100%" @click="config.popup.filterShow = true">筛选</van-button> -->
 			<van-tabs v-model="filterForm.orderState">
 				<van-tab title="未审核" name="1"></van-tab>
+				<van-tab title="待付款" name="4"></van-tab>
+				<van-tab title="已付款" name="5"></van-tab>
 				<van-tab title="已审核" name="2"></van-tab>
 				<van-tab title="已删除" name="3"></van-tab>
 			</van-tabs>
@@ -17,380 +18,449 @@
 			@fabClick="menuClick"
 		></drag-menu>
 		<van-pull-refresh v-model="config.list.pullRefresh.reloading" @refresh="pullOnRefresh">
-			<van-list v-model="config.list.pushLoading.loading" :finished="config.list.pushLoading.finished"  finished-text="没有更多了" @load="onLoad" :offset="100">
-				<van-swipe-cell 
-					v-for="(item,index) in wxOrdersList" 
-					:key="index"
-				>
-					<template 
-						slot="right"  
-						v-if="item.IsDel === '0' && item.Checked === '0' && (( item.IsGroup === '0' && item.UsePay == null  )  || ( item.UsePay == '1' && item.Refund == 1 ) || ( item.UsePay == '1' && item.Paid == 0 ) )"
-						>
-						<van-button 
-							square 
-							text="删除" 
-							type="danger" 
-							style="height:100%;" 
-							@click="delClick(item.CusPoNo)"
-						/>
-					</template>
-					<template 
-						slot="left"
-						v-if="item.IsDel === '0' && item.Checked === '0' && ((item.UsePay == '1' && item.Paid == 0 && item.IsGroup == 0))"
-					>
-						<van-button 
-							square 
-							text="修改" 
-							type="primary" 
-							style="height:100%;" 
-							@click="modifyClick(item)"
-						/>
-					</template>
+			<van-list 
+				v-model="config.list.pushLoading.loading" 
+				:finished="config.list.pushLoading.finished"  
+				finished-text="没有更多了" 
+				:offset="100"
+				@load="onLoad" 
+			>
+				<!-- 订单未支付 -->
+				<template v-if="filterForm.orderState == 4 || filterForm.orderState == 5">
 					<card 
-						:title="item.CusPoNo"
-						:extra="item.Title"
-						:thumbnail="item.IsGroup === '1' && item.PayDeadlineTime?item.pic:''"
+						:title="'流水号:'+rowData.TradeNo"
+						:extra="'金额:'+rowData.PayAmount"
 						:is-shadow="true"
+						v-for="(rowData,idx) in wxOrdersList" 
+						:key="idx"
 					>
 						<div class="card-body-container">
 							<div class="card-body-item card-body-item-100">
-								<div>付款状态:
-									<span 
-										class="mg-left-20" 
-										v-if=" item.UsePay === '1' && item.Paid === '0' "
-									>
-										<span v-if=" item.IsOverTime ">超时</span>未付款
-									</span>
-									<span 
-										class="mg-left-20 blue-color" 
-										v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " 
-									>
-										已付款
-									</span>
-									<span 
-										class="mg-left-20 red-color" 
-										v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' ">
-										申请退款中
-									</span>
-									<span class="mg-left-20 gray-color" v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' ">
-										已退款
-									</span>
-								</div>
+								支付发起时间: 
+								<span class="mg-left-20">{{ rowData.AddTime }}</span>
 							</div>
 							<div class="card-body-item card-body-item-100">
-								<div class="card-body-txt">订单标识</div>:
-								<van-tag class="mg-left-20" type="primary">
-									{{ cTypeName(item.CType) }}
-								</van-tag>
-								<van-tag 
-								 	v-if=" item.IsCard === '1' " 
-								 	class="mg-left-20"  
-								 	type="warning" 
-								 >
-									{{ item.CardFlag }}
-								</van-tag>
+								付款截至时间: 
+								<span class="mg-left-20">{{ rowData.PayDeadlineTime }}</span>
 							</div>
-							<!-- <div 
-								v-if="item.IsGroup === '1' && item.PayDeadlineTime && item.Title" 
-								class="card-body-item card-body-item-100"
+							<div class="card-body-item card-body-item-100">
+								订单金额: 
+								<span class="mg-left-20">{{ rowData.PayAmount }}</span>
+							</div>
+							<div v-if="rowData.OutTradeId" class="card-body-item card-body-item-100">
+								支付通知时间: 
+								<span class="mg-left-20">{{ rowData.PaidTime }}</span>
+							</div>
+							<div class="card-body-item card-body-item-100">
+								订单状态: 
+								<span class="mg-left-20">{{ rowData.billStatus }}</span>
+							</div>
+							<div v-if="rowData.OutTradeId" class="card-body-item card-body-item-100">
+								流水号: 
+								<span class="mg-left-20">{{ rowData.OutTradeId }}</span>
+							</div>
+						</div>
+						
+						<div v-if="config.divider.showDetailIdx.some(item => item == idx) ? true:false">
+							<card 
+								:title="item.CusPoNo"
+								:extra="item.Title"
+								:is-shadow="true"
+								v-for="(item, key) in rowData.orderDetail" 
+								:key="key"
 							>
-								<span>团购标题:
-									<span class="mg-left-20">{{ item.Title }}</span>
-								</span>
-							</div> -->
-							<div v-if="item.IsDel==='1'" class="card-body-item card-body-item-100">
-								<span>删除原因:
-									<span class="mg-left-20 red-color" >{{ item.DelRemark }}</span>
-								</span>
-							</div>
-							<div v-if="item.CType === 's'||item.CType === 'c'" class="card-body-item card-body-item-100">
-								<span>纸板规格:
-									<span class="mg-left-20">{{ item.Length }}×{{ item.Width }}</span>
-									<span class="mg-left-20">{{ item.BoardId }}</span>
-								</span>
-							</div>
-							<div v-if="item.CType === 'c'" class="card-body-item card-body-item-100">
-								<span>纸箱规格:
-									<span class="mg-left-20">{{ item.BoxL }}×{{ item.BoxW }}×{{ item.BoxH }}</span>
-								</span>
-							</div>
-							<div v-if="item.CType === 'c'" class="card-body-item card-body-item-100">
-								<span>箱型信息:
-									<span class="mg-left-20">{{ item.BoxName }}</span>
-								</span>
-							</div>
-							<div v-if="item.CType === 'x'" class="card-body-item card-body-item-100">
-								<span>套件信息:
-									<span class="mg-left-20" >{{ item.ProductId }}</span>
-									<span class="mg-left-20" >{{ item.ProductName }}</span>
-								</span>
-							</div>
-							<div v-if="item.CType === 't'" class="card-body-item card-body-item-100">
-								<span>货品编号:
-									<span class="mg-left-20" >{{ item.MatNo }}</span>
-								</span>
-							</div>
-							<div class="card-body-item card-body-item-100">
-								<span>订单信息:
-									<span class="mg-left-20">
-										{{ item.OrdQty }}
-										<span v-if="item.CType === 's'">片</span>
-										<span v-else>个</span>
-									</span>
-									<span 
-										v-if="item.CType === 's' || item.CType === 'c'" 
-										class="mg-left-20"
+								<div class="card-body-container">
+									<div class="card-body-item card-body-item-100">
+										<div>付款状态:
+											<span 
+												class="mg-left-20" 
+												v-if=" item.UsePay === '1' && item.Paid === '0' "
+											>
+												<span v-if=" item.IsOverTime ">超时</span>未付款
+											</span>
+											<span 
+												class="mg-left-20 blue-color" 
+												v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " 
+											>
+												已付款
+											</span>
+											<span 
+												class="mg-left-20 red-color" 
+												v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' "
+											>
+												申请退款中
+											</span>
+											<span 
+												class="mg-left-20 gray-color" 
+												v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' "
+											>
+												已退款
+											</span>
+										</div>
+									</div>
+									<div class="card-body-item card-body-item-100">
+										<div class="card-body-txt">订单标识</div>:
+										<van-tag class="mg-left-20" type="primary">
+											{{ cTypeName(item.CType) }}
+										</van-tag>
+										<van-tag 
+										 	v-if=" item.IsCard === '1' " 
+										 	class="mg-left-20"  
+										 	type="warning" 
+										 >
+											{{ item.CardFlag }}
+										</van-tag>
+									</div>
+									<div v-if="item.IsDel==='1'" class="card-body-item card-body-item-100">
+										<span>删除原因:
+											<span class="mg-left-20 red-color" >{{ item.DelRemark }}</span>
+										</span>
+									</div>
+									<div v-if="item.CType === 's'||item.CType === 'c'" class="card-body-item card-body-item-100">
+										<span>纸板规格:
+											<span class="mg-left-20">{{ item.Length }}×{{ item.Width }}</span>
+											<span class="mg-left-20">{{ item.BoardId }}</span>
+										</span>
+									</div>
+									<div v-if="item.CType === 'c'" class="card-body-item card-body-item-100">
+										<span>纸箱规格:
+											<span class="mg-left-20">{{ item.BoxL }}×{{ item.BoxW }}×{{ item.BoxH }}</span>
+										</span>
+									</div>
+									<div v-if="item.CType === 'c'" class="card-body-item card-body-item-100">
+										<span>箱型信息:
+											<span class="mg-left-20">{{ item.BoxName }}</span>
+										</span>
+									</div>
+									<div v-if="item.CType === 'x'" class="card-body-item card-body-item-100">
+										<span>套件信息:
+											<span class="mg-left-20" >{{ item.ProductId }}</span>
+											<span class="mg-left-20" >{{ item.ProductName }}</span>
+										</span>
+									</div>
+									<div v-if="item.CType === 't'" class="card-body-item card-body-item-100">
+										<span>货品编号:
+											<span class="mg-left-20" >{{ item.MatNo }}</span>
+										</span>
+									</div>
+									<div class="card-body-item card-body-item-100">
+										<span>订单信息:
+											<span class="mg-left-20">
+												{{ item.OrdQty }}
+												<span v-if="item.CType === 's'">片</span>
+												<span v-else>个</span>
+											</span>
+											<span 
+												v-if="item.CType === 's' || item.CType === 'c'" 
+												class="mg-left-20"
+											>
+												{{ item.Area }}㎡
+											</span>
+										</span>
+									</div>
+									<div v-if="item.ScoreInfo" class="card-body-item card-body-item-100">
+										<span>压线信息:
+											<span class="mg-left-20">{{ item.ScoreInfo }}</span>
+										</span>
+									</div>
+									<div class="card-body-item card-body-item-100">
+										<span>送货地址:
+											<span class="mg-left-20">{{ item.SubDNAddress }}</span>
+										</span>
+									</div>
+									<div class="card-body-item card-body-item-100">
+										<div class="card-body-txt green-color">下单</div>|
+										<div class="card-body-txt red-color">交货</div>:
+										<span class="mg-left-20 green-color">{{ item.BuildDate }}</span>
+										<span class="mg-left-20 red-color">{{ item.DeliveryDate }}</span>
+									</div>
+									<div v-if="item.IsGroup == 0&&pageConfig.isCalc" class="card-body-item card-body-item-100">
+										<div class="card-body-txt blue-color">价格</div>|
+										<div class="card-body-txt yellow-color">金额</div>:
+										<span class="mg-left-20 blue-color">{{ item.WebCalPrice }}元/㎡</span>
+										<span class="mg-left-20 yellow-color">{{ item.WebCalAmt }}元</span>
+									</div>
+									<div v-if="item.IsGroup == 1" class="card-body-item card-body-item-100">
+										<div class="card-body-txt blue-color">价格</div>|
+										<div class="card-body-txt yellow-color">金额</div>:
+										<span class="mg-left-20 blue-color">{{ item.Price }}元/㎡</span>
+										<span class="mg-left-20 yellow-color">{{ item.Cost }}元</span>
+									</div>
+
+								</div>
+								<div slot="actions" class="card-actions">
+									<div 
+										class="card-actions-item" 
+										@click="wxDetailClick(item.CusPoNo)"
 									>
-										{{ item.Area }}㎡
-									</span>
-								</span>
-							</div>
-							<div class="card-body-item card-body-item-100">
-								<span>压线信息:
-									<span class="mg-left-20">{{ item.ScoreInfo }}</span>
-								</span>
-							</div>
-							<div class="card-body-item card-body-item-100">
-								<span>送货地址:
-									<span class="mg-left-20">{{ item.SubDNAddress }}</span>
-								</span>
-							</div>
-							<div class="card-body-item card-body-item-100">
-								<div class="card-body-txt green-color">下单</div>|
-								<div class="card-body-txt red-color">交货</div>:
-								<span class="mg-left-20 green-color">{{ item.BuildDate }}</span>
-								<span class="mg-left-20 red-color">{{ item.DeliveryDate }}</span>
-							</div>
-							<div v-if="item.IsGroup == 0&&pageConfig.isCalc" class="card-body-item card-body-item-100">
-								<div class="card-body-txt blue-color">价格</div>|
-								<div class="card-body-txt yellow-color">金额</div>:
-								<span class="mg-left-20 blue-color">{{ item.WebCalPrice }}元/㎡</span>
-								<span class="mg-left-20 yellow-color">{{ item.WebCalAmt }}元</span>
-							</div>
-							<div v-if="item.IsGroup == 1" class="card-body-item card-body-item-100">
-								<div class="card-body-txt blue-color">价格</div>|
-								<div class="card-body-txt yellow-color">金额</div>:
-								<span class="mg-left-20 blue-color">{{ item.Price }}元/㎡</span>
-								<span class="mg-left-20 yellow-color">{{ item.Cost }}元</span>
+										<van-icon color="#3c9cff" name="bars" size="18"/>
+										<span class="card-actions-item-text blue-color">详情</span>
+									</div>
+
+									<div 
+										v-if=" filterForm.orderState == 5 && item.UsePay === '1' "
+										class="card-actions-item" 
+										@click="payDetailClick(item.CusPoNo)"
+									>
+										<van-icon color="#3c9cff" name="peer-pay" size="18"/>
+										<span class="card-actions-item-text blue-color">支付信息</span>
+									</div>
+								</div>
+							</card>
+						</div>
+
+						<van-divider :style="{ color: '#1989fa', padding: '0', margin: '8px 0'}" @click="dividerClick(idx)" >
+							{{ config.divider.showDetailIdx.some(item => item == idx) ? '点击收起':'点击查看'  }}
+						</van-divider>
+						
+						<!-- 未付款订单 -->
+						<div slot="actions" class="card-actions" v-if="filterForm.orderState == 4">
+							<div 
+								class="card-actions-item" 
+								@click="checkPayStatus(rowData, 'resetPayStatus')"
+							>
+								<van-icon color="#f56c6c" name="close" size="18"/>
+								<span class="card-actions-item-text red-color">取消支付</span>
 							</div>
 
-						</div>
-						<div slot="actions" class="card-actions">
 							<div 
-								v-if=" filterForm.orderState == 1 && item.UsePay === '1' "
 								class="card-actions-item" 
-								@click="payDetailClick(item.CusPoNo)"
+								@click="checkPayStatus(rowData, 'queryOrderStatus')"
 							>
-								<van-icon color="#3c9cff" name="peer-pay" size="18"/>
-								<span class="card-actions-item-text blue-color">支付信息</span>
+								<van-icon color="#3c9cff" name="replay" size="18"/>
+								<span class="card-actions-item-text blue-color">刷新状态</span>
 							</div>
+
 							<div 
 								class="card-actions-item" 
-								@click="wxDetailClick(item.CusPoNo)"
+								@click="checkPayStatus(rowData, 'goPayWay')"
 							>
-								<van-icon color="#3c9cff" name="bars" size="18"/>
-								<span class="card-actions-item-text blue-color">详情</span>
-							</div>
-							<div 
-								v-if=" item.Checked === '1' && item.IsCard === '0' && item.CType !== 't' "
-								class="card-actions-item" 
-								@click="setCommon( item.CusPoNo )"
-							>
-								<van-icon color="#f9ae3d" name="star" size="18"/>
-								<span class="card-actions-item-text yellow-color">设为常用</span>
-							</div>
-							<div 
-								v-if=" item.Checked === '1' && item.IsCard === '1' && item.CType !== 't' "
-								class="card-actions-item" 
-								@click="cancelCommon( item.CusPoNo )"
-							>
-								<van-icon color="#f56c6c" name="star-o" size="18"/>
-								<span class="card-actions-item-text red-color">取消常用</span>
-							</div>
-							<div 
-								v-if=" item.Checked === '1' && item.IsCard === '1' "
-								class="card-actions-item" 
-								@click="buildOrder( item )"
-							>
-								<van-icon color="#3c9cff" class-prefix="iconfont" name="xiadan" size="18"/>
-								<span class="card-actions-item-text blue-color">快速下单</span>
+								<van-icon color="#5ac725" name="balance-o" size="18"/>
+								<span class="card-actions-item-text green-color">去支付</span>
 							</div>
 						</div>
 					</card>
-				</van-swipe-cell>
-				<!-- <van-panel  v-for="(item,index) in wxOrdersList" :key="index" style="font-size:0.8125rem;">
-					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if="item.IsGroup === '1' && item.PayDeadlineTime ">
-						<div style="height:3.125rem;width:100%;display: flex;" @click="headerClick(item)">
-							<div style="display: inline-flex;line-height:3.125rem;width:75%;overflow: hidden;">
-								<van-image :src="item.pic" round style="width: 25%; height: 100%;display: inline-flex;" />
-								<span class="van-ellipsis" style="width:70%;">
-									<span style="color: #e01835;font-size:0.8125rem;" v-if=" item.BoardId && !item.MatNo ">
-										{{ item.BoardId }}
-									</span>
-									<span v-else-if=" !item.BoardId && item.MatNo ">
-										{{ item.MatNo }}
-									</span>
-									<span v-if=" item.Title ">{{ item.Title }}</span>
-								</span>
-								<i class="van-icon van-icon-arrow" style="display: table-cell; vertical-align: middle; font-size: 1rem;top: 17px;color:#4bb0ff;"></i>
-							</div>
-							<div style="display: inline-flex;line-height:3.125rem;font-size:0.875rem;width:30%;color: #ffa500;text-align:center;">
-								<span v-if=" item.UsePay === '1' && item.Paid === '0' ">
-									<span v-if=" item.IsOverTime ">超时</span>未付款
-								</span>
-								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " style="color: #1a991d;">
-									已付款
-								</span>
-								<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' " style="color: #ff0000;">
-									申请退款中
-								</span>
-								<span v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' " style="color: #666;">
-									已退款
-								</span>
-							</div>
-						</div>
-					</div>
-					<div slot="header" style="margin-left:1.25rem;color:#1a991d" v-if=" item.IsGroup === '0' && item.PayDeadlineTime ">
-						<div style="line-height:3.125rem;font-size:0.875rem;width:90%;color: #ffa500;text-align:right;">
-							付款状态：
-							<span v-if=" item.UsePay === '1' && item.Paid === '0' ">
-								<span v-if=" item.IsOverTime ">超时</span>未付款
-							</span>
-							<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " style="color: #1a991d;">
-								已付款
-							</span>
-							<span v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' " style="color: #ff0000;">
-								申请退款中
-							</span>
-							<span v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' " style="color: #666;">
-								已退款
-							</span>
-						</div>
-					</div>
-					<div slot="default">
-						<van-swipe-cell>
-							<template 
-								slot="right"  
-								v-if="item.IsDel === '0' && item.Checked === '0' && (( item.IsGroup === '0' && item.UsePay == null  )  || ( item.UsePay == '1' && item.Refund == 1 ) || ( item.UsePay == '1' && item.Paid == 0 ) )"
-								>
-								<van-button 
-									square 
-									text="删除" 
-									type="danger" 
-									style="height:100%;" 
-									@click="delClick(item.CusPoNo)"
-								/>
-							</template>
-							<template 
-								slot="left"
-								v-if="item.IsDel === '0' && item.Checked === '0' && ((item.UsePay == '1' && item.Paid == 0 && item.IsGroup == 0))"
+				</template>
+				<!-- 订单其他状态 -->
+				<template v-else>
+					<van-swipe-cell 
+						v-for="(item,index) in wxOrdersList" 
+						:key="index"
+					>
+						<template 
+							slot="right"  
+							v-if="item.IsDel === '0' && item.Checked === '0' && (( item.IsGroup === '0' && item.UsePay == null  )  || ( item.UsePay == '1' && item.Refund == 1 ) || ( item.UsePay == '1' && item.Paid == 0 && !item.WxOutTradeNo ) )"
 							>
-								<van-button 
-									square 
-									text="修改" 
-									type="primary" 
-									style="height:100%;" 
-									@click="modifyClick(item)"
-								/>
-							</template>
-							<div class="van-row van-row--flex van-row--justify-center">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--22">
-									<van-tag plain type="primary" style="font-size:0.75rem;">
+							<van-button 
+								square 
+								text="删除" 
+								type="danger" 
+								style="height:100%;" 
+								@click="delClick(item.CusPoNo)"
+							/>
+						</template>
+						<template 
+							slot="left"
+							v-if="item.IsDel === '0' && item.Checked === '0' && ((item.UsePay == '1' && item.Paid == 0 && item.IsGroup == 0 && !item.WxOutTradeNo))"
+						>
+							<van-button 
+								square 
+								text="修改" 
+								type="primary" 
+								style="height:100%;" 
+								@click="modifyClick(item)"
+							/>
+						</template>
+						<card 
+							:title="item.CusPoNo"
+							:extra="item.Title"
+							:thumbnail="item.IsGroup === '1' && item.PayDeadlineTime?item.pic:''"
+							:is-shadow="true"
+						>
+							<div class="card-body-container">
+								<div v-if="item.Price" class="card-body-item card-body-item-100">
+									<div>付款状态:
+										<span 
+											class="mg-left-20" 
+											v-if=" item.UsePay === '1' && item.Paid === '0' "
+										>
+											<span v-if=" item.IsOverTime ">超时</span>未付款
+										</span>
+										<span 
+											class="mg-left-20 blue-color" 
+											v-if=" item.UsePay === '1' && item.Paid === '1' && item.Apply === '0' && item.Refund === '0' " 
+										>
+											已付款
+										</span>
+										<span 
+											class="mg-left-20 red-color" 
+											v-if=" item.UsePay === '1' && item.Paid === '1' && item.Checked === '0' && item.Apply === '1' && item.Refund === '0' "
+										>
+											申请退款中
+										</span>
+										<span 
+											class="mg-left-20 gray-color" 
+											v-if=" item.UsePay === '1' && item.Paid === '1' && ((item.Checked === '0' && item.Apply === '1') || (item.Checked === '1' && item.Apply === '0')) && item.Refund === '1' "
+										>
+											已退款
+										</span>
+									</div>
+								</div>
+								<div v-if="!item.Price" class="card-body-item card-body-item-100">
+									<div>
+										该订单为直接下单,无需直接支付
+									</div>
+								</div>
+
+								<div class="card-body-item card-body-item-100">
+									<div class="card-body-txt">订单标识</div>:
+									<van-tag class="mg-left-20" type="primary">
 										{{ cTypeName(item.CType) }}
 									</van-tag>
-									<van-tag plain type="warning" v-if=" item.IsCard === '1' " style="font-size:0.75rem;">
-										常用订单标识:{{ item.CardFlag }}
+									<van-tag 
+									 	v-if=" item.IsCard === '1' " 
+									 	class="mg-left-20"  
+									 	type="warning" 
+									 >
+										{{ item.CardFlag }}
 									</van-tag>
-									<van-tag plain type="danger" v-if=" item.IsDel === '1' " style="font-size:0.75rem;">
-										删除原因:{{ item.DelRemark }}
-									</van-tag>
 								</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--11">客订单号:{{ item.CusPoNo }}</div>
-								<div class="van-col van-col--11">
-									<span v-if=" item.CType === 's' || item.CType === 'c' ">材质:{{ item.BoardId }}</span>
-									<span v-else-if=" item.CType === 'x' ">套件:{{ item.ProductId }}</span>
-									<span v-else-if=" item.CType === 't' ">货品编号:{{ item.MatNo }}</span>
+								<div v-if="item.IsDel==='1'" class="card-body-item card-body-item-100">
+									<span>删除原因:
+										<span class="mg-left-20 red-color" >{{ item.DelRemark }}</span>
+									</span>
 								</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 'c' ">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--22">箱型:{{ item.BoxName }}</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 'c' ">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--22">
-									纸箱规格(mm):{{ item.BoxL }}&nbsp;x&nbsp;{{ item.BoxW }}&nbsp;x&nbsp;{{ item.BoxH }}
+								<div v-if="item.CType === 's'||item.CType === 'c'" class="card-body-item card-body-item-100">
+									<span>纸板规格:
+										<span class="mg-left-20">{{ item.Length }}×{{ item.Width }}</span>
+										<span class="mg-left-20">{{ item.BoardId }}</span>
+									</span>
 								</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.CType === 's' || item.CType === 'c' ">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--22" >
-									纸板规格(mm):{{ item.Length }}&nbsp;x&nbsp;{{ item.Width }}
+								<div v-if="item.CType === 'c'" class="card-body-item card-body-item-100">
+									<span>纸箱规格:
+										<span class="mg-left-20">{{ item.BoxL }}×{{ item.BoxW }}×{{ item.BoxH }}</span>
+									</span>
 								</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center" v-if="item.CType === 'x'">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--22">
-									套件:{{ item.ProductName }}
+								<div v-if="item.CType === 'c'" class="card-body-item card-body-item-100">
+									<span>箱型信息:
+										<span class="mg-left-20">{{ item.BoxName }}</span>
+									</span>
 								</div>
+								<div v-if="item.CType === 'x'" class="card-body-item card-body-item-100">
+									<span>套件信息:
+										<span class="mg-left-20" >{{ item.ProductId }}</span>
+										<span class="mg-left-20" >{{ item.ProductName }}</span>
+									</span>
+								</div>
+								<div v-if="item.CType === 't'" class="card-body-item card-body-item-100">
+									<span>货品编号:
+										<span class="mg-left-20" >{{ item.MatNo }}</span>
+									</span>
+								</div>
+								<div class="card-body-item card-body-item-100">
+									<span>订单信息:
+										<span class="mg-left-20">
+											{{ item.OrdQty }}
+											<span v-if="item.CType === 's'">片</span>
+											<span v-else>个</span>
+										</span>
+										<span 
+											v-if="item.CType === 's' || item.CType === 'c'" 
+											class="mg-left-20"
+										>
+											{{ item.Area }}㎡
+										</span>
+									</span>
+								</div>
+								<div v-if="item.ScoreInfo" class="card-body-item card-body-item-100">
+									<span>压线信息:
+										<span class="mg-left-20">{{ item.ScoreInfo }}</span>
+									</span>
+								</div>
+								<div class="card-body-item card-body-item-100">
+									<span>送货地址:
+										<span class="mg-left-20">{{ item.SubDNAddress }}</span>
+									</span>
+								</div>
+								<div class="card-body-item card-body-item-100">
+									<div class="card-body-txt green-color">下单</div>|
+									<div class="card-body-txt red-color">交货</div>:
+									<span class="mg-left-20 green-color">{{ item.BuildDate }}</span>
+									<span class="mg-left-20 red-color">{{ item.DeliveryDate }}</span>
+								</div>
+								<div v-if="item.IsGroup == 0&&pageConfig.isCalc" class="card-body-item card-body-item-100">
+									<div class="card-body-txt blue-color">价格</div>|
+									<div class="card-body-txt yellow-color">金额</div>:
+									<span class="mg-left-20 blue-color">{{ item.WebCalPrice }}元/㎡</span>
+									<span class="mg-left-20 yellow-color">{{ item.WebCalAmt }}元</span>
+								</div>
+								<div v-if="item.IsGroup == 1" class="card-body-item card-body-item-100">
+									<div class="card-body-txt blue-color">价格</div>|
+									<div class="card-body-txt yellow-color">金额</div>:
+									<span class="mg-left-20 blue-color">{{ item.Price }}元/㎡</span>
+									<span class="mg-left-20 yellow-color">{{ item.Cost }}元</span>
+								</div>
+
 							</div>
-							<div class="van-row van-row--flex van-row--justify-center">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--11" v-if="item.CType === 's' || item.CType === 'c'" >订单数:{{ item.OrdQty }}</div>
-								<div class="van-col van-col--22" v-else>订单数:{{ item.OrdQty }}</div>
-								<div class="van-col van-col--11"  v-if="item.CType === 's' || item.CType === 'c'">下单面积(㎡):{{ item.Area }}</div>
+							<div slot="actions" class="card-actions">
+								<template v-if="filterForm.orderState != 4">
+									<div 
+										v-if=" filterForm.orderState == 1 && item.UsePay === '1' "
+										class="card-actions-item" 
+										@click="payDetailClick(item.CusPoNo)"
+									>
+										<van-icon color="#3c9cff" name="peer-pay" size="18"/>
+										<span class="card-actions-item-text blue-color">支付信息</span>
+									</div>
+									<div 
+										class="card-actions-item" 
+										@click="wxDetailClick(item.CusPoNo)"
+									>
+										<van-icon color="#3c9cff" name="bars" size="18"/>
+										<span class="card-actions-item-text blue-color">详情</span>
+									</div>
+									<div 
+										v-if=" item.Checked === '1' && item.IsCard === '0' && item.CType !== 't' "
+										class="card-actions-item" 
+										@click="setCommon( item.CusPoNo )"
+									>
+										<van-icon color="#f9ae3d" name="star" size="18"/>
+										<span class="card-actions-item-text yellow-color">设为常用</span>
+									</div>
+									<div 
+										v-if=" item.Checked === '1' && item.IsCard === '1' && item.CType !== 't' "
+										class="card-actions-item" 
+										@click="cancelCommon( item.CusPoNo )"
+									>
+										<van-icon color="#f56c6c" name="star-o" size="18"/>
+										<span class="card-actions-item-text red-color">取消常用</span>
+									</div>
+									<div 
+										v-if=" item.Checked === '1' && item.IsCard === '1' "
+										class="card-actions-item" 
+										@click="buildOrder( item )"
+									>
+										<van-icon color="#3c9cff" class-prefix="iconfont" name="xiadan" size="18"/>
+										<span class="card-actions-item-text blue-color">快速下单</span>
+									</div>
+								</template>
+								
 							</div>
-							<div class="van-row van-row--flex van-row--justify-center">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--22">压线信息:{{ item.ScoreInfo }}</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--22">送货地址:{{ item.SubDNAddress }}</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--11">下单日期:{{ item.BuildDate }}</div>
-								<div class="van-col van-col--11">交货日期:{{ item.DeliveryDate }}</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.IsGroup == 0 && pageConfig.isCalc ">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--11">计价价格:{{ item.WebCalPrice }}</div>
-								<div class="van-col van-col--11">金额:{{ item.WebCalAmt }}</div>
-							</div>
-							<div class="van-row van-row--flex van-row--justify-center" v-if=" item.IsGroup == 1">
-								<div class="van-col van-col--2"></div>
-								<div class="van-col van-col--11">团购价格:{{ item.Price }}</div>
-								<div class="van-col van-col--11">团购金额:{{ item.Cost }}</div>
-							</div>
-						</van-swipe-cell>
-					</div>
-					<div slot="footer" style="text-align:right;">
-						<van-button size="small" color="linear-gradient(to right, #4bb0ff, #6149f6)" @click="payDetailClick(item.CusPoNo)" v-if=" filterForm.orderState == 1 && item.UsePay === '1' ">
-							支付信息
-						</van-button>
-						<van-button size="small" type="primary" @click="wxDetailClick(item.CusPoNo)">
-							详情
-						</van-button>
-						<van-button size="small" type="warning" v-if=" item.Checked === '1' && item.IsCard === '0' && item.CType !== 't' " @click="setCommon( item.CusPoNo )">
-							设为常用
-						</van-button>
-						<van-button size="small" plain type="danger" v-if=" item.Checked === '1' && item.IsCard === '1' && item.CType !== 't' " @click="cancelCommon( item.CusPoNo )">
-							取消常用
-						</van-button>
-						<van-button size="small" plain type="primary" v-if=" item.Checked === '1' && item.IsCard === '1' " @click=" buildOrder( item ) ">
-							快速下单
-						</van-button>
-					</div>
-				</van-panel> -->
+						</card>
+					</van-swipe-cell>
+				</template>
 			</van-list>
 		</van-pull-refresh>
-		<float-nav v-if=" config.floatNav.show && config.floatNav.isFinish && filterForm.orderState==1" :listData=" config.floatNav.listData " :selectNum=" config.floatNav.selectNum "></float-nav>
-		<wx-order-detail :detailShow.sync="config.popup.detailShow" :cusOrderId="detailForm.cusOrderId" v-if="config.popup.detailShow"></wx-order-detail>
+		<float-nav 
+			v-if=" config.floatNav.show && config.floatNav.isFinish && filterForm.orderState==1" 
+			:listData=" config.floatNav.listData " 
+			:selectNum=" config.floatNav.selectNum " 
+		/>
+		<wx-order-detail 
+			v-if="config.popup.detailShow"
+			:detailShow.sync="config.popup.detailShow" 
+			:cusOrderId="detailForm.cusOrderId" 
+		/>
 		<popup-filter :filterShow.sync="config.popup.filterShow" @resetClick="resetClick" @filterClick="filterClick">
 			<div slot="filter-field-1">
 				<uni-check-box
@@ -444,19 +514,25 @@
 		<van-dialog v-model="config.dialog.show" title="请填写删除原因" @confirm="delConfirm()" @cancel="config.dialog.show = false" show-cancel-button>
 			<van-field v-model="delForm.delRemak" size="large" input-align="center" placeholder="请填写删除原因"/>
 		</van-dialog>
-		<van-dialog v-model="config.setCommon.show" title="请为这个常用订单添加标识" @confirm="setCommonConfirm()" @cancel="config.setCommon.show = false" show-cancel-button>
+		<van-dialog 
+			v-model="config.setCommon.show" 
+			title="请为这个常用订单添加标识" 
+			@confirm="setCommonConfirm()" 
+			@cancel="config.setCommon.show = false" 
+			show-cancel-button
+		>
 			<van-field v-model="setCommonForm.cardFlag" size="large" input-align="center" placeholder="请填写标识"/>
 		</van-dialog>
 	</div>
 </template>
 <script>
-	import { Button, Icon, Image, Popup, Field, Dialog, PullRefresh, SwipeCell, Toast, List, SwitchCell, Panel, Sticky, Tag, Tab, Tabs } from 'vant';
+	import { Button, Icon, Image, Popup, Field, Dialog, PullRefresh, SwipeCell, Toast, List, SwitchCell, Panel, Divider, Sticky, Tag, Tab, Tabs } from 'vant';
 	import WxOrderDetail from '@/components/subject/client/WxOrderDetail.vue';
 	import NewTimePicker from '@/components/subject/time/NewTimePicker.vue';
 	import PopupFilter from '@/components/subject/PopupFilter.vue';
 	import RadioCell from '@/components/subject/RadioCell.vue';
-	/*import FloatNav from '@/components/subject/client/FloatNav.vue';*/
-	import FloatNav from '@/components/karry/floatNav/KarryFloatNav.vue';
+	import FloatNav from '@/components/subject/client/FloatNav.vue';
+	/*import FloatNav from '@/components/karry/floatNav/KarryFloatNav.vue';*/
 	import schema from 'async-validator';
 	import { cTypeChange } from '@/util/index';
 	import { getStorage, setStorage, removeStorage } from '@/util/storage';
@@ -469,6 +545,8 @@
 
 	/*api接口*/
 	import { getWebConfig } from '@/api/common/webConfig.js'
+
+	import { fetchList, doOpData } from "@/api/client/customer.js"
 
 	export default {
 		components:{
@@ -484,6 +562,7 @@
 			[List.name]: List,
 			[SwitchCell.name]: SwitchCell,
 			[Panel.name]: Panel,
+			[Divider.name]: Divider,
 			[Sticky.name]: Sticky,
 			[Tag.name]: Tag,
 			[Tab.name]: Tab,
@@ -557,9 +636,12 @@
 						show: false,
 						isFinish: false,
 						listData: [],
-						now: new Date(),
+						now: Math.floor(Date.now() / 1000),
 						selectNum : 0
-					}
+					},
+					divider: {
+						showDetailIdx: [],
+					},
 				},
 				filterForm:{
 					beginDate: '',
@@ -570,31 +652,32 @@
 					orderState: '1',
 					curPage: 0,
 				},
-				detailForm : {
-					cusOrderId : ''
+				detailForm: {
+					cusOrderId: ''
 				},
-				pageConfig : {
-					minDate : '',
-					maxDate : '',
-					isCalc: false
+				pageConfig: {
+					minDate: '',
+					maxDate: '',
+					isCalc: false,
+					webPayGapTime: 60,
 				},
-				delForm : {
-					cusOrderId : '',
-					delRemak   : '',
+				delForm: {
+					cusOrderId: '',
+					delRemak: '',
 				},
-				wxOrdersList:[],
-				delRules : {
-					cusOrderId : [
-						{ required : true, message: '请选择要删除的订单' }
+				wxOrdersList: [],
+				delRules: {
+					cusOrderId: [
+						{ required: true, message: '请选择要删除的订单' }
 					],
 					delRemak : [
-						{ required : true, message: '请选择或填写删除原因' }
+						{ required: true, message: '请选择或填写删除原因' }
 					]
 				},
-				validator : {},
-				setCommonForm : {
-					orderId  : '',
-					cardFlag : '' 
+				validator: {},
+				setCommonForm: {
+					orderId: '',
+					cardFlag: '' 
 				}
 			}
 		},
@@ -631,6 +714,7 @@
 				this.pageConfig.minDate = result.WeborderMinDate
 				this.pageConfig.maxDate = result.WeborderMaxDate
 				this.pageConfig.isCalc = result.BuildAddCalc == 1 ? true : false
+				this.pageConfig.webPayGapTime = result.WebPayGapTime
 				result.WeborderDefaultDelRemark.split(',').forEach((item,index)=>{
 					this.config.radio.defaultDelRemark.push({title:item,value:item})
 				})
@@ -660,18 +744,18 @@
 					if( res.result.unchecked_order_data && res.result.unchecked_order_data.length != 0 ){
 						res.result.unchecked_order_data.forEach((item,index)=>{
 							self.config.floatNav.listData.push({
-								boardId : item.BoardId,
-								matNo   : item.MatNo,
-								title   : item.Title,
-								cost    : Number(item.Cost),
-								id      : item.Id,
-								pic     : item.FirstPic == null ? '' : item.FirstPic,
-								isover  : item.PayDeadlineTime * 1000 > self.config.floatNav.now ? false : true,
-								cusPoNo : item.CusPoNo,
+								boardId: item.BoardId,
+								matNo: item.MatNo,
+								title: item.Title,
+								cost: Number(item.Cost),
+								id: item.Id,
+								pic: item.FirstPic == null ? '' : item.FirstPic,
+								isover: item.PayDeadlineTime > self.config.floatNav.now ? false : true,
+								cusPoNo: item.CusPoNo,
 								isGroup : item.WebProductId == 0 ? 0 : 1,
 								deadline: item.PayDeadlineTime * 1000
 							});
-							if( item.PayDeadlineTime*1000 > self.config.floatNav.now ){
+							if( item.PayDeadlineTime > self.config.floatNav.now ){
 								self.config.floatNav.selectNum++;
 							}
 						});
@@ -683,23 +767,23 @@
 				return cTypeChange( cType );
 			},
 			wxDetailClick( cusOrderId ){
-				this.detailForm.cusOrderId   = cusOrderId;
+				this.detailForm.cusOrderId = cusOrderId;
 				this.config.popup.detailShow = true;
 			},
 			resetClick(){
 				this.filterForm = {
-					beginDate  : '',
-					endDate    : '',
-					dateType   : 0,
-					groupBy    : 2,
-					orderType  : 'all',
-					orderState : this.filterForm.orderState,
-					curPage    : 0,
+					beginDate: '',
+					endDate: '',
+					dateType: 0,
+					groupBy: 2,
+					orderType: 'all',
+					orderState: this.filterForm.orderState,
+					curPage: 0,
 				};
 				removeStorage('client/wxOrders');
-				this.config.getConfig      = true;
+				this.config.getConfig = true;
 				this.config.switch.checked = false;
-				this.getConfig( true );
+				this.getConfig(true);
 			},
 			filterClick(){
 				this.wxOrdersList = [];
@@ -707,7 +791,7 @@
 				this.config.popup.filterShow = false;
 			},
 			delClick( cusOrderId ){
-				this.delForm.cusOrderId    = cusOrderId;
+				this.delForm.cusOrderId = cusOrderId;
 				this.config.popup.del.show = true;
 			},
 			modifyClick( item ){
@@ -734,9 +818,9 @@
 				}
 			},
 			otherReason( cusOrderId ){
-				this.delForm.delRemak      = '';
+				this.delForm.delRemak = '';
 				this.config.popup.del.show = false;
-				this.config.dialog.show    = true;
+				this.config.dialog.show = true;
 			},
 			delConfirm(){
 				let self = this;
@@ -805,15 +889,15 @@
 						if( item.PayDeadlineTime ){
 							this.$router.push({
 								name:'sBuildPay',
-								params : {
-									orderId : item.CusPoNo
+								params: {
+									orderId: item.CusPoNo
 								}
 							});
 						}else{
 							this.$router.push({
 								name:'sBuild',
-								params : {
-									orderId : item.CusPoNo
+								params: {
+									orderId: item.CusPoNo
 								}
 							});
 						}
@@ -822,15 +906,15 @@
 						if( item.PayDeadlineTime ){
 							this.$router.push({
 								name:'cBuildPay',
-								params : {
-									orderId : item.CusPoNo
+								params: {
+									orderId: item.CusPoNo
 								}
 							});
 						}else{
 							this.$router.push({
 								name:'cBuild',
-								params : {
-									orderId : item.CusPoNo
+								params: {
+									orderId: item.CusPoNo
 								}
 							});
 						}
@@ -838,8 +922,8 @@
 					case 'x':
 						this.$router.push({
 							name:'xBuild',
-							params : {
-								orderId : item.CusPoNo
+							params: {
+								orderId: item.CusPoNo
 							}
 						});
 						break;
@@ -848,7 +932,7 @@
 				}
 			},
 			payDetailClick( cusPoNo ){
-				this.$router.push({ name:'payDetail', params:{ orderId : cusPoNo } });
+				this.$router.push({ name: 'payDetail', params: { orderId: cusPoNo } });
 			},
 			beforeunloadHandler(){
 				if( this.config.switch.checked ){
@@ -856,7 +940,96 @@
 				}else{
 					removeStorage('client/wxOrders');
 				}
-			}
+			},
+			/* 重置流水号 */
+			resetPayStatus( rowData ) {
+				const self = this;
+				Dialog.confirm({
+					message: '确认取消支付?'
+				}).then(()=>{
+					self.$request.client.ordersManage.wechatPayStatusReset( rowData.TradeNo ).then(res=>{
+						if( res.errorCode == '00000' ){
+							Toast.success('取消成功');
+							self.filterClick();
+						}else{
+							Toast.fail(res.msg || '取消失败');
+						}
+					});
+				}).catch(()=>{
+					Dialog.close();
+				});
+			},
+			/* 跳转payway页面*/
+			goPayWay( rowData ) {
+				const list = rowData.orderDetail.map(item => item.CusPoNo).join(',');
+				this.$router.push({ name: 'payWay', params: { cusOrderId: list  } });
+			},
+			/* 分割线点击 */
+			dividerClick(index) {
+				if( this.config.divider.showDetailIdx.some(item => item == index) ) {
+					this.config.divider.showDetailIdx = this.config.divider.showDetailIdx.filter(item=> item != index);
+				} else {
+					this.config.divider.showDetailIdx.push(index);
+				}
+			},
+			/* 取消支付|去支付的防抖 */
+			// type => resetPayStatus || goPayWay
+			async checkPayStatus( rowData, type ) {
+
+				if( type == 'queryOrderStatus' ) {
+					// 检查是否在防抖时间内
+					if (this.querying) {
+						Toast.info('正在处理中，请稍后');
+						return;
+					}
+
+					// 设置防抖状态
+					this.querying = true;
+
+					try {
+						const { errorCode, result } = await doOpData({
+							dataType: 13,
+							wxOutTradeNo: rowData.TradeNo
+						});
+						Toast.success('账单更新成功');
+
+						this.filterClick();
+					} catch(error) {
+						Toast.fail('查询失败');
+					} finally {
+						// 3秒后重置防抖状态
+						setTimeout(() => {
+							this.querying = false;
+						}, 3000);
+					}
+
+					return 
+				}
+
+				// 将字符串时间转换为Date对象
+				const payTime = new Date(rowData.LastPayTime);
+
+				// 计算支付时间加上间隔后的截止时间
+				const endTime = new Date(payTime.getTime() + this.pageConfig.webPayGapTime * 1000);
+
+				// 获取当前时间
+				const now = new Date();
+
+				// 计算剩余时间
+				const remaining = (endTime - now) > 0 ?  Math.floor((endTime - now) / 1000) : 0;
+
+				if( remaining > 0 ) {
+					Toast.fail("请在"+remaining+"秒后点击");
+					return false
+				}
+
+				if( type == 'resetPayStatus' ) {
+					this.resetPayStatus(rowData);
+				}
+				if( type == 'goPayWay' ) {
+					this.goPayWay(rowData);
+				}
+			},
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','微信订单')

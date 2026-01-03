@@ -67,26 +67,26 @@
 		},
 		data(){
 			return {
-				config:{
-					isWx:false
+				config: {
+					isWx: false
 				},
-				info : {
-					isOneCent  : false,
-					useAlipay  : false,
-					useWechat  : false,
-					useCredit  : false,
-					useYSB     : false,
-					leftMinAmtCond:'',
-					orderName  : '',
-					total      : 0,
-					deadTime   : 0,
-					inTime     : true,
-					cusOrderId : '',
+				info: {
+					isOneCent: false,
+					useAlipay: false,
+					useWechat: false,
+					useCredit: false,
+					useYSB: false,
+					leftMinAmtCond: '',
+					orderName : '',
+					total: 0,
+					deadTime: 0,
+					inTime: true,
+					cusOrderId: '',
 				},
-				time:0,
-				countDownShow : false,
-				wxQrCodeShow  : false,
-				qrCodeUrl     : ''
+				time: 0,
+				countDownShow: false,
+				wxQrCodeShow: false,
+				qrCodeUrl: ''
 			}
 		},
 		methods:{
@@ -110,6 +110,8 @@
 						this.time = this.info.deadTime - now.getTime();
 						this.countDownShow = true;
 					});
+				}).catch(err=> {
+					this.goToWxOrd()
 				});
 			},
 			payClick( type ){
@@ -150,6 +152,7 @@
 					}
 				}
 				if( type == 'ysb' ){
+					// 测试
 					//this.config.isWx = true
 					if( !this.config.isWx ){
 						Dialog.alert({
@@ -159,8 +162,8 @@
 						});
 					}else{
 						let data = {
-							tradeType  : 0,
-							cusOrderId : this.info.cusOrderId
+							tradeType: 0,
+							cusOrderId: this.info.cusOrderId
 						};
 						this.ysbPay(data);
 					}
@@ -183,8 +186,10 @@
 				let self = this;
 				this.$request.payAll.payAll.ysbPay( data ).then(res=>{
 					if( res.errorCode == '00000' ){
-						console.log(res)
+						//console.log(res)
 						submitForm(res.server_url,{code_info:res.result});
+					} else {
+						this.goToWxOrd()
 					}
 				})
 			},
@@ -267,20 +272,27 @@
 				}).then(()=>{
 					document.getElementById('qrcode').innerHTML = '';
 					new QRCode('qrcode',{
-						text         : this.qrCodeUrl,
-				     	colorDark    : '#000000',
-				      	colorLight   : '#ffffff',
-				      	correctLevel : QRCode.CorrectLevel.H
+						text : this.qrCodeUrl,
+				     	colorDark: '#000000',
+				      	colorLight: '#ffffff',
+				      	correctLevel: QRCode.CorrectLevel.H
 					});
 				})
 			},
 			checkPay(){
 				this.wxQrCodeShow = false;
 				if( this.info.cusOrderId.indexOf(',') == -1 ){
-					this.$router.push({ name : 'payDetail' , params : { orderId : this.info.cusOrderId } }); 
+					this.$router.push({ name: 'payDetail', params: { orderId: this.info.cusOrderId } }); 
 				}else{
 					this.$router.push('/client/wxorder/lists');
 				}
+			},
+			goToWxOrd() {
+				setTimeout(()=> {
+					this.$router.push({
+						name: "wxorder"
+					})
+				}, 3000)
 			}
 		},
 		created(){

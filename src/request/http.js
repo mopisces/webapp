@@ -30,7 +30,7 @@ httpServer.interceptors.request.use(
 	},
 	error => {
 		Toast.clear();
-		Promise.error(error);
+		return Promise.error(error);
 	},
 	
 );
@@ -45,6 +45,7 @@ httpServer.interceptors.response.use(
 	},
 	error =>{
 		Toast.clear();
+		console.log(error)
 		if( error ){
 			Toast.fail( JSON.stringify(error) );
 			errorHandle.mainHandle(error.data.errorCode,error.data.msg);

@@ -1203,6 +1203,7 @@
 			scoreEdgeChange(e) {
 				this.formData.lineBallInfo = ['无压线', '普通压线', '平压线'][e.detail.value[1]]
 				this.formData.edgeType = e.detail.value[0]
+				this.formData.isEdge = ['净片', '毛片'][e.detail.value[0]]
 			},
 			addressChange( newValue ){
 				this.formData.address = newValue;

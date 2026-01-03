@@ -3,7 +3,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 let timeStamp = new Date().getTime();
 module.exports = {
-  filenameHashing:false,
+  filenameHashing: true,
   chainWebpack: config =>{
     config.plugins.delete('prefetch');
     /*config.output.filename('js/[name].?t='+TimeStamp+'.js').end();
@@ -60,7 +60,7 @@ module.exports = {
   },
   devServer: {
     disableHostCheck: true,
-    port: 50000
+    port: 50003
   },
   lintOnSave: false 
 }

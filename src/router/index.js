@@ -28,6 +28,7 @@ const loginClient = () => import('@/components/login/ClientLogin');
 const contact     = () => import('@/components/client/index/Contact');
 //测试扫码
 const scanCode = () => import('@/components/common/ScanCodePage');
+
 //测试登录
 //const sLogin = () => import('@/pages/login/staff');
 let routes = [
@@ -111,6 +112,14 @@ let router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    // 添加版本检测逻辑
+    const currentVersion = '1.0.1'; // 每次部署更新此版本号
+    const storedVersion = localStorage.getItem('appVersion');
+    if (storedVersion !== currentVersion) {
+        localStorage.setItem('appVersion', currentVersion);
+        window.location.reload(true); 
+    }
+
     if( to.name != 'staffLogin' || to.name != 'clientLogin' ){
         if( getStorage('jpdn-login-type') == 'client' ){
             store.commit('client/setIsLogin',getStorage('jpdn-client-isLogin', 'sessionStorage') == 1 ? 1 : 0);
@@ -118,7 +127,6 @@ router.beforeEach((to, from, next) => {
         if( getStorage('jpdn-login-type') == 'staff' ){
             store.commit('staff/setIsLogin',getStorage('jpdn-staff-isLogin', 'sessionStorage') == 1 ? 1 : 0);
         }
-        //store.commit('staff/setIsLogin',getStorage('jpdn-staff-isLogin'));
     }
     window.scrollTo(0,0);
     
@@ -130,7 +138,6 @@ router.beforeEach((to, from, next) => {
     }else{
         store.commit('client/setTabbarActive','menu');
     }
-    //console.log(store.state.client.navList)
     if( to.meta.needLogin && ( !getStorage('jpdn-client-isLogin', 'sessionStorage') && to.params ) ){
         next({
             replace:true,
@@ -155,21 +162,7 @@ router.beforeEach((to, from, next) => {
         }
     } else {
         next()
-    }/*else if( store.state.staff.isLogin && getStorage('staff-auth-url') && store.state.staff.navList == null ){
-        store.dispatch('staff/permission', JSON.parse(getStorage('staff-auth-url')));
-        router.addRoutes(store.state.staff.navList);
-        next({ ...to, replace: true });
-    }else if( store.state.client.isLogin &&getStorage('client-auth-url') && store.state.client.navList == null ){
-        store.dispatch('client/permission', JSON.parse(getStorage('client-auth-url')));
-        router.addRoutes(store.state.client.navList);
-        next({ ...to, replace: true });
-    }else if( getStorage('jpdn-admin-token', 'sessionStorage') && store.state.admin.navList == null ){
-        store.dispatch('admin/permission');
-        router.addRoutes(store.state.admin.navList);
-        next({ ...to, replace: true });
-    }else{
-        next();
-    }*/
+    }
 });
 
 export default router;

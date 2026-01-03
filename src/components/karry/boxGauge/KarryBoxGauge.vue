@@ -64,7 +64,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	.box-gauge-container {
 		border: 0.0625rem solid #ebedf0;
 		background: #fff;

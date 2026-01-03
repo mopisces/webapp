@@ -338,6 +338,11 @@
 						this.config.mockList.indexList.push(toolItem)
 					})
 				}
+
+				// 测试菜单
+				//this.config.mockList.indexList.push({
+				//	text:'查询银行状态', role:'查询银行状态', iconName:'shenhe', url:'/client/pay/queryOrderStatus'
+				//})
 			},
 			/*菜单点击*/
 			openPage(item) {

@@ -25,16 +25,16 @@ const getCusFreeMB = () => import('@/pages/client/getCusFreeMB.vue')
 const lists = () => import('@/pages/client/commonly/getMat.vue');
 //常用订单 @/components/client/usedorder/Lists
 const orderList = () => import('@/pages/client/commonly/getOrd.vue');
-//微信订单 @/components/client/wxorder/Lists
-const wxList = () => import('@/pages/client/wxOrd/getWxOrdList.vue');
+//微信订单 @/pages/client/wxOrd/getWxOrdList.vue
+const wxList = () => import('@/components/client/wxorder/Lists');
 //简单纸板下单
 const sBuild = () => import('@/components/client/build/SBuild');
 //纸箱纸板下单 @/pages/client/build/buildC.vue
 const cBuild = () => import('@/components/client/build/CBuild');
 //纸箱下单
 const xBuild           = () => import('@/components/client/build/X');
-//支付方式
-const payWay           = () => import('@/components/pay/order/Way');
+//支付方式 @/pages/client/pay/chooseWay.vue
+const payWay = () => import('@/components/pay/order/Way');
 //支付详细信息
 const payDetail        = () => import('@/components/pay/order/Detail');
 //申请退款
@@ -132,6 +132,7 @@ export const asyncClientRouterMap = [
             },
             {
                 path:'wxorder/lists',
+                name: 'wxorder',
                 meta: { title: '微信订单', role:'微信订单' },
                 component: wxList,
             },

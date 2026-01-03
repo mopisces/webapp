@@ -125,12 +125,12 @@
 						<span class="mg-left-20">{{ orderDetail.SubDNAddress }}</span>
 					</span>
 				</div>
-				<div class="card-body-item card-body-item-100">
+				<div v-if="orderDetail.DNRemark" class="card-body-item card-body-item-100">
 					<span>送货备注:
 						<span class="mg-left-20">{{ orderDetail.DNRemark }}</span>
 					</span>
 				</div>
-				<div class="card-body-item card-body-item-100">
+				<div v-if="orderDetail.ProRemark" class="card-body-item card-body-item-100">
 					<span>生产备注:
 						<span class="mg-left-20">{{ orderDetail.ProRemark }}</span>
 					</span>

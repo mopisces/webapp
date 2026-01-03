@@ -109,6 +109,9 @@ const ordersManage = {
 	},
 	wechatCancel( orderId ){
 		return post( window.jpdn_domain_client + 'cancelCommon',{ cancel_order_id:orderId } );
+	},
+	wechatPayStatusReset( tradeNo ) {
+		return post( window.jpdn_domain_client + 'orderManage/wechatPayStatusReset',{ tradeNo: tradeNo } );
 	}
 };
 export default ordersManage;

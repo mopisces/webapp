@@ -579,7 +579,7 @@
 				viewH: 'page/viewH'
 			}),
 			showFloatNav() {
-				return this.config.floatNav.show && this.formData.ordState == 1 && this.config.floatNav.selectNum>0
+				return this.config.floatNav.show && this.formData.ordState == 1 && this.config.floatNav.selectNum > 0
 			}
 		},
 		methods: {

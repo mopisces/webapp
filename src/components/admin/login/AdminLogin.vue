@@ -65,6 +65,7 @@
 						setStorage('jpdn-admin-refresh',res.result.refresh_token,  'sessionStorage')
 						setStorage('jpdn-admin-username',self.formData.adminName)
 						setStorage('jpdn-login-type','admin')
+
 						self.$router.push('/admin/config/lists');
 					}
 				});
@@ -76,7 +77,7 @@
 		},
 		created(){
 			this.$store.commit('common/setType','admin');
-			removeStorage()
+			//removeStorage()
 			//sessionStorage.clear();
 		},
 		async mounted(){

@@ -650,6 +650,7 @@
 				this.formData.lineBallInfo = data[1];
 			},
 			calcPriceInfo( showToast = true, isCheck = false ){
+				console.log(this.formData.isEdge )
 				if( this.formData.isCalc == 0 ) return true
 				delete this.rules.dOrdPrice
 				delete this.rules.dAmt
@@ -728,6 +729,7 @@
 			scoreEdgeChange(e) {
 				this.formData.lineBallInfo = ['无压线', '普通压线', '平压线'][e.detail.value[1]]
 				this.formData.edgeType = ['净片', '毛片'][e.detail.value[0]]
+				this.formData.isEdge = ['净片', '毛片'][e.detail.value[0]]
 			},
 			lineBallChange(e){
 				this.formData.lineBallInfo = e.detail.value
@@ -797,10 +799,12 @@
 		},
 		created(){
 			this.$store.commit('client/setHeaderTitle','简单纸板下单');
+			console.log("SBuild")
 		},
 		mounted(){
 			this.fetchBuildType( this.$route.params );
 			this.validator = new schema(this.rules);
+			console.log("SBuild")
 		},
 		updated(){
 			

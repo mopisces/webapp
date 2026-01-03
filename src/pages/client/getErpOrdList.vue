@@ -165,10 +165,10 @@
 	import DragMenu from "@/components/subject/fab/DragMenu.vue"
 	/*自定义订单详细信息组件*/
 	import OrdDesc from "@/components/karry/ordDesc/OrdDesc.vue"
-	/*自定义纸箱规格组件*/
-	import KarryBoxGauge from "@/components/karry/boxGauge/KarryBoxGauge.vue"
 	/*自定义纸板规格*/
 	import KarryBdGauge from "@/components/karry/bdGauge/KarryBdGauge.vue"
+	/*自定义纸箱规格组件*/
+	import KarryBoxGauge from "@/components/karry/boxGauge/KarryBoxGauge.vue"
 	/*自定义方法*/
 	import { getStorage, setStorage, removeStorage } from "@/util/storage"
 	/*api接口*/
